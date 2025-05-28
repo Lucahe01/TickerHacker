@@ -1,0 +1,745 @@
+!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertiv (VRT) - Interactive Business Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Visualization & Content Choices:
+        - Overview: Text, key stats cards. Goal: Inform.
+        - Business Model (Segments, Portfolio, End-Markets, Operations): Text, HTML tables (Segment Financials, Product/Service Revenue), cards for portfolio items. Goal: Inform, Compare. Charts: Segment Revenue/Profit (Bar).
+        - Market Position (Industry, Competition, Market Share): Text, competitor list, market share highlights. Goal: Inform, Compare.
+        - Financial Dashboard (Revenue, Profitability, Cash Flow, ROIC, Balance Sheet): Multiple Line/Bar Charts for trends (Revenue, OpInc, Adj. OpInc, EBITDA, Margins, OCF, Adj. FCF, ROIC). HTML tables for reconciliations. Goal: Change, Compare. Interaction: Tooltips.
+        - Strategy & Outlook (Growth Drivers, Initiatives, Guidance): Text, lists. Goal: Inform.
+        - Conclusion: Text summary. Goal: Inform.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All charts via Chart.js (Canvas). -->
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f5f5f4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 650px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 320px; 
+            max-height: 380px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container { 
+                height: 350px; 
+                max-height: 400px;
+            } 
+        }
+        .sticky-nav { 
+            position: -webkit-sticky; 
+            position: sticky; 
+            top: 0; 
+            z-index: 50; 
+        }
+        .nav-link {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #0284c7; /* sky-600 */
+            color: #FFFFFF;
+        }
+        h1.main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700;
+            color: #0369a1; /* sky-700 */
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h2.section-title { 
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; 
+            color: #0ea5e9; /* sky-500 */
+            margin-bottom: 1.5rem; 
+            padding-bottom: 0.5rem; 
+            border-bottom: 2px solid #e7e5e4; /* stone-200 */
+        }
+        h3.subsection-title { 
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; 
+            color: #14b8a6; /* teal-500 */
+            margin-top: 2rem; 
+            margin-bottom: 1rem; 
+        }
+        h4.content-title { 
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; 
+            margin-top: 1.25rem; 
+            margin-bottom: 0.75rem; 
+            color: #0ea5e9; /* sky-500 */
+        }
+        .section-card { 
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03); 
+            padding: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+        .content-text { 
+            line-height: 1.75;
+            color: #4b5563; /* gray-600 */
+            font-size: 0.95rem; 
+        }
+        .section-intro { 
+            font-size: 1.05rem; 
+            color: #52525b; /* zinc-600 */
+            margin-bottom: 1.5rem; 
+            line-height: 1.6; 
+        }
+        .table-wrapper { overflow-x: auto; margin-top:1rem; margin-bottom:1rem; border: 1px solid #e7e5e4; border-radius: 0.5rem;}
+        table { width: 100%; border-collapse: collapse; }
+        th, td { 
+            border-bottom: 1px solid #e7e5e4; /* stone-200 */
+            padding: 0.75rem 1rem; 
+            text-align: left; 
+            font-size: 0.875rem; /* text-sm */
+        }
+        td:not(:first-child), th:not(:first-child) { border-left: 1px solid #e7e5e4; }
+        th { 
+            background-color: #f5f5f4; /* stone-100 */
+            font-weight: 600; 
+            color: #1f2937; /* gray-800 */
+        }
+        tr:last-child td { border-bottom: none; }
+        .key-metric-card {
+            background-color: #f0f9ff; /* sky-50 */
+            border-left: 4px solid #0ea5e9; /* sky-500 */
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 0.75rem;
+        }
+        .key-metric-title {
+            font-weight: 500;
+            color: #0369a1; /* sky-700 */
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+        .key-metric-value {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700;
+            color: #0c4a6e; /* sky-800 */
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-gray-700">
+
+    <header class="bg-white/95 backdrop-blur-sm shadow-md sticky-nav">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl" style="color: #0369a1;">Vertiv (VRT) Analysis</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#business-model" class="nav-link">Business Model</a>
+                        <a href="#market-position" class="nav-link">Market Position</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#strategy" class="nav-link">Strategy</a>
+                        <a href="#conclusion" class="nav-link">Conclusion</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" id="icon-menu" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" id="icon-close" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#overview" class="nav-link block text-base">Overview</a>
+                <a href="#business-model" class="nav-link block text-base">Business Model</a>
+                <a href="#market-position" class="nav-link block text-base">Market Position</a>
+                <a href="#financials" class="nav-link block text-base">Financials</a>
+                <a href="#strategy" class="nav-link block text-base">Strategy</a>
+                <a href="#conclusion" class="nav-link block text-base">Conclusion</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8 mt-4">
+        <h1 class="main-title">Vertiv Holdings Co. (VRT) Interactive Analysis</h1>
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">I. Company Overview & Executive Summary</h2>
+            <p class="section-intro">This section provides a high-level introduction to Vertiv Holdings Co., a global leader in critical digital infrastructure. We'll cover its core mission, key financial highlights, and strategic focus in the rapidly evolving tech landscape, particularly its role in supporting AI and data center growth.</p>
+            <p class="content-text mb-4">Vertiv Holdings Co. (NYSE: VRT) is a global provider of critical digital infrastructure technologies and lifecycle services, essential for the continuous and optimal operation of data centers, communication networks, and commercial and industrial facilities. The company's portfolio encompasses power management, thermal management, IT and edge infrastructure solutions, and related services. Vertiv is strategically positioned to capitalize on the rapid expansion of digital infrastructure, driven significantly by the proliferation of cloud computing, colocation services, and the transformative impact of artificial intelligence (AI). The company commands leading market positions, notably #1 in thermal management and #1 in 3-phase large Uninterruptible Power Supplies (UPS).</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 my-6">
+                <div class="key-metric-card"><div class="key-metric-title">FY2024 Net Sales</div><div class="key-metric-value">~$8.0B</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">Q1 2025 Net Sales</div><div class="key-metric-value">$2.04B</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">FY2024 Adj. Op. Margin</div><div class="key-metric-value">19.4%</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">FY2024 Adj. FCF</div><div class="key-metric-value">~$1.1B</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">Q1 2025 Order Backlog</div><div class="key-metric-value">$7.9B</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">2029 Target Adj. Op. Margin</div><div class="key-metric-value">25%</div></div>
+            </div>
+            <p class="content-text mb-4">Vertiv's strategic direction is focused on leveraging the AI-driven demand for high-density power and advanced cooling solutions, particularly liquid cooling. This involves expanding its global manufacturing capabilities, enhancing operational efficiencies through the Vertiv Operating System (VOS), and making targeted acquisitions. The company's recent financial outperformance and optimistic projections are attributable to favorable market conditions and a significant internal transformation centered on operational excellence and strategic portfolio enhancements.</p>
+            <p class="content-text">Vertiv's lineage dates back to 1946 (Capitol Refrigeration/Liebert), later operating as Emerson Network Power before Platinum Equity acquired it in 2016. Vertiv became publicly traded in February 2020 via a SPAC. With ~31,000 employees and 23 manufacturing sites globally, Vertiv aims to empower vital applications of the digital world.</p>
+        </section>
+
+        <section id="business-model" class="section-card scroll-mt-20">
+            <h2 class="section-title">II. Business Model & Operations</h2>
+            <p class="section-intro">Delve into Vertiv's operational structure, including its geographic segments, diverse product and service portfolio, key end-markets, and global manufacturing and supply chain strategies. This section explores how Vertiv creates value and serves its global customer base.</p>
+
+            <h3 class="subsection-title">A. Segment Analysis</h3>
+            <p class="content-text mb-4">Vertiv reports financials across three geographic segments: Americas, Asia Pacific (APAC), and Europe, Middle East & Africa (EMEA). The Americas is the largest, contributing 56% of FY2024 net sales ($4.50B), followed by EMEA (22%, $1.79B) and APAC (22%, $1.72B).</p>
+            <div class="chart-container my-6 mx-auto">
+                <canvas id="segmentRevenueChart"></canvas>
+            </div>
+            <div class="table-wrapper">
+                <table id="segmentFinancialsTable">
+                    <caption>Table 1: Vertiv Segment Financial Performance (Net Sales & Operating Profit, $M)</caption>
+                    <thead><tr><th>Year</th><th>Region</th><th>Net Sales ($M)</th><th>Operating Profit ($M)</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <p class="content-text mt-2">The growing revenue concentration in the Americas reflects strong North American data center investment, particularly AI-driven. APAC's lower operating profit relative to revenue compared to EMEA warrants strategic attention.</p>
+
+            <h3 class="subsection-title">B. Product and Service Portfolio</h3>
+            <p class="content-text mb-4">Vertiv offers a comprehensive suite including Critical Power (#1 in 3-phase large UPS), Thermal Management (#1 globally, including advanced liquid cooling), Racks & Enclosures, Monitoring & Management, Integrated Solutions (modular DCs), and Services. Products accounted for ~78% of FY2024 net sales ($6.25B), with Services & Spares at ~22% ($1.77B).</p>
+             <div class="chart-container my-6 mx-auto">
+                <canvas id="productServiceRevenueChart"></canvas>
+            </div>
+            <div class="table-wrapper">
+                <table id="productServiceRevenueTable">
+                     <caption>Table 2: Vertiv Net Sales by Product & Service ($M)</caption>
+                    <thead><tr><th>Year</th><th>Products ($M)</th><th>Services & Spares ($M)</th><th>Total ($M)</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <p class="content-text mt-2">Strategic acquisitions like E&I Engineering (power distribution), CoolTera (liquid cooling), and BSE (thermal) have enhanced this portfolio for AI-era demands.</p>
+
+            <h3 class="subsection-title">C. End-Markets</h3>
+            <p class="content-text mb-4">Data Centers are the largest end-market (80% of FY2024 revenue), driven by cloud, colocation, enterprise, and especially AI. Communication Networks and Commercial & Industrial each contribute 10%. Key customers include Alibaba, AT&T, Equinix, NVIDIA.</p>
+
+            <h3 class="subsection-title">D. Manufacturing and Supply Chain</h3>
+            <p class="content-text">Vertiv operates 23 global manufacturing sites, leveraging the Vertiv Operating System (VOS) for efficiency. Capacity is expanding (e.g., Pune, India; Pelzer, SC) to meet AI-driven demand, particularly for switchgear, busway, and modular solutions. Supply chain resilience is a key focus.</p>
+        </section>
+
+        <section id="market-position" class="section-card scroll-mt-20">
+            <h2 class="section-title">III. Competitive Environment & Market Position</h2>
+            <p class="section-intro">This section examines the dynamic critical digital infrastructure market, Vertiv's key competitors, and its market share in core segments. The focus is on how Vertiv navigates competition and leverages industry trends like AI and liquid cooling.</p>
+            
+            <h3 class="subsection-title">A. Industry Overview</h3>
+            <p class="content-text mb-4">The market is fueled by AI/HPC, cloud/colocation growth (15-17% CAGR forecast), and edge computing. Key trends include the shift to liquid cooling, demand for modular data centers, and emphasis on energy efficiency. The data center power market was ~$20.2B in 2024 (13.2% CAGR), and the UPS market ~$8.9B (15.2% CAGR).</p>
+
+            <h3 class="subsection-title">B. Competitive Landscape</h3>
+            <p class="content-text mb-4">Vertiv competes with large global firms and niche specialists. Key competitors include:</p>
+            <ul class="list-disc list-inside content-text space-y-1">
+                <li><strong>Schneider Electric S.E.:</strong> Broad portfolio, strong in DCIM, actively pursuing AI/liquid cooling.</li>
+                <li><strong>Eaton Corporation Plc:</strong> Major in power management (UPS, PDUs, switchgear).</li>
+                <li>Others: Johnson Controls, Huawei, ABB, Legrand, Dell.</li>
+            </ul>
+            <p class="content-text mt-2">Vertiv differentiates through lifecycle services, global network, technology expertise, and focus on complex AI data center needs.</p>
+
+            <h3 class="subsection-title">C. Market Share</h3>
+            <ul class="list-disc list-inside content-text space-y-1">
+                <li><strong>Overall Data Center Physical Infrastructure:</strong> Joint #1 with Schneider Electric (17% each, Q3 2023).</li>
+                <li><strong>Thermal Management:</strong> #1 Global Provider.</li>
+                <li><strong>3-Phase Large UPS & Power Switching/Distribution:</strong> #1 Market Position.</li>
+            </ul>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">IV. Financial Performance Dashboard</h2>
+            <p class="section-intro">Explore Vertiv's financial journey from FY2019 to Q1 2025. This interactive dashboard visualizes trends in revenue, profitability, cash flow, and returns, offering insights into the company's financial health and operational efficiency.</p>
+            
+            <h3 class="subsection-title">A. Revenue & Order Trends</h3>
+            <div class="grid md:grid-cols-2 gap-x-8 gap-y-10 mt-6">
+                <div class="chart-container"><canvas id="netSalesTrendChart"></canvas></div>
+                <div class="chart-container"><canvas id="orderBacklogChart"></canvas></div>
+            </div>
+            <div class="table-wrapper mt-8">
+                <table id="netSalesGrowthTable">
+                    <caption>Table 3: Vertiv Consolidated Net Sales & Growth ($M)</caption>
+                    <thead><tr><th>Year</th><th>Total Net Sales</th><th>YoY Growth (%)</th><th>Products Sales</th><th>Services Sales</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <h3 class="subsection-title">B. Profitability Analysis</h3>
+            <div class="grid md:grid-cols-2 gap-x-8 gap-y-10 mt-6">
+                <div class="chart-container"><canvas id="gaapOpIncomeChart"></canvas></div>
+                <div class="chart-container"><canvas id="adjOpIncomeChart"></canvas></div>
+                <div class="chart-container"><canvas id="ebitdaChart"></canvas></div>
+                <div class="chart-container"><canvas id="profitMarginsChart"></canvas></div>
+            </div>
+             <div class="table-wrapper mt-8">
+                <table id="profitabilityMetricsTable">
+                    <caption>Table 4: Vertiv Key Profitability Metrics & Margins</caption>
+                    <thead><tr><th>Year</th><th>GAAP OpInc ($M)</th><th>Adj. OpInc ($M)</th><th>Adj. EBITDA ($M)</th><th>Gross Margin (%)</th><th>GAAP OpMargin (%)</th><th>Adj. OpMargin (%)</th><th>Net Margin (%)</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <details class="mt-4 content-text bg-stone-50 p-3 rounded">
+                <summary class="font-semibold cursor-pointer text-sky-600">View GAAP to Adjusted Operating Profit Reconciliation (FY2023-FY2024)</summary>
+                <div class="table-wrapper mt-2">
+                    <table id="gaapToAdjOpProfitTable">
+                        <caption>Table 5: Reconciliation of GAAP to Adjusted Operating Profit ($M)</caption>
+                        <thead><tr><th>Item</th><th>FY2024</th><th>FY2023</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </details>
+
+
+            <h3 class="subsection-title">C. Cash Flow & Capital Efficiency</h3>
+            <div class="grid md:grid-cols-2 gap-x-8 gap-y-10 mt-6">
+                <div class="chart-container"><canvas id="cashFlowChart"></canvas></div>
+                <div class="chart-container"><canvas id="roicChart"></canvas></div>
+            </div>
+            <div class="table-wrapper mt-8">
+                <table id="cashFlowMetricsTable">
+                     <caption>Table 6: Vertiv Key Cash Flow Metrics ($M)</caption>
+                    <thead><tr><th>Year</th><th>Operating Cash Flow</th><th>Capital Expenditures</th><th>Adjusted Free Cash Flow</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+             <details class="mt-4 content-text bg-stone-50 p-3 rounded">
+                <summary class="font-semibold cursor-pointer text-sky-600">View OCF to Adjusted FCF Reconciliation (FY2023-FY2024)</summary>
+                <div class="table-wrapper mt-2">
+                    <table id="ocfToAdjFcfTable">
+                        <caption>Table 7: Reconciliation of OCF to Adjusted FCF ($M)</caption>
+                        <thead><tr><th>Item</th><th>FY2024</th><th>FY2023</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </details>
+
+            <h3 class="subsection-title">D. Balance Sheet Health</h3>
+            <div class="grid md:grid-cols-3 gap-4 my-6">
+                <div class="key-metric-card"><div class="key-metric-title">YE 2024 Cash</div><div class="key-metric-value" id="ye24Cash">$1.23B</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">YE 2024 Total Debt</div><div class="key-metric-value" id="ye24Debt">$2.93B</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">YE 2024 Net Leverage</div><div class="key-metric-value" id="ye24NetLeverage">~1.0x</div></div>
+            </div>
+            <div class="table-wrapper">
+                <table id="balanceSheetTable">
+                    <caption>Table 9: Vertiv Key Balance Sheet Items (Year-End, $M)</caption>
+                    <thead><tr><th>Year</th><th>Cash & Equiv.</th><th>Total Assets</th><th>Total Debt</th><th>Total Equity</th><th>Net Leverage (approx.)</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="strategy" class="section-card scroll-mt-20">
+            <h2 class="section-title">V. Strategic Outlook & Growth Drivers</h2>
+            <p class="section-intro">Examine Vertiv's strategic direction, focusing on key growth catalysts like the AI revolution, its initiatives in innovation and capacity expansion, and management's financial outlook for the coming years.</p>
+            
+            <h3 class="subsection-title">Key Growth Catalysts</h3>
+            <p class="content-text mb-2">The AI revolution is a primary catalyst, demanding high-density power and advanced cooling (especially liquid cooling). Vertiv is aligning with AI chip leaders like NVIDIA. Broader data center market growth (cloud, colocation, edge) also fuels demand.</p>
+
+            <h3 class="subsection-title">Vertiv's Strategic Initiatives</h3>
+            <ul class="list-disc list-inside content-text space-y-1">
+                <li><strong>Innovation & R&D:</strong> Significant investment ($352.1M in FY24) in liquid cooling and high-density power.</li>
+                <li><strong>Capacity Expansion:</strong> Expanding global manufacturing (India, SC) for switchgear, busway, modular solutions.</li>
+                <li><strong>Vertiv Operating System (VOS):</strong> Driving operational efficiency, productivity, and margins.</li>
+                <li><strong>Strategic Acquisitions:</strong> E&I Engineering, CoolTera, BSE to enhance portfolio.</li>
+            </ul>
+
+            <h3 class="subsection-title">Management's Outlook and Financial Guidance</h3>
+            <h4 class="content-title">FY2025 Guidance (as of Q1 2025):</h4>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 my-4">
+                <div class="key-metric-card"><div class="key-metric-title">Net Sales</div><div class="key-metric-value">$9.3 - $9.6B</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">Adj. Op. Margin</div><div class="key-metric-value">19.75 - 21.25%</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">Adj. Diluted EPS</div><div class="key-metric-value">$3.45 - $3.65</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">Adj. FCF</div><div class="key-metric-value">$1.25 - $1.35B</div></div>
+            </div>
+            <h4 class="content-title">Long-Term Financial Framework (by 2029):</h4>
+             <div class="grid md:grid-cols-2 gap-4 my-4">
+                <div class="key-metric-card"><div class="key-metric-title">Annual Organic Growth</div><div class="key-metric-value">12-14%</div></div>
+                <div class="key-metric-card"><div class="key-metric-title">Adj. Operating Margins</div><div class="key-metric-value">25%</div></div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="section-card scroll-mt-20">
+            <h2 class="section-title">VI. Conclusion & Analyst's Perspective</h2>
+            <p class="section-intro">A summary of Vertiv's strengths, challenges, and future considerations. This section offers a perspective on Vertiv's position in the dynamic digital infrastructure market and the key factors for its continued success.</p>
+            <h3 class="subsection-title">Strengths</h3>
+            <p class="content-text mb-2">Leading market positions (thermal, UPS), comprehensive AI-focused portfolio, global footprint, VOS-driven efficiencies, strong financials, and investment-grade credit.</p>
+            <h3 class="subsection-title">Challenges and Risks</h3>
+            <p class="content-text mb-2">Execution risk in scaling operations, supply chain vulnerabilities, intense competition (Schneider, Eaton), and data center market cyclicality.</p>
+            <h3 class="subsection-title">Future Considerations</h3>
+            <p class="content-text">Success hinges on sustained innovation (liquid cooling), operational execution (VOS, capacity), supply chain resilience, and strategic capital allocation.</p>
+            <p class="content-text mt-4">Vertiv appears strongly positioned to benefit from the AI-driven data center growth cycle. Its strategic initiatives align well with market demands. While risks persist, the current trajectory, robust backlog, and improving financials suggest a positive outlook.</p>
+        </section>
+    </main>
+
+    <footer class="bg-sky-800 text-sky-100 text-center p-8 mt-12">
+        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Vertiv (VRT) Interactive Analysis. For illustrative purposes only. Data derived from public filings and reports.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconMenu = document.getElementById('icon-menu');
+        const iconClose = document.getElementById('icon-close');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            iconMenu.classList.toggle('hidden');
+            iconClose.classList.toggle('hidden');
+        });
+        
+        document.querySelectorAll('#mobile-menu a.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                iconMenu.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+            });
+        });
+        
+        const navLinks = document.querySelectorAll('header .nav-link');
+        const sections = document.querySelectorAll('main section[id]');
+
+        function changeNavActiveState() {
+            let currentSectionId = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 100) { // 100px offset for sticky nav
+                    currentSectionId = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSectionId}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('load', changeNavActiveState);
+        window.addEventListener('scroll', changeNavActiveState);
+
+        function wrapText(text, maxWidthChars) {
+            if (typeof text !== 'string') return text;
+            const words = text.split(' ');
+            let lines = [];
+            let currentLine = words[0] || '';
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + words[i].length + 1 < maxWidthChars) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+        
+        const CHART_PALETTE = {
+            blue: '#3b82f6',    // blue-500
+            sky: '#0ea5e9',     // sky-500
+            teal: '#14b8a6',    // teal-500
+            green: '#22c55e',   // green-500
+            orange: '#f97316',  // orange-500
+            purple: '#8b5cf6',  // violet-500
+            pink: '#ec4899',    // pink-500
+            stone: '#78716c',   // stone-500
+        };
+
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4b5563'; // gray-600
+
+        const defaultChartOptions = (titleText, yLabel = 'Value ($M)') => ({
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top', labels: { font: { size: 11 }, color: '#374151'}},
+                title: { display: true, text: titleText, color: '#374151', font: {size: 14, weight: '500'}},
+                tooltip: {
+                    mode: 'index', intersect: false, titleColor: '#1f2937', bodyColor: '#4b5563',
+                    backgroundColor: 'rgba(255,255,255,0.95)', borderColor: '#e5e7eb', borderWidth: 1,
+                    padding: 10, cornerRadius: 4, boxPadding: 3,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) { label += ': '; }
+                            if (context.parsed.y !== null) {
+                                let value = context.parsed.y;
+                                let canvasId = '';
+                                if (context.chart && context.chart.canvas && typeof context.chart.canvas.id === 'string') {
+                                    canvasId = context.chart.canvas.id;
+                                }
+                                if (canvasId === 'profitMarginsChart' || canvasId === 'roicChart') {
+                                   label += value.toFixed(1) + '%';
+                                } else {
+                                   label += '$' + value.toLocaleString(undefined, { minimumFractionDigits: (value % 1 === 0 ? 0 : 1), maximumFractionDigits: 1 }) + 'M';
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { 
+                    ticks: { 
+                        font: { size: 10 }, 
+                        color: '#4b5563', 
+                        callback: function(val, idx, vals) { // Changed to regular function
+                            return wrapText(this.getLabels()[idx], 10);
+                        }
+                    }, 
+                    grid: { display: false } 
+                },
+                y: { 
+                    ticks: { 
+                        font: { size: 10 }, 
+                        color: '#4b5563', 
+                        callback: function(val) { // Changed to regular function
+                            let canvasId = '';
+                            if (this.chart && this.chart.canvas && typeof this.chart.canvas.id === 'string') {
+                                canvasId = this.chart.canvas.id;
+                            }
+                            return (canvasId === 'profitMarginsChart' || canvasId === 'roicChart' ? val + '%' : '$' + val.toLocaleString() + 'M');
+                        }
+                    }, 
+                    beginAtZero: true, 
+                    grid: { color: 'rgba(200,200,200,0.3)'}, 
+                    title: {display: true, text: yLabel, font: {size: 11}}
+                }
+            }
+        });
+        
+        // Data for Tables
+        const segmentFinancialData = [
+            { year: 2024, region: 'Americas', sales: 4500.6, profit: 1097.8 }, { year: 2024, region: 'APAC', sales: 1717.8, profit: 175.2 }, { year: 2024, region: 'EMEA', sales: 1793.4, profit: 439.4 },
+            { year: 2023, region: 'Americas', sales: 3844.5, profit: 762.4 }, { year: 2023, region: 'APAC', sales: 1527.8, profit: 147.4 }, { year: 2023, region: 'EMEA', sales: 1490.9, profit: 297.7 },
+            { year: 2022, region: 'Americas', sales: 2728.6, profit: 426.1 }, { year: 2022, region: 'APAC', sales: 1601.3, profit: 274.4 }, { year: 2022, region: 'EMEA', sales: 1361.6, profit: 234.6 },
+        ];
+        const productServiceRevenueData = [
+            { year: 2024, products: 6245.2, services: 1766.6, total: 8011.8 }, { year: 2023, products: 5271.2, services: 1592.0, total: 6863.2 },
+            { year: 2022, products: 4210.9, services: 1480.6, total: 5691.5 }, { year: 2021, products: 3854.5, services: 1143.6, total: 4998.1 },
+            { year: 2020, products: 3308.8, services: 1061.8, total: 4370.6 },
+        ];
+        const netSalesGrowthData = [
+            { year: 2024, total: 8011.8, growth: 16.7, products: 6245.2, services: 1766.6 }, { year: 2023, total: 6863.2, growth: 20.6, products: 5271.2, services: 1592.0 },
+            { year: 2022, total: 5691.5, growth: 13.9, products: 4210.9, services: 1480.6 }, { year: 2021, total: 4998.1, growth: 14.3, products: 3854.5, services: 1143.6 },
+            { year: 2020, total: 4370.6, growth: -1.4, products: 3308.8, services: 1061.8 }, { year: 2019, total: 4431.2, growth: 'N/A', products: 3356.1, services: 1075.1 },
+        ];
+        const profitabilityMetricsData = [
+            { year: 2024, gaapOpInc: 1367.4, adjOpInc: 1551.6, adjEbitda: 1651.0, grossMargin: 36.6, gaapOpMargin: 17.1, adjOpMargin: 19.4, netMargin: 6.2 },
+            { year: 2023, gaapOpInc: 872.2, adjOpInc: 1053.5, adjEbitda: 1151.0, grossMargin: 35.0, gaapOpMargin: 12.7, adjOpMargin: 15.3, netMargin: 6.7 },
+            { year: 2022, gaapOpInc: 223.4, adjOpInc: 500.0, adjEbitda: 533.0, grossMargin: 28.4, gaapOpMargin: 3.9, adjOpMargin: 8.8, netMargin: 1.3 },
+            { year: 2021, gaapOpInc: 259.9, adjOpInc: 471.0, adjEbitda: 493.0, grossMargin: 30.5, gaapOpMargin: 5.2, adjOpMargin: 9.4, netMargin: 2.4 },
+            { year: 2020, gaapOpInc: 213.5, adjOpInc: 337.0, adjEbitda: 427.0, grossMargin: 33.7, gaapOpMargin: 4.9, adjOpMargin: 7.7, netMargin: -7.5 },
+        ];
+        const gaapToAdjOpProfitData = [
+            { item: 'GAAP Operating profit', fy2024: 1367.4, fy2023: 872.2 }, { item: 'Amortization of intangibles', fy2024: 184.2, fy2023: 181.3 },
+            { item: 'Restructuring costs', fy2024: 5.3, fy2023: 28.6 }, { item: 'Stock-based compensation', fy2024: 34.6, fy2023: 25.0 },
+            { item: 'Other operating expense (income), net', fy2024: -6.0, fy2023: -9.9 }, { item: 'Adjusted operating profit', fy2024: 1551.6, fy2023: 1053.5, isBold: true },
+        ];
+        const cashFlowMetricsData = [
+            { year: 2024, ocf: 1319.3, capex: 167.0, adjFcf: 1135.2 }, { year: 2023, ocf: 900.5, capex: 127.9, adjFcf: 778.3 },
+            { year: 2022, ocf: -152.8, capex: 100.0, adjFcf: -259.8 }, { year: 2021, ocf: 210.9, capex: 64.3, adjFcf: 139.9 },
+            { year: 2020, ocf: 209.4, capex: 55.1, adjFcf: 125.3 }, { year: 2019, ocf: 57.5, capex: 65.3, adjFcf: -7.8 },
+        ];
+         const ocfToAdjFcfData = [
+            { item: 'Net cash from operating activities', fy2024: 1319.3, fy2023: 900.5 }, { item: 'Capital expenditures', fy2024: -167.0, fy2023: -127.9 },
+            { item: 'Investments in capitalized software', fy2024: -17.1, fy2023: -6.7 }, { item: 'Proceeds from disposition of PP&E', fy2024: 0, fy2023: 12.4 },
+            { item: 'Adjusted free cash flow', fy2024: 1135.2, fy2023: 778.3, isBold: true },
+        ];
+        const balanceSheetData = [
+            { year: 2024, cash: 1227.6, assets: 9132.5, debt: 2928.2, equity: 2434.3, netLeverage: '1.0x' },
+            { year: 2023, cash: 780.4, assets: 7998.5, debt: 2940.9, equity: 2014.9, netLeverage: '1.9x' },
+            { year: 2022, cash: 260.6, assets: 7095.7, debt: 3190.9, equity: 1441.9, netLeverage: 'N/A' },
+            { year: 2021, cash: 439.1, assets: 6939.6, debt: 2972.3, equity: 1417.7, netLeverage: 'N/A' },
+            { year: 2020, cash: 534.6, assets: 5073.8, debt: 3361.1, equity: 668.3, netLeverage: '2.8x' },
+            { year: 2019, cash: 223.5, assets: 4657.4, debt: 3467.3, equity: -704.8, netLeverage: 'N/A' },
+        ];
+
+        // Populate Tables
+        function populateTable(tableId, data, columns) {
+            const tableBody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            if (!tableBody) return;
+            tableBody.innerHTML = ''; // Clear existing rows
+            data.forEach(rowData => {
+                const row = tableBody.insertRow();
+                columns.forEach(col => {
+                    const cell = row.insertCell();
+                    cell.textContent = rowData[col.key] !== undefined && rowData[col.key] !== null ? (typeof rowData[col.key] === 'number' && !col.isPercentage && !col.isRatio ? rowData[col.key].toLocaleString(undefined, {minimumFractionDigits: col.digits || 0, maximumFractionDigits: col.digits || 1}) : rowData[col.key]) + (col.isPercentage ? '%' : '') : 'N/A';
+                    if (rowData.isBold) { cell.classList.add('font-bold'); }
+                });
+            });
+        }
+
+        populateTable('segmentFinancialsTable', segmentFinancialData, [{key:'year'}, {key:'region'}, {key:'sales', digits:1}, {key:'profit', digits:1}]);
+        populateTable('productServiceRevenueTable', productServiceRevenueData, [{key:'year'}, {key:'products', digits:1}, {key:'services', digits:1}, {key:'total', digits:1}]);
+        populateTable('netSalesGrowthTable', netSalesGrowthData, [{key:'year'}, {key:'total', digits:1}, {key:'growth', isPercentage: true, digits:1}, {key:'products', digits:1}, {key:'services', digits:1}]);
+        populateTable('profitabilityMetricsTable', profitabilityMetricsData, [{key:'year'}, {key:'gaapOpInc', digits:1}, {key:'adjOpInc', digits:1}, {key:'adjEbitda', digits:1}, {key:'grossMargin', isPercentage:true, digits:1}, {key:'gaapOpMargin', isPercentage:true, digits:1}, {key:'adjOpMargin', isPercentage:true, digits:1}, {key:'netMargin', isPercentage:true, digits:1}]);
+        populateTable('gaapToAdjOpProfitTable', gaapToAdjOpProfitData, [{key:'item'}, {key:'fy2024', digits:1}, {key:'fy2023', digits:1}]);
+        populateTable('cashFlowMetricsTable', cashFlowMetricsData, [{key:'year'}, {key:'ocf', digits:1}, {key:'capex', digits:1}, {key:'adjFcf', digits:1}]);
+        populateTable('ocfToAdjFcfTable', ocfToAdjFcfData, [{key:'item'}, {key:'fy2024', digits:1}, {key:'fy2023', digits:1}]);
+        populateTable('balanceSheetTable', balanceSheetData, [{key:'year'}, {key:'cash', digits:1}, {key:'assets', digits:1}, {key:'debt', digits:1}, {key:'equity', digits:1}, {key:'netLeverage', isRatio:true}]);
+
+
+        // Chart Instantiations
+        const years = ['2019', '2020', '2021', '2022', '2023', '2024']; // Extended for trends
+        const shortYears = ['2022', '2023', '2024'];
+
+        // Segment Revenue Chart
+        new Chart(document.getElementById('segmentRevenueChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: shortYears,
+                datasets: [
+                    { label: 'Americas Sales', data: segmentFinancialData.filter(d=>d.region==='Americas').map(d=>d.sales).reverse(), backgroundColor: CHART_PALETTE.blue },
+                    { label: 'APAC Sales', data: segmentFinancialData.filter(d=>d.region==='APAC').map(d=>d.sales).reverse(), backgroundColor: CHART_PALETTE.teal },
+                    { label: 'EMEA Sales', data: segmentFinancialData.filter(d=>d.region==='EMEA').map(d=>d.sales).reverse(), backgroundColor: CHART_PALETTE.green },
+                ]
+            },
+            options: defaultChartOptions('Segment Net Sales ($M)')
+        });
+        
+        // Product/Service Revenue Chart
+        new Chart(document.getElementById('productServiceRevenueChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: productServiceRevenueData.map(d=>d.year).slice(0,5).reverse(), // Show last 5 years
+                datasets: [
+                    { label: 'Products Sales', data: productServiceRevenueData.map(d=>d.products).slice(0,5).reverse(), backgroundColor: CHART_PALETTE.sky, stack: 'Stack 0' },
+                    { label: 'Services & Spares Sales', data: productServiceRevenueData.map(d=>d.services).slice(0,5).reverse(), backgroundColor: CHART_PALETTE.orange, stack: 'Stack 0' },
+                ]
+            },
+            options: {...defaultChartOptions('Net Sales by Product & Service ($M)'), scales: {...defaultChartOptions().scales, y: {...defaultChartOptions().scales.y, stacked: true}}}
+        });
+
+        // Net Sales Trend Chart
+        new Chart(document.getElementById('netSalesTrendChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Total Net Sales', data: netSalesGrowthData.map(d=>d.total).reverse(),
+                    borderColor: CHART_PALETTE.blue, backgroundColor: CHART_PALETTE.blue + '33', tension: 0.1, fill: true, pointRadius: 3, pointBackgroundColor: CHART_PALETTE.blue
+                }]
+            },
+            options: defaultChartOptions('Consolidated Net Sales Trend ($M)')
+        });
+
+        // Order Backlog Chart
+        new Chart(document.getElementById('orderBacklogChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['YE19', 'YE20', 'YE21', 'YE22', 'YE23', 'YE24', 'Q1_25'],
+                datasets: [{
+                    label: 'Order Backlog ($B)', data: [1.4, 1.85, 3.19, 4.75, 5.5, 7.18, 7.9],
+                    backgroundColor: CHART_PALETTE.purple,
+                }]
+            },
+            options: defaultChartOptions('Order Backlog Growth ($B)', 'Value ($B)')
+        });
+        
+        // GAAP Operating Income Chart
+        new Chart(document.getElementById('gaapOpIncomeChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: profitabilityMetricsData.map(d=>d.year).reverse(),
+                datasets: [{
+                    label: 'GAAP Operating Income', data: profitabilityMetricsData.map(d=>d.gaapOpInc).reverse(),
+                    borderColor: CHART_PALETTE.teal, backgroundColor: CHART_PALETTE.teal + '33', tension: 0.1, fill: true, pointRadius: 3, pointBackgroundColor: CHART_PALETTE.teal
+                }]
+            },
+            options: defaultChartOptions('GAAP Operating Income Trend ($M)')
+        });
+        
+        // Adjusted Operating Income Chart
+        new Chart(document.getElementById('adjOpIncomeChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: profitabilityMetricsData.map(d=>d.year).reverse(),
+                datasets: [{
+                    label: 'Adjusted Operating Income', data: profitabilityMetricsData.map(d=>d.adjOpInc).reverse(),
+                    borderColor: CHART_PALETTE.green, backgroundColor: CHART_PALETTE.green + '33', tension: 0.1, fill: true, pointRadius: 3, pointBackgroundColor: CHART_PALETTE.green
+                }]
+            },
+            options: defaultChartOptions('Adjusted Operating Income Trend ($M)')
+        });
+
+        // EBITDA Chart
+        new Chart(document.getElementById('ebitdaChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: profitabilityMetricsData.map(d=>d.year).reverse(),
+                datasets: [{
+                    label: 'Adjusted EBITDA', data: profitabilityMetricsData.map(d=>d.adjEbitda).reverse(),
+                    borderColor: CHART_PALETTE.orange, backgroundColor: CHART_PALETTE.orange + '33', tension: 0.1, fill: true, pointRadius: 3, pointBackgroundColor: CHART_PALETTE.orange
+                }]
+            },
+            options: defaultChartOptions('Adjusted EBITDA Trend ($M)')
+        });
+        
+        // Profit Margins Chart
+        new Chart(document.getElementById('profitMarginsChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: profitabilityMetricsData.map(d=>d.year).reverse(),
+                datasets: [
+                    { label: 'Gross Margin', data: profitabilityMetricsData.map(d=>d.grossMargin).reverse(), borderColor: CHART_PALETTE.blue, tension: 0.1, pointRadius: 3, pointBackgroundColor: CHART_PALETTE.blue },
+                    { label: 'Adj. Operating Margin', data: profitabilityMetricsData.map(d=>d.adjOpMargin).reverse(), borderColor: CHART_PALETTE.sky, tension: 0.1, pointRadius: 3, pointBackgroundColor: CHART_PALETTE.sky },
+                    { label: 'Net Margin', data: profitabilityMetricsData.map(d=>d.netMargin).reverse(), borderColor: CHART_PALETTE.pink, tension: 0.1, pointRadius: 3, pointBackgroundColor: CHART_PALETTE.pink },
+                ]
+            },
+            options: defaultChartOptions('Profit Margins Trend (%)', 'Margin (%)')
+        });
+
+        // Cash Flow Chart
+        new Chart(document.getElementById('cashFlowChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: cashFlowMetricsData.map(d=>d.year).reverse(),
+                datasets: [
+                    { label: 'Operating Cash Flow', data: cashFlowMetricsData.map(d=>d.ocf).reverse(), backgroundColor: CHART_PALETTE.purple },
+                    { label: 'Adjusted Free Cash Flow', data: cashFlowMetricsData.map(d=>d.adjFcf).reverse(), backgroundColor: CHART_PALETTE.stone },
+                ]
+            },
+            options: defaultChartOptions('Cash Flow Trends ($M)')
+        });
+        
+        // ROIC Chart
+        const roicData = [
+            { year: 2024, roic: 21.3 }, { year: 2023, roic: 17.6 }, { year: 2022, roic: 2.5 },
+            { year: 2021, roic: 5.0 }, { year: 2020, roic: 8.0 }
+        ];
+        new Chart(document.getElementById('roicChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: roicData.map(d=>d.year).reverse(),
+                datasets: [{
+                    label: 'ROIC (%)', data: roicData.map(d=>d.roic).reverse(),
+                    backgroundColor: CHART_PALETTE.green,
+                }]
+            },
+            options: defaultChartOptions('Return on Invested Capital (ROIC %)', 'ROIC (%)')
+        });
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSMC Interactive Business Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Visualization & Content Choices:
+        - Executive Summary: Text. Goal: Inform. Method: Key highlights. Interaction: Read. Justification: Quick overview.
+        - Business Model (Pure-Play, Value Prop, Core Ops - OIP, Fab, Packaging, Quality, Supply): Text, HTML lists/cards. Goal: Inform. Method: Structured text. Interaction: Read. Justification: Detailed explanation of operations.
+        - Revenue by Application (Table 1): Goal: Compare & Change. Viz: Grouped Bar Chart (Chart.js). Interaction: Tooltips. Justification: Trend/comparison across platforms.
+        - Revenue by Tech Node (Table 2): Goal: Compare & Change. Viz: Stacked Bar Chart (Chart.js). Interaction: Tooltips. Justification: Composition/growth of advanced nodes.
+        - Revenue by Geography (Sec 3.3): Goal: Inform. Viz: Pie Chart (Chart.js). Interaction: Tooltips. Justification: Geographic distribution.
+        - Foundry Market Share (Table 3): Goal: Compare. Viz: Bar Chart (Chart.js). Interaction: Tooltips. Justification: Market player comparison.
+        - Competitive Landscape (Competitors, Advantages, Comparison Table): Text, HTML Table. Goal: Compare & Inform. Method: Structured text & table. Interaction: Read. Justification: Understanding competitive positioning.
+        - Financial Metrics Trend (Table 4 - Revenue, OpInc, NetInc, Margins): Goal: Change. Viz: Multiple Line Charts (Chart.js). Interaction: Tooltips. Justification: Key financial/profitability trends.
+        - ROIC Trend (Table 5): Goal: Change. Viz: Line Chart (Chart.js). Interaction: Tooltips. Justification: Capital efficiency trend.
+        - CapEx & R&D Trend (Table 6): Goal: Compare & Change. Viz: Grouped Bar Chart (Chart.js). Interaction: Tooltips. Justification: Investment trends.
+        - Strategic Outlook (Drivers, Risks, Conclusion): Text. Goal: Inform. Method: Structured text. Interaction: Read. Justification: Future perspective.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All charts via Chart.js (Canvas).
+    -->
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            scroll-behavior: smooth; 
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 650px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 300px; 
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container { 
+                height: 350px; 
+                max-height: 400px;
+            } 
+        }
+        .sticky-nav { 
+            position: -webkit-sticky; 
+            position: sticky; 
+            top: 0; 
+            z-index: 50; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #60A5FA; /* blue-400 */
+            color: #FFFFFF;
+        }
+        h2 { /* Equivalent to section-title */
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; 
+            color: #60A5FA; /* blue-400 */
+            margin-bottom: 1.5rem; 
+            padding-bottom: 0.5rem; 
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        h3 { /* Equivalent to subsection-title */
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; 
+            color: #2DD4BF; /* teal-400 */
+            margin-top: 1.5rem; 
+            margin-bottom: 1rem; 
+        }
+        h4 { 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            margin-top: 1rem; 
+            margin-bottom: 0.5rem; 
+            color: #3B82F6; /* blue-500, distinct from h3's teal */
+        }
+        .section-card { /* Replaces .card */
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .content-text { /* For general paragraph text inside cards */
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .section-intro { /* Existing class, ensure color consistency */
+            font-size: 1.1rem; 
+            color: #4B5563; /* gray-600 */
+            margin-bottom: 1.5rem; 
+            line-height: 1.6; 
+        }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { 
+            border: 1px solid #D4D4D8; /* stone-300 */
+            padding: 0.75rem; 
+            text-align: left; 
+            font-size: 0.9rem; 
+        }
+        th { 
+            background-color: #F5F5F4; /* stone-100 */
+            font-weight: 600; 
+            color: #1F2937; /* gray-800 */
+        }
+        .highlight-stat { 
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            color: #F97316; /* orange-500 */
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-gray-700">
+
+    <header class="bg-white/95 backdrop-blur-sm shadow-md sticky-nav">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl" style="color: #2563EB;">TSMC Interactive Analysis</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#summary" class="nav-link">Summary</a>
+                        <a href="#business-model" class="nav-link">Business Model</a>
+                        <a href="#revenue" class="nav-link">Revenue</a>
+                        <a href="#competition" class="nav-link">Competition</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#summary" class="nav-link block text-base">Summary</a>
+                <a href="#business-model" class="nav-link block text-base">Business Model</a>
+                <a href="#revenue" class="nav-link block text-base">Revenue</a>
+                <a href="#competition" class="nav-link block text-base">Competition</a>
+                <a href="#financials" class="nav-link block text-base">Financials</a>
+                <a href="#outlook" class="nav-link block text-base">Outlook</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8 mt-4">
+        <section id="summary" class="section-card scroll-mt-20">
+            <h2>Executive Summary</h2>
+            <p class="section-intro">This section provides a high-level overview of TSMC, highlighting its position as the world's leading dedicated semiconductor foundry. It touches upon its pioneering business model, key revenue drivers like High-Performance Computing (HPC) and Smartphones, strong financial performance, and its competitive standing against players like Samsung and Intel. The summary also notes TSMC's strategic global expansion efforts to ensure supply chain resilience amidst geopolitical complexities.</p>
+            <p class="content-text mb-4">Taiwan Semiconductor Manufacturing Company (TSMC) is the world's foremost dedicated semiconductor foundry. It pioneered the pure-play business model, consistently maintaining technological supremacy and a dominant market position. TSMC's revenue is primarily driven by High-Performance Computing (HPC) and Smartphone segments, with significant contributions from its most advanced technology nodes.</p>
+            <p class="content-text mb-4">The company's financial performance is characterized by robust growth, high profitability, and substantial cash flow generation, enabling continuous large-scale investments in R&D and manufacturing capacity. The pure-play foundry model, separating chip design from manufacturing, has allowed TSMC to foster deep, non-competitive relationships with a broad array of customers. This model, combined with consistent execution on its technology roadmap and its Open Innovation Platform® (OIP), has built immense customer trust.</p>
+            <p class="content-text">Key competitors include Samsung Foundry and Intel (with Intel Foundry Services - IFS). However, TSMC's singular focus, technological lead, manufacturing scale, and entrenched ecosystem provide substantial advantages. TSMC is strategically expanding its global manufacturing footprint (USA, Japan, Germany) to navigate geopolitical considerations and enhance supply chain resilience, though this presents challenges in replicating Taiwanese operational efficiency.</p>
+        </section>
+
+        <section id="business-model" class="section-card scroll-mt-20">
+            <h2>TSMC's Business Model: The Pure-Play Foundry Pioneer</h2>
+            <p class="section-intro">This section delves into the core of TSMC's operations: its innovative pure-play foundry model. You'll learn about its genesis, how TSMC generates revenue by serving fabless companies and IDMs, and the critical operational aspects from design enablement via the Open Innovation Platform® (OIP) to advanced wafer fabrication, packaging, quality control, and global supply chain management. This exploration will clarify TSMC's unique value proposition and the foundations of its market leadership.</p>
+
+            <h3>2.1 The Dedicated Foundry Model: Genesis and Evolution</h3>
+            <p class="content-text">The semiconductor industry was reshaped by the pure-play foundry model, conceptualized by Dr. Morris Chang with TSMC's establishment in 1987. This model exclusively focuses on manufacturing integrated circuits (ICs) based on designs from other companies, separating manufacturing from design. This enabled the rise of "fabless" semiconductor companies (e.g., Nvidia, Qualcomm) by removing their need for costly fabrication plants, catalyzing innovation across the sector.</p>
+
+            <h3>2.2 How TSMC Makes Money: Value Proposition</h3>
+            <p class="content-text">TSMC manufactures semiconductor wafers for fabless design houses (Apple, Nvidia, AMD) and IDMs (Intel, NXP) that outsource some production. Its value proposition includes:
+                <ul class="list-disc list-inside ml-4 my-2 content-text space-y-1">
+                    <li>Access to most advanced process technologies.</li>
+                    <li>Substantial manufacturing scale and high yields.</li>
+                    <li>"Customer-owned tooling" (COT) flow.</li>
+                    <li>A non-competitive stance: TSMC doesn't design or sell its own branded chips, ensuring trust with clients.</li>
+                </ul>
+            This trust-based partnership model fosters long-term relationships and informs TSMC's R&D and investment strategies.
+            </p>
+
+            <h3>2.3 Core Operations: From Design to Delivery</h3>
+            <h4>2.3.1 The Open Innovation Platform® (OIP) Ecosystem</h4>
+            <p class="content-text">OIP is a comprehensive design technology infrastructure streamlining chip design. It includes alliances for IP, EDA tools, design services, cloud environments, and advanced packaging. OIP provides libraries, silicon IP, process design kits (PDKs), and certified design flows, reducing design barriers and accelerating time-to-market, creating strong customer lock-in.</p>
+
+            <h4>2.3.2 Wafer Fabrication: Technology Nodes and Advanced Packaging</h4>
+            <p class="content-text mb-2">TSMC leads in advanced logic technologies, mastering FinFET (16nm, 7nm, 5nm, 3nm) and moving to Nanosheet (2nm). N3 (3nm FinFET) offers significant performance/power improvements over N5. EUV lithography is key for nodes 7nm and beyond. The fabrication process involves hundreds of steps like photolithography, etching, deposition, and polishing in GIGAFAB® facilities using smart manufacturing.</p>
+            <p class="font-semibold mt-2 content-text">Advanced Packaging (3DFabric™ Platform):</p>
+            <ul class="list-disc list-inside ml-4 my-2 space-y-1 content-text">
+                <li><strong>CoWoS® (Chip-on-Wafer-on-Substrate):</strong> 2.5D packaging integrating multiple dies (SoCs, HBM) on a silicon interposer for HPC/AI.</li>
+                <li><strong>InFO (Integrated Fan-Out):</strong> Wafer-level packaging for smaller form factors and improved thermal performance, suitable for mobile.</li>
+                <li><strong>TSMC-SoIC® (System on Integrated Chips):</strong> True 3D chip stacking for heterogeneous integration with ultra-high-density vertical stacking.</li>
+            </ul>
+            <p class="content-text">Leadership in both logic nodes and advanced packaging creates a synergistic offering, vital for AI/HPC markets.</p>
+
+            <h4>2.3.3 Quality Control and Manufacturing Excellence</h4>
+            <p class="content-text">TSMC adheres to ISO 9001 and ISO/TS 16949, aiming for "Zero defect." Rigorous raw material and supplier risk management (eCoA, eCoA SPC) is in place. In-fab manufacturing defense systems linked via MES ensure stringent production control and error prevention, sustaining PPM defect levels. High yields ensure reliability and cost-effectiveness for customers and TSMC.</p>
+
+            <h4>2.3.4 Supply Chain Management and Global Logistics</h4>
+            <p class="content-text">TSMC manages a complex global supply chain for equipment (ASML, Applied Materials), raw materials (Shin-Etsu, SUMCO), and services. Geopolitical factors have led to strategic manufacturing footprint diversification (new fabs in Arizona, USA; Kumamoto, Japan; Dresden, Germany), supported by incentives like the US CHIPS Act. This global expansion, while crucial for de-risking, poses challenges in replicating Taiwanese efficiency and costs.</p>
+        </section>
+
+        <section id="revenue" class="section-card scroll-mt-20">
+            <h2>Revenue Deep Dive</h2>
+            <p class="section-intro">This section breaks down TSMC's revenue streams, offering insights into what drives its financial success. You will find interactive visualizations of revenue segmented by application platform (like HPC and Smartphone), technology node (such as 3nm, 5nm, and 7nm), and geographical region. These charts will help you understand market demand trends and TSMC's reliance on different sectors and technologies.</p>
+
+            <h3>3.1 Revenue by Application Platform (2020-2024)</h3>
+            <p class="content-text mb-4">High-Performance Computing (HPC) has become TSMC's largest revenue source, overtaking Smartphones, highlighting the AI boom. The chart below shows the revenue share trend for key platforms. In FY2024, HPC was 51%, Smartphone 35%, IoT 6%, Automotive 5%, and DCE 1%.</p>
+            <div class="chart-container p-4 rounded-lg">
+                <canvas id="revenueByPlatformChart"></canvas>
+            </div>
+
+            <h3 class="mt-8">3.2 Revenue by Technology Node (2022-2024)</h3>
+            <p class="content-text mb-4">Advanced technologies (7nm and smaller) are critical, accounting for 69% of wafer revenue in FY2024. The 3nm node contributed 18%, 5nm was 34%, and 7nm was 17% in FY2024. This shows strong adoption of TSMC's latest innovations.</p>
+            <div class="chart-container p-4 rounded-lg">
+                <canvas id="revenueByNodeChart"></canvas>
+            </div>
+
+            <h3 class="mt-8">3.3 Revenue by Geography (FY2024)</h3>
+            <p class="content-text mb-4">North America remains the dominant source of revenue, reflecting the concentration of major fabless companies there. In FY2024, North America contributed 70%, China 11%, Asia Pacific (excl. China/Japan) 10%, Japan 5%, and EMEA 4%.</p>
+            <div class="chart-container p-4 rounded-lg h-80 sm:h-96 md:max-h-[400px]">
+                 <canvas id="revenueByGeoChart"></canvas>
+            </div>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2>Competitive Landscape</h2>
+            <p class="section-intro">Explore TSMC's position within the dynamic semiconductor foundry market. This section provides an overview of the market structure, identifies key competitors like Samsung Foundry and Intel Foundry Services (IFS), details TSMC's significant competitive advantages, and offers a comparative analysis of their differing business models. The included chart illustrates TSMC's dominant market share.</p>
+
+            <h3>4.1 Overview of the Semiconductor Foundry Market & TSMC's Share</h3>
+            <p class="content-text mb-4">The foundry market includes pure-play foundries (like TSMC) and IDMs offering foundry services (Samsung, Intel). TSMC holds a commanding market share, especially in advanced nodes. In Q4 2023, TSMC's revenue far surpassed competitors.</p>
+            <div class="chart-container p-4 rounded-lg">
+                <canvas id="marketShareChart"></canvas>
+            </div>
+            <p class="mt-4 text-xs text-gray-500 content-text">Note: Q3 2024 data also shows TSMC with ~64.9% market share, Samsung ~9.3%.</p>
+
+            <h3>4.2 Key Competitors</h3>
+            <div class="grid md:grid-cols-2 gap-6 mt-4">
+                <div class="p-4 border border-stone-200 rounded-lg bg-stone-50">
+                    <h4 class="text-blue-500">Samsung Foundry (IDM Model)</h4>
+                    <p class="content-text text-sm">Samsung is TSMC's most significant competitor in advanced nodes. An IDM, it uses Gate-All-Around (GAA) for 3nm. Challenges include matching TSMC's yields and broad customer adoption, partly due to potential channel conflicts as Samsung also sells end-products.</p>
+                </div>
+                <div class="p-4 border border-stone-200 rounded-lg bg-stone-50">
+                    <h4 class="text-blue-500">Intel Foundry Services (IFS) (IDM 2.0 Model)</h4>
+                    <p class="content-text text-sm">Intel's IDM 2.0 strategy aims to make IFS a major foundry provider. Backed by US government support (CHIPS Act), IFS faces challenges in execution, achieving competitive yields, and building trust with customers who may be Intel's competitors.</p>
+                </div>
+            </div>
+            <h4 class="mt-4">Other Pure-Play Foundries</h4>
+            <p class="content-text">GlobalFoundries (USA), UMC (Taiwan), and SMIC (China) generally focus on mature nodes and specialized technologies, not directly competing with TSMC at the leading edge.</p>
+
+            <h3>4.3 TSMC's Competitive Advantages</h3>
+            <ul class="list-disc list-inside ml-4 my-2 space-y-1 content-text">
+                <li><strong>Technological Leadership:</strong> Consistent pioneering of advanced nodes (7nm, 5nm, 3nm, roadmap to 2nm/1.4nm) and EUV mastery.</li>
+                <li><strong>Manufacturing Scale and Efficiency:</strong> GIGAFAB® facilities ensure high volume, efficiency, and leading yields.</li>
+                <li><strong>Customer Trust and Partnership Model:</strong> Pure-play model avoids competition with clients, fostering deep collaboration.</li>
+                <li><strong>Comprehensive IP and Design Ecosystem (OIP):</strong> Reduces design complexity and time-to-market, creating customer stickiness.</li>
+                <li><strong>Advanced Packaging Capabilities:</strong> CoWoS®, InFO, SoIC® offer holistic solutions for complex chip designs.</li>
+            </ul>
+            <p class="content-text">These advantages are mutually reinforcing, creating a virtuous cycle that is difficult for competitors to disrupt.</p>
+
+            <h3>4.4 Comparative Analysis: Business Models</h3>
+            <p class="content-text mb-2">The fundamental difference lies in strategic focus and customer trust. TSMC's non-competitive stance is a key differentiator.</p>
+            <div class="table-wrapper mt-4">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>TSMC (Pure-Play)</th>
+                            <th>Samsung (IDM & Foundry)</th>
+                            <th>Intel (IDM 2.0)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="content-text">
+                        <tr>
+                            <td><strong>Focus</strong></td>
+                            <td>Contract manufacturing only</td>
+                            <td>Own chips + external foundry</td>
+                            <td>Own chips + growing external foundry (IFS)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Customer Competition</strong></td>
+                            <td>No</td>
+                            <td>Yes (in end-products)</td>
+                            <td>Yes (in chip markets)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Key Strength</strong></td>
+                            <td>Trust, specialization, tech leadership</td>
+                            <td>Vertical integration, internal demand</td>
+                            <td>CPU design leadership, US support</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Key Challenge</strong></td>
+                            <td>High CapEx, reliance on fabless success</td>
+                            <td>Foundry yield/trust, internal priorities</td>
+                            <td>Execution risk, cultural shift for IFS</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2>Financial Performance Analysis</h2>
+            <p class="section-intro">This section presents an in-depth look at TSMC's financial health and performance trends from 2019 to 2024. Interactive charts will display key metrics such as net revenue, operating income, net income, profit margins, Return on Invested Capital (ROIC), and investments in Capital Expenditures (CapEx) and R&D. This data illustrates TSMC's growth, profitability, and commitment to innovation.</p>
+
+            <h3>5.1 Key Financial Metrics Trend (2019-2024, NT$ Billion)</h3>
+            <p class="content-text mb-4">TSMC has shown strong revenue growth (CAGR ~22% NT$ 2019-2024), with a significant rebound in 2024 driven by AI demand. Profitability remains high due to advanced node dominance and efficiency.</p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="chart-container p-4 rounded-lg">
+                    <canvas id="revenueTrendChart"></canvas>
+                </div>
+                <div class="chart-container p-4 rounded-lg">
+                    <canvas id="operatingIncomeTrendChart"></canvas>
+                </div>
+                <div class="chart-container p-4 rounded-lg">
+                    <canvas id="netIncomeTrendChart"></canvas>
+                </div>
+                <div class="chart-container p-4 rounded-lg">
+                    <canvas id="profitMarginsTrendChart"></canvas>
+                </div>
+            </div>
+
+            <h3 class="mt-8">5.2 Return on Invested Capital (ROIC) Analysis (2019-2023)</h3>
+            <p class="content-text mb-4">TSMC consistently generates high ROIC, indicating efficient capital use. ROIC peaked in 2022 and remained robust in 2023 despite an industry downturn.</p>
+            <div class="chart-container p-4 rounded-lg">
+                <canvas id="roicTrendChart"></canvas>
+            </div>
+
+            <h3 class="mt-8">5.3 Capital Expenditures and R&D Investment Trends (2019-2024, USD Billion)</h3>
+            <p class="content-text mb-4">Massive investments in CapEx (for advanced fabs) and R&D (for future tech) underscore TSMC's commitment to leadership and create high barriers to entry.</p>
+            <div class="chart-container p-4 rounded-lg">
+                <canvas id="investmentTrendChart"></canvas>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2>Strategic Outlook and Concluding Remarks</h2>
+            <p class="section-intro">This final section looks towards TSMC's future, outlining key growth drivers such as AI and 5G, alongside significant challenges including geopolitical tensions and intense competition. It concludes with insights into TSMC's trajectory, emphasizing its critical role in global technology and the factors essential for its continued success.</p>
+
+            <h3>6.1 Key Growth Drivers</h3>
+            <ul class="list-disc list-inside ml-4 my-2 space-y-1 content-text">
+                <li><strong>Artificial Intelligence (AI) and High-Performance Computing (HPC):</strong> Unprecedented demand for specialized processors for data centers and edge devices, leveraging TSMC's most advanced nodes and packaging.</li>
+                <li><strong>5G Technology:</strong> Ongoing deployment and 5G-enabled smartphones drive demand for advanced, power-efficient chips.</li>
+                <li><strong>Automotive Electronics:</strong> EVs, autonomous driving (ADAS), and advanced infotainment systems increase semiconductor content per vehicle.</li>
+                <li><strong>Internet of Things (IoT):</strong> Proliferation of connected devices requires diverse low-power, cost-effective chips.</li>
+            </ul>
+
+            <h3>6.2 Challenges and Risks</h3>
+            <ul class="list-disc list-inside ml-4 my-2 space-y-1 content-text">
+                <li><strong>Geopolitical Tensions:</strong> US-China rivalry and Taiwan's status pose risks, driving global manufacturing diversification.</li>
+                <li><strong>Intensifying Competition:</strong> Samsung Foundry and Intel (IFS) are investing heavily to close the gap.</li>
+                <li><strong>Supply Chain Complexity and Disruptions:</strong> Reliance on global suppliers (e.g., ASML for EUV) and resources (water, energy).</li>
+                <li><strong>Capital Intensity and Cyclicality:</strong> High fixed costs make TSMC vulnerable to industry downturns.</li>
+                <li><strong>Global Expansion Challenges:</strong> Higher costs, talent acquisition, and maintaining efficiency in new fabs (USA, Japan, Germany).</li>
+                <li><strong>Impact of Government Policies:</strong> CHIPS Act and similar initiatives offer support but may come with conditions.</li>
+            </ul>
+
+            <h3>6.3 Concluding Insights on TSMC's Future Trajectory</h3>
+            <p class="content-text mb-2">TSMC is an indispensable linchpin in the global tech ecosystem. Its pure-play model, technological excellence, and customer partnerships create a formidable advantage. Future growth is robust, driven by AI, HPC, 5G, and automotive trends, supported by a clear technology roadmap (2nm, 1.4nm) and strong financials.</p>
+            <p class="content-text mb-2">However, navigating geopolitical tensions, managing global expansion effectively, and fending off competition are critical. Continued leadership depends on:</p>
+            <ol class="list-decimal list-inside ml-4 my-2 space-y-1 content-text">
+                <li>Sustaining technological innovation.</li>
+                <li>Flawless manufacturing execution.</li>
+                <li>Successful global expansion management.</li>
+                <li>Maintaining customer trust.</li>
+                <li>Navigating geopolitical and supply chain risks.</li>
+            </ol>
+            <p class="content-text">TSMC is a critical enabler of global technological progress. Its strategic importance is undeniable, and it is well-positioned to maintain leadership in the "Foundry 2.0" era.</p>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-stone-300 text-center p-8 mt-12">
+        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Report. Data derived from TSMC analysis. For illustrative purposes only.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuButton.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+
+        document.querySelectorAll('#mobile-menu a.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
+                const svgs = mobileMenuButton.querySelectorAll('svg');
+                svgs[0].classList.remove('hidden'); // Show menu icon
+                svgs[1].classList.add('hidden'); // Hide close icon
+            });
+        });
+        
+        const navLinks = document.querySelectorAll('header .nav-link');
+        const sections = document.querySelectorAll('main section[id]');
+
+        function changeNavActiveState() {
+            let currentSectionId = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 100) { // 100px offset for sticky nav
+                    currentSectionId = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSectionId}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('load', changeNavActiveState);
+        window.addEventListener('scroll', changeNavActiveState);
+
+
+        function wrapText(text, maxWidthChars) {
+            if (typeof text !== 'string') return text;
+            const words = text.split(' ');
+            let lines = [];
+            let currentLine = words[0] || '';
+
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + words[i].length + 1 < maxWidthChars) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+        
+        const NEW_CHART_COLORS = {
+            blue: '#60A5FA',    // blue-400
+            teal: '#2DD4BF',    // teal-400
+            orange: '#F97316',  // orange-500
+            sky: '#7DD3FC',     // sky-300 (lighter blue)
+            green: '#34D399',   // emerald-400
+            yellow: '#FACC15',  // yellow-400
+            purple: '#A78BFA',  // violet-400
+            pink: '#F472B6',    // pink-400
+            stone: '#A8A29E',   // stone-400 
+            gray: '#6B7280'     // gray-500
+        };
+
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = NEW_CHART_COLORS.gray;
+
+
+        const defaultChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { 
+                        font: { size: 10 },
+                        color: NEW_CHART_COLORS.gray 
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    titleColor: '#1F2937', 
+                    bodyColor: '#4B5563', 
+                    backgroundColor: 'rgba(255,255,255,0.95)',
+                    borderColor: '#E7E5E4', 
+                    borderWidth: 1,
+                    padding: 10,
+                    cornerRadius: 4,
+                    boxPadding: 3,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                let value = context.parsed.y;
+                                let chartCanvasId = typeof context.chart.canvas.id === 'string' ? context.chart.canvas.id : '';
+                                if (chartCanvasId.includes('Margins') || chartCanvasId.includes('roic') || chartCanvasId.includes('ByPlatform') || chartCanvasId.includes('ByNode') || chartCanvasId.includes('ByGeo')) {
+                                   label += value.toFixed(1) + '%';
+                                } else if (context.dataset.label && (context.dataset.label.includes('(USD Billion)') || context.dataset.label.includes('(NT$ Billion)'))) {
+                                   label += value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                }
+                                 else {
+                                   label += value.toLocaleString();
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                },
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        font: { size: 10 },
+                        color: NEW_CHART_COLORS.gray,
+                        callback: function(value, index, values) {
+                            const label = this.getLabelForValue(value);
+                            return wrapText(label, 12); 
+                        }
+                    },
+                    grid: { display: false }
+                },
+                y: {
+                    ticks: { 
+                        font: { size: 10 },
+                        color: NEW_CHART_COLORS.gray,
+                        callback: function(value, index, values) {
+                             let chartCanvasId = typeof this.chart.canvas.id === 'string' ? this.chart.canvas.id : '';
+                             if (chartCanvasId.includes('Margins') || chartCanvasId.includes('roic') || chartCanvasId.includes('ByPlatform') || chartCanvasId.includes('ByNode') || chartCanvasId.includes('ByGeo')) {
+                                return value + '%';
+                             }
+                             return value.toLocaleString();
+                        }
+                    },
+                    beginAtZero: true,
+                    grid: { color: 'rgba(200,200,200,0.3)'} 
+                }
+            }
+        };
+        
+        const revenueByPlatformCtx = document.getElementById('revenueByPlatformChart').getContext('2d');
+        new Chart(revenueByPlatformCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024'],
+                datasets: [
+                    { label: 'HPC', data: [33, 37, 41, 43, 51], backgroundColor: NEW_CHART_COLORS.blue, borderWidth: 0 },
+                    { label: 'Smartphone', data: [48, 44, 39, 38, 35], backgroundColor: NEW_CHART_COLORS.sky, borderWidth: 0 },
+                    { label: 'IoT', data: [8, 8, 9, 8, 6], backgroundColor: NEW_CHART_COLORS.teal, borderWidth: 0 },
+                    { label: 'Automotive', data: [3, 4, 5, 6, 5], backgroundColor: NEW_CHART_COLORS.green, borderWidth: 0 },
+                    { label: 'DCE', data: [4, 4, 3, 2, 1], backgroundColor: NEW_CHART_COLORS.yellow, borderWidth: 0 },
+                    { label: 'Others', data: [4, 3, 3, 3, 2], backgroundColor: NEW_CHART_COLORS.stone, borderWidth: 0 }
+                ]
+            },
+            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Revenue by Platform (% of Total Net Revenue)', color: NEW_CHART_COLORS.gray, font: {size: 14, weight: '500'} } } }
+        });
+
+        const revenueByNodeCtx = document.getElementById('revenueByNodeChart').getContext('2d');
+        new Chart(revenueByNodeCtx, {
+            type: 'bar', 
+            data: {
+                labels: ['2022', '2023', '2024'],
+                datasets: [
+                    { label: '3nm', data: [0, 6, 18], backgroundColor: NEW_CHART_COLORS.purple, borderWidth: 0, stack: 'Stack 0' },
+                    { label: '5nm', data: [26, 33, 34], backgroundColor: NEW_CHART_COLORS.blue, borderWidth: 0, stack: 'Stack 0' },
+                    { label: '7nm', data: [27, 19, 17], backgroundColor: NEW_CHART_COLORS.sky, borderWidth: 0, stack: 'Stack 0' },
+                ]
+            },
+            options: { ...defaultChartOptions, scales: {...defaultChartOptions.scales, y: {...defaultChartOptions.scales.y, stacked: true}}, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Revenue by Advanced Node (% of Total Wafer Revenue)', color: NEW_CHART_COLORS.gray, font: {size: 14, weight: '500'} } } }
+        });
+        
+        const revenueByGeoCtx = document.getElementById('revenueByGeoChart').getContext('2d');
+        new Chart(revenueByGeoCtx, {
+            type: 'pie',
+            data: {
+                labels: ['North America', 'China', 'Asia Pacific (excl. China/Japan)', 'Japan', 'EMEA'],
+                datasets: [{
+                    label: 'Revenue by Geography FY2024',
+                    data: [70, 11, 10, 5, 4],
+                    backgroundColor: [NEW_CHART_COLORS.blue, NEW_CHART_COLORS.sky, NEW_CHART_COLORS.teal, NEW_CHART_COLORS.green, NEW_CHART_COLORS.yellow],
+                    borderColor: '#FFFFFF', 
+                    borderWidth: 2
+                }]
+            },
+            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Revenue by Geography (FY2024, % of Total Net Revenue)', color: NEW_CHART_COLORS.gray, font: {size: 14, weight: '500'} } } }
+        });
+
+        const marketShareCtx = document.getElementById('marketShareChart').getContext('2d');
+        new Chart(marketShareCtx, {
+            type: 'bar',
+            data: {
+                labels: ['TSMC', 'Samsung Semi.', 'GlobalFoundries', 'UMC'],
+                datasets: [{
+                    label: 'Revenue (USD Million)',
+                    data: [19660, 3619, 1854, 1727],
+                    backgroundColor: [NEW_CHART_COLORS.blue, NEW_CHART_COLORS.sky, NEW_CHART_COLORS.teal, NEW_CHART_COLORS.green],
+                    borderWidth: 0
+                }]
+            },
+            options: { ...defaultChartOptions, indexAxis: 'y', plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Global Foundry Market Share by Revenue (Q4 2023)', color: NEW_CHART_COLORS.gray, font: {size: 14, weight: '500'} } } }
+        });
+
+        const revenueTrendCtx = document.getElementById('revenueTrendChart').getContext('2d');
+        new Chart(revenueTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'Net Revenue (NT$ Billion)',
+                    data: [1069.99, 1339.26, 1587.42, 2263.89, 2161.74, 2894.31],
+                    borderColor: NEW_CHART_COLORS.blue,
+                    backgroundColor: NEW_CHART_COLORS.blue + '22', 
+                    tension: 0.1,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: NEW_CHART_COLORS.blue,
+                    pointBorderColor: '#FFFFFF',
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: '#FFFFFF',
+                    pointHoverBorderColor: NEW_CHART_COLORS.blue
+                }]
+            },
+            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Net Revenue Trend', color: NEW_CHART_COLORS.gray, font: {size: 14, weight: '500'} } } }
+        });
+
+        const operatingIncomeTrendCtx = document.getElementById('operatingIncomeTrendChart').getContext('2d');
+        new Chart(operatingIncomeTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'Operating Income (NT$ Billion)',
+                    data: [372.36, 566.46, 649.26, 1120.63, 920.80, 1322.05],
+                    borderColor: NEW_CHART_COLORS.sky,
+                    backgroundColor: NEW_CHART_COLORS.sky + '22',
+                    tension: 0.1,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: NEW_CHART_COLORS.sky,
+                }]
+            },
+            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Operating Income Trend', color: NEW_CHART_COLORS.gray, font: {size: 14, weight: '500'} } } }
+        });
+        
+        const netIncomeTrendCtx = document.getElementById('netIncomeTrendChart').getContext('2d');
+        new Chart(netIncomeTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'Net Income to Parent (NT$ Billion)',
+                    data: [345.26, 517.89, 597.07, 1016.53, 838.50, 1173.27],
+                    borderColor: NEW_CHART_COLORS.teal,
+                    backgroundColor: NEW_CHART_COLORS.teal + '22',
+                    tension: 0.1,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: NEW_CHART_COLORS.teal,
+                }]
+            },
+            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Net Income Trend', color: NEW_CHART_COLORS.gray, font: {size: 14, weight: '500'} } } }
+        });
+
+        const profitMarginsTrendCtx = document.getElementById('profitMarginsTrendChart').getContext('2d');
+        new Chart(profitMarginsTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                datasets: [
+                    { label: 'Gross Profit Margin (%)', data: [46.0, 53.1, 51.6, 59.6, 54.4, 56.1], borderColor: NEW_CHART_COLORS.green, backgroundColor: 'transparent', tension: 0.1, pointRadius: 3, pointBackgroundColor: NEW_CHART_COLORS.green },
+                    { label: 'Operating Profit Margin (%)', data: [34.8, 42.3, 40.9, 49.5, 42.6, 45.7], borderColor: NEW_CHART_COLORS.yellow, backgroundColor: 'transparent', tension: 0.1, pointRadius: 3, pointBackgroundColor: NEW_CHART_COLORS.yellow },
+                    { label: 'Net Profit Margin (%)', data: [32.3, 38.7, 37.6, 44.9, 38.8, 40.5], borderColor: NEW_CHART_COLORS.orange, backgroundColor: 'transparent', tension: 0.1, pointRadius: 3, pointBackgroundColor: NEW_CHART_COLORS.orange }
+                ]
+            },
+            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Profit Margins Trend', color: NEW_CHART_COLORS.gray, font: {size: 14, weight: '500'} } } }
+        });
+
+        const roicTrendCtx = document.getElementById('roicTrendChart').getContext('2d');
+        new Chart(roicTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023'],
+                datasets: [{
+                    label: 'ROIC (%)',
+                    data: [28.05, 35.72, 32.54, 40.55, 26.88],
+                    borderColor: NEW_CHART_COLORS.purple,
+                    backgroundColor: NEW_CHART_COLORS.purple + '22',
+                    tension: 0.1,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: NEW_CHART_COLORS.purple,
+                }]
+            },
+            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Return on Invested Capital (ROIC) Trend', color: NEW_CHART_COLORS.gray, font: {size: 14, weight: '500'} } } }
+        });
+
+        const investmentTrendCtx = document.getElementById('investmentTrendChart').getContext('2d');
+        new Chart(investmentTrendCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024 (Plan)'],
+                datasets: [
+                    { label: 'Capital Expenditures (USD Billion)', data: [14.9, 17.2, 30.0, 36.3, 30.45, 30.0], backgroundColor: NEW_CHART_COLORS.blue, borderWidth: 0 },
+                    { label: 'R&D Investment (USD Billion)', data: [2.96, 3.9, 4.46, 5.47, 5.85, 6.36], backgroundColor: NEW_CHART_COLORS.sky, borderWidth: 0 }
+                ]
+            },
+            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'CapEx & R&D Investment Trends', color: NEW_CHART_COLORS.gray, font: {size: 14, weight: '500'} } } }
+        });
+
+    </script>
+</body>
+</html>
+

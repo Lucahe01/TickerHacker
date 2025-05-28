@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Atlassian (TEAM) Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; 
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 350px;
+        }
+         @media (min-width: 768px) { /* md breakpoint */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        h1.main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+            padding-top: 0.5rem; 
+        }
+        h2.company-title { 
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #60A5FA; /* blue-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        h3.section-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2DD4BF; /* teal-400 */
+            margin-top: 1.5rem; 
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        h4.subsection-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; 
+            margin-bottom: 0.75rem; 
+        }
+        p, li {
+            line-height: 1.75; 
+            margin-bottom: 1rem; 
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem; 
+        }
+        ul {
+            list-style-type: none; 
+            padding-left: 0; 
+        }
+        ul li {
+            padding-left: 1.75rem; 
+            position: relative;
+        }
+        ul li::before { 
+            content: '➔';
+            position: absolute;
+            left: 0;
+            color: #60A5FA; /* blue-400 */
+            font-weight: bold;
+        }
+        .metric-card { 
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem; 
+            text-align: center;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03);
+        }
+        .metric-card-title { 
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem; 
+            font-weight: 500; 
+        }
+        .metric-card-value { 
+            font-size: 1.75rem; /* text-2xl */
+            font-weight: 600; 
+            color: #1F2937; /* gray-800 */
+        }
+        .content-wrapper { 
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); 
+            padding: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+    </style>
+</head>
+
+<body class="bg-stone-100 text-gray-700 min-h-screen">
+    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <h1 class="main-title text-3xl">Interactive Atlassian (TEAM) Analysis</h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+        <section id="team-content">
+            <div class="content-wrapper">
+                <h2 class="company-title">Atlassian Corporation (TEAM) In-Depth Analysis</h2>
+                <p class="text-gray-600 mb-6 text-base md:text-lg">This interactive report provides a comprehensive analysis of Atlassian Corporation (TEAM), a global leader in collaboration, development, and issue tracking software. Discover Atlassian's strategic focus on its "Cloud-First" transition, its innovative product suite including Jira, Confluence, and Trello, the integration of "Atlassian Intelligence," its unique Product-Led Growth model, competitive positioning, detailed financial performance, and its outlook in the dynamic software industry.</p>
+
+                <div id="team-overview">
+                    <h3 class="section-title">1. Company Overview & Strategy</h3>
+                    <p>Atlassian Corporation's mission is "to help unleash the potential of every team." Founded in 2002, the company has grown into a major provider of software solutions that enhance teamwork, communication, and productivity for a diverse global customer base, from startups to large enterprises. A cornerstone of Atlassian's current strategy is its "Cloud-First" transition, aggressively migrating customers to its cloud platform and emphasizing benefits like scalability and continuous innovation. This involves phasing out server product support (completed February 2024) and encouraging adoption of its Cloud or Data Center offerings. Other key strategic pillars include a "Land and Expand" sales model, fostering a strong third-party app ecosystem via the Atlassian Marketplace, an increasing focus on large enterprise customers, and significant investment in product innovation, most notably the integration of "Atlassian Intelligence (AI)" capabilities across its platform to boost productivity and provide smarter insights. The company is also expanding its product appeal beyond technical teams to serve all knowledge workers.</p>
+                </div>
+
+                <div id="team-business-model">
+                    <h3 class="section-title">2. Business Model & Revenue Generation</h3>
+                    <p>Atlassian's business model primarily revolves around subscription-based revenue for its software products, with a strategic emphasis on cloud offerings.</p>
+                    <h4 class="subsection-title">Revenue Streams:</h4>
+                    <ul>
+                        <li><strong>Cloud Subscriptions:</strong> The largest and fastest-growing revenue stream, derived from customers subscribing to cloud-hosted versions of products like Jira Cloud and Confluence Cloud. Pricing is typically per-user, per-month, with tiered plans.</li>
+                        <li><strong>Data Center Subscriptions:</strong> Revenue from annual subscriptions to its self-managed Data Center products, catering to larger enterprises with specific governance or operational needs.</li>
+                        <li><strong>Server Maintenance (Legacy & Declining):</strong> Historically, revenue from maintenance on perpetual server licenses. This stream is rapidly diminishing as server support has ended.</li>
+                        <li><strong>Marketplace and Other Revenue:</strong> Commissions from third-party app sales via the Atlassian Marketplace (a significant contributor) and fees for Premier Support offerings.</li>
+                    </ul>
+                    <h4 class="subsection-title">Customer Segments:</h4>
+                     <p>Atlassian serves a broad range of customers globally, from small teams to the world's largest corporations (over 303,000 customers as of March 2024). Its traditional stronghold has been technical teams (software developers, IT operations), but it's increasingly targeting business teams (marketing, HR, finance) with products like Jira Work Management and Trello.</p>
+                    <h4 class="subsection-title">Go-to-Market Strategy:</h4>
+                     <p>Atlassian is known for its efficient Product-Led Growth (PLG) model, where many customers self-discover and adopt products through free trials and online purchases. This is complemented by a "Land and Expand" strategy, word-of-mouth marketing, a global network of Solution Partners, and an expanding enterprise sales team to serve larger clients and facilitate cloud migrations.</p>
+                </div>
+
+                <div id="team-products">
+                    <h3 class="section-title">3. Product Portfolio & Innovation</h3>
+                    <p>Atlassian offers a broad and increasingly integrated suite of software products designed to help teams plan, track, collaborate, and build. Innovation, particularly in AI, is a key focus.</p>
+                    <h4 class="subsection-title">Key Product Offerings:</h4>
+                    <ul>
+                        <li><strong>Jira Platform:</strong> Includes Jira Software (agile project management), Jira Work Management (for business teams), Jira Service Management (ITSM and customer service), and Jira Align (enterprise agile planning).</li>
+                        <li><strong>Confluence:</strong> A team collaboration and knowledge management platform for creating and sharing content.</li>
+                        <li><strong>Trello:</strong> A visual collaboration tool for organizing projects using boards, lists, and cards.</li>
+                        <li><strong>Bitbucket:</strong> A Git-based source code management solution.</li>
+                        <li><strong>Atlassian Guard:</strong> Enterprise-grade identity and access management for cloud products.</li>
+                        <li><strong>Loom (Acquired Oct 2023):</strong> A video messaging platform for asynchronous communication.</li>
+                        <li><strong>Atlassian Marketplace:</strong> Offers over 7,000 third-party apps and integrations.</li>
+                    </ul>
+                    <h4 class="subsection-title">Innovation: Atlassian Intelligence</h4>
+                    <p>A major strategic initiative is the integration of "Atlassian Intelligence" across its cloud platform. This involves embedding AI-powered capabilities like automated task summaries, natural language querying (e.g., JQL generation), AI-assisted content creation, virtual agent capabilities in JSM, and improved search. Atlassian leverages its own AI models and partnerships (e.g., with OpenAI) for these features.</p>
+                </div>
+
+                <div id="team-competition">
+                    <h3 class="section-title">4. Competitive Landscape & Differentiation</h3>
+                    <p>Atlassian operates in several competitive software markets, including work management, IT service management, and developer collaboration.</p>
+                    <h4 class="subsection-title">Key Competitors:</h4>
+                    <ul>
+                        <li><strong>Work Management & Collaboration:</strong> Microsoft (Azure DevOps, Teams, Planner), Asana, Monday.com, ClickUp, Wrike, ServiceNow, Notion, Slack.</li>
+                        <li><strong>IT Service Management (JSM):</strong> ServiceNow, BMC, Zendesk, Freshservice.</li>
+                        <li><strong>Code Hosting & DevOps (Bitbucket):</strong> GitHub (Microsoft), GitLab.</li>
+                    </ul>
+                     <h4 class="subsection-title">Atlassian's Key Differentiators:</h4>
+                    <ul>
+                        <li><strong>Breadth and Integration of Product Suite:</strong> Offers a comprehensive suite covering many aspects of team collaboration and software development.</li>
+                        <li><strong>Strong Market Position in Technical Teams:</strong> Jira is a de facto standard for many agile development teams.</li>
+                        <li><strong>Extensive Atlassian Marketplace:</strong> Thousands of apps provide unparalleled extensibility and customization, creating strong network effects.</li>
+                        <li><strong>Unique Go-to-Market Model:</strong> Efficient PLG combined with expanding enterprise sales.</li>
+                        <li><strong>Strategic Cloud Transformation & AI Investment:</strong> Positioning for future growth with a modern cloud platform and integrated AI.</li>
+                    </ul>
+                </div>
+
+                <div id="team-financials">
+                    <h3 class="section-title">5. Financial Performance Analysis</h3>
+                    <p>Atlassian has demonstrated strong revenue growth, driven significantly by its cloud business, and robust cash flow generation. While GAAP profitability has been impacted by investments and stock-based compensation, non-GAAP metrics highlight underlying operational strength. (Note: Atlassian's fiscal year ends June 30th. Charts below use available full fiscal year data.)</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+                        <div class="metric-card">
+                            <div class="metric-card-title">Q3 FY24 Total Revenue</div>
+                            <div class="metric-card-value">$1.189B</div>
+                            <p class="text-xs text-gray-500 mt-1">+24% YoY</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">Q3 FY24 Cloud Revenue</div>
+                            <div class="metric-card-value">$902.9M</div>
+                             <p class="text-xs text-gray-500 mt-1">+29% YoY</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">Q3 FY24 Non-GAAP Op. Margin</div>
+                            <div class="metric-card-value">26.9%</div>
+                            <p class="text-xs text-gray-500 mt-1">Strong Profitability</p>
+                        </div>
+                         <div class="metric-card">
+                            <div class="metric-card-title">Customers (Mar 2024)</div>
+                            <div class="metric-card-value">>303K</div>
+                             <p class="text-xs text-gray-500 mt-1">Expanding Base</p>
+                        </div>
+                    </div>
+
+                    <h4 class="subsection-title">Total Revenue Trend (Fiscal Years 2019-2023)</h4>
+                    <p>The chart below illustrates Atlassian's consistent upward trajectory in total revenue over the past five reported fiscal years.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="teamTotalRevenueChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Cloud Revenue Trend (Fiscal Years 2019-2023)</h4>
+                    <p>This chart highlights the rapid growth of Atlassian's cloud revenue, a key strategic focus for the company.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="teamCloudRevenueChart"></canvas>
+                    </div>
+                    
+                    <h4 class="subsection-title">Non-GAAP Operating Margin Trend (Fiscal Years 2019-2023)</h4>
+                    <p>This visualization tracks Atlassian's Non-GAAP Operating Margin, providing insight into its operational profitability excluding certain non-cash expenses.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="teamNonGaapOpMarginChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Operating Cash Flow Trend (Fiscal Years 2019-2023)</h4>
+                    <p>The chart below shows Atlassian's growing ability to generate cash from its core business operations.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="teamOcfChart"></canvas>
+                    </div>
+                    
+                    <h4 class="subsection-title">Customer Count Growth Trend (Fiscal Years 2019-2023, Q3 FY24)</h4>
+                    <p>This chart illustrates the expansion of Atlassian's customer base over time.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="teamCustomerCountChart"></canvas>
+                    </div>
+
+                    <p class="mt-4">Atlassian's financial results demonstrate a successful scaling of its business, with cloud revenue becoming the dominant contributor. The company maintains high gross margins (typically above 82% GAAP). While GAAP operating income has often been negative due to significant investments in R&D, S&M, and stock-based compensation, its Non-GAAP operating margins have been consistently strong. Robust operating cash flow provides financial flexibility for continued investment and strategic initiatives.</p>
+                </div>
+
+                <div id="team-outlook">
+                    <h3 class="section-title">6. Strategic Outlook & Future Growth Drivers</h3>
+                    <p>Atlassian is strategically positioned to capitalize on the ongoing digital transformation and the increasing importance of team collaboration and developer productivity. Its future growth is expected to be driven by its cloud transition, enterprise market penetration, and AI innovation.</p>
+                    <h4 class="subsection-title">Key Growth Drivers:</h4>
+                    <ul>
+                        <li><strong>Cloud Migration:</strong> Continued migration of its large existing on-premises customer base to its Cloud and Data Center offerings.</li>
+                        <li><strong>Enterprise Market Penetration:</strong> Expanding its footprint within large enterprises with Cloud Enterprise solutions and Atlassian Guard.</li>
+                        <li><strong>Expansion into Non-Technical Teams:</strong> Broadening the appeal of its products (Jira Work Management, Trello, Confluence) to all knowledge workers.</li>
+                        <li><strong>Atlassian Intelligence:</strong> Leveraging AI to create significant product differentiation, enhance productivity, and unlock new value propositions.</li>
+                        <li><strong>Atlassian Marketplace Growth:</strong> The thriving ecosystem of third-party apps continues to drive platform stickiness and revenue.</li>
+                        <li><strong>International Expansion:</strong> Growing its presence and customer base in international markets.</li>
+                    </ul>
+                    <h4 class="subsection-title">Potential Challenges & Risks:</h4>
+                    <ul>
+                        <li><strong>Intense Competition:</strong> Faces strong competition from large platform players like Microsoft and specialized SaaS vendors.</li>
+                        <li><strong>Cloud Transition Execution:</strong> Successfully managing the complexities of migrating a large customer base to the cloud.</li>
+                        <li><strong>Macroeconomic Conditions:</strong> IT spending can be impacted by broader economic headwinds.</li>
+                        <li><strong>Maintaining Innovation Pace:</strong> The need to continuously innovate, especially in AI, to stay ahead of competitors.</li>
+                        <li><strong>GAAP Profitability:</strong> Balancing growth investments with the path to sustained GAAP profitability remains a focus.</li>
+                    </ul>
+                    <h4 class="subsection-title">Overall Outlook:</h4>
+                    <p>Atlassian's strategic focus on cloud, enterprise, and AI, coupled with its strong product portfolio and unique go-to-market model, positions it well for continued growth. The success of Atlassian Intelligence and the ongoing cloud transition will be key factors in shaping its future. While navigating a competitive landscape, Atlassian's established market presence and loyal customer base provide a solid foundation for future success in empowering teams globally. The recent leadership transition, with Scott Farquhar stepping down as co-CEO, will be a factor to observe as Mike Cannon-Brookes leads the company as sole CEO.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Atlassian (TEAM) Analysis. For informational purposes only.</p>
+        <p class="text-xs mt-1">Data synthesized from publicly available company reports and market analyses.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        const CHART_COLORS = { 
+            blue: '#60A5FA',    
+            teal: '#2DD4BF',    
+            amber: '#FDBA74',  
+            stone: '#E7E5E4',   
+            gray: '#4B5563',    
+            darkBlue: '#2563EB', 
+            darkTeal: '#14B8A6', 
+            darkOrange: '#F97316',
+            indigo: '#6366F1', // For Cloud Revenue
+            pink: '#EC4899',   // For Non-GAAP Op Margin
+            green: '#34D399',  // For OCF
+            purple: '#A78BFA' // For Customer Count
+        };
+        
+        const teamTotalRevenueData = {
+            labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23'],
+            datasets: [{
+                label: 'Total Revenue ($M)',
+                data: [1210.0, 1613.3, 2120.0, 2802.7, 3534.9],
+                borderColor: CHART_COLORS.blue, 
+                backgroundColor: CHART_COLORS.blue + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.blue,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.blue,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const teamCloudRevenueData = {
+            labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23'],
+            datasets: [{
+                label: 'Cloud Revenue ($M)',
+                data: [536.2, 782.6, 1146.8, 1588.4, 2299.1],
+                borderColor: CHART_COLORS.indigo, 
+                backgroundColor: CHART_COLORS.indigo + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.indigo,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.indigo,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const teamNonGaapOpMarginData = {
+            labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23'],
+            datasets: [{
+                label: 'Non-GAAP Operating Margin (%)',
+                data: [21.5, 24.2, 24.2, 22.2, 22.1],
+                borderColor: CHART_COLORS.pink, 
+                backgroundColor: CHART_COLORS.pink + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.pink,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.pink,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+         const teamOcfData = {
+            labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23'],
+            datasets: [{
+                label: 'Operating Cash Flow ($M)',
+                data: [432.7, 579.7, 735.3, 893.4, 1038.5],
+                borderColor: CHART_COLORS.green, 
+                backgroundColor: CHART_COLORS.green + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.green,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.green,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const teamCustomerCountData = {
+            labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23', 'Q3 FY24'],
+            datasets: [{
+                label: 'Customer Count (Thousands)',
+                data: [150.2, 174.0, 212.0, 242.6, 259.7, 303.0], // Using approx. for FY20, FY21; FY23 used 259.7k from a consistent series point.
+                borderColor: CHART_COLORS.purple, 
+                backgroundColor: CHART_COLORS.purple + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.purple,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.purple,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+
+
+        let teamTotalRevenueChartInstance, teamCloudRevenueChartInstance, teamNonGaapOpMarginChartInstance, teamOcfChartInstance, teamCustomerCountChartInstance;
+
+        function createChart(ctx, type, data, options) {
+            if (!ctx) return null;
+            return new Chart(ctx, { type, data, options });
+        }
+        
+        const commonChartOptionsLine = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: { color: '#4B5563', font: { size: 11 } },
+                    grid: { color: '#E7E5E4', drawBorder: false }
+                },
+                x: {
+                    ticks: { color: '#4B5563', font: { size: 11 } },
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top', align: 'end',
+                    labels: { color: '#374151', font: { size: 12, weight: '500' }, padding: 15, boxWidth: 12, usePointStyle: true }
+                },
+                tooltip: {
+                    enabled: true, backgroundColor: '#1F2937', titleColor: '#F3F4F6', titleFont: { weight: '600', size: 13 },
+                    bodyColor: '#D1D5DB', bodyFont: { size: 12 }, padding: 10, cornerRadius: 4, displayColors: true,
+                    borderColor: '#4B5563', borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) { label += ': '; }
+                            if (context.parsed.y !== null) {
+                                if (context.dataset.label.includes('Margin') || context.dataset.label.includes('%')) {
+                                     label += context.parsed.y.toFixed(1) + '%';
+                                } else if (context.dataset.label.includes('Customer Count')) {
+                                    label += context.parsed.y.toLocaleString() + 'K';
+                                }
+                                 else {
+                                     label += '$' + context.parsed.y.toLocaleString() + 'M';
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            animation: { duration: 700, easing: 'easeOutCubic' }
+        };
+        
+        function initializeTeamCharts() { 
+            const teamTotalRevenueChartCtx = document.getElementById('teamTotalRevenueChart')?.getContext('2d');
+            const teamCloudRevenueChartCtx = document.getElementById('teamCloudRevenueChart')?.getContext('2d');
+            const teamNonGaapOpMarginChartCtx = document.getElementById('teamNonGaapOpMarginChart')?.getContext('2d');
+            const teamOcfChartCtx = document.getElementById('teamOcfChart')?.getContext('2d');
+            const teamCustomerCountChartCtx = document.getElementById('teamCustomerCountChart')?.getContext('2d');
+
+
+            if (teamTotalRevenueChartCtx && !teamTotalRevenueChartInstance) {
+                teamTotalRevenueChartInstance = createChart(teamTotalRevenueChartCtx, 'line', teamTotalRevenueData, commonChartOptionsLine);
+            }
+            if (teamCloudRevenueChartCtx && !teamCloudRevenueChartInstance) {
+                teamCloudRevenueChartInstance = createChart(teamCloudRevenueChartCtx, 'line', teamCloudRevenueData, commonChartOptionsLine);
+            }
+            if (teamNonGaapOpMarginChartCtx && !teamNonGaapOpMarginChartInstance) {
+                teamNonGaapOpMarginChartInstance = createChart(teamNonGaapOpMarginChartCtx, 'line', teamNonGaapOpMarginData, commonChartOptionsLine);
+            }
+            if (teamOcfChartCtx && !teamOcfChartInstance) {
+                teamOcfChartInstance = createChart(teamOcfChartCtx, 'line', teamOcfData, commonChartOptionsLine);
+            }
+            if (teamCustomerCountChartCtx && !teamCustomerCountChartInstance) {
+                teamCustomerCountChartInstance = createChart(teamCustomerCountChartCtx, 'line', teamCustomerCountData, commonChartOptionsLine);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTeamCharts(); 
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broadcom Inc. - Data Infrastructure & Software Leader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 
+        Infographic Narrative Plan (Broadcom):
+        1.  Hero Section: Broadcom's Core Identity & FY24 Revenue.
+        2.  Dual Engines: Semiconductor Solutions & Infrastructure Software (Revenue Split, Key Products).
+        3.  Revenue Model & Production: How money is made, Fabless model.
+        4.  Financial Highlights: Key trends (Revenue, Adj. EBITDA, OCF, ROIC), GAAP vs. Non-GAAP note.
+        5.  Competitive Landscape: Key Competitors, Strengths & Challenges.
+        6.  Comparative Analysis: Broadcom vs. NVIDIA vs. TSMC.
+        7.  Strategic Outlook: Growth Vectors & Potential Risks.
+        8.  Conclusion: Summary of Broadcom's market position.
+        This structure provides a clear, scrollable narrative, consistent with an infographic format.
+    -->
+
+    <!-- 
+        Visualization & Content Choices (Broadcom):
+        - Hero Stat (FY24 Revenue): Single Big Number (HTML/CSS). Goal: Inform.
+        - Segment Revenue Split (FY24 & Q1 FY25): Donut Charts (Chart.js Canvas). Goal: Compare.
+        - Segment Revenue Trend (FY20-FY24): Stacked Bar Chart (Chart.js Canvas). Goal: Change/Compare.
+        - Production Model (Fabless): HTML/CSS flow diagram. Goal: Organize.
+        - Revenue Streams Breakdown: Donut Chart (Chart.js Canvas). Goal: Compare.
+        - Financial Trends (Total Net Revenue, Adj. EBITDA, OCF, ROIC): Line Charts (Chart.js Canvas). Goal: Change.
+        - Competitive Landscape & SWOT-like elements: Styled HTML lists/cards. Goal: Organize.
+        - Broadcom vs. NVIDIA vs. TSMC: HTML Table. Goal: Compare/Organize.
+        All charts use Chart.js (Canvas), adhering to NO SVG, NO MERMAID JS. Label wrapping and tooltip configuration applied. Chart containers styled as required. The visual style will match the Palantir SPA for consistency.
+    -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 550px; /* Slightly smaller max-width for infographic style */
+            margin-left: auto;
+            margin-right: auto;
+            height: 280px; 
+            max-height: 320px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 320px;
+                max-height: 360px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #60A5FA; /* blue-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+            text-align: center;
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2DD4BF; /* teal-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight-stat {
+            font-size: 2.5rem; /* text-4xl */
+            font-weight: 700;
+            color: #F97316; /* orange-500 */
+        }
+         .highlight-stat-small {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #F97316; /* orange-500 */
+        }
+        .flow-step {
+            background-color: #EFF6FF; /* blue-50 */
+            border: 1px solid #BFDBFE; /* blue-200 */
+            color: #1E40AF; /* blue-800 */
+            padding: 0.75rem;
+            border-radius: 0.375rem; /* rounded-md */
+            text-align: center;
+            flex-grow: 1;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .flow-arrow {
+            font-size: 1.5rem; /* text-2xl */
+            color: #60A5FA; /* blue-400 */
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #60A5FA; /* blue-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 2rem; /* text-3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #60A5FA;">Broadcom (AVGO) Infographic</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#hero" class="nav-link">Intro</a>
+                        <a href="#segments" class="nav-link">Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competition</a>
+                        <a href="#comparison" class="nav-link">Peers</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#hero" class="nav-link block text-base">Intro</a>
+                    <a href="#segments" class="nav-link block text-base">Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competition</a>
+                    <a href="#comparison" class="nav-link block text-base">Peers</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="hero" class="section-card text-center scroll-mt-20">
+            <h1 class="main-title mb-2">Broadcom Inc.: Diversified Technology Powerhouse</h1>
+            <p class="content-text text-lg mb-6 max-w-3xl mx-auto">Designing, developing, and supplying a broad range of semiconductor and infrastructure software solutions, Broadcom drives innovation through technology leadership and strategic acquisitions.</p>
+            <div class="kpi-card max-w-sm mx-auto">
+                <p class="kpi-label">Fiscal Year 2024 Net Revenue</p>
+                <p class="kpi-value text-orange-500">$51.57 Billion</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6 mt-8 max-w-4xl mx-auto">
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-500">Dual Growth Engine</h3>
+                    <p class="content-text text-sm">Strategic M&A combined with continuous, substantial R&D investment fuels market leadership and innovation across diverse technology sectors.</p>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                    <h3 class="text-xl font-semibold mb-2 text-teal-500">Integrated Solutions</h3>
+                    <p class="content-text text-sm">Unique capability to seamlessly integrate silicon (hardware) and software, offering end-to-end technological capabilities and unparalleled value to customers.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">Dual Engines: Semiconductor & Software</h2>
+            <p class="content-text text-center max-w-3xl mx-auto mb-8">Broadcom operates through two primary segments: Semiconductor Solutions and Infrastructure Software. The acquisition of VMware has significantly bolstered the software segment, creating a more balanced revenue profile.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-8">
+                <div class="text-center">
+                    <h3 class="subsection-title !mt-0">FY2024 Revenue Split</h3>
+                    <div class="chart-container h-72 md:h-80 max-w-xs">
+                        <canvas id="fy2024SegmentRevenueChart"></canvas>
+                    </div>
+                    <p class="mt-3 text-sm content-text">VMware acquisition significantly boosted Infrastructure Software's contribution.</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="subsection-title !mt-0">Q1 FY2025 Revenue Split</h3>
+                     <div class="chart-container h-72 md:h-80 max-w-xs">
+                        <canvas id="q1fy2025SegmentRevenueChart"></canvas>
+                    </div>
+                    <p class="mt-3 text-sm content-text">Software continues as a substantial part of Broadcom's revenue post-VMware.</p>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="subsection-title text-center">Segment Revenue Trend (FY20-FY24)</h3>
+                <p class="content-text text-center max-w-2xl mx-auto mb-4">Illustrating the growing importance of Infrastructure Software alongside sustained Semiconductor growth.</p>
+                <div class="chart-container h-96 max-w-2xl">
+                    <canvas id="segmentRevenueTrendChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
+                <div class="p-6 bg-stone-50 rounded-lg border border-stone-200">
+                    <h3 class="subsection-title !mt-0" style="color: #FDBA74;">Semiconductor Solutions</h3>
+                    <p class="content-text mb-4 text-sm">Provides critical components for networking, wireless, broadband, storage, industrial, and AI applications. Operates primarily on a fabless model.</p>
+                    <h4 class="font-semibold mt-3 mb-1 text-gray-700">Key Product Areas:</h4>
+                    <ul class="list-disc list-inside content-text text-xs space-y-1 pl-4">
+                        <li>Networking: Ethernet switches, routers, custom AI/ML silicon (XPUs)</li>
+                        <li>Wireless: Wi-Fi, Bluetooth, GPS/GNSS solutions</li>
+                        <li>Broadband: Modem & Set-top Box SoCs, PON/DSL infrastructure</li>
+                        <li>Storage: SAS/SATA/Fibre Channel controllers, HBAs</li>
+                    </ul>
+                </div>
+
+                <div class="p-6 bg-stone-50 rounded-lg border border-stone-200">
+                    <h3 class="subsection-title !mt-0" style="color: #5EEAD4;">Infrastructure Software</h3>
+                    <p class="content-text mb-4 text-sm">Transformatively grown through acquisitions (CA, Symantec, VMware), helps organizations modernize, optimize, and secure complex IT environments.</p>
+                    <h4 class="font-semibold mt-3 mb-1 text-gray-700">Key Product Areas (Post-VMware):</h4>
+                    <ul class="list-disc list-inside content-text text-xs space-y-1 pl-4">
+                        <li>VMware Solutions: VMware Cloud Foundation (VCF), vSphere, NSX</li>
+                        <li>Enterprise Software: ValueOps, DevOps, AIOps</li>
+                        <li>Mainframe Software: Infrastructure mgmt, Security</li>
+                        <li>Cybersecurity & Fibre Channel SAN (Brocade)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="revenue-model-production" class="section-card scroll-mt-20">
+            <h2 class="section-title">Revenue Model & Production</h2>
+            <p class="content-text text-center max-w-3xl mx-auto mb-8">Broadcom's revenue is primarily from product sales, with a strategic shift towards recurring software subscriptions. Its fabless model allows focus on design and innovation.</p>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-center">Estimated Revenue Streams</h3>
+                     <div class="chart-container h-80 md:h-96">
+                        <canvas id="revenueStreamsChart"></canvas>
+                    </div>
+                    <p class="mt-3 text-sm content-text text-center">Increasing share from software subscriptions and services, alongside semiconductor product sales and IP licensing.</p>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-center">Fabless Production Model</h3>
+                    <div class="flex flex-col sm:flex-row items-stretch justify-center space-y-2 sm:space-y-0 sm:space-x-2 mt-4 p-4 border border-stone-200 rounded-lg">
+                        <div class="flow-step">R&D and Design Focus</div>
+                        <div class="flow-arrow transform sm:rotate-0 rotate-90">&rarr;</div>
+                        <div class="flow-step">Outsourced Manufacturing</div>
+                        <div class="flow-arrow transform sm:rotate-0 rotate-90">&rarr;</div>
+                        <div class="flow-step">Specialized In-House (e.g. FBAR)</div>
+                    </div>
+                     <p class="content-text mt-4 text-sm">This "design-win" model for SoCs leads to long product cycles and customer stickiness, supporting attractive margins. Key customers include large OEMs, hyperscalers, and enterprises.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Performance Highlights</h2>
+            <p class="content-text text-center max-w-3xl mx-auto mb-8">Consistent growth and strong profitability, further bolstered by strategic acquisitions. Non-GAAP figures are key to understanding ongoing operational performance.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                    <h3 class="subsection-title !text-lg !mt-0 text-center">Total Net Revenue (FY19-FY24)</h3>
+                    <div class="chart-container h-72">
+                        <canvas id="totalRevenueChart"></canvas>
+                    </div>
+                    <p class="mt-2 text-xs content-text text-center">Significant jump in FY2024 due to VMware.</p>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                    <h3 class="subsection-title !text-lg !mt-0 text-center">Adjusted EBITDA (FY20-FY24)</h3>
+                    <div class="chart-container h-72">
+                        <canvas id="adjustedEbitdaChart"></canvas>
+                    </div>
+                    <p class="mt-2 text-xs content-text text-center">Reflects core operational profitability.</p>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                    <h3 class="subsection-title !text-lg !mt-0 text-center">Operating Cash Flow (FY19-Q1FY25)</h3>
+                    <div class="chart-container h-72">
+                        <canvas id="ocfChart"></canvas>
+                    </div>
+                    <p class="mt-2 text-xs content-text text-center">Consistently robust OCF generation.</p>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                    <h3 class="subsection-title !text-lg !mt-0 text-center">ROIC (FY19-FY24)</h3>
+                    <div class="chart-container h-72">
+                        <canvas id="roicChart"></canvas>
+                    </div>
+                    <p class="mt-2 text-xs content-text text-center">FY24 dip reflects VMware acquisition capital.</p>
+                </div>
+            </div>
+             <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 class="subsection-title !mt-0 text-blue-700 text-center">GAAP vs. Non-GAAP: A Tale of Two Margins</h3>
+                <p class="content-text text-sm text-center max-w-2xl mx-auto">Broadcom's GAAP results are significantly impacted by M&A accounting (amortization, stock-based compensation). Non-GAAP metrics offer a clearer view of ongoing operational performance. E.g., Q1 FY2025: Non-GAAP Op. Margin <span class="font-bold text-orange-500">65.9%</span> vs. GAAP Op. Margin <span class="font-bold text-orange-500">42.0%</span>.</p>
+            </div>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Landscape</h2>
+            <p class="content-text text-center max-w-3xl mx-auto mb-8">Broadcom faces intense competition across its diverse portfolio from established players and agile innovators.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                    <h3 class="subsection-title !text-lg !mt-0" style="color: #FDBA74;">Semiconductor Competitors</h3>
+                    <ul class="list-disc list-inside content-text text-xs space-y-1 pl-4">
+                        <li>Networking: NVIDIA (Mellanox), Marvell, Intel.</li>
+                        <li>Wireless: Qualcomm, MediaTek, Skyworks, Qorvo.</li>
+                        <li>Broadband: MaxLinear, MediaTek.</li>
+                        <li>Storage: Microchip, Marvell.</li>
+                    </ul>
+                </div>
+                <div class="p-4 bg-stone-50 rounded-lg border border-stone-200">
+                    <h3 class="subsection-title !text-lg !mt-0" style="color: #5EEAD4;">Infrastructure Software Competitors</h3>
+                    <ul class="list-disc list-inside content-text text-xs space-y-1 pl-4">
+                        <li>Cloud/Virtualization: Microsoft, Red Hat, Nutanix, AWS, GCP.</li>
+                        <li>Enterprise/Mainframe: IBM, BMC, OpenText, ServiceNow.</li>
+                        <li>Cybersecurity: Palo Alto Networks, Fortinet, CrowdStrike.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="subsection-title text-center mt-6">Navigating the Terrain: Strengths & Challenges</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                <div>
+                    <h4 class="text-xl font-semibold mb-2 text-teal-600">Key Strengths 👍</h4>
+                    <ul class="list-disc list-inside content-text space-y-1 text-sm pl-4">
+                        <li>Technology Leadership & Broad IP Portfolio</li>
+                        <li>Scale & Silicon-Software Integration</li>
+                        <li>Strong Customer Relationships (OEMs, Hyperscalers)</li>
+                        <li>Proven M&A Execution & Synergy Realization</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-2 text-orange-600">Key Challenges ⚠️</h4>
+                     <ul class="list-disc list-inside content-text space-y-1 text-sm pl-4">
+                        <li>Customer Concentration Risk (e.g., Apple)</li>
+                        <li>Complex Integration of Large Acquisitions (VMware)</li>
+                        <li>Intense Competition Across All Segments</li>
+                        <li>Semiconductor Industry Cyclicality</li>
+                        <li>Geopolitical & Regulatory Scrutiny</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="section-card scroll-mt-20">
+            <h2 class="section-title">Business Model Comparison</h2>
+            <p class="content-text text-center max-w-3xl mx-auto mb-8">Broadcom's diversified hardware/software model contrasts with NVIDIA's AI platform focus and TSMC's foundry specialization.</p>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-stone-200 border border-stone-200">
+                    <thead class="bg-stone-100">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-stone-600 uppercase tracking-wider">Feature</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-stone-600 uppercase tracking-wider">Broadcom</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-stone-600 uppercase tracking-wider">NVIDIA</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-stone-600 uppercase tracking-wider">TSMC</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-stone-200 content-text text-sm">
+                        <tr>
+                            <td class="px-4 py-3 font-medium">Core Business</td>
+                            <td class="px-4 py-3">Diversified Semi (mostly fabless) & Infra Software</td>
+                            <td class="px-4 py-3">GPU-centric AI & Accelerated Computing (fabless)</td>
+                            <td class="px-4 py-3">Pure-Play Semiconductor Foundry (manufacturing)</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-medium">Production</td>
+                            <td class="px-4 py-3">Designs chips, outsources most fab; develops software</td>
+                            <td class="px-4 py-3">Designs chips, outsources fab; develops CUDA software</td>
+                            <td class="px-4 py-3">Manufactures wafers in own capital-intensive fabs</td>
+                        </tr>
+                         <tr>
+                            <td class="px-4 py-3 font-medium">Key Differentiator</td>
+                            <td class="px-4 py-3">Integrated silicon & software; M&A prowess</td>
+                            <td class="px-4 py-3">Full-stack AI platform (HW + CUDA); AI innovation</td>
+                            <td class="px-4 py-3">Pure-play model; manufacturing scale & tech leadership</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Future Trajectory</h2>
+            <p class="content-text text-center max-w-3xl mx-auto mb-8">Broadcom aims to leverage its expanded portfolio, particularly in AI and software, to drive future growth while managing integration and market risks.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="p-4 bg-teal-50 border border-teal-200 rounded-lg">
+                    <h3 class="subsection-title !mt-0 text-teal-700">Key Growth Vectors 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-1 text-sm pl-4">
+                        <li>AI Proliferation (Custom Accelerators, Networking)</li>
+                        <li>VMware Synergy & Subscription Transition</li>
+                        <li>Hybrid Cloud Expansion (via VMware)</li>
+                        <li>Next-Gen Connectivity (5G, Wi-Fi 7)</li>
+                    </ul>
+                </div>
+                <div class="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <h3 class="subsection-title !mt-0 text-orange-700">Potential Challenges & Risks 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-1 text-sm pl-4">
+                        <li>VMware Integration Execution & Customer Retention</li>
+                        <li>Semiconductor Cyclicality & Macroeconomic Factors</li>
+                        <li>Intense Competition & Price Pressures</li>
+                        <li>Geopolitical Tensions & Supply Chain Disruptions</li>
+                        <li>Debt Burden Management Post-Acquisitions</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="section-card text-center scroll-mt-20">
+            <h2 class="section-title">Broadcom: A Resilient Infrastructure Leader</h2>
+            <p class="content-text text-lg max-w-3xl mx-auto mb-4">Broadcom has established itself as a critical infrastructure technology provider, adeptly combining semiconductor innovation with a growing enterprise software footprint. Its strategic M&A approach, particularly the VMware acquisition, positions it to capitalize on secular trends like AI, cloud, and next-generation connectivity.</p>
+            <p class="content-text max-w-3xl mx-auto">Successfully navigating the integration of VMware, managing a diverse product portfolio, and adapting to the dynamic competitive landscape will be key to realizing its full potential and delivering sustained shareholder value.</p>
+            <p class="text-xs text-gray-500 mt-6">Infographic based on "Broadcom Inc.: An In-Depth Analysis" report. Data up to Q1 FY2025 where available.</p>
+        </section>
+
+    </main>
+    
+    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+        <p class="text-sm">&copy; <span id="currentYear"></span> Broadcom Infographic. For informational purposes only.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.classList.toggle('hidden');
+                mobileMenuButton.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+            });
+        }
+        
+        // Chart.js Global Config & Helper Functions
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563'; // gray-600
+
+        const CHART_PALETTE = {
+            blue: '#60A5FA',    // blue-400
+            teal: '#5EEAD4',    // teal-300
+            orange: '#FDBA74',  // orange-300
+            red: '#F87171',     // red-400 (slightly softer red for charts)
+            purple: '#A78BFA',  // purple-400
+            stone: '#A8A29E'    // stone-400 (for neutral elements)
+        };
+
+        function processLabels(labels) {
+            return labels.map(label => {
+                if (typeof label === 'string' && label.length > 16) {
+                    const words = label.split(' ');
+                    const newLabel = [];
+                    let currentLine = '';
+                    words.forEach(word => {
+                        if ((currentLine + word).length > 16 && currentLine.length > 0) {
+                            newLabel.push(currentLine.trim());
+                            currentLine = word + ' ';
+                        } else {
+                            currentLine += word + ' ';
+                        }
+                    });
+                    if (currentLine.trim().length > 0) newLabel.push(currentLine.trim());
+                    return newLabel.length > 0 ? newLabel : [label];
+                }
+                return label;
+            });
+        }
+        
+        const commonTooltipCallbackConfig = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+
+        // FY2024 Segment Revenue Chart
+        const fy2024SegmentData = {
+            labels: processLabels(['Semiconductor Solutions', 'Infrastructure Software']),
+            datasets: [{
+                label: 'FY2024 Revenue',
+                data: [58.4, 41.6], // Percentages
+                backgroundColor: [CHART_PALETTE.blue, CHART_PALETTE.teal],
+                borderColor: '#FFFFFF', borderWidth: 2
+            }]
+        };
+        new Chart(document.getElementById('fy2024SegmentRevenueChart'), {
+            type: 'doughnut', data: fy2024SegmentData,
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels:{boxWidth:12, padding:10} }, title: { display: false }, tooltip: commonTooltipCallbackConfig.plugins.tooltip }}
+        });
+
+        // Q1 FY2025 Segment Revenue Chart
+        const q1fy2025SegmentData = {
+            labels: processLabels(['Semiconductor Solutions', 'Infrastructure Software']),
+            datasets: [{
+                label: 'Q1 FY2025 Revenue',
+                data: [55.0, 45.0], // Percentages
+                backgroundColor: [CHART_PALETTE.blue, CHART_PALETTE.teal],
+                borderColor: '#FFFFFF', borderWidth: 2
+            }]
+        };
+        new Chart(document.getElementById('q1fy2025SegmentRevenueChart'), {
+            type: 'doughnut', data: q1fy2025SegmentData,
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels:{boxWidth:12, padding:10} }, title: { display: false }, tooltip: commonTooltipCallbackConfig.plugins.tooltip }}
+        });
+        
+        // Segment Revenue Trend Chart (Stacked Bar)
+        const segmentRevenueTrendData = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            datasets: [
+                { label: 'Semiconductor Sol. ($M)', data: [17353, 20385, 25820, 28180, 30097], backgroundColor: CHART_PALETTE.blue },
+                { label: 'Infrastructure SW ($M)', data: [6535, 7065, 7383, 7639, 21477], backgroundColor: CHART_PALETTE.teal }
+            ]
+        };
+        new Chart(document.getElementById('segmentRevenueTrendChart'), {
+            type: 'bar', data: segmentRevenueTrendData,
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true, grid:{display:false} }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Revenue ($M)'}, grid:{color: CHART_PALETTE.stone + '80'} } }, plugins: { legend: { position: 'top' }, tooltip: {...commonTooltipCallbackConfig.plugins.tooltip, mode: 'index', intersect: false} }}
+        });
+
+        // Revenue Streams Chart (Estimated)
+        const revenueStreamsData = {
+            labels: processLabels(['Semiconductor Sales', 'Software Subscriptions & Licenses', 'Services & Support', 'IP Licensing & Other']),
+            datasets: [{
+                label: 'Estimated Revenue Streams',
+                data: [50, 35, 10, 5], 
+                backgroundColor: [CHART_PALETTE.blue, CHART_PALETTE.teal, CHART_PALETTE.orange, CHART_PALETTE.purple],
+                borderColor: '#FFFFFF', borderWidth: 2
+            }]
+        };
+        new Chart(document.getElementById('revenueStreamsChart'), {
+            type: 'doughnut', data: revenueStreamsData,
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels:{boxWidth:12, padding:10} }, title: { display: false }, tooltip: commonTooltipCallbackConfig.plugins.tooltip }}
+        });
+
+        const lineChartBaseOptions = {
+            responsive: true, maintainAspectRatio: false,
+            scales: { x: {grid:{display:false}}, y: { beginAtZero: false, grid:{color: CHART_PALETTE.stone + '80'} } },
+            plugins: { legend: { display: false }, tooltip: commonTooltipCallbackConfig.plugins.tooltip },
+            elements: { line: { tension: 0.1, borderWidth: 2 }, point: { radius: 3, hoverRadius: 5 } }
+        };
+
+        // Total Net Revenue Chart
+        new Chart(document.getElementById('totalRevenueChart'), {
+            type: 'line',
+            data: { labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23', 'FY24'], datasets: [{ label: 'Total Net Revenue ($B)', data: [22.60, 23.89, 27.45, 33.20, 35.82, 51.57], borderColor: CHART_PALETTE.red, backgroundColor: CHART_PALETTE.red + '33', fill: true, pointBackgroundColor: CHART_PALETTE.red }] },
+            options: {...lineChartBaseOptions, scales: {...lineChartBaseOptions.scales, y: {...lineChartBaseOptions.scales.y, title: {display: true, text: 'Revenue ($ Billions)'}}}}
+        });
+
+        // Adjusted EBITDA Chart
+        new Chart(document.getElementById('adjustedEbitdaChart'), {
+            type: 'line',
+            data: { labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'], datasets: [{ label: 'Adjusted EBITDA ($B)', data: [13.64, 16.57, 21.03, 23.21, 31.90], borderColor: CHART_PALETTE.teal, backgroundColor: CHART_PALETTE.teal + '33', fill: true, pointBackgroundColor: CHART_PALETTE.teal }] },
+            options: {...lineChartBaseOptions, scales: {...lineChartBaseOptions.scales, y: {...lineChartBaseOptions.scales.y, title: {display: true, text: 'Adj. EBITDA ($ Billions)'}}}}
+        });
+
+        // OCF Chart
+        new Chart(document.getElementById('ocfChart'), {
+            type: 'line',
+            data: { labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23', 'Q1FY25'], datasets: [{ label: 'Operating Cash Flow ($B)', data: [9.19, 11.60, 13.75, 16.74, 18.06, 6.11], borderColor: CHART_PALETTE.blue, backgroundColor: CHART_PALETTE.blue + '33', fill: true, pointBackgroundColor: CHART_PALETTE.blue }] },
+            options: {...lineChartBaseOptions, scales: {...lineChartBaseOptions.scales, y: {...lineChartBaseOptions.scales.y, title: {display: true, text: 'OCF ($ Billions)'}}}}
+        });
+        
+        // ROIC Chart
+        new Chart(document.getElementById('roicChart'), {
+            type: 'line',
+            data: { labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23', 'FY24'], datasets: [{ label: 'ROIC (%)', data: [6.68, 6.91, 12.19, 19.73, 22.54, 5.57], borderColor: CHART_PALETTE.orange, backgroundColor: CHART_PALETTE.orange + '33', fill: true, pointBackgroundColor: CHART_PALETTE.orange }] },
+            options: {...lineChartBaseOptions, scales: {...lineChartBaseOptions.scales, y: {...lineChartBaseOptions.scales.y, title: {display: true, text: 'ROIC (%)'}}}}
+        });
+
+        // Sticky Nav Active State
+        const sections = document.querySelectorAll('main section[id]');
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.getAttribute('id');
+                const navLink = document.querySelector(`header nav a[href="#${id}"]`);
+                if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    if (navLink) {
+                        navLink.classList.add('active');
+                    }
+                }
+            });
+        };
+        const observerOptions = { root: null, rootMargin: "-20% 0px -60% 0px", threshold: 0.1 };
+        const sectionObserver = new IntersectionObserver(observerCallback, observerOptions);
+        sections.forEach(section => sectionObserver.observe(section));
+        
+        // Set initial active link for the first section
+        if (navLinks.length > 0 && sections.length > 0) {
+            const firstSectionId = sections[0].getAttribute('id');
+            const firstNavLink = document.querySelector(`header nav a[href="#${firstSectionId}"]`);
+            if (firstNavLink) {
+                 // Check if already scrolled past the first section slightly
+                if (window.scrollY < sections[0].offsetTop + sections[0].offsetHeight / 2) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    firstNavLink.classList.add('active');
+                }
+            }
+        }
+        // Close mobile menu on link click
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenuButton.click(); 
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
+
