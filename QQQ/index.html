@@ -1,663 +1,560 @@
-!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tempus AI Interactive Analysis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Visualization & Content Choices: 
-        - Overview: Text summaries. Goal: Inform. Method: HTML/Tailwind. Interaction: Navigation. Justification: Provides foundational context.
-        - Business Model: Text summaries, lists for segments/products. Goal: Explain. Method: HTML/Tailwind. Interaction: Navigation. Justification: Clearly outlines how Tempus operates. Revenue breakdown chart (pie/bar) for segments. Goal: Compare. Method: Chart.js. Interaction: Tooltips. Justification: Visualizes revenue sources.
-        - Financial Performance: Multiple charts (line, bar, combo) for revenue trends, profitability metrics (gross profit, net loss, Adj. EBITDA), and key balance sheet items. Goal: Show change, compare. Method: Chart.js. Interaction: Tooltips, potential toggles for data views. Justification: Dynamic visualization of financial health and trends is more engaging than static tables.
-        - Competitive Landscape: Text summaries, HTML table for competitor overview. Goal: Inform, compare. Method: HTML/Tailwind. Interaction: Navigation. Justification: Structured presentation of competitive data.
-        - Differentiators: Text summaries, HTML table for business model comparison. Goal: Highlight, compare. Method: HTML/Tailwind. Interaction: Navigation. Justification: Clearly articulates Tempus's unique selling propositions.
-        - All text is summarized from the report to maintain conciseness and focus on key insights.
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
-    -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-        .nav-link {
-            @apply px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-100 hover:text-blue-700 rounded-md transition-colors;
-        }
-        .nav-link.active {
-            @apply bg-blue-600 text-white hover:bg-blue-700;
-        }
-        .section-title {
-            @apply text-3xl font-bold mb-6 text-blue-600 border-b-2 border-blue-200 pb-2;
-        }
-        .subsection-title {
-            @apply text-2xl font-semibold mb-4 text-blue-500 mt-6;
-        }
-        .content-card {
-            @apply bg-white p-6 rounded-lg shadow-md mb-6;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 700px; 
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px; 
-            max-height: 400px; 
-            padding: 1rem;
-            background-color: #ffffff;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        @media (max-width: 768px) {
-            .chart-container {
-                height: 300px;
-            }
-        }
-        .tab-button {
-            @apply px-4 py-2 font-medium text-sm rounded-md transition-colors duration-150;
-        }
-        .tab-button.active {
-            @apply bg-blue-600 text-white;
-        }
-        .tab-button:not(.active) {
-            @apply bg-gray-200 text-gray-700 hover:bg-blue-100 hover:text-blue-600;
-        }
-        .kpi-card {
-            @apply bg-blue-50 p-4 rounded-lg shadow text-center;
-        }
-        .kpi-value {
-            @apply text-2xl font-bold text-blue-700;
-        }
-        .kpi-label {
-            @apply text-sm text-gray-600;
-        }
-        .table-responsive {
-            @apply overflow-x-auto;
-        }
-        .table {
-            @apply min-w-full divide-y divide-gray-200;
-        }
-        .table th {
-            @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
-        }
-        .table td {
-            @apply px-6 py-4 whitespace-nowrap text-sm text-gray-700;
-        }
-        .table tbody tr:nth-child(even) {
-            @apply bg-gray-50;
-        }
-    </style>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.5">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.7px Arial; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
+    span.s1 {font-kerning: none}
+  </style>
 </head>
-<body class="antialiased bg-gray-100 text-gray-800">
-
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <h1 class="text-3xl font-bold text-blue-600">Tempus AI Interactive Analysis</h1>
-                </div>
-                <nav class="hidden md:flex space-x-1">
-                    <a href="#overview" class="nav-link active">Overview</a>
-                    <a href="#business-model" class="nav-link">Business Model</a>
-                    <a href="#financials" class="nav-link">Financials</a>
-                    <a href="#competition" class="nav-link">Competition</a>
-                    <a href="#differentiators" class="nav-link">Differentiators</a>
-                    <a href="#conclusion" class="nav-link">Conclusion</a>
-                </nav>
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-gray-700 hover:text-blue-700 focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
-            <a href="#overview" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-700">Overview</a>
-            <a href="#business-model" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-700">Business Model</a>
-            <a href="#financials" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-700">Financials</a>
-            <a href="#competition" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-700">Competition</a>
-            <a href="#differentiators" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-700">Differentiators</a>
-            <a href="#conclusion" class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-700">Conclusion</a>
-        </div>
-    </header>
-
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-5xl">
-
-        <section id="overview" class="pt-16 -mt-16 mb-12 content-card">
-            <h2 class="section-title">Company Overview</h2>
-            <p class="mb-4 text-gray-700 leading-relaxed">Tempus AI, Inc. (NASDAQ: TEM) is a healthcare technology company focused on advancing precision medicine by integrating artificial intelligence with vast amounts of clinical and molecular data. Founded in 2015, its mission is to develop "Intelligent Diagnostics" that personalize patient care, initially in oncology and expanding into other areas like cardiology and radiology. The Tempus Platform aims to liberate and make actionable siloed healthcare data, leveraging one of the world's largest libraries of clinical and molecular oncology data.</p>
-            <p class="text-gray-700 leading-relaxed">This section provides a high-level introduction to Tempus AI, its mission, and strategic focus. It sets the stage for understanding the company's role in the evolving landscape of AI-driven healthcare and precision medicine. Users will find a summary of Tempus's core objectives and the foundational principles upon which its business is built.</p>
-            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="kpi-card">
-                    <div class="kpi-value">Founded 2015</div>
-                    <div class="kpi-label">Year Established</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">NASDAQ: TEM</div>
-                    <div class="kpi-label">Stock Ticker</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">Precision Medicine</div>
-                    <div class="kpi-label">Core Focus</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="business-model" class="pt-16 -mt-16 mb-12 content-card">
-            <h2 class="section-title">Business Model & Operations</h2>
-            <p class="mb-4 text-gray-700 leading-relaxed">Tempus AI operates a synergistic business model centered around two core segments: Genomics and Data & Services. The Genomics segment generates high-quality molecular and clinical data through diagnostic testing, which then fuels the Data & Services segment. This latter segment leverages the data via AI for insights, research collaborations, and platform solutions. This section delves into how Tempus creates value, generates revenue, and delivers its products and services. Users will explore the interplay between data generation and data monetization, which is central to Tempus's strategy.</p>
-
-            <h3 class="subsection-title">Core Business Segments</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h4 class="text-xl font-semibold mb-2 text-gray-700">1. Genomics</h4>
-                    <p class="text-sm text-gray-600 mb-2">Focuses on intelligent molecular diagnostic testing to guide patient treatment.</p>
-                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                        <li><strong>Oncology Testing:</strong> Comprehensive genomic profiling (xT), liquid biopsies (xF/xF+), exome sequencing (xE), tumor origin identification (TO). Includes ADLT-priced xT CDx.</li>
-                        <li><strong>Hereditary Testing (Ambry Genetics):</strong> Germline assays (xG/xG+) for inherited cancer risk (e.g., CancerNext, BRCAplus).</li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-xl font-semibold mb-2 text-gray-700">2. Data and Services</h4>
-                    <p class="text-sm text-gray-600 mb-2">Capitalizes on the extensive multimodal data library and AI capabilities.</p>
-                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                        <li><strong>Insights (Data Licensing):</strong> Licensing de-identified clinical, molecular, and imaging data to pharma for R&D. Significant growth driver.</li>
-                        <li><strong>AI Model Development & Analytics:</strong> Collaborations (e.g., AstraZeneca) to build AI models; bespoke analytical services.</li>
-                        <li><strong>Platforms & Other Services:</strong> Trials/TIME (trial matching), Next (care gap identification), Algos (algorithmic tests), Hub (clinician portal), Lens (research platform), olivia (patient app).</li>
-                    </ul>
-                </div>
-            </div>
-
-            <h3 class="subsection-title">Revenue Generation</h3>
-            <p class="text-sm text-gray-600 mb-4">Revenue is generated through test fees in the Genomics segment and through data licensing, AI model development fees, platform access, and clinical trial services in the Data & Services segment. The diversification, especially the growth in data-centric revenues, is key to Tempus's financial strategy.</p>
-            <div class="chart-container my-6 mx-auto">
-                <canvas id="revenueSegmentsChart"></canvas>
-            </div>
-            <p class="text-xs text-center text-gray-500 mt-2">Illustrative Revenue Contribution by Segment (Q1 2025)</p>
-
-            <h3 class="subsection-title">Operational Model: The Tempus Platform</h3>
-            <p class="text-sm text-gray-600 leading-relaxed">Operations revolve around the Tempus Platform, an integrated system for data acquisition (from labs, EHRs, imaging), processing, AI-driven analysis, and delivery of insights. This platform aims to be an "operating system" for healthcare data, creating a virtuous cycle: testing generates data, data trains AI, AI improves diagnostics and creates data products, driving more testing and services.</p>
-        </section>
-
-        <section id="financials" class="pt-16 -mt-16 mb-12 content-card">
-            <h2 class="section-title">Financial Performance</h2>
-            <p class="mb-4 text-gray-700 leading-relaxed">This section provides an interactive exploration of Tempus AI's financial performance, highlighting key trends in revenue, profitability, and cash flow. The company is in a rapid growth phase, marked by strong revenue increases and significant investments. Users can examine various financial metrics through dynamic charts to understand Tempus's financial trajectory and its progress towards profitability targets, such as the projected positive Adjusted EBITDA for 2025.</p>
-            
-            <div class="mb-6">
-                <div class="flex space-x-2 mb-4 border-b border-gray-200">
-                    <button class="financial-tab-button tab-button active" data-chart="revenueTrendChart">Revenue Trends</button>
-                    <button class="financial-tab-button tab-button" data-chart="profitabilityTrendChart">Profitability Trends</button>
-                    <button class="financial-tab-button tab-button" data-chart="balanceSheetChart">Balance Sheet Highlights</button>
-                </div>
-                <div id="financial-charts-container">
-                    <div class="chart-container" id="revenueTrendChartContainer">
-                        <canvas id="revenueTrendChart"></canvas>
-                    </div>
-                    <div class="chart-container hidden" id="profitabilityTrendChartContainer">
-                        <canvas id="profitabilityTrendChart"></canvas>
-                    </div>
-                     <div class="chart-container hidden" id="balanceSheetChartContainer">
-                        <canvas id="balanceSheetChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <h3 class="subsection-title">Key Financial Highlights (Q1 2025 YoY Growth)</h3>
-             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div class="kpi-card">
-                    <div class="kpi-value">75.4%</div>
-                    <div class="kpi-label">Total Revenue Growth</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">88.9%</div>
-                    <div class="kpi-label">Genomics Revenue Growth</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">58.0%</div>
-                    <div class="kpi-label">Insights (Data Licensing) Growth</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value">60.7%</div>
-                    <div class="kpi-label">Gross Margin (Q1 2025)</div>
-                </div>
-                 <div class="kpi-card">
-                    <div class="kpi-value">-$16.2M</div>
-                    <div class="kpi-label">Adjusted EBITDA (Q1 2025)</div>
-                </div>
-                 <div class="kpi-card">
-                    <div class="kpi-value">$5M (Proj.)</div>
-                    <div class="kpi-label">FY2025 Adj. EBITDA Target</div>
-                </div>
-            </div>
-            <p class="text-sm text-gray-600 leading-relaxed">Tempus AI demonstrates robust revenue growth and improving gross margins. While GAAP net losses persist, largely due to non-cash stock-based compensation and growth investments, Adjusted EBITDA is trending positively. The company is focused on managing operating expenses while scaling, with a key target of achieving positive Adjusted EBITDA in 2025.</p>
-        </section>
-
-        <section id="competition" class="pt-16 -mt-16 mb-12 content-card">
-            <h2 class="section-title">Competitive Landscape</h2>
-            <p class="mb-4 text-gray-700 leading-relaxed">Tempus AI operates in a dynamic and competitive sector, facing companies specializing in genomics, diagnostics, healthcare data, and AI. This section outlines the key competitors and the general market environment. Understanding this landscape is crucial to appreciating Tempus's strategic positioning and challenges. Users will find a summary of different competitor types and a table detailing some major players.</p>
-            
-            <p class="text-sm text-gray-600 mb-4">The competitive field includes genomics specialists (e.g., Foundation Medicine, Guardant Health, Caris Life Sciences) and healthcare data/AI platforms (e.g., ConcertAI, IQVIA). Competition is driven by technological innovation, R&D investment, and strategic partnerships.</p>
-
-            <h3 class="subsection-title">Key Competitor Overview</h3>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Competitor</th>
-                            <th>Primary Focus</th>
-                            <th>Key Offerings</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td>Foundation Medicine</td>
-                            <td>Genomic Testing (CGP)</td>
-                            <td>FoundationOne CDx, Liquid CDx</td>
-                            <td>Subsidiary of Roche</td>
-                        </tr>
-                        <tr>
-                            <td>Guardant Health</td>
-                            <td>Liquid Biopsy, MRD, RWD</td>
-                            <td>Guardant360, Reveal, Shield</td>
-                            <td>Public (NASDAQ: GH)</td>
-                        </tr>
-                        <tr>
-                            <td>Caris Life Sciences</td>
-                            <td>Genomic Testing (WES, WTS), AI, RWD</td>
-                            <td>MI Profile, Caris Assure</td>
-                            <td>Filed for IPO (May 2025)</td>
-                        </tr>
-                        <tr>
-                            <td>ConcertAI</td>
-                            <td>Real-World Data, Clinical AI</td>
-                            <td>eurekaHealth, Patient360™</td>
-                            <td>Private</td>
-                        </tr>
-                        <tr>
-                            <td>IQVIA</td>
-                            <td>RWD, Analytics, CRO</td>
-                            <td>IQVIA CORE™</td>
-                            <td>Public (NYSE: IQV)</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-             <p class="text-xs text-center text-gray-500 mt-2">This table is illustrative and not exhaustive.</p>
-        </section>
-
-        <section id="differentiators" class="pt-16 -mt-16 mb-12 content-card">
-            <h2 class="section-title">Key Differentiators</h2>
-            <p class="mb-4 text-gray-700 leading-relaxed">Tempus AI strives to differentiate itself through a combination of its integrated multimodal data approach, its "Intelligent Diagnostics" philosophy, its comprehensive Tempus Platform, the scale of its data and AI capabilities, and its dual focus on diagnostics and data/AI services. This section explores these unique aspects and how they compare to competitors. Users can understand the core strengths Tempus leverages to build its competitive advantage.</p>
-            
-            <ul class="list-disc list-inside space-y-2 text-gray-700 mb-6">
-                <li><strong>Integrated Multimodal Data:</strong> Large, proprietary library of linked clinical, molecular, imaging, and pathology data, forming a rich substrate for AI.</li>
-                <li><strong>"Intelligent Diagnostics":</strong> AI (including generative AI) used to contextualize lab results with comprehensive patient data for personalized insights.</li>
-                <li><strong>Tempus Platform as an "Operating System":</strong> A suite of integrated software tools (Hub, Lens, Next, TIME, olivia) embedded in user workflows.</li>
-                <li><strong>Scale of Data & AI:</strong> One of the largest clinical/molecular oncology datasets, augmented by strategic AI collaborations (e.g., AstraZeneca, Illumina).</li>
-                <li><strong>Dual Focus:</strong> Synergistic model where Genomics testing feeds data for high-value Data & AI Services, creating a virtuous cycle.</li>
-            </ul>
-
-            <h3 class="subsection-title">Business Model Comparison Snippet</h3>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Differentiating Factor</th>
-                            <th>Tempus AI</th>
-                            <th>Guardant Health (Illustrative)</th>
-                            <th>Foundation Medicine (Illustrative)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Data Strategy</td>
-                            <td class="text-xs">Linked multimodal (clinical, molecular, imaging); "OS" for data</td>
-                            <td class="text-xs">Genomic & clinical (GuardantINFORM); liquid biopsy focus</td>
-                            <td class="text-xs">Genomic data from CGP; Roche ecosystem</td>
-                        </tr>
-                        <tr>
-                            <td>AI Integration</td>
-                            <td class="text-xs">Central to "Intelligent Diagnostics"; generative AI</td>
-                            <td class="text-xs">AI in test dev, data analysis</td>
-                            <td class="text-xs">AI in variant interpretation; Roche AI</td>
-                        </tr>
-                        <tr>
-                            <td>Platform Ecosystem</td>
-                            <td class="text-xs">Integrated suite (Hub, Lens, Next, etc.)</td>
-                            <td class="text-xs">Guardant Connect; LIMS</td>
-                            <td class="text-xs">Physician portals; Roche systems</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p class="text-xs text-center text-gray-500 mt-2">Simplified comparison based on report details.</p>
-        </section>
-        
-        <section id="conclusion" class="pt-16 -mt-16 mb-12 content-card">
-            <h2 class="section-title">Concluding Remarks</h2>
-            <p class="mb-4 text-gray-700 leading-relaxed">Tempus AI is a rapidly growing company at the intersection of genomics, big data, and AI, aiming to revolutionize precision medicine. Its integrated business model, focusing on generating and leveraging multimodal data through its Tempus Platform, shows strong revenue growth and improving operational metrics, with a target for positive Adjusted EBITDA in 2025. This section summarizes the key takeaways from the analysis, reflecting on Tempus's potential and the challenges it faces in a competitive healthcare technology market.</p>
-            <p class="text-gray-700 leading-relaxed">Key challenges include achieving sustained GAAP profitability, managing high operating expenses during scaling, and continuously demonstrating clinical and economic value in a competitive landscape. Success hinges on data expansion, AI advancement, market penetration, and disciplined financial management. Tempus AI represents a compelling, maturing enterprise with significant potential to impact precision medicine.</p>
-        </section>
-
-    </main>
-
-    <footer class="text-center mt-12 py-6 border-t border-gray-300 w-full">
-        <p class="text-sm text-gray-600">&copy; <span id="footerYear"></span> Interactive Report Analysis. For informational purposes only.</p>
-        <p class="text-xs mt-1 text-gray-500">Data derived from Tempus AI, Inc. public disclosures and analysis report.</p>
-    </footer>
-
-    <script>
-        document.getElementById('footerYear').textContent = new Date().getFullYear();
-
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetElement = document.querySelector(this.getAttribute('href'));
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-                }
-
-                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-                if (!this.closest('#mobile-menu')) {
-                    this.classList.add('active');
-                }
-                
-                if (!mobileMenu.classList.contains('hidden')) {
-                    mobileMenu.classList.add('hidden');
-                }
-            });
-        });
-        
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('header nav a.nav-link');
-        const mobileNavLinks = document.querySelectorAll('#mobile-menu a');
-
-        window.onscroll = () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (pageYOffset >= sectionTop - 80) { 
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').substring(1) === current) {
-                    link.classList.add('active');
-                }
-            });
-            mobileNavLinks.forEach(link => { 
-                 link.classList.remove('bg-blue-100'); 
-                 if (link.getAttribute('href').substring(1) === current) {
-                    link.classList.add('bg-blue-100');
-                 }
-            });
-        };
-
-        const tempusFinancialData = {
-            revenue: {
-                labels: ['FY 2022', 'FY 2023', 'FY 2024', 'Q1 2024', 'Q1 2025'],
-                total: [321.0, 531.8, 693.4, 145.8, 255.7],
-                genomics: [198.0, 363.0, 451.7, 102.6, 193.8],
-                dataServices: [122.7, 168.8, 241.6, 43.2, 61.9]
-            },
-            profitability: {
-                labels: ['FY 2022', 'FY 2023', 'FY 2024', 'Q1 2024', 'Q1 2025'],
-                grossProfit: [122.0, 286.2, 381.1, 77.7, 155.2],
-                grossMargin: [38.0, 53.8, 55.0, 53.3, 60.7],
-                netLoss: [-289.8, -214.1, -705.8, -64.7, -68.0],
-                adjEbitda: [null, -154.2, -104.7, -43.9, -16.2] 
-            },
-            balanceSheet: {
-                labels: ['YE 2022', 'YE 2023', 'YE 2024', 'Q1 2025'],
-                cashAndSTInv: [303.0, 198.2, 448.1, 218.8],
-                totalAssets: [null, 548.6, 1180.0, 1540.0], 
-                totalLiabilities: [null, 675.9, 1650.0, 1220.0], 
-                totalEquity: [null, -127.3, -470.0, 326.2] 
-            },
-            revenueSegmentsQ12025: {
-                labels: ['Genomics', 'Data & Services'],
-                data: [193.8, 61.9] 
-            }
-        };
-        
-        const chartOptionsBase = (titleText) => ({
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                title: {
-                    display: true,
-                    text: titleText,
-                    font: { size: 16, weight: 'bold' },
-                    color: '#1e3a8a' // Darker Blue for titles
-                },
-                legend: {
-                    position: 'bottom',
-                    labels: { color: '#374151' } // Gray-700
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.7)',
-                    titleFont: { weight: 'bold'},
-                    bodyFont: {},
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed.y !== null) {
-                                label += context.parsed.y.toLocaleString() + 'M';
-                            }
-                            return label;
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    ticks: { 
-                        color: '#4b5563', // Gray-600
-                        callback: function(value) { return value.toLocaleString() + 'M'; }
-                    },
-                    grid: { color: '#d1d5db' } // Gray-300
-                },
-                x: {
-                    ticks: { color: '#4b5563' }, // Gray-600
-                    grid: { display: false }
-                }
-            }
-        });
-        
-        const themeChartColors = {
-            primaryBlue: 'rgba(59, 130, 246, 0.7)', // blue-500
-            lightBlue: 'rgba(147, 197, 253, 0.7)', // blue-300
-            darkGray: 'rgba(75, 85, 99, 0.7)', // gray-600
-            mediumGray: 'rgba(107, 114, 128, 0.7)', // gray-500
-            lightGrayBlue: 'rgba(191, 219, 254, 0.7)', // blue-200
-            accentRed: 'rgba(239, 68, 68, 0.7)', // red-500
-            accentGreen: 'rgba(16, 185, 129, 0.7)', // green-500
-            
-            primaryBlueSolid: 'rgba(59, 130, 246, 1)',
-            darkGraySolid: 'rgba(75, 85, 99, 1)',
-        };
-
-        new Chart(document.getElementById('revenueSegmentsChart'), {
-            type: 'pie',
-            data: {
-                labels: tempusFinancialData.revenueSegmentsQ12025.labels,
-                datasets: [{
-                    label: 'Revenue Q1 2025',
-                    data: tempusFinancialData.revenueSegmentsQ12025.data,
-                    backgroundColor: [themeChartColors.primaryBlue, themeChartColors.lightBlue],
-                    borderColor: ['#FFFFFF', '#FFFFFF'],
-                    borderWidth: 2
-                }]
-            },
-            options: chartOptionsBase('Revenue Contribution by Segment (Q1 2025)')
-        });
-
-        const revenueTrendChartCtx = document.getElementById('revenueTrendChart').getContext('2d');
-        let revenueTrendChartInstance = new Chart(revenueTrendChartCtx, {
-            type: 'bar',
-            data: {
-                labels: tempusFinancialData.revenue.labels,
-                datasets: [
-                    {
-                        label: 'Genomics Revenue',
-                        data: tempusFinancialData.revenue.genomics,
-                        backgroundColor: themeChartColors.primaryBlue,
-                        borderColor: themeChartColors.primaryBlueSolid,
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Data & Services Revenue',
-                        data: tempusFinancialData.revenue.dataServices,
-                        backgroundColor: themeChartColors.lightBlue,
-                        borderColor: 'rgba(147, 197, 253, 1)',
-                        borderWidth: 1
-                    },
-                     {
-                        label: 'Total Revenue',
-                        data: tempusFinancialData.revenue.total,
-                        type: 'line',
-                        borderColor: themeChartColors.darkGraySolid,
-                        backgroundColor: themeChartColors.darkGray,
-                        borderWidth: 2,
-                        fill: false,
-                        tension: 0.1,
-                        yAxisID: 'y' 
-                    }
-                ]
-            },
-            options: chartOptionsBase('Revenue Trends (USD Millions)')
-        });
-
-        const profitabilityTrendChartCtx = document.getElementById('profitabilityTrendChart').getContext('2d');
-        let profitabilityTrendChartInstance = new Chart(profitabilityTrendChartCtx, {
-            type: 'bar',
-            data: {
-                labels: tempusFinancialData.profitability.labels,
-                datasets: [
-                    {
-                        label: 'Gross Profit',
-                        data: tempusFinancialData.profitability.grossProfit,
-                        backgroundColor: themeChartColors.lightGrayBlue,
-                        yAxisID: 'yAmount'
-                    },
-                    {
-                        label: 'Net Loss',
-                        data: tempusFinancialData.profitability.netLoss,
-                        backgroundColor: themeChartColors.accentRed,
-                        yAxisID: 'yAmount'
-                    },
-                    {
-                        label: 'Adjusted EBITDA',
-                        data: tempusFinancialData.profitability.adjEbitda,
-                        backgroundColor: themeChartColors.accentGreen,
-                         yAxisID: 'yAmount'
-                    },
-                    {
-                        label: 'Gross Margin (%)',
-                        data: tempusFinancialData.profitability.grossMargin,
-                        type: 'line',
-                        borderColor: themeChartColors.primaryBlueSolid,
-                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                        fill: false,
-                        tension: 0.1,
-                        yAxisID: 'yPercentage'
-                    }
-                ]
-            },
-            options: {
-                ...chartOptionsBase('Profitability Trends (USD Millions / %)'),
-                scales: {
-                    yAmount: {
-                        type: 'linear',
-                        position: 'left',
-                        title: { display: true, text: 'Amount (USD Millions)', color: '#374151'},
-                        ticks: { color: '#4b5563', callback: function(value) { return value.toLocaleString() + 'M'; }},
-                        grid: { color: '#d1d5db' }
-                    },
-                    yPercentage: {
-                        type: 'linear',
-                        position: 'right',
-                        title: { display: true, text: 'Gross Margin (%)', color: '#374151'},
-                        ticks: { color: '#4b5563', callback: function(value) { return value.toFixed(0) + '%'; }},
-                        grid: { drawOnChartArea: false } 
-                    },
-                    x: { ticks: { color: '#4b5563' }, grid: {display: false} }
-                }
-            }
-        });
-
-        const balanceSheetChartCtx = document.getElementById('balanceSheetChart').getContext('2d');
-        let balanceSheetChartInstance = new Chart(balanceSheetChartCtx, {
-            type: 'bar',
-            data: {
-                labels: tempusFinancialData.balanceSheet.labels,
-                datasets: [
-                    {
-                        label: 'Cash & ST Investments',
-                        data: tempusFinancialData.balanceSheet.cashAndSTInv,
-                        backgroundColor: themeChartColors.primaryBlue,
-                    },
-                    {
-                        label: 'Total Assets',
-                        data: tempusFinancialData.balanceSheet.totalAssets,
-                        backgroundColor: themeChartColors.lightBlue,
-                    },
-                    {
-                        label: 'Total Liabilities',
-                        data: tempusFinancialData.balanceSheet.totalLiabilities,
-                        backgroundColor: themeChartColors.mediumGray,
-                    },
-                    {
-                        label: 'Total Equity/(Deficit)',
-                        data: tempusFinancialData.balanceSheet.totalEquity,
-                        backgroundColor: themeChartColors.darkGray,
-                    }
-                ]
-            },
-            options: chartOptionsBase('Balance Sheet Highlights (USD Millions)')
-        });
-
-        const financialTabButtons = document.querySelectorAll('.financial-tab-button');
-        const financialChartContainers = {
-            revenueTrendChart: document.getElementById('revenueTrendChartContainer'),
-            profitabilityTrendChart: document.getElementById('profitabilityTrendChartContainer'),
-            balanceSheetChart: document.getElementById('balanceSheetChartContainer')
-        };
-
-        financialTabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                financialTabButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                const chartToShow = button.dataset.chart;
-                Object.values(financialChartContainers).forEach(container => container.classList.add('hidden'));
-                if (financialChartContainers[chartToShow]) {
-                    financialChartContainers[chartToShow].classList.remove('hidden');
-                }
-
-                if (chartToShow === 'revenueTrendChart' && revenueTrendChartInstance) revenueTrendChartInstance.resize();
-                if (chartToShow === 'profitabilityTrendChart' && profitabilityTrendChartInstance) profitabilityTrendChartInstance.resize();
-                if (chartToShow === 'balanceSheetChart' && balanceSheetChartInstance) balanceSheetChartInstance.resize();
-            });
-        });
-
-    </script>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="en"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1">    &lt;meta charset="UTF-8"&gt;</span></p>
+<p class="p1"><span class="s1">    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
+<p class="p1"><span class="s1">    &lt;title&gt;Invesco QQQ Trust (QQQ) Insights: Year-End 2024&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1">    &lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">    &lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">    &lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"&gt;</span></p>
+<p class="p1"><span class="s1">    &lt;style&gt;</span></p>
+<p class="p1"><span class="s1">        body {</span></p>
+<p class="p1"><span class="s1">            font-family: 'Inter', sans-serif;</span></p>
+<p class="p1"><span class="s1">            background-color: #F8F9FA; /* Light Gray Background */</span></p>
+<p class="p1"><span class="s1">            color: #333333; /* Dark Gray Text */</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .header-bg {</span></p>
+<p class="p1"><span class="s1">            background-color: #075E54; /* Dark Emerald Green */</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .accent-bg {</span></p>
+<p class="p1"><span class="s1">            background-color: #128C7E; /* Medium Emerald Green */</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .accent-text {</span></p>
+<p class="p1"><span class="s1">            color: #128C7E; /* Medium Emerald Green */</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .highlight-text {</span></p>
+<p class="p1"><span class="s1">            color: #FFD700; /* Gold */</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .card {</span></p>
+<p class="p1"><span class="s1">            background-color: #FFFFFF; /* Card Background */</span></p>
+<p class="p1"><span class="s1">            border-radius: 0.5rem;</span></p>
+<p class="p1"><span class="s1">            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);</span></p>
+<p class="p1"><span class="s1">            padding: 1.5rem;</span></p>
+<p class="p1"><span class="s1">            margin-bottom: 1.5rem;</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .chart-container {</span></p>
+<p class="p1"><span class="s1">            position: relative;</span></p>
+<p class="p1"><span class="s1">            width: 100%;</span></p>
+<p class="p1"><span class="s1">            max-width: 600px;</span></p>
+<p class="p1"><span class="s1">            margin-left: auto;</span></p>
+<p class="p1"><span class="s1">            margin-right: auto;</span></p>
+<p class="p1"><span class="s1">            height: 300px;</span></p>
+<p class="p1"><span class="s1">            max-height: 400px;</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        @media (min-width: 768px) {</span></p>
+<p class="p1"><span class="s1">            .chart-container {</span></p>
+<p class="p1"><span class="s1">                height: 350px;</span></p>
+<p class="p1"><span class="s1">            }</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        h1, h2, h3 {</span></p>
+<p class="p1"><span class="s1">            color: #075E54; /* Dark Emerald Green */</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .stat-value {</span></p>
+<p class="p1"><span class="s1">            font-size: 2.5rem;</span></p>
+<p class="p1"><span class="s1">            font-weight: 700;</span></p>
+<p class="p1"><span class="s1">            color: #FFD700; /* Gold */</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .stat-label {</span></p>
+<p class="p1"><span class="s1">            font-size: 0.875rem;</span></p>
+<p class="p1"><span class="s1">            color: #075E54; /* Dark Emerald Green */</span></p>
+<p class="p1"><span class="s1">            text-transform: uppercase;</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .table-header {</span></p>
+<p class="p1"><span class="s1">            background-color: #128C7E; /* Medium Emerald Green */</span></p>
+<p class="p1"><span class="s1">            color: white;</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .nav-link {</span></p>
+<p class="p1"><span class="s1">            transition: color 0.3s ease;</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .nav-link:hover {</span></p>
+<p class="p1"><span class="s1">            color: #FFD700; /* Gold */</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">        .nav-link.active {</span></p>
+<p class="p1"><span class="s1">            color: #FFD700; /* Gold */</span></p>
+<p class="p1"><span class="s1">            border-bottom: 2px solid #FFD700;</span></p>
+<p class="p1"><span class="s1">        }</span></p>
+<p class="p1"><span class="s1">    &lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body class="antialiased"&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">    &lt;header class="header-bg text-white p-6 shadow-lg sticky top-0 z-50"&gt;</span></p>
+<p class="p1"><span class="s1">        &lt;div class="container mx-auto flex flex-col md:flex-row justify-between items-center"&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;h1 class="text-3xl font-bold mb-4 md:mb-0 text-center md:text-left"&gt;Invesco QQQ Trust (QQQ): Year-End 2024 Analysis&lt;/h1&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;nav&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;ul class="flex space-x-4 md:space-x-6"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;&lt;a href="#overview" class="nav-link"&gt;Overview&lt;/a&gt;&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;&lt;a href="#reconstitution" class="nav-link"&gt;Reconstitution&lt;/a&gt;&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;&lt;a href="#holdings" class="nav-link"&gt;Holdings&lt;/a&gt;&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;&lt;a href="#stock-lookup" class="nav-link"&gt;Stock Lookup&lt;/a&gt;&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;&lt;a href="#sectors" class="nav-link"&gt;Sectors&lt;/a&gt;&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;&lt;a href="#outlook" class="nav-link"&gt;Outlook&lt;/a&gt;&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/ul&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;/nav&gt;</span></p>
+<p class="p1"><span class="s1">        &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">    &lt;/header&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">    &lt;main class="container mx-auto p-4 md:p-8"&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        &lt;section id="overview" class="mb-12 pt-16 -mt-16"&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;h2 class="text-3xl font-semibold mb-6 text-center"&gt;QQQ at a Glance: Year-End 2024&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1">                The Invesco QQQ Trust, tracking the Nasdaq-100 Index, demonstrated significant growth and market prominence through 2024. This overview highlights key performance indicators and the fund's substantial market presence.</span></p>
+<p class="p1"><span class="s1">            &lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-center"&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-value"&gt;$318.9B&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-label"&gt;Assets Under Management (AUM)&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-sm text-gray-600 mt-2"&gt;As of December 31, 2024, reflecting strong investor confidence.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-value"&gt;24.88%&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-label"&gt;Nasdaq-100 Price Return (2024)&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-sm text-gray-600 mt-2"&gt;Building on a 53.81% return in 2023.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-value"&gt;0.20%&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-label"&gt;Expense Ratio&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-sm text-gray-600 mt-2"&gt;A cost-effective way to access Nasdaq-100 companies.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        &lt;section id="reconstitution" class="mb-12 pt-16 -mt-16"&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;h2 class="text-3xl font-semibold mb-6 text-center"&gt;Nasdaq-100 Index Reconstitution: December 2024&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1">                The annual Nasdaq-100 reconstitution, effective December 23, 2024, ensures the index reflects current market leadership. This process involves adding companies with growing significance and removing others, impacting QQQ's portfolio.</span></p>
+<p class="p1"><span class="s1">            &lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="grid grid-cols-1 md:grid-cols-2 gap-8"&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;h3 class="text-2xl font-semibold mb-4 accent-text text-center"&gt;Companies Added to Nasdaq-100&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;ul class="space-y-3"&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li class="p-3 bg-green-50 rounded-md shadow-sm"&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;strong class="text-green-700"&gt;Palantir Technologies Inc. (PLTR)&lt;/strong&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;p class="text-sm text-gray-600"&gt;AI-powered data analytics, signaling focus on AI applications.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li class="p-3 bg-green-50 rounded-md shadow-sm"&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;strong class="text-green-700"&gt;MicroStrategy Incorporated (MSTR)&lt;/strong&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;p class="text-sm text-gray-600"&gt;Significant Bitcoin holdings, indicating digital asset economy integration.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li class="p-3 bg-green-50 rounded-md shadow-sm"&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;strong class="text-green-700"&gt;Axon Enterprise, Inc. (AXON)&lt;/strong&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;p class="text-sm text-gray-600"&gt;Growth in public safety technology and software.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;/ul&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;h3 class="text-2xl font-semibold mb-4 text-red-600 text-center"&gt;Companies Removed from Nasdaq-100&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;ul class="space-y-3"&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li class="p-3 bg-red-50 rounded-md shadow-sm"&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;strong class="text-red-700"&gt;Illumina, Inc. (ILMN)&lt;/strong&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;p class="text-sm text-gray-600"&gt;Genomics leader, potentially signaling market shifts.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li class="p-3 bg-red-50 rounded-md shadow-sm"&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;strong class="text-red-700"&gt;Super Micro Computer, Inc. (SMCI)&lt;/strong&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;p class="text-sm text-gray-600"&gt;Despite growth, removed due to relative changes or index rules.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li class="p-3 bg-red-50 rounded-md shadow-sm"&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;strong class="text-red-700"&gt;Moderna, Inc. (MRNA)&lt;/strong&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;p class="text-sm text-gray-600"&gt;Biotech firm, possibly indicating a shift from pandemic-era beneficiaries.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;/ul&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;p class="text-md text-gray-600 mt-6 text-center max-w-3xl mx-auto"&gt;This rebalance fine-tuned the index, highlighting emerging themes like AI and digital assets, while recalibrating exposure away from certain biotech segments.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        &lt;section id="holdings" class="mb-12 pt-16 -mt-16"&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;h2 class="text-3xl font-semibold mb-6 text-center"&gt;Deep Dive: QQQ Top Holdings &amp; Concentration&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1">                QQQ's performance is heavily influenced by its top holdings, primarily mega-cap technology and growth companies. The concentration of returns in these few names is a defining characteristic of the fund.</span></p>
+<p class="p1"><span class="s1">            &lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="card md:col-span-2 overflow-x-auto"&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;h3 class="text-2xl font-semibold mb-4 accent-text"&gt;Top 10 Holdings (as of December 31, 2024)&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;p class="text-sm text-gray-600 mb-4"&gt;QQQ mirrors the Nasdaq-100. Data below reflects Nasdaq-100 year-end information. Percentages are approximate where noted.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;table class="min-w-full divide-y divide-gray-200"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;thead class="table-header"&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider"&gt;Ticker&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider"&gt;Company Name&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider"&gt;GICS Sector&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider"&gt;% of QQQ (Approx.)&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1">                            &lt;th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider"&gt;Market Cap (USD B)&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;/thead&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;tbody class="bg-white divide-y divide-gray-200"&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;AAPL&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Apple Inc.&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Information Technology&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;9.74%&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;3,785.30&lt;/td&gt;&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;NVDA&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;NVIDIA Corp&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Information Technology&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;High*&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;3,288.76&lt;/td&gt;&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;MSFT&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Microsoft Corp&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Information Technology&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;High*&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;3,133.80&lt;/td&gt;&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;AMZN&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Amazon.com Inc&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Consumer Discretionary&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;High*&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;2,306.89&lt;/td&gt;&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;GOOGL&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Alphabet Inc. Class A&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Communication Services&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;2.85%&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;2,159.97&lt;/td&gt;&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;TSLA&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Tesla Inc.&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Consumer Discretionary&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;3.77%&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;1,296.35&lt;/td&gt;&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;META&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Meta Platforms Inc. Class A&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Communication Services&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;High*&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;1,276.41&lt;/td&gt;&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;AVGO&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Broadcom Inc.&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Information Technology&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;High*&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;1,086.72&lt;/td&gt;&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;COST&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Costco Wholesale Corp&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Consumer Staples&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;2.57%&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;406.73&lt;/td&gt;&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;tr&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;NFLX&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Netflix Inc.&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;Communication Services&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;High*&lt;/td&gt;&lt;td class="px-4 py-2 whitespace-nowrap"&gt;381.27&lt;/td&gt;&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;/tbody&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/table&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;p class="text-xs text-gray-500 mt-2"&gt;*Note: Percentages for NVDA, MSFT, AMZN, META, AVGO, NFLX are not explicitly provided for 12/31/2024 in the source data, but their market caps indicate significant weight.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">            &lt;h3 class="text-2xl font-semibold mt-10 mb-6 text-center accent-text"&gt;The Power of a Few: Concentration Risk&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">             &lt;p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1">                The Nasdaq-100's 2024 returns were overwhelmingly driven by its largest constituents, indicating a "narrow market." This concentration presents both opportunities and risks for QQQ investors.</span></p>
+<p class="p1"><span class="s1">            &lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center"&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-value"&gt;97.2%&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-label"&gt;Top 10 Contribution to NDX Return&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-sm text-gray-600 mt-2"&gt;Top 10 highest-weighted companies contributed 25.2% to the index's 25.9% total return.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-value"&gt;72%&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-label"&gt;"Magnificent Seven" Share of NDX 2024 Returns&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-sm text-gray-600 mt-2"&gt;Highlighting extreme concentration of risk and reward.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-value"&gt;22%&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="stat-label"&gt;"Hit Rate" in 2024&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-sm text-gray-600 mt-2"&gt;Percentage of Nasdaq-100 names beating the benchmark, indicating narrow market leadership.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;p class="text-md text-gray-600 mt-6 text-center max-w-3xl mx-auto"&gt;This extreme concentration means QQQ's performance is highly sensitive to these few giants, making it a high-conviction play rather than a broadly diversified one.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        &lt;section id="stock-lookup" class="mb-12 pt-16 -mt-16"&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;h2 class="text-3xl font-semibold mb-6 text-center"&gt;Explore Individual QQQ Holdings (Top 25)&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1">                Select a company from the dropdown to see more details about its presence within the QQQ Trust. This list focuses on the top 25 representative holdings.</span></p>
+<p class="p1"><span class="s1">            &lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="card max-w-xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="mb-4"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;label for="stockSelect" class="block text-gray-700 text-sm font-bold mb-2"&gt;Select a QQQ Stock:&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;select id="stockSelect" class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-bg focus:border-transparent"&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;option value=""&gt;-- Select a Stock --&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;/select&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div id="selectedStockInfo" class="mt-6 p-4 bg-gray-50 rounded-md border border-gray-200 text-gray-800"&gt;</span></p>
+<p class="p1"><span class="s1">                    Please select a stock from the dropdown above to view its information.</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        &lt;section id="sectors" class="mb-12 pt-16 -mt-16"&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;h2 class="text-3xl font-semibold mb-6 text-center"&gt;Sector &amp; Market Cap Breakdown&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1">                QQQ's portfolio is heavily weighted towards Information Technology, followed by Communication Services and Consumer Discretionary. It predominantly comprises Giant-cap and Large-cap companies.</span></p>
+<p class="p1"><span class="s1">            &lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start"&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;h3 class="text-2xl font-semibold mb-4 accent-text text-center"&gt;QQQ Sector Allocation (Approx. Dec 31, 2024)&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;div class="chart-container h-[350px] md:h-[400px]"&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;canvas id="sectorAllocationChart"&gt;&lt;/canvas&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-sm text-gray-600 mt-4 text-center"&gt;Information Technology dominates, underscoring the fund's tech-centric nature.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;h3 class="text-2xl font-semibold mb-4 accent-text text-center"&gt;Market Capitalization Distribution (Proxy May 2025)&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">                     &lt;div class="chart-container h-[350px] md:h-[400px]"&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;canvas id="marketCapChart"&gt;&lt;/canvas&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-sm text-gray-600 mt-4 text-center"&gt;Focus on established, large-scale enterprises.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        &lt;section id="outlook" class="mb-12 pt-16 -mt-16"&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;h2 class="text-3xl font-semibold mb-6 text-center"&gt;Performance, Valuation &amp; Forward Look&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto"&gt;</span></p>
+<p class="p1"><span class="s1">                While QQQ delivered strong returns in 2024, its high concentration and valuation metrics warrant careful consideration in light of macroeconomic factors and potential market rotations.</span></p>
+<p class="p1"><span class="s1">            &lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card text-center"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;h3 class="text-xl font-semibold mb-2 accent-text"&gt;Q4 2024 Dividend&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-3xl font-bold highlight-text"&gt;$0.83466&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-sm text-gray-600"&gt;per share&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;div class="card text-center"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;h3 class="text-xl font-semibold mb-2 accent-text"&gt;Annual Dividend Yield&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-3xl font-bold highlight-text"&gt;~0.56%&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-sm text-gray-600"&gt;Relatively low, typical for growth-focused funds.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">                 &lt;div class="card"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;h3 class="text-xl font-semibold mb-2 accent-text text-center"&gt;Valuation Snapshot&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;ul class="text-sm text-gray-700 space-y-1"&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;P/E Ratio (QQQ, May '25):&lt;/strong&gt; 25.12&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;P/B Ratio (QQQ, May '25):&lt;/strong&gt; 6.29&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;P/S Ratio (QQQ, May '25):&lt;/strong&gt; 4.86&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;P/BV (NDX, Dec '24):&lt;/strong&gt; 6.11&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;EV/Sales (NDX, Dec '24):&lt;/strong&gt; 4.94&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;/ul&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-xs text-gray-500 mt-2"&gt;Reflects premium for growth potential.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;div class="card mt-8"&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;h3 class="text-2xl font-semibold mb-4 accent-text"&gt;Key Takeaways &amp; Future Considerations&lt;/h3&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;ul class="list-disc list-inside space-y-2 text-gray-700"&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;QQQ remains a highly concentrated bet on mega-cap tech and growth leaders.&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;Performance in 2025 will likely hinge on these few dominant companies and their ability to innovate and maintain profitability.&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;High valuations and a "higher-for-longer" interest rate environment could pose headwinds.&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;Potential market rotation towards broader earnings growth could impact QQQ's relative outperformance.&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;li&gt;Investors should monitor macroeconomic indicators, Fed policy, and the performance of top holdings closely.&lt;/li&gt;</span></p>
+<p class="p1"><span class="s1">                &lt;/ul&gt;</span></p>
+<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">    &lt;/main&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">    &lt;footer class="bg-gray-800 text-gray-300 p-8 text-center"&gt;</span></p>
+<p class="p1"><span class="s1">        &lt;p&gt;&amp;copy; 2025 QQQ Insights Infographic. Data based on year-end 2024 reports.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">        &lt;p class="text-xs mt-2"&gt;This infographic is for informational purposes only and not financial advice.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">    &lt;/footer&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">    &lt;script&gt;</span></p>
+<p class="p1"><span class="s1">        const wrapLabel = (label, maxLength = 16) =&gt; {</span></p>
+<p class="p1"><span class="s1">            if (typeof label !== 'string' || label.length &lt;= maxLength) {</span></p>
+<p class="p1"><span class="s1">                return label;</span></p>
+<p class="p1"><span class="s1">            }</span></p>
+<p class="p1"><span class="s1">            const words = label.split(' ');</span></p>
+<p class="p1"><span class="s1">            const lines = [];</span></p>
+<p class="p1"><span class="s1">            let currentLine = '';</span></p>
+<p class="p1"><span class="s1">            for (const word of words) {</span></p>
+<p class="p1"><span class="s1">                if ((currentLine + word).length &gt; maxLength &amp;&amp; currentLine.length &gt; 0) {</span></p>
+<p class="p1"><span class="s1">                    lines.push(currentLine.trim());</span></p>
+<p class="p1"><span class="s1">                    currentLine = '';</span></p>
+<p class="p1"><span class="s1">                }</span></p>
+<p class="p1"><span class="s1">                currentLine += word + ' ';</span></p>
+<p class="p1"><span class="s1">            }</span></p>
+<p class="p1"><span class="s1">            if (currentLine.trim().length &gt; 0) {</span></p>
+<p class="p1"><span class="s1">                lines.push(currentLine.trim());</span></p>
+<p class="p1"><span class="s1">            }</span></p>
+<p class="p1"><span class="s1">            return lines.length &gt; 0 ? lines : [label];</span></p>
+<p class="p1"><span class="s1">        };</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        const tooltipTitleCallback = (tooltipItems) =&gt; {</span></p>
+<p class="p1"><span class="s1">            const item = tooltipItems[0];</span></p>
+<p class="p1"><span class="s1">            if (!item) return '';</span></p>
+<p class="p1"><span class="s1">            let label = item.chart.data.labels[item.dataIndex];</span></p>
+<p class="p1"><span class="s1">            if (Array.isArray(label)) {</span></p>
+<p class="p1"><span class="s1">                return label.join(' ');</span></p>
+<p class="p1"><span class="s1">            }</span></p>
+<p class="p1"><span class="s1">            return label;</span></p>
+<p class="p1"><span class="s1">        };</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        const commonChartOptions = {</span></p>
+<p class="p1"><span class="s1">            responsive: true,</span></p>
+<p class="p1"><span class="s1">            maintainAspectRatio: false,</span></p>
+<p class="p1"><span class="s1">            plugins: {</span></p>
+<p class="p1"><span class="s1">                legend: {</span></p>
+<p class="p1"><span class="s1">                    position: 'bottom',</span></p>
+<p class="p1"><span class="s1">                    labels: {</span></p>
+<p class="p1"><span class="s1">                        color: '#333333',</span></p>
+<p class="p1"><span class="s1">                        font: { size: 12 }</span></p>
+<p class="p1"><span class="s1">                    }</span></p>
+<p class="p1"><span class="s1">                },</span></p>
+<p class="p1"><span class="s1">                tooltip: {</span></p>
+<p class="p1"><span class="s1">                    callbacks: {</span></p>
+<p class="p1"><span class="s1">                        title: tooltipTitleCallback</span></p>
+<p class="p1"><span class="s1">                    },</span></p>
+<p class="p1"><span class="s1">                    backgroundColor: '#075E54',</span></p>
+<p class="p1"><span class="s1">                    titleColor: '#FFFFFF',</span></p>
+<p class="p1"><span class="s1">                    bodyColor: '#FFFFFF',</span></p>
+<p class="p1"><span class="s1">                    borderColor: '#FFD700',</span></p>
+<p class="p1"><span class="s1">                    borderWidth: 1</span></p>
+<p class="p1"><span class="s1">                }</span></p>
+<p class="p1"><span class="s1">            },</span></p>
+<p class="p1"><span class="s1">            scales: {</span></p>
+<p class="p1"><span class="s1">                y: {</span></p>
+<p class="p1"><span class="s1">                    ticks: { color: '#333333', font: { size: 10 } },</span></p>
+<p class="p1"><span class="s1">                    grid: { color: '#e0e0e0' }</span></p>
+<p class="p1"><span class="s1">                },</span></p>
+<p class="p1"><span class="s1">                x: {</span></p>
+<p class="p1"><span class="s1">                    ticks: { color: '#333333', font: { size: 10 } },</span></p>
+<p class="p1"><span class="s1">                    grid: { display: false }</span></p>
+<p class="p1"><span class="s1">                }</span></p>
+<p class="p1"><span class="s1">            }</span></p>
+<p class="p1"><span class="s1">        };</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        const emeraldGoldPalette = ['#075E54', '#128C7E', '#25D366', '#FFD700', '#064940', '#0E7A6E'];</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        // Sector Allocation Chart</span></p>
+<p class="p1"><span class="s1">        const sectorData = {</span></p>
+<p class="p1"><span class="s1">            labels: [</span></p>
+<p class="p1"><span class="s1">                wrapLabel('Information Technology'), wrapLabel('Communication Services'), wrapLabel('Consumer Discretionary'),</span></p>
+<p class="p1"><span class="s1">                wrapLabel('Consumer Staples'), wrapLabel('Health Care'), wrapLabel('Industrials'),</span></p>
+<p class="p1"><span class="s1">                wrapLabel('Utilities'), wrapLabel('Materials'), wrapLabel('Energy'), wrapLabel('Financials')</span></p>
+<p class="p1"><span class="s1">            ],</span></p>
+<p class="p1"><span class="s1">            datasets: [{</span></p>
+<p class="p1"><span class="s1">                label: 'Sector Allocation',</span></p>
+<p class="p1"><span class="s1">                data: [52.73, 15.66, 13.87, 6.06, 5.55, 4.86, 1.46, 1.46, 0.52, 0.44],</span></p>
+<p class="p1"><span class="s1">                backgroundColor: emeraldGoldPalette,</span></p>
+<p class="p1"><span class="s1">                borderColor: '#FFFFFF',</span></p>
+<p class="p1"><span class="s1">                borderWidth: 2</span></p>
+<p class="p1"><span class="s1">            }]</span></p>
+<p class="p1"><span class="s1">        };</span></p>
+<p class="p1"><span class="s1">        const sectorAllocationCtx = document.getElementById('sectorAllocationChart').getContext('2d');</span></p>
+<p class="p1"><span class="s1">        new Chart(sectorAllocationCtx, {</span></p>
+<p class="p1"><span class="s1">            type: 'doughnut',</span></p>
+<p class="p1"><span class="s1">            data: sectorData,</span></p>
+<p class="p1"><span class="s1">            options: { ...commonChartOptions, cutout: '60%' }</span></p>
+<p class="p1"><span class="s1">        });</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        // Market Cap Chart</span></p>
+<p class="p1"><span class="s1">        const marketCapData = {</span></p>
+<p class="p1"><span class="s1">            labels: [wrapLabel('Giant-cap'), wrapLabel('Large-cap'), wrapLabel('Mid-cap')],</span></p>
+<p class="p1"><span class="s1">            datasets: [{</span></p>
+<p class="p1"><span class="s1">                label: 'Market Cap Distribution (%)',</span></p>
+<p class="p1"><span class="s1">                data: [54.48, 34.12, 10.74],</span></p>
+<p class="p1"><span class="s1">                backgroundColor: ['#075E54', '#128C7E', '#25D366'],</span></p>
+<p class="p1"><span class="s1">                borderColor: '#FFFFFF',</span></p>
+<p class="p1"><span class="s1">                borderWidth: 1</span></p>
+<p class="p1"><span class="s1">            }]</span></p>
+<p class="p1"><span class="s1">        };</span></p>
+<p class="p1"><span class="s1">        const marketCapCtx = document.getElementById('marketCapChart').getContext('2d');</span></p>
+<p class="p1"><span class="s1">        new Chart(marketCapCtx, {</span></p>
+<p class="p1"><span class="s1">            type: 'bar',</span></p>
+<p class="p1"><span class="s1">            data: marketCapData,</span></p>
+<p class="p1"><span class="s1">            options: {</span></p>
+<p class="p1"><span class="s1">                ...commonChartOptions,</span></p>
+<p class="p1"><span class="s1">                indexAxis: 'y',</span></p>
+<p class="p1"><span class="s1">                 scales: {</span></p>
+<p class="p1"><span class="s1">                    y: {</span></p>
+<p class="p1"><span class="s1">                        ticks: { color: '#333333', font: { size: 12 }, autoSkip: false },</span></p>
+<p class="p1"><span class="s1">                        grid: { display: false }</span></p>
+<p class="p1"><span class="s1">                    },</span></p>
+<p class="p1"><span class="s1">                    x: {</span></p>
+<p class="p1"><span class="s1">                        ticks: { color: '#333333', font: { size: 10 }, callback: function(value) { return value + '%' } },</span></p>
+<p class="p1"><span class="s1">                        grid: { color: '#e0e0e0' }</span></p>
+<p class="p1"><span class="s1">                    }</span></p>
+<p class="p1"><span class="s1">                },</span></p>
+<p class="p1"><span class="s1">                plugins: {</span></p>
+<p class="p1"><span class="s1">                    legend: { display: false },</span></p>
+<p class="p1"><span class="s1">                    tooltip: {</span></p>
+<p class="p1"><span class="s1">                        callbacks: {</span></p>
+<p class="p1"><span class="s1">                            title: tooltipTitleCallback,</span></p>
+<p class="p1"><span class="s1">                            label: function(context) {</span></p>
+<p class="p1"><span class="s1">                                return `${context.dataset.label}: ${context.parsed.x}%`;</span></p>
+<p class="p1"><span class="s1">                            }</span></p>
+<p class="p1"><span class="s1">                        },</span></p>
+<p class="p1"><span class="s1">                        backgroundColor: '#075E54',</span></p>
+<p class="p1"><span class="s1">                        titleColor: '#FFFFFF',</span></p>
+<p class="p1"><span class="s1">                        bodyColor: '#FFFFFF',</span></p>
+<p class="p1"><span class="s1">                        borderColor: '#FFD700',</span></p>
+<p class="p1"><span class="s1">                        borderWidth: 1</span></p>
+<p class="p1"><span class="s1">                    }</span></p>
+<p class="p1"><span class="s1">                }</span></p>
+<p class="p1"><span class="s1">            }</span></p>
+<p class="p1"><span class="s1">        });</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        // Stock Lookup Dropdown Logic - Now includes top 25 representative stocks</span></p>
+<p class="p1"><span class="s1">        const qqqStocks = [</span></p>
+<p class="p1"><span class="s1">            { ticker: 'AAPL', name: 'Apple Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'NVDA', name: 'NVIDIA Corp' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'MSFT', name: 'Microsoft Corp' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'AMZN', name: 'Amazon.com Inc' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'GOOGL', name: 'Alphabet Inc. Class A' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'TSLA', name: 'Tesla Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'META', name: 'Meta Platforms Inc. Class A' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'AVGO', name: 'Broadcom Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'COST', name: 'Costco Wholesale Corp' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'NFLX', name: 'Netflix Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'PLTR', name: 'Palantir Technologies Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'MSTR', name: 'MicroStrategy Incorporated' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'AXON', name: 'Axon Enterprise, Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'ADBE', name: 'Adobe Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'INTC', name: 'Intel Corp.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'CMCSA', name: 'Comcast Corp.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'PEP', name: 'PepsiCo Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'SBUX', name: 'Starbucks Corp.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'CSCO', name: 'Cisco Systems Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'QCOM', name: 'Qualcomm Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'AMD', name: 'Advanced Micro Devices Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'CMG', name: 'Chipotle Mexican Grill Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'WDAY', name: 'Workday Inc.' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'MAR', name: 'Marriott International Inc. Class A' },</span></p>
+<p class="p1"><span class="s1">            { ticker: 'LRCX', name: 'Lam Research Corp.' }</span></p>
+<p class="p1"><span class="s1">        ].sort((a, b) =&gt; a.ticker.localeCompare(b.ticker)); // Sort alphabetically by ticker</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        const stockSelect = document.getElementById('stockSelect');</span></p>
+<p class="p1"><span class="s1">        const selectedStockInfo = document.getElementById('selectedStockInfo');</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        qqqStocks.forEach(stock =&gt; {</span></p>
+<p class="p1"><span class="s1">            const option = document.createElement('option');</span></p>
+<p class="p1"><span class="s1">            option.value = stock.ticker;</span></p>
+<p class="p1"><span class="s1">            option.textContent = `${stock.ticker} - ${stock.name}`;</span></p>
+<p class="p1"><span class="s1">            stockSelect.appendChild(option);</span></p>
+<p class="p1"><span class="s1">        });</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        stockSelect.addEventListener('change', (event) =&gt; {</span></p>
+<p class="p1"><span class="s1">            const selectedTicker = event.target.value;</span></p>
+<p class="p1"><span class="s1">            if (selectedTicker) {</span></p>
+<p class="p1"><span class="s1">                const stock = qqqStocks.find(s =&gt; s.ticker === selectedTicker);</span></p>
+<p class="p1"><span class="s1">                selectedStockInfo.innerHTML = `</span></p>
+<p class="p1"><span class="s1">                    &lt;h4 class="text-xl font-semibold mb-2 accent-text"&gt;${stock.name} (${stock.ticker})&lt;/h4&gt;</span></p>
+<p class="p1"><span class="s1">                    &lt;p class="text-gray-700"&gt;</span></p>
+<p class="p1"><span class="s1">                        Detailed information for ${stock.name} would be displayed here, including its specific weight in QQQ, recent performance, and relevant news.</span></p>
+<p class="p1"><span class="s1">                        This section can be expanded to fetch real-time data or more detailed report insights.</span></p>
+<p class="p1"><span class="s1">                    &lt;/p&gt;</span></p>
+<p class="p1"><span class="s1">                `;</span></p>
+<p class="p1"><span class="s1">            } else {</span></p>
+<p class="p1"><span class="s1">                selectedStockInfo.innerHTML = `Please select a stock from the dropdown above to view its information.`;</span></p>
+<p class="p1"><span class="s1">            }</span></p>
+<p class="p1"><span class="s1">        });</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        // Smooth scroll for navigation</span></p>
+<p class="p1"><span class="s1">        document.querySelectorAll('a[href^="#"]').forEach(anchor =&gt; {</span></p>
+<p class="p1"><span class="s1">            anchor.addEventListener('click', function (e) {</span></p>
+<p class="p1"><span class="s1">                e.preventDefault();</span></p>
+<p class="p1"><span class="s1">                document.querySelector(this.getAttribute('href')).scrollIntoView({</span></p>
+<p class="p1"><span class="s1">                    behavior: 'smooth'</span></p>
+<p class="p1"><span class="s1">                });</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">                // Active link styling</span></p>
+<p class="p1"><span class="s1">                document.querySelectorAll('nav .nav-link').forEach(link =&gt; link.classList.remove('active'));</span></p>
+<p class="p1"><span class="s1">                this.classList.add('active');</span></p>
+<p class="p1"><span class="s1">            });</span></p>
+<p class="p1"><span class="s1">        });</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        // Active link on scroll</span></p>
+<p class="p1"><span class="s1">        const sections = document.querySelectorAll('section[id]');</span></p>
+<p class="p1"><span class="s1">        const navLinks = document.querySelectorAll('nav .nav-link');</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">        window.addEventListener('scroll', () =&gt; {</span></p>
+<p class="p1"><span class="s1">            let current = '';</span></p>
+<p class="p1"><span class="s1">            sections.forEach(section =&gt; {</span></p>
+<p class="p1"><span class="s1">                const sectionTop = section.offsetTop;</span></p>
+<p class="p1"><span class="s1">                if (pageYOffset &gt;= sectionTop - 70) { // 70 is approx header height + some buffer</span></p>
+<p class="p1"><span class="s1">                    current = section.getAttribute('id');</span></p>
+<p class="p1"><span class="s1">                }</span></p>
+<p class="p1"><span class="s1">            });</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">            navLinks.forEach(link =&gt; {</span></p>
+<p class="p1"><span class="s1">                link.classList.remove('active');</span></p>
+<p class="p1"><span class="s1">                if (link.getAttribute('href').includes(current)) {</span></p>
+<p class="p1"><span class="s1">                    link.classList.add('active');</span></p>
+<p class="p1"><span class="s1">                }</span></p>
+<p class="p1"><span class="s1">            });</span></p>
+<p class="p1"><span class="s1">        });</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">    &lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
 </body>
 </html>
-
