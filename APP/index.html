@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive AppLovin (APP) Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; 
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 350px;
+        }
+         @media (min-width: 768px) { /* md breakpoint */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        h1.main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+            padding-top: 0.5rem; 
+        }
+        h2.company-title { 
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #60A5FA; /* blue-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        h3.section-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2DD4BF; /* teal-400 */
+            margin-top: 1.5rem; 
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        h4.subsection-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; 
+            margin-bottom: 0.75rem; 
+        }
+        p, li {
+            line-height: 1.75; 
+            margin-bottom: 1rem; 
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem; 
+        }
+        ul {
+            list-style-type: none; 
+            padding-left: 0; 
+        }
+        ul li {
+            padding-left: 1.75rem; 
+            position: relative;
+        }
+        ul li::before { 
+            content: '➔';
+            position: absolute;
+            left: 0;
+            color: #60A5FA; /* blue-400 */
+            font-weight: bold;
+        }
+        .metric-card { 
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem; 
+            text-align: center;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03);
+        }
+        .metric-card-title { 
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem; 
+            font-weight: 500; 
+        }
+        .metric-card-value { 
+            font-size: 1.75rem; /* text-2xl */
+            font-weight: 600; 
+            color: #1F2937; /* gray-800 */
+        }
+        .content-wrapper { 
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); 
+            padding: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+    </style>
+</head>
+
+<body class="bg-stone-100 text-gray-700 min-h-screen">
+    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <h1 class="main-title text-3xl">Interactive AppLovin (APP) Analysis</h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+        <section id="app-content">
+            <div class="content-wrapper">
+                <h2 class="company-title">AppLovin Corp. (APP) In-Depth Analysis</h2>
+                <p class="text-gray-600 mb-6 text-base md:text-lg">This interactive report explores AppLovin Corporation (APP), a leading AI-powered advertising and marketing technology platform. Discover its strategic evolution from mobile gaming to a high-margin ad-tech powerhouse, its innovative AXON AI engine, core Software Platform components (AppDiscovery, MAX, Adjust, Wurl), competitive positioning, robust financial performance, and future growth trajectory in e-commerce and Connected TV (CTV).</p>
+
+                <div id="app-overview">
+                    <h3 class="section-title">1. Company Overview & Strategic Evolution</h3>
+                    <p>AppLovin Corporation (APP), founded in 2012, has undergone a significant transformation from a mobile gaming entity into a sophisticated, AI-driven advertising and marketing platform. The company's mission is to provide comprehensive end-to-end software and AI solutions that enable businesses of all sizes to effectively connect with their ideal customers and grow their operations. A pivotal strategic move is the ongoing divestiture of its first-party mobile games business (historically known as the Apps segment) to Tripledot Studios, a transaction expected to close in the second quarter of 2025. This divestiture underscores AppLovin's commitment to sharpening its focus on its high-margin, core ad-tech Software Platform, which now constitutes its primary Advertising revenue stream. Central to its technological prowess is the AXON AI engine, which powers its advertising solutions and is key to its expansion into new verticals like e-commerce and Connected TV (CTV).</p>
+                </div>
+
+                <div id="app-business-model">
+                    <h3 class="section-title">2. Business Model & Platform Components</h3>
+                    <p>AppLovin's business model is centered around its advanced Software Platform, which leverages the proprietary AXON AI engine to deliver superior advertising performance and monetization solutions for mobile app developers and marketers.</p>
+                    <h4 class="subsection-title">Core Software Platform (Advertising Revenue):</h4>
+                    <ul>
+                        <li><strong>AppDiscovery:</strong> An AI-driven user acquisition solution that helps advertisers find and acquire high-value users for their mobile apps. Revenue is primarily performance-based, typically on a cost-per-install (CPI) or cost-per-action (CPA) model.</li>
+                        <li><strong>MAX:</strong> A leading in-app bidding and monetization platform that enables app publishers to maximize their advertising revenue through a competitive, unified auction. MAX commands a significant market share (reportedly >60%) and generates revenue through a fee (around 5%) from third-party advertisers participating in the auction.</li>
+                        <li><strong>Adjust:</strong> A mobile app measurement, attribution, and analytics platform acquired by AppLovin. Adjust provides marketers with critical insights into their campaign performance and user behavior, operating on a Software-as-a-Service (SaaS) revenue model.</li>
+                        <li><strong>Wurl:</strong> A platform focused on Connected TV (CTV) advertising distribution and monetization, representing AppLovin's strategic expansion into the growing CTV market.</li>
+                        <li><strong>SparkLabs:</strong> An in-house creative studio that develops high-performing ad creatives, leveraging data insights to optimize engagement and conversion for AppLovin's clients.</li>
+                    </ul>
+                    <h4 class="subsection-title">Apps Segment (Being Divested):</h4>
+                     <p>Historically, this segment comprised a portfolio of first-party mobile games. These games generated revenue through in-app purchases (IAP) and in-app advertising (IAA), and crucially, provided valuable first-party data that was instrumental in training and refining the AXON AI engine. The divestiture signals a strategic shift to pure-play ad-tech.</p>
+                    <h4 class="subsection-title">Revenue Generation & Product Delivery:</h4>
+                    <p>AppLovin's revenue is predominantly driven by performance-based advertising (via AppDiscovery), fees from its MAX mediation platform, and SaaS subscriptions from Adjust. Emerging revenue streams from Wurl in the CTV space are also contributing to growth. Product delivery relies on the sophisticated AXON AI engine, an integrated technology stack, a global infrastructure, and increasingly, self-service platforms that empower clients to manage their campaigns and monetization strategies directly.</p>
+                </div>
+
+                <div id="app-products">
+                    <h3 class="section-title">3. Product & Service Portfolio (Software Platform Focus)</h3>
+                    <p>With the strategic shift away from first-party game development, AppLovin's product portfolio is now squarely focused on its Software Platform, providing a comprehensive suite of tools for mobile app growth and monetization, powered by its advanced AI technology.</p>
+                    <ul>
+                        <li><strong>AI-Powered Advertising:</strong> Leveraging the AXON engine, AppDiscovery offers intelligent targeting and campaign optimization to drive efficient user acquisition for advertisers.</li>
+                        <li><strong>Advanced Monetization:</strong> MAX provides publishers with a sophisticated in-app bidding solution that maximizes ad revenue by creating a fair and competitive auction for ad inventory.</li>
+                        <li><strong>Measurement & Analytics:</strong> Adjust offers robust mobile attribution, analytics, and fraud prevention tools, giving marketers clear visibility into their marketing spend and performance.</li>
+                        <li><strong>Creative Optimization:</strong> SparkLabs develops data-driven, high-impact ad creatives designed to capture user attention and drive conversions.</li>
+                        <li><strong>CTV Solutions:</strong> Wurl enables content distribution and advertising monetization for CTV publishers, tapping into the rapidly expanding connected TV advertising market.</li>
+                        <li><strong>Emerging E-commerce Solutions:</strong> AppLovin is extending its AI capabilities to the e-commerce sector, aiming to help online retailers acquire customers and drive sales more effectively.</li>
+                    </ul>
+                </div>
+
+                <div id="app-competition">
+                    <h3 class="section-title">4. Competitive Landscape & Market Positioning</h3>
+                    <p>AppLovin operates in the highly competitive and rapidly evolving ad-tech and mobile monetization landscape. Its success is built on technological innovation, particularly its AI capabilities, and a comprehensive, integrated platform offering.</p>
+                    <h4 class="subsection-title">Key Competitors:</h4>
+                    <ul>
+                        <li><strong>Google:</strong> A dominant force in digital advertising with Google Ads and AdMob.</li>
+                        <li><strong>Meta (Facebook):</strong> Offers extensive advertising solutions through Facebook Audience Network and its core platforms.</li>
+                        <li><strong>Unity (incorporating ironSource):</strong> A major competitor, especially after Unity's merger with ironSource, offering game development tools and a strong mobile ad monetization platform.</li>
+                        <li><strong>Digital Turbine:</strong> Provides mobile platform solutions for carriers and OEMs, including app distribution and advertising.</li>
+                        <li>Other ad networks, demand-side platforms (DSPs), and supply-side platforms (SSPs).</li>
+                    </ul>
+                     <h4 class="subsection-title">Market Position & Competitive Advantages:</h4>
+                    <ul>
+                        <li><strong>Leading AI-Driven Performance:</strong> The AXON AI engine is a core differentiator, enabling superior targeting, campaign optimization, and return on ad spend for clients.</li>
+                        <li><strong>Integrated Full-Stack Solution:</strong> Offering a comprehensive suite (AppDiscovery, MAX, Adjust) provides a one-stop-shop for many mobile developers and marketers.</li>
+                        <li><strong>Market Leadership in Mediation:</strong> MAX is a recognized market leader in in-app bidding mediation, with a reported market share exceeding 60%.</li>
+                        <li><strong>Performance-Driven Model:</strong> A significant portion of its revenue is tied to delivering measurable results for advertisers, aligning its success with that of its clients.</li>
+                        <li><strong>Scale and Network Effects:</strong> A large network of advertisers and publishers using AppLovin's platform creates powerful network effects, improving data insights and liquidity in its ad exchange.</li>
+                        <li><strong>Agility and Innovation:</strong> Demonstrated ability to innovate and expand into new areas, such as e-commerce and CTV advertising.</li>
+                    </ul>
+                </div>
+
+                <div id="app-financials">
+                    <h3 class="section-title">5. Financial Performance Analysis</h3>
+                    <p>AppLovin has demonstrated remarkable financial growth and a significant improvement in profitability, particularly following enhancements to its AXON AI engine and its strategic focus on the higher-margin Advertising (Software Platform) segment. This section highlights key financial metrics and trends through interactive visualizations.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY2024 Total Revenue</div>
+                            <div class="metric-card-value">$4.709B</div>
+                            <p class="text-xs text-gray-500 mt-1">43.4% YoY Increase</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">Q1 '25 Adv. Revenue</div>
+                            <div class="metric-card-value">$1.159B</div>
+                             <p class="text-xs text-gray-500 mt-1">71% YoY Growth</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY2024 Adj. EBITDA</div>
+                            <div class="metric-card-value">$2.700B</div>
+                            <p class="text-xs text-gray-500 mt-1">57.3% Margin</p>
+                        </div>
+                         <div class="metric-card">
+                            <div class="metric-card-title">Q1 '25 Net Income</div>
+                            <div class="metric-card-value">$576.4M</div>
+                            <p class="text-xs text-gray-500 mt-1">38.8% Net Margin</p>
+                        </div>
+                    </div>
+
+                    <h4 class="subsection-title">Total Revenue Trend (Fiscal Years 2020-2024)</h4>
+                    <p>The chart below displays AppLovin's total revenue growth, reflecting the increasing contribution and high growth of its Software Platform (Advertising) segment.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="appRevenueChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Advertising Revenue Trend (FY2022-FY2024, Q1 FY2025)</h4>
+                    <p>This chart highlights the rapid growth of AppLovin's core Advertising segment, which is now the primary focus of the company.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="appAdvertisingRevenueChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Adjusted EBITDA Margin Trend (FY2022 - Q1 FY2025)</h4>
+                    <p>This chart illustrates the significant improvement in AppLovin's profitability, as measured by its Adjusted EBITDA margin, showcasing the efficiency and scalability of its AI-driven software platform.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="appAdjEbitdaMarginChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Net Income/(Loss) Trend (Fiscal Years 2020-2024, Q1 FY2025)</h4>
+                    <p>This visualization tracks AppLovin's bottom-line GAAP Net Income (or Loss), showing its path to sustained profitability.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="appNetIncomeChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Operating Cash Flow Trend (Fiscal Years 2022-2024, Q1 FY2025)</h4>
+                    <p>The trend in Operating Cash Flow (OCF) demonstrates AppLovin's increasing ability to generate cash from its core business operations.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="appOcfChart"></canvas>
+                    </div>
+
+                    <p class="mt-4">AppLovin's financial trajectory highlights a successful pivot towards its high-margin Software Platform. Revenue has grown substantially, reaching $4.709 billion in FY2024. More impressively, profitability has seen a dramatic uplift; FY2024 Net Income stood at $1.580 billion. The company generates strong free cash flow ($2.1 billion in FY2024), which supports strategic investments, potential acquisitions, and shareholder return initiatives. The reported Return on Invested Capital (ROIC) for FY2024 was exceptionally high at approximately 48.6%, underscoring the capital efficiency of its business model.</p>
+                </div>
+
+                <div id="app-outlook">
+                    <h3 class="section-title">6. Strategic Outlook & Future Growth Drivers</h3>
+                    <p>The divestiture of its Apps business is set to further sharpen AppLovin's focus on its core AI-driven ad-tech Software Platform, paving the way for continued innovation and expansion. The company's future growth hinges on several strategic initiatives and its ability to navigate a dynamic market.</p>
+                    <h4 class="subsection-title">Key Growth Strategies:</h4>
+                    <ul>
+                        <li><strong>Expansion into E-commerce and Web Advertising:</strong> Leveraging the AXON AI engine to penetrate new advertising verticals beyond mobile apps, including e-commerce and general web advertising.</li>
+                        <li><strong>Connected TV (CTV) Growth:</strong> Scaling its CTV advertising solutions through Wurl to capture a larger share of this rapidly growing market.</li>
+                        <li><strong>Continuous AXON AI Enhancement:</strong> Ongoing investment in its core AI technology to maintain a competitive edge in performance and efficiency.</li>
+                        <li><strong>Rollout of Self-Service Platforms:</strong> Empowering more advertisers and publishers with direct access to its tools, potentially increasing adoption and scalability.</li>
+                        <li><strong>International Market Expansion:</strong> Growing its footprint and client base in key international markets.</li>
+                    </ul>
+                    <h4 class="subsection-title">Potential Challenges & Risks:</h4>
+                    <ul>
+                        <li><strong>Dependence on Mobile Ecosystems:</strong> Changes in policies by major mobile platform owners (Apple, Google) regarding advertising identifiers and privacy can impact the ad-tech industry.</li>
+                        <li><strong>Intense Competition:</strong> The digital advertising space is highly competitive, with large players and nimble innovators vying for market share.</li>
+                        <li><strong>Execution Risk in New Verticals:</strong> Successfully expanding into e-commerce and CTV requires adapting its technology and go-to-market strategies effectively.</li>
+                        <li><strong>Data Privacy Regulations:</strong> Evolving global data privacy regulations necessitate ongoing compliance efforts and can affect data utilization for advertising.</li>
+                        <li><strong>Macroeconomic Factors:</strong> Economic downturns can lead to reduced advertising budgets, impacting AppLovin's revenue.</li>
+                    </ul>
+                    <h4 class="subsection-title">Overall Outlook:</h4>
+                    <p>AppLovin is well-positioned with its advanced AI technology, integrated software stack, and strong financial performance. The strategic focus on its core ad-tech business is expected to drive sustained growth and profitability. Its ability to innovate, particularly with the AXON AI engine, and successfully execute its expansion strategies into new advertising verticals like e-commerce and CTV will be crucial for its long-term success in the dynamic digital advertising landscape. The company's proven track record of adapting to market changes and delivering strong results provides a positive outlook.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive AppLovin (APP) Analysis. For informational purposes only.</p>
+        <p class="text-xs mt-1">Data synthesized from publicly available company reports and market analyses.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        const CHART_COLORS = { 
+            blue: '#60A5FA',    
+            amber: '#FDBA74',  
+            teal: '#5EEAD4',    
+            stone: '#E7E5E4',   
+            gray: '#4B5563',    
+            darkBlue: '#2563EB', 
+            darkTeal: '#14B8A6', 
+            darkOrange: '#F97316',
+            violet: '#8B5CF6',
+            green: '#34D399', // Added for OCF
+            pink: '#EC4899'   // Added for Net Income
+        };
+        
+        const appRevenueData = {
+            labels: ['FY 2020', 'FY 2021', 'FY 2022', 'FY 2023', 'FY 2024'],
+            datasets: [{
+                label: 'Total Revenue ($M)',
+                data: [1451, 2793, 2817, 3283, 4709],
+                borderColor: CHART_COLORS.blue, 
+                backgroundColor: CHART_COLORS.blue + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.blue,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.blue,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const appAdvertisingRevenueData = {
+            labels: ['FY 2022', 'FY 2023', 'FY 2024', 'Q1 FY2024', 'Q1 FY2025'],
+            datasets: [{
+                label: 'Advertising Revenue ($M)',
+                data: [1049.2, 1841.8, 3224.1, 678.4, 1159.0],
+                borderColor: CHART_COLORS.darkBlue, 
+                backgroundColor: CHART_COLORS.darkBlue + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.darkBlue,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.darkBlue,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const appAdjEbitdaMarginData = {
+            labels: ['FY 2022', 'FY 2023', 'FY 2024', 'Q1 FY2025'],
+            datasets: [{
+                label: 'Adjusted EBITDA Margin (%)',
+                data: [39.0, 45.7, 57.3, 67.7], 
+                backgroundColor: CHART_COLORS.violet + 'CC', 
+                borderColor: CHART_COLORS.violet,
+                borderWidth: 1, borderRadius: 4, hoverBackgroundColor: CHART_COLORS.violet
+            }]
+        };
+        const appNetIncomeData = {
+            labels: ['FY 2020', 'FY 2021', 'FY 2022', 'FY 2023', 'FY 2024', 'Q1 FY2024', 'Q1 FY2025'],
+            datasets: [{
+                label: 'Net Income/(Loss) ($M)',
+                data: [-125.9, -37.0, -192.9, 356.7, 1579.8, 236.2, 576.4],
+                borderColor: CHART_COLORS.pink, 
+                backgroundColor: CHART_COLORS.pink + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.pink,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.pink,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const appOcfData = {
+            labels: ['FY 2022', 'FY 2023', 'FY 2024', 'Q1 FY2025'],
+            datasets: [{
+                label: 'Operating Cash Flow ($M)',
+                data: [412.8, 1061.5, 2099.0, 832.0],
+                borderColor: CHART_COLORS.green, 
+                backgroundColor: CHART_COLORS.green + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.green,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.green,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+
+
+        let appRevenueChartInstance, appAdvertisingRevenueChartInstance, appAdjEbitdaMarginChartInstance, appNetIncomeChartInstance, appOcfChartInstance;
+
+        function createChart(ctx, type, data, options) {
+            if (!ctx) return null;
+            return new Chart(ctx, { type, data, options });
+        }
+        
+        const commonChartOptionsLine = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: { color: '#4B5563', font: { size: 11 } },
+                    grid: { color: '#E7E5E4', drawBorder: false }
+                },
+                x: {
+                    ticks: { color: '#4B5563', font: { size: 11 } },
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top', align: 'end',
+                    labels: { color: '#374151', font: { size: 12, weight: '500' }, padding: 15, boxWidth: 12, usePointStyle: true }
+                },
+                tooltip: {
+                    enabled: true, backgroundColor: '#1F2937', titleColor: '#F3F4F6', titleFont: { weight: '600', size: 13 },
+                    bodyColor: '#D1D5DB', bodyFont: { size: 12 }, padding: 10, cornerRadius: 4, displayColors: true,
+                    borderColor: '#4B5563', borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) { label += ': '; }
+                            if (context.parsed.y !== null) {
+                                if (context.dataset.label.includes('Margin') || context.dataset.label.includes('%')) {
+                                     label += context.parsed.y.toFixed(1) + '%';
+                                } else {
+                                     label += '$' + context.parsed.y.toLocaleString() + 'M';
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            animation: { duration: 700, easing: 'easeOutCubic' }
+        };
+
+        const commonChartOptionsBar = { 
+            ...commonChartOptionsLine, 
+             scales: { 
+                y: {
+                    beginAtZero: true, 
+                    ticks: { color: '#4B5563', font: { size: 11 }, callback: function(value) { return value + '%';} }, 
+                    grid: { color: '#E7E5E4', drawBorder: false }
+                },
+                x: {
+                    ticks: { color: '#4B5563', font: { size: 11 } },
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                ...commonChartOptionsLine.plugins, 
+                tooltip: { 
+                    ...commonChartOptionsLine.plugins.tooltip,
+                     callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) { label += ': '; }
+                            if (context.parsed.y !== null) {
+                               label += context.parsed.y.toFixed(1) + '%';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+        
+        function initializeAppCharts() { 
+            const appRevenueChartCtx = document.getElementById('appRevenueChart')?.getContext('2d');
+            const appAdvertisingRevenueChartCtx = document.getElementById('appAdvertisingRevenueChart')?.getContext('2d');
+            const appAdjEbitdaMarginChartCtx = document.getElementById('appAdjEbitdaMarginChart')?.getContext('2d');
+            const appNetIncomeChartCtx = document.getElementById('appNetIncomeChart')?.getContext('2d');
+            const appOcfChartCtx = document.getElementById('appOcfChart')?.getContext('2d');
+
+
+            if (appRevenueChartCtx && !appRevenueChartInstance) {
+                appRevenueChartInstance = createChart(appRevenueChartCtx, 'line', appRevenueData, commonChartOptionsLine);
+            }
+            if (appAdvertisingRevenueChartCtx && !appAdvertisingRevenueChartInstance) {
+                appAdvertisingRevenueChartInstance = createChart(appAdvertisingRevenueChartCtx, 'line', appAdvertisingRevenueData, commonChartOptionsLine);
+            }
+            if (appAdjEbitdaMarginChartCtx && !appAdjEbitdaMarginChartInstance) {
+                appAdjEbitdaMarginChartInstance = createChart(appAdjEbitdaMarginChartCtx, 'bar', appAdjEbitdaMarginData, commonChartOptionsBar);
+            }
+            if (appNetIncomeChartCtx && !appNetIncomeChartInstance) {
+                appNetIncomeChartInstance = createChart(appNetIncomeChartCtx, 'line', appNetIncomeData, commonChartOptionsLine);
+            }
+            if (appOcfChartCtx && !appOcfChartInstance) {
+                appOcfChartInstance = createChart(appOcfChartCtx, 'line', appOcfData, commonChartOptionsLine);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAppCharts(); 
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Intuit (INTU) Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; 
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 350px;
+        }
+         @media (min-width: 768px) { /* md breakpoint */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        h1.main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+            padding-top: 0.5rem; 
+        }
+        h2.company-title { 
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #60A5FA; /* blue-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        h3.section-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2DD4BF; /* teal-400 */
+            margin-top: 1.5rem; 
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        h4.subsection-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; 
+            margin-bottom: 0.75rem; 
+        }
+        p, li {
+            line-height: 1.75; 
+            margin-bottom: 1rem; 
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem; 
+        }
+        ul {
+            list-style-type: none; 
+            padding-left: 0; 
+        }
+        ul li {
+            padding-left: 1.75rem; 
+            position: relative;
+        }
+        ul li::before { 
+            content: '➔';
+            position: absolute;
+            left: 0;
+            color: #60A5FA; /* blue-400 */
+            font-weight: bold;
+        }
+        .metric-card { 
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem; 
+            text-align: center;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03);
+        }
+        .metric-card-title { 
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem; 
+            font-weight: 500; 
+        }
+        .metric-card-value { 
+            font-size: 1.75rem; /* text-2xl */
+            font-weight: 600; 
+            color: #1F2937; /* gray-800 */
+        }
+        .content-wrapper { 
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); 
+            padding: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+    </style>
+</head>
+
+<body class="bg-stone-100 text-gray-700 min-h-screen">
+    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <h1 class="main-title text-3xl">Interactive Intuit (INTU) Analysis</h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+        <section id="intu-content">
+            <div class="content-wrapper">
+                <h2 class="company-title">Intuit Inc. (INTU) In-Depth Analysis</h2>
+                <p class="text-gray-600 mb-6 text-base md:text-lg">This interactive report delves into Intuit Inc. (INTU), a global financial technology platform dedicated to "powering prosperity around the world." Explore Intuit's strategic transformation into an AI-driven expert platform, its diverse product ecosystem including TurboTax, QuickBooks, Credit Karma, and Mailchimp, its competitive positioning, robust financial performance, and its forward-looking strategy focused on AI innovation and customer empowerment.</p>
+
+                <div id="intu-overview">
+                    <h3 class="section-title">1. Company Overview & Strategy</h3>
+                    <p>Intuit Inc. is a global financial technology platform with a mission to power prosperity for consumers and small businesses. Its core strategy revolves around becoming an AI-driven expert platform. This involves leveraging its proprietary generative AI technology, "Intuit Assist," to create "done-for-you" experiences and seamlessly connect customers with AI-powered human experts across its product ecosystem. Intuit's strategy is guided by its "Five Big Bets," which focus on: accelerating speed to benefit for customers, connecting people to experts, unlocking smart money decisions, being the center of small business growth, and disrupting the mid-market. This customer-centric approach aims to simplify financial lives and foster financial confidence.</p>
+                </div>
+
+                <div id="intu-business-model">
+                    <h3 class="section-title">2. Business Model & Segments</h3>
+                    <p>Intuit's business model is designed to simplify the financial lives of its diverse customer base through an integrated suite of software products and services, increasingly enhanced by artificial intelligence.</p>
+                    <h4 class="subsection-title">Core Value Proposition:</h4>
+                    <ul>
+                        <li>Putting more money in customers' pockets through tax savings, expense management, and financial insights.</li>
+                        <li>Saving customers valuable time through automation of financial tasks and streamlined workflows.</li>
+                        <li>Instilling confidence in financial decisions through expert guidance and intelligent tools.</li>
+                    </ul>
+                    <h4 class="subsection-title">Customer Segments & Revenue Streams:</h4>
+                    <p>Intuit serves several distinct customer segments, each with tailored solutions:</p>
+                    <ul>
+                        <li><strong>Consumers:</strong> Primarily through TurboTax for tax preparation and Credit Karma for personal finance management (credit scores, financial product recommendations). Revenue from software sales, filing fees, premium service fees (TurboTax Live), and referral fees (Credit Karma).</li>
+                        <li><strong>Small Businesses & Self-Employed:</strong> Through the QuickBooks ecosystem (accounting, payroll, payments) and Mailchimp (marketing automation). Revenue from software subscriptions, licenses, and transaction fees.</li>
+                        <li><strong>Mid-Market Businesses:</strong> Increasingly targeted with QuickBooks Online Advanced and specialized solutions.</li>
+                        <li><strong>Professional Accountants:</strong> Served by the ProTax Group (Lacerte, ProSeries, ProConnect Tax Online) through software licenses and subscriptions.</li>
+                    </ul>
+                     <h4 class="subsection-title">Key Activities & Resources:</h4>
+                     <p>Intuit's operations are driven by continuous software and AI development (Intuit Assist), extensive marketing and customer support, sophisticated data analytics, and strategic acquisitions like Credit Karma and Mailchimp, which have significantly expanded its platform capabilities and customer reach. Key resources include its powerful technology platform, widely recognized brands, a vast repository of customer data (approximately 100 million users), a skilled global workforce, and an extensive partner ecosystem.</p>
+                </div>
+
+                <div id="intu-products">
+                    <h3 class="section-title">3. Product Portfolio Deep Dive</h3>
+                    <p>Intuit's product portfolio is organized into key segments, each featuring flagship products that are market leaders in their respective categories. "Intuit Assist" is being integrated across these platforms to provide AI-powered guidance and automation.</p>
+                    <h4 class="subsection-title">Small Business & Self-Employed Group (Global Business Solutions):</h4>
+                    <ul>
+                        <li><strong>QuickBooks Ecosystem:</strong> Includes QuickBooks Online, QuickBooks Desktop, QuickBooks Self-Employed, and QuickBooks Live (bookkeeping assistance). Offers solutions for accounting, payroll, payments, and capital. This segment is a major revenue driver, with Q3 FY25 revenue reported at $2.8 billion (a 19% year-over-year increase).</li>
+                        <li><strong>Mailchimp:</strong> An email marketing and automation platform that helps small businesses engage with their customers.</li>
+                    </ul>
+                    <h4 class="subsection-title">Consumer Group:</h4>
+                    <ul>
+                        <li><strong>TurboTax:</strong> Leading tax preparation software for individuals, available online, as desktop software, and through assisted offerings like TurboTax Live (with human expert help) and TurboTax Full Service. This segment generated $4.0 billion in revenue in Q3 FY25 (an 11% year-over-year increase), with TurboTax Live being a significant growth catalyst.</li>
+                    </ul>
+                    <h4 class="subsection-title">Credit Karma:</h4>
+                    <ul>
+                        <li>A personal finance platform offering free credit scores and reports, credit monitoring, and personalized recommendations for financial products like credit cards and loans. It also provides access to savings and checking accounts. Credit Karma's revenue, primarily from referral fees, reached $579 million in Q3 FY25 (a 31% year-over-year increase), highlighting its strategic importance for data insights and ecosystem integration.</li>
+                    </ul>
+                    <h4 class="subsection-title">ProTax Group:</h4>
+                    <ul>
+                        <li>Provides professional tax preparation software for accounting professionals, including Lacerte, ProSeries, and ProConnect Tax Online. This segment reported revenue of $278 million in Q3 FY25 (a 9% year-over-year increase).</li>
+                    </ul>
+                </div>
+
+                <div id="intu-competition">
+                    <h3 class="section-title">4. Competitive Landscape & Differentiation</h3>
+                    <p>Intuit operates in several competitive markets, facing challenges from traditional software providers, newer cloud-based solutions, and even governmental initiatives.</p>
+                    <h4 class="subsection-title">Key Competitors by Product Area:</h4>
+                    <ul>
+                        <li><strong>QuickBooks:</strong> Competes with Xero, Sage, FreshBooks, and other small business accounting software.</li>
+                        <li><strong>Mailchimp:</strong> Faces competition from Klaviyo, HubSpot, Constant Contact, and other marketing automation platforms.</li>
+                        <li><strong>TurboTax:</strong> Competes with H&R Block, TaxAct, and potentially the IRS Direct File program.</li>
+                        <li><strong>Credit Karma:</strong> Competes with NerdWallet, Credit Sesame, and various financial comparison sites.</li>
+                        <li><strong>ProTax Group:</strong> Competes with Thomson Reuters, Wolters Kluwer, and Drake Software.</li>
+                    </ul>
+                     <h4 class="subsection-title">Intuit's Competitive Advantages & Differentiation:</h4>
+                    <ul>
+                        <li><strong>Strong Brand Recognition:</strong> TurboTax and QuickBooks are household names with high levels of trust.</li>
+                        <li><strong>Large and Loyal Customer Base:</strong> Approximately 100 million users provide a significant network effect and data advantage.</li>
+                        <li><strong>Integrated Ecosystem ("One Intuit Ecosystem"):</strong> Seamless connections between its products (e.g., QuickBooks and TurboTax, Mailchimp integration) create a sticky platform.</li>
+                        <li><strong>Vast Data Repository for AI:</strong> Decades of financial data fuel the development and refinement of Intuit Assist and other AI-driven features.</li>
+                        <li><strong>Advanced AI Capabilities (Intuit Assist):</strong> Differentiates by offering personalized, proactive, and "done-for-you" experiences.</li>
+                        <li><strong>Network of Experts:</strong> The ability to connect users with human experts (bookkeepers, tax professionals) through its "Live" offerings provides a hybrid approach that many competitors lack.</li>
+                    </ul>
+                    <p>Intuit's platform-centric strategy, combined with its deep AI investments and human expert network, aims to provide a holistic and superior value proposition compared to standalone point solutions or purely software-based offerings.</p>
+                </div>
+
+                <div id="intu-financials">
+                    <h3 class="section-title">5. Financial Performance Analysis</h3>
+                    <p>Intuit has consistently delivered robust financial growth, driven by the strength of its Online Ecosystem (QuickBooks Online, TurboTax Online), strategic acquisitions like Credit Karma and Mailchimp, and an increasing focus on higher-value, service-oriented offerings. This section visualizes key financial trends to provide deeper insights.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY2024 Total Revenue</div>
+                            <div class="metric-card-value">$16.3B</div>
+                            <p class="text-xs text-gray-500 mt-1">Solid Annual Performance</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY25F Revenue Guidance</div>
+                            <div class="metric-card-value">$18.74B</div>
+                             <p class="text-xs text-gray-500 mt-1">~15% Est. YoY Growth</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY25F Non-GAAP Op. Income</div>
+                            <div class="metric-card-value">$7.55B</div>
+                            <p class="text-xs text-gray-500 mt-1">Strong Profitability Outlook</p>
+                        </div>
+                         <div class="metric-card">
+                            <div class="metric-card-title">FY25F Non-GAAP EPS</div>
+                            <div class="metric-card-value">$20.10</div>
+                            <p class="text-xs text-gray-500 mt-1">Healthy Earnings Forecast</p>
+                        </div>
+                    </div>
+
+                    <h4 class="subsection-title">Total Net Revenue Trend (Fiscal Years 2018-2025F)</h4>
+                    <p>The chart below illustrates Intuit's strong and consistent growth in total net revenue, reflecting market leadership and successful strategic execution. The forecast for FY2025 indicates continued upward momentum.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="intuRevenueChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">GAAP Operating Income Trend (Select Fiscal Years)</h4>
+                    <p>This chart displays Intuit's GAAP Operating Income for available fiscal years, demonstrating its ability to grow operational profits alongside revenue. (Note: FY2023 data point was not available in the provided source trend data for the initial chart and is thus not connected).</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="intuOpIncomeChart"></canvas>
+                    </div>
+                    
+                    <h4 class="subsection-title">GAAP Gross Profit Margin Trend (Fiscal Years 2018-2024)</h4>
+                    <p>This chart highlights Intuit's consistently high GAAP Gross Profit Margin, a testament to its strong pricing power and the efficient cost structure of its software and platform offerings.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="intuGrossMarginChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Operating Cash Flow Trend (Fiscal Years 2018-2024)</h4>
+                    <p>The trend in Operating Cash Flow (OCF) demonstrates Intuit's increasing ability to generate cash from its core business operations, providing financial flexibility for investments and shareholder returns.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="intuOcfChart"></canvas>
+                    </div>
+
+                    <p class="mt-4">Intuit's financial model is characterized by a significant and growing proportion of service and subscription revenue (which accounted for 82% of total revenue in FY2021). The company consistently maintains high gross margins, typically in the low 80% range. All business segments contribute to overall growth, with Credit Karma and the "Live" assisted offerings within TurboTax showing particularly strong momentum. Intuit actively returns capital to shareholders through dividends and share repurchase programs, supported by its strong and growing cash flow generation.</p>
+                </div>
+
+                <div id="intu-outlook">
+                    <h3 class="section-title">6. Strategic Outlook & Future Growth Drivers</h3>
+                    <p>Intuit's strategic shift towards an AI-driven expert platform is gaining significant traction, with artificial intelligence poised to enhance customer experiences, improve operational efficiency, and unlock new revenue opportunities across its ecosystem.</p>
+                    <h4 class="subsection-title">Key Growth Drivers:</h4>
+                    <ul>
+                        <li><strong>AI Innovation (Intuit Assist):</strong> Deepening the integration of Intuit Assist across all products to provide personalized, proactive, and automated financial assistance.</li>
+                        <li><strong>Online Ecosystem Expansion:</strong> Continued growth in QuickBooks Online and Mailchimp, driven by new customer acquisition and upselling higher-value services.</li>
+                        <li><strong>Consumer Segment Value Shift:</strong> Driving adoption of TurboTax Live and other assisted tax preparation services, which command higher price points.</li>
+                        <li><strong>Credit Karma Synergies:</strong> Leveraging Credit Karma's data and user base to offer more personalized financial products and insights within the broader Intuit ecosystem.</li>
+                        <li><strong>Mid-Market Penetration:</strong> Expanding QuickBooks Online Advanced and other offerings to serve larger small businesses and mid-market companies.</li>
+                        <li><strong>Global Expansion:</strong> Targeting international markets for QuickBooks and Mailchimp.</li>
+                    </ul>
+                    <h4 class="subsection-title">Potential Challenges & Risks:</h4>
+                    <ul>
+                        <li><strong>Intense Competition:</strong> Ongoing competition from existing players and new entrants in all market segments.</li>
+                        <li><strong>Governmental Encroachment:</strong> Potential impact from initiatives like the IRS Direct File program on the consumer tax business.</li>
+                        <li><strong>Macroeconomic Factors:</strong> Economic downturns can affect small business health and consumer spending on financial products.</li>
+                        <li><strong>Data Privacy and Security:</strong> Managing vast amounts of sensitive customer data requires robust security measures and adherence to evolving privacy regulations.</li>
+                        <li><strong>Integration of Acquisitions:</strong> Ensuring successful integration and realization of synergies from large acquisitions like Credit Karma and Mailchimp.</li>
+                        <li><strong>Execution of AI Strategy:</strong> Effectively monetizing AI investments and ensuring AI tools deliver tangible customer value.</li>
+                    </ul>
+                    <h4 class="subsection-title">Overall Outlook:</h4>
+                    <p>Intuit's strong brand portfolio, massive customer base, extensive data assets, and leadership in AI-driven financial technology position it well for continued growth and market leadership. The company's focus on solving critical customer pain points and its commitment to innovation are key strengths. Navigating the competitive landscape, adapting to regulatory changes, and successfully executing its AI platform strategy will be crucial for realizing its long-term vision of powering prosperity globally.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Intuit (INTU) Analysis. For informational purposes only.</p>
+        <p class="text-xs mt-1">Data synthesized from publicly available company reports and market analyses.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        const CHART_COLORS = { 
+            blue: '#60A5FA',    // blue-400 
+            teal: '#2DD4BF',    // teal-400 
+            amber: '#FDBA74',  // orange-300
+            stone: '#E7E5E4',   
+            gray: '#4B5563',    
+            darkBlue: '#2563EB', // blue-600
+            darkTeal: '#14B8A6', // teal-500
+            darkOrange: '#F97316' //orange-500
+        };
+        
+        const intuRevenueData = {
+            labels: ['FY18', 'FY19', 'FY20', 'FY21', 'FY22', 'FY23', 'FY24', 'FY25F'],
+            datasets: [{
+                label: 'Total Net Revenue ($M)',
+                data: [6025, 6784, 7679, 9633, 12726, 14368, 16285, 18742],
+                borderColor: CHART_COLORS.blue, 
+                backgroundColor: CHART_COLORS.blue + '33',
+                fill: true,
+                tension: 0.2,
+                borderWidth: 2,
+                pointBackgroundColor: CHART_COLORS.blue,
+                pointBorderColor: '#ffffff',
+                pointHoverBackgroundColor: '#ffffff',
+                pointHoverBorderColor: CHART_COLORS.blue,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        };
+        const intuOpIncomeData = {
+            labels: ['FY18', 'FY19', 'FY20', 'FY21', 'FY22', 'FY24', 'FY25F'], // FY23 is intentionally skipped as per source data
+            datasets: [{
+                label: 'GAAP Operating Income ($M)',
+                data: [1560, 1854, 2176, 2500, 2571, 3630, 4908], // FY23 data point not available in original trend
+                borderColor: CHART_COLORS.teal, 
+                backgroundColor: CHART_COLORS.teal + '33',
+                fill: true,
+                tension: 0.2,
+                borderWidth: 2,
+                pointBackgroundColor: CHART_COLORS.teal,
+                pointBorderColor: '#ffffff',
+                pointHoverBackgroundColor: '#ffffff',
+                pointHoverBorderColor: CHART_COLORS.teal,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                spanGaps: false 
+            }]
+        };
+        const intuGrossMarginData = {
+            labels: ['FY18', 'FY19', 'FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            datasets: [{
+                label: 'GAAP Gross Margin (%)',
+                data: [83.6, 83.4, 82.0, 82.4, 82.2, 81.6, 81.8],
+                borderColor: CHART_COLORS.darkOrange, 
+                backgroundColor: CHART_COLORS.darkOrange + '33',
+                fill: true,
+                tension: 0.2,
+                borderWidth: 2,
+                pointBackgroundColor: CHART_COLORS.darkOrange,
+                pointBorderColor: '#ffffff',
+                pointHoverBackgroundColor: '#ffffff',
+                pointHoverBorderColor: CHART_COLORS.darkOrange,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        };
+        const intuOcfData = {
+            labels: ['FY18', 'FY19', 'FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            datasets: [{
+                label: 'Operating Cash Flow ($M)',
+                data: [2112, 2300, 2414, 3077, 3897, 4669, 5794],
+                borderColor: CHART_COLORS.darkBlue, 
+                backgroundColor: CHART_COLORS.darkBlue + '33',
+                fill: true,
+                tension: 0.2,
+                borderWidth: 2,
+                pointBackgroundColor: CHART_COLORS.darkBlue,
+                pointBorderColor: '#ffffff',
+                pointHoverBackgroundColor: '#ffffff',
+                pointHoverBorderColor: CHART_COLORS.darkBlue,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        };
+
+
+        let intuRevenueChartInstance, intuOpIncomeChartInstance, intuGrossMarginChartInstance, intuOcfChartInstance;
+
+        function createChart(ctx, type, data, options) {
+            if (!ctx) return null;
+            return new Chart(ctx, { type, data, options });
+        }
+        
+        const commonChartOptionsLine = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false, 
+                    ticks: { color: '#4B5563', font: { size: 11 } },
+                    grid: { color: '#E7E5E4', drawBorder: false }
+                },
+                x: {
+                    ticks: { color: '#4B5563', font: { size: 11 } },
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top', align: 'end',
+                    labels: { color: '#374151', font: { size: 12, weight: '500' }, padding: 15, boxWidth: 12, usePointStyle: true }
+                },
+                tooltip: {
+                    enabled: true, backgroundColor: '#1F2937', titleColor: '#F3F4F6', titleFont: { weight: '600', size: 13 },
+                    bodyColor: '#D1D5DB', bodyFont: { size: 12 }, padding: 10, cornerRadius: 4, displayColors: true,
+                    borderColor: '#4B5563', borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) { label += ': '; }
+                            if (context.parsed.y !== null) {
+                                if (context.dataset.label.includes('Margin') || context.dataset.label.includes('%')) {
+                                     label += context.parsed.y.toFixed(1) + '%';
+                                } else {
+                                     label += '$' + context.parsed.y.toLocaleString() + 'M';
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            animation: { duration: 700, easing: 'easeOutCubic' }
+        };
+        
+        function initializeIntuitCharts() { 
+            const intuRevenueChartCtx = document.getElementById('intuRevenueChart')?.getContext('2d');
+            const intuOpIncomeChartCtx = document.getElementById('intuOpIncomeChart')?.getContext('2d');
+            const intuGrossMarginChartCtx = document.getElementById('intuGrossMarginChart')?.getContext('2d');
+            const intuOcfChartCtx = document.getElementById('intuOcfChart')?.getContext('2d');
+
+
+            if (intuRevenueChartCtx && !intuRevenueChartInstance) {
+                intuRevenueChartInstance = createChart(intuRevenueChartCtx, 'line', intuRevenueData, commonChartOptionsLine);
+            }
+            if (intuOpIncomeChartCtx && !intuOpIncomeChartInstance) {
+                intuOpIncomeChartInstance = createChart(intuOpIncomeChartCtx, 'line', intuOpIncomeData, commonChartOptionsLine);
+            }
+            if (intuGrossMarginChartCtx && !intuGrossMarginChartInstance) {
+                intuGrossMarginChartInstance = createChart(intuGrossMarginChartCtx, 'line', intuGrossMarginData, commonChartOptionsLine);
+            }
+            if (intuOcfChartCtx && !intuOcfChartInstance) {
+                intuOcfChartInstance = createChart(intuOcfChartCtx, 'line', intuOcfData, commonChartOptionsLine);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeIntuitCharts(); 
+        });
+    </script></body>
+</html>
+

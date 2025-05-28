@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Arista Networks (ANET) Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; 
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 350px;
+        }
+         @media (min-width: 768px) { /* md breakpoint */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        h1.main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+            padding-top: 0.5rem; 
+        }
+        h2.company-title { 
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #60A5FA; /* blue-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        h3.section-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2DD4BF; /* teal-400 */
+            margin-top: 1.5rem; 
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        h4.subsection-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; 
+            margin-bottom: 0.75rem; 
+        }
+        p, li {
+            line-height: 1.75; 
+            margin-bottom: 1rem; 
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem; 
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        ul li {
+            padding-left: 1.75rem;
+            position: relative;
+        }
+        ul li::before {
+            content: '➔';
+            position: absolute;
+            left: 0;
+            color: #60A5FA; /* blue-400 */
+            font-weight: bold;
+        }
+        .metric-card { 
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem; 
+            text-align: center;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03);
+        }
+        .metric-card-title { 
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem; 
+            font-weight: 500; 
+        }
+        .metric-card-value { 
+            font-size: 1.75rem; /* text-2xl */
+            font-weight: 600; 
+            color: #1F2937; /* gray-800 */
+        }
+        .content-wrapper { 
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); 
+            padding: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+    </style>
+</head>
+
+<body class="bg-stone-100 text-gray-700 min-h-screen">
+    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <h1 class="main-title text-3xl">Interactive Arista Networks (ANET) Analysis</h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+        <section id="anet-content">
+            <div class="content-wrapper">
+                <h2 class="company-title">Arista Networks (ANET) In-Depth Analysis</h2>
+                <p class="text-gray-600 mb-6 text-base md:text-lg">This interactive report provides a comprehensive exploration of Arista Networks (ANET), a prominent leader in data-driven, client-to-cloud networking solutions. Delve into Arista's innovative business model, its advanced product portfolio featuring EOS® and CloudVision®, its competitive standing in the dynamic networking industry, detailed financial performance trends, and its forward-looking strategic outlook, particularly focusing on AI networking and enterprise market diversification.</p>
+
+                <div id="anet-overview">
+                    <h3 class="section-title">1. Company Overview & Snapshot</h3>
+                    <p>Arista Networks, Inc. (ANET), established in 2004 and headquartered in Santa Clara, California, stands as a pivotal force in the networking industry. Under the leadership of CEO Jayshree V. Ullal, Arista specializes in delivering high-performance, scalable networking solutions tailored for demanding environments such as AI clusters, large-scale data centers, enterprise campuses, and complex routing scenarios. The company's philosophy is deeply rooted in software-driven cloud networking principles and a commitment to open standards. In 2024, Arista marked significant milestones, celebrating its 20th anniversary and the 10th anniversary of its IPO, alongside achieving the #1 market share position in data center switching, underscoring its sustained growth and market leadership.</p>
+                </div>
+
+                <div id="anet-business-model">
+                    <h3 class="section-title">2. Business Model & Value Proposition</h3>
+                    <p>Arista's business model is engineered to deliver high-value networking solutions by synergizing advanced hardware with its versatile Extensible Operating System (EOS). This approach allows Arista to cater to the evolving needs of modern digital infrastructures.</p>
+                    <h4 class="subsection-title">Core Value Proposition:</h4>
+                    <ul>
+                        <li><strong>High-Performance Hardware:</strong> Offering cutting-edge switches and routers capable of speeds up to 800G, designed for low-latency and high-throughput applications critical for AI and large data centers.</li>
+                        <li><strong>Extensible Operating System (EOS®):</strong> A highly programmable and resilient network operating system that provides a consistent software foundation across Arista's entire product line, enabling automation and flexibility through Software Defined Networking (SDN) principles.</li>
+                        <li><strong>CloudVision®:</strong> A network-wide automation and telemetry platform that simplifies network operations, provides deep visibility, and facilitates proactive management.</li>
+                        <li><strong>Energy Efficiency:</strong> A growing focus on developing power-efficient networking solutions to help customers reduce their environmental footprint and operational costs.</li>
+                    </ul>
+                    <h4 class="subsection-title">Customer Segments & Revenue Mix:</h4>
+                     <p>Arista serves a diverse clientele, with a strategic emphasis on diversifying its customer base:</p>
+                    <ul>
+                        <li><strong>Cloud Titans:</strong> Major hyperscale cloud providers like Microsoft and Meta, which constituted approximately 48% of Arista's revenue in Fiscal Year 2024.</li>
+                        <li><strong>Enterprise:</strong> A rapidly growing segment, representing about 35% of revenue, as more enterprises adopt cloud networking principles for their private and hybrid cloud infrastructures.</li>
+                        <li><strong>Service Providers:</strong> Including telecommunications companies and other service providers, accounting for roughly 17% of revenue.</li>
+                    </ul>
+                     <h4 class="subsection-title">Revenue Streams:</h4>
+                     <p>Arista's revenue is primarily generated from:</p>
+                    <ul>
+                        <li><strong>Product Revenue:</strong> Sales of hardware (Ethernet switches, routers) and software licenses (EOS, CloudVision). In FY23, hardware accounted for $4.12 billion, while software and subscriptions contributed $826 million. Arista is strategically focusing on increasing its recurring software and subscription revenue.</li>
+                        <li><strong>Services Revenue:</strong> Support, maintenance, and professional services.</li>
+                    </ul>
+                     <h4 class="subsection-title">Key Activities, Resources & Partnerships:</h4>
+                    <ul>
+                        <li><strong>Research & Development:</strong> Significant investment in R&D is core to Arista's strategy, focusing on AI networking, continuous EOS enhancements, and CloudVision development. R&D staff numbered 1,250 in Q4 2023, with an R&D expenditure of $996.7 million in FY24.</li>
+                        <li><strong>Intellectual Property:</strong> A strong portfolio of 387 patents as of December 2023, primarily related to EOS.</li>
+                        <li><strong>Strategic Partnerships:</strong> Collaborations with hyperscalers, semiconductor firms (Broadcom, Intel), system integrators (Accenture), and technology partners like Nvidia (for the EOS AI Agent) are crucial for market access and innovation.</li>
+                    </ul>
+                    <h4 class="subsection-title">Cost Structure:</h4>
+                    <p>Key components of Arista's cost structure include R&D expenses, outsourced manufacturing costs to partners like Jabil and Foxconn, and sales and marketing expenditures ($550.0 million in FY24).</p>
+                </div>
+
+                <div id="anet-products">
+                    <h3 class="section-title">3. Product Portfolio & Service Delivery</h3>
+                    <p>Arista Networks offers a comprehensive and sophisticated suite of networking hardware and software products, distinguished by its powerful software capabilities designed to meet the rigorous demands of modern, high-performance networking environments, especially those driven by AI and cloud computing.</p>
+                    <h4 class="subsection-title">Ethernet Switching & Routing Hardware:</h4>
+                    <ul>
+                        <li><strong>7000-Series Switches:</strong> A broad portfolio catering to diverse needs including Data Center Switches, R-Series Universal Platforms, 700-Series Cognitive Campus Switches, and 7130-Series Ultra-Low Latency Switches.</li>
+                        <li><strong>Etherlink AI Platforms:</strong> Newly developed platforms specifically optimized for the demanding connectivity requirements of AI training and inference clusters.</li>
+                    </ul>
+                    <h4 class="subsection-title">Software & Solutions:</h4>
+                    <ul>
+                        <li><strong>Extensible Operating System (EOS®):</strong> Arista's flagship network operating system, known for its single binary image, programmability, resilience, and open standards support.</li>
+                        <li><strong>CloudVision®:</strong> A comprehensive network automation, telemetry, and observability platform.</li>
+                        <li><strong>Cognitive Wi-Fi:</strong> Advanced Wi-Fi solutions integrated with CloudVision.</li>
+                        <li><strong>Targeted Solutions:</strong> Including AI Networking, Cloud Networking, Cognitive Campus Workspaces, Cloud-Grade Routing, Network Security, and Network Observability.</li>
+                    </ul>
+                    <h4 class="subsection-title">Innovation, Manufacturing & Supply Chain:</h4>
+                    <ul>
+                        <li><strong>Research & Development Focus:</strong> Continuous innovation in software-driven cloud networking, open standards, and AI/ML workload optimization. R&D expenses were $996.7 million in FY24.</li>
+                        <li><strong>Manufacturing Model:</strong> Outsourced strategy with partners like Jabil, Sanmina, Flex, and Foxconn.</li>
+                        <li><strong>Supply Chain Management:</strong> Reliance on limited key component suppliers, with mitigation efforts through advanced planning systems like SAP IBP.</li>
+                    </ul>
+                </div>
+
+                <div id="anet-competition">
+                    <h3 class="section-title">4. Competitive Landscape & Market Positioning</h3>
+                    <p>Arista Networks navigates a highly dynamic and competitive networking industry, characterized by rapid technological advancements, the pervasive shift to cloud computing, escalating demands for high-speed data processing, the rise of Software-Defined Networking (SDN), and the transformative impact of AI/ML workloads on network infrastructure.</p>
+                    <h4 class="subsection-title">Industry Dynamics:</h4>
+                    <ul>
+                        <li>Cloud Dominance, High-Speed Ethernet Demand (up to 800G), SDN and Virtualization adoption, and significant AI/ML Workload Impact.</li>
+                    </ul>
+                    <h4 class="subsection-title">Primary Competitors:</h4>
+                    <p>Arista faces competition from a mix of established giants and specialized players including Cisco Systems, Juniper Networks, Nvidia, Broadcom, Huawei, HPE, Dell Technologies, H3C, and ODMs.</p>
+                     <h4 class="subsection-title">Market Share & Positioning:</h4>
+                    <ul>
+                        <li><strong>Data Center Switching:</strong> Achieved #1 market share in 2024.</li>
+                        <li><strong>Overall Ethernet Switch Market:</strong> 13.6% revenue share in Q3 2024 (IDC), ranking second globally.</li>
+                    </ul>
+                    <h4 class="subsection-title">Competitive Differentiation:</h4>
+                    <p>Arista distinguishes itself through EOS, its open standards philosophy, leadership in high-speed Ethernet, strong focus on programmability and automation, and customer-centric innovation.</p>
+                </div>
+
+                <div id="anet-financials">
+                    <h3 class="section-title">5. Financial Performance Analysis</h3>
+                    <p>Arista Networks has consistently demonstrated a strong and resilient financial performance, characterized by robust revenue growth, healthy and expanding profitability, efficient operations, and a solid balance sheet. The company's financial strength enables continued investment in innovation and strategic growth initiatives.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-6">
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY2024 Total Revenue</div>
+                            <div class="metric-card-value">$7.003B</div>
+                            <p class="text-xs text-gray-500 mt-1">19.5% YoY Increase</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY2024 GAAP Gross Margin</div>
+                            <div class="metric-card-value">64.1%</div>
+                             <p class="text-xs text-gray-500 mt-1">vs 61.9% in FY2023</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY2024 GAAP Op. Income</div>
+                            <div class="metric-card-value">$2.945B</div>
+                            <p class="text-xs text-gray-500 mt-1">42.1% Op. Margin</p>
+                        </div>
+                         <div class="metric-card">
+                            <div class="metric-card-title">FY2024 Net Income</div>
+                            <div class="metric-card-value">$2.852B</div>
+                            <p class="text-xs text-gray-500 mt-1">Robust Profitability</p>
+                        </div>
+                    </div>
+
+                    <h4 class="subsection-title">Revenue Trend (Fiscal Years 2018-2024)</h4>
+                    <p>The chart below illustrates Arista's consistent upward trajectory in total revenue over the past seven fiscal years, reflecting strong market adoption of its solutions and successful expansion strategies.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="anetRevenueChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">GAAP Operating Margin Trend (Fiscal Years 2018-2024)</h4>
+                    <p>This chart showcases Arista's ability to maintain and improve its operational profitability (GAAP Operating Margin) even as it scales its business and invests in growth. The trend highlights efficient cost management and a strong value proposition.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="anetOpMarginChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">GAAP Gross Profit Margin Trend (Fiscal Years 2018-2024)</h4>
+                    <p>This visualization tracks Arista's GAAP Gross Profit Margin, indicating the profitability of its products and services before operating expenses.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="anetGrossMarginChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Net Income Trend (Fiscal Years 2018-2024)</h4>
+                    <p>The chart below shows Arista's GAAP Net Income, reflecting its bottom-line profitability after all expenses and taxes.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="anetNetIncomeChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Operating Cash Flow Trend (Fiscal Years 2018-2024)</h4>
+                    <p>This chart illustrates the trend in cash generated from Arista's core business operations, a key indicator of its financial health and ability to self-fund growth.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="anetOcfChart"></canvas>
+                    </div>
+
+                    <p class="mt-4">Arista's financial narrative is one of consistent growth and strengthening profitability. The company has successfully scaled its revenue from $2.15 billion in FY2018 to over $7 billion in FY2024. This growth has been accompanied by an impressive expansion in GAAP operating margin, from 31.5% in FY2018 to 42.1% in FY2024. Furthermore, Arista generates significant operating and free cash flow, and as of late 2024, maintained a strong balance sheet with zero total debt, providing substantial financial flexibility for future investments and shareholder returns.</p>
+                </div>
+
+                <div id="anet-outlook">
+                    <h3 class="section-title">6. Strategic Outlook & Future Growth Drivers</h3>
+                    <p>Arista Networks is strategically positioned to capitalize on key technology trends, particularly the explosive growth in AI and machine learning, the continued migration to cloud architectures, and the increasing demand for high-performance, software-driven networking solutions. The company's future growth is expected to be driven by several key pillars, though it also faces certain challenges and competitive pressures.</p>
+                    <h4 class="subsection-title">Key Growth Drivers:</h4>
+                    <ul>
+                        <li>AI Networking Leadership (projecting $750M revenue by 2025).</li>
+                        <li>Enterprise Market Expansion.</li>
+                        <li>Software and Services Recurring Revenue Growth.</li>
+                        <li>EOS Ecosystem Development.</li>
+                        <li>Innovation in High-Speed Networking (800G+).</li>
+                        <li>International Expansion.</li>
+                    </ul>
+                    <h4 class="subsection-title">Potential Challenges & Risks:</h4>
+                    <ul>
+                        <li>Revenue Concentration with Cloud Titans.</li>
+                        <li>Supply Chain Vulnerabilities.</li>
+                        <li>Intense Competition (Cisco, Nvidia).</li>
+                        <li>Macroeconomic Factors impacting IT spending.</li>
+                        <li>Maintaining Innovation Pace.</li>
+                    </ul>
+                    <h4 class="subsection-title">Overall Outlook:</h4>
+                    <p>Despite the challenges, Arista Networks' strategic focus on software-driven networking, its leadership in high-performance data center and AI solutions, and its commitment to open standards position it well for sustained long-term growth. The company's strong financial performance, innovative culture, and expanding enterprise footprint provide a solid foundation to navigate the competitive landscape and capitalize on emerging market opportunities. The ability to execute on its AI networking strategy and further penetrate the enterprise segment will be key determinants of its future success.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Arista Networks (ANET) Analysis. For informational purposes only.</p>
+        <p class="text-xs mt-1">Data synthesized from publicly available company reports and market analyses.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        const CHART_COLORS = { 
+            blue: '#60A5FA',    
+            amber: '#FDBA74',  
+            teal: '#5EEAD4',    
+            stone: '#E7E5E4',   
+            gray: '#4B5563',    
+            darkBlue: '#2563EB', 
+            darkTeal: '#14B8A6', 
+            darkOrange: '#F97316',
+            green: '#34D399', // A green for OCF
+            purple: '#A78BFA' // A purple for Net Income
+        };
+        
+        const anetRevenueData = {
+            labels: ['FY 2018', 'FY 2019', 'FY 2020', 'FY 2021', 'FY 2022', 'FY 2023', 'FY 2024'],
+            datasets: [{
+                label: 'Total Revenue ($M)',
+                data: [2151, 2411, 2318, 2948, 4381, 5860, 7003],
+                borderColor: CHART_COLORS.blue, 
+                backgroundColor: CHART_COLORS.blue + '33', 
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.blue,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.blue,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const anetOpMarginData = {
+            labels: ['FY 2018', 'FY 2019', 'FY 2020', 'FY 2021', 'FY 2022', 'FY 2023', 'FY 2024'],
+            datasets: [{
+                label: 'GAAP Operating Margin (%)',
+                data: [31.5, 33.4, 30.2, 31.4, 34.9, 38.5, 42.1],
+                borderColor: CHART_COLORS.amber, 
+                backgroundColor: CHART_COLORS.amber + '33', 
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.amber,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.amber,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const anetGrossMarginData = {
+            labels: ['FY 2018', 'FY 2019', 'FY 2020', 'FY 2021', 'FY 2022', 'FY 2023', 'FY 2024'],
+            datasets: [{
+                label: 'GAAP Gross Profit Margin (%)',
+                data: [63.8, 64.0, 63.9, 63.8, 61.1, 61.9, 64.1], // Data from ANET Analysis Table
+                borderColor: CHART_COLORS.teal, 
+                backgroundColor: CHART_COLORS.teal + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.teal,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.teal,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const anetNetIncomeData = {
+            labels: ['FY 2018', 'FY 2019', 'FY 2020', 'FY 2021', 'FY 2022', 'FY 2023', 'FY 2024'],
+            datasets: [{
+                label: 'Net Income ($M)',
+                data: [328, 860, 635, 841, 1352, 2087, 2852], // Data from ANET Analysis Table
+                borderColor: CHART_COLORS.purple, 
+                backgroundColor: CHART_COLORS.purple + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.purple,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.purple,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const anetOcfData = {
+            labels: ['FY 2018', 'FY 2019', 'FY 2020', 'FY 2021', 'FY 2022', 'FY 2023', 'FY 2024'],
+            datasets: [{
+                label: 'Operating Cash Flow ($M)',
+                data: [503, 963, 735, 1016, 493, 2034, 3837], // Data from ANET Analysis Table
+                borderColor: CHART_COLORS.green, 
+                backgroundColor: CHART_COLORS.green + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.green,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.green,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+
+        let anetRevenueChartInstance, anetOpMarginChartInstance, anetGrossMarginChartInstance, anetNetIncomeChartInstance, anetOcfChartInstance;
+
+        function createChart(ctx, type, data, options) {
+            if (!ctx) return null;
+            return new Chart(ctx, { type, data, options });
+        }
+        
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: { 
+                        color: '#4B5563', 
+                        font: { size: 11 } 
+                    },
+                    grid: { 
+                        color: '#E7E5E4', 
+                        drawBorder: false,
+                    }
+                },
+                x: {
+                    ticks: { 
+                        color: '#4B5563',
+                        font: { size: 11 } 
+                    },
+                    grid: { 
+                        display: false 
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    align: 'end',
+                    labels: { 
+                        color: '#374151', 
+                        font: { size: 12, weight: '500' }, 
+                        padding: 15,
+                        boxWidth: 12, 
+                        usePointStyle: true,
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: '#1F2937', 
+                    titleColor: '#F3F4F6', 
+                    titleFont: { weight: '600', size: 13 }, 
+                    bodyColor: '#D1D5DB', 
+                    bodyFont: { size: 12 },
+                    padding: 10, 
+                    cornerRadius: 4, 
+                    displayColors: true, 
+                    borderColor: '#4B5563', 
+                    borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                if (context.dataset.label.includes('Margin') || context.dataset.label.includes('%')) {
+                                     label += context.parsed.y.toFixed(1) + '%';
+                                } else {
+                                     label += '$' + context.parsed.y.toLocaleString() + 'M';
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 700, 
+                easing: 'easeOutCubic' 
+            }
+        };
+        
+        function initializeAnCharts() { 
+            const anetRevenueChartCtx = document.getElementById('anetRevenueChart')?.getContext('2d');
+            const anetOpMarginChartCtx = document.getElementById('anetOpMarginChart')?.getContext('2d');
+            const anetGrossMarginChartCtx = document.getElementById('anetGrossMarginChart')?.getContext('2d');
+            const anetNetIncomeChartCtx = document.getElementById('anetNetIncomeChart')?.getContext('2d');
+            const anetOcfChartCtx = document.getElementById('anetOcfChart')?.getContext('2d');
+
+            if (anetRevenueChartCtx && !anetRevenueChartInstance) {
+                anetRevenueChartInstance = createChart(anetRevenueChartCtx, 'line', anetRevenueData, commonChartOptions);
+            }
+            if (anetOpMarginChartCtx && !anetOpMarginChartInstance) {
+                anetOpMarginChartInstance = createChart(anetOpMarginChartCtx, 'line', anetOpMarginData, commonChartOptions);
+            }
+            if (anetGrossMarginChartCtx && !anetGrossMarginChartInstance) {
+                anetGrossMarginChartInstance = createChart(anetGrossMarginChartCtx, 'line', anetGrossMarginData, commonChartOptions);
+            }
+            if (anetNetIncomeChartCtx && !anetNetIncomeChartInstance) {
+                anetNetIncomeChartInstance = createChart(anetNetIncomeChartCtx, 'line', anetNetIncomeData, commonChartOptions);
+            }
+            if (anetOcfChartCtx && !anetOcfChartInstance) {
+                anetOcfChartInstance = createChart(anetOcfChartCtx, 'line', anetOcfData, commonChartOptions);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAnCharts(); 
+        });
+    </script>
+</body>
+</html>
+

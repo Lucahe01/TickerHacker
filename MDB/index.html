@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invesco QQQ Trust (QQQ) Insights: Year-End 2024</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA; /* Light Gray Background */
+            color: #333333; /* Dark Gray Text */
+        }
+        .header-bg {
+            background-color: #075E54; /* Dark Emerald Green */
+        }
+        .accent-bg {
+            background-color: #128C7E; /* Medium Emerald Green */
+        }
+        .accent-text {
+            color: #128C7E; /* Medium Emerald Green */
+        }
+        .highlight-text {
+            color: #FFD700; /* Gold */
+        }
+        .card {
+            background-color: #FFFFFF; /* Card Background */
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        h1, h2, h3 {
+            color: #075E54; /* Dark Emerald Green */
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #FFD700; /* Gold */
+        }
+        .stat-label {
+            font-size: 0.875rem;
+            color: #075E54; /* Dark Emerald Green */
+            text-transform: uppercase;
+        }
+        .table-header {
+            background-color: #128C7E; /* Medium Emerald Green */
+            color: white;
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #FFD700; /* Gold */
+        }
+        .nav-link.active {
+            color: #FFD700; /* Gold */
+            border-bottom: 2px solid #FFD700;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="header-bg text-white p-6 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <h1 class="text-3xl font-bold mb-4 md:mb-0 text-center md:text-left">Invesco QQQ Trust (QQQ): Year-End 2024 Analysis</h1>
+            <nav>
+                <ul class="flex space-x-4 md:space-x-6">
+                    <li><a href="#overview" class="nav-link">Overview</a></li>
+                    <li><a href="#reconstitution" class="nav-link">Reconstitution</a></li>
+                    <li><a href="#holdings" class="nav-link">Holdings</a></li>
+                    <li><a href="#stock-lookup" class="nav-link">Stock Lookup</a></li>
+                    <li><a href="#sectors" class="nav-link">Sectors</a></li>
+                    <li><a href="#outlook" class="nav-link">Outlook</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="overview" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-semibold mb-6 text-center">QQQ at a Glance: Year-End 2024</h2>
+            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
+                The Invesco QQQ Trust, tracking the Nasdaq-100 Index, demonstrated significant growth and market prominence through 2024. This overview highlights key performance indicators and the fund's substantial market presence.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
+                <div class="card">
+                    <div class="stat-value">$318.9B</div>
+                    <div class="stat-label">Assets Under Management (AUM)</div>
+                    <p class="text-sm text-gray-600 mt-2">As of December 31, 2024, reflecting strong investor confidence.</p>
+                </div>
+                <div class="card">
+                    <div class="stat-value">24.88%</div>
+                    <div class="stat-label">Nasdaq-100 Price Return (2024)</div>
+                    <p class="text-sm text-gray-600 mt-2">Building on a 53.81% return in 2023.</p>
+                </div>
+                <div class="card">
+                    <div class="stat-value">0.20%</div>
+                    <div class="stat-label">Expense Ratio</div>
+                    <p class="text-sm text-gray-600 mt-2">A cost-effective way to access Nasdaq-100 companies.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="reconstitution" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Nasdaq-100 Index Reconstitution: December 2024</h2>
+            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
+                The annual Nasdaq-100 reconstitution, effective December 23, 2024, ensures the index reflects current market leadership. This process involves adding companies with growing significance and removing others, impacting QQQ's portfolio.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="text-2xl font-semibold mb-4 accent-text text-center">Companies Added to Nasdaq-100</h3>
+                    <ul class="space-y-3">
+                        <li class="p-3 bg-green-50 rounded-md shadow-sm">
+                            <strong class="text-green-700">Palantir Technologies Inc. (PLTR)</strong>
+                            <p class="text-sm text-gray-600">AI-powered data analytics, signaling focus on AI applications.</p>
+                        </li>
+                        <li class="p-3 bg-green-50 rounded-md shadow-sm">
+                            <strong class="text-green-700">MicroStrategy Incorporated (MSTR)</strong>
+                            <p class="text-sm text-gray-600">Significant Bitcoin holdings, indicating digital asset economy integration.</p>
+                        </li>
+                        <li class="p-3 bg-green-50 rounded-md shadow-sm">
+                            <strong class="text-green-700">Axon Enterprise, Inc. (AXON)</strong>
+                            <p class="text-sm text-gray-600">Growth in public safety technology and software.</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold mb-4 text-red-600 text-center">Companies Removed from Nasdaq-100</h3>
+                    <ul class="space-y-3">
+                        <li class="p-3 bg-red-50 rounded-md shadow-sm">
+                            <strong class="text-red-700">Illumina, Inc. (ILMN)</strong>
+                            <p class="text-sm text-gray-600">Genomics leader, potentially signaling market shifts.</p>
+                        </li>
+                        <li class="p-3 bg-red-50 rounded-md shadow-sm">
+                            <strong class="text-red-700">Super Micro Computer, Inc. (SMCI)</strong>
+                            <p class="text-sm text-gray-600">Despite growth, removed due to relative changes or index rules.</p>
+                        </li>
+                        <li class="p-3 bg-red-50 rounded-md shadow-sm">
+                            <strong class="text-red-700">Moderna, Inc. (MRNA)</strong>
+                            <p class="text-sm text-gray-600">Biotech firm, possibly indicating a shift from pandemic-era beneficiaries.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-md text-gray-600 mt-6 text-center max-w-3xl mx-auto">This rebalance fine-tuned the index, highlighting emerging themes like AI and digital assets, while recalibrating exposure away from certain biotech segments.</p>
+        </section>
+
+        <section id="holdings" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Deep Dive: QQQ Top Holdings & Concentration</h2>
+            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
+                QQQ's performance is heavily influenced by its top holdings, primarily mega-cap technology and growth companies. The concentration of returns in these few names is a defining characteristic of the fund.
+            </p>
+            <div class="card md:col-span-2 overflow-x-auto">
+                <h3 class="text-2xl font-semibold mb-4 accent-text">Top 10 Holdings (as of December 31, 2024)</h3>
+                <p class="text-sm text-gray-600 mb-4">QQQ mirrors the Nasdaq-100. Data below reflects Nasdaq-100 year-end information. Percentages are approximate where noted.</p>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="table-header">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Ticker</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Company Name</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">GICS Sector</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">% of QQQ (Approx.)</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Market Cap (USD B)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr><td class="px-4 py-2 whitespace-nowrap">AAPL</td><td class="px-4 py-2 whitespace-nowrap">Apple Inc.</td><td class="px-4 py-2 whitespace-nowrap">Information Technology</td><td class="px-4 py-2 whitespace-nowrap">9.74%</td><td class="px-4 py-2 whitespace-nowrap">3,785.30</td></tr>
+                        <tr><td class="px-4 py-2 whitespace-nowrap">NVDA</td><td class="px-4 py-2 whitespace-nowrap">NVIDIA Corp</td><td class="px-4 py-2 whitespace-nowrap">Information Technology</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">3,288.76</td></tr>
+                        <tr><td class="px-4 py-2 whitespace-nowrap">MSFT</td><td class="px-4 py-2 whitespace-nowrap">Microsoft Corp</td><td class="px-4 py-2 whitespace-nowrap">Information Technology</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">3,133.80</td></tr>
+                        <tr><td class="px-4 py-2 whitespace-nowrap">AMZN</td><td class="px-4 py-2 whitespace-nowrap">Amazon.com Inc</td><td class="px-4 py-2 whitespace-nowrap">Consumer Discretionary</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">2,306.89</td></tr>
+                        <tr><td class="px-4 py-2 whitespace-nowrap">GOOGL</td><td class="px-4 py-2 whitespace-nowrap">Alphabet Inc. Class A</td><td class="px-4 py-2 whitespace-nowrap">Communication Services</td><td class="px-4 py-2 whitespace-nowrap">2.85%</td><td class="px-4 py-2 whitespace-nowrap">2,159.97</td></tr>
+                        <tr><td class="px-4 py-2 whitespace-nowrap">TSLA</td><td class="px-4 py-2 whitespace-nowrap">Tesla Inc.</td><td class="px-4 py-2 whitespace-nowrap">Consumer Discretionary</td><td class="px-4 py-2 whitespace-nowrap">3.77%</td><td class="px-4 py-2 whitespace-nowrap">1,296.35</td></tr>
+                        <tr><td class="px-4 py-2 whitespace-nowrap">META</td><td class="px-4 py-2 whitespace-nowrap">Meta Platforms Inc. Class A</td><td class="px-4 py-2 whitespace-nowrap">Communication Services</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">1,276.41</td></tr>
+                        <tr><td class="px-4 py-2 whitespace-nowrap">AVGO</td><td class="px-4 py-2 whitespace-nowrap">Broadcom Inc.</td><td class="px-4 py-2 whitespace-nowrap">Information Technology</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">1,086.72</td></tr>
+                        <tr><td class="px-4 py-2 whitespace-nowrap">COST</td><td class="px-4 py-2 whitespace-nowrap">Costco Wholesale Corp</td><td class="px-4 py-2 whitespace-nowrap">Consumer Staples</td><td class="px-4 py-2 whitespace-nowrap">2.57%</td><td class="px-4 py-2 whitespace-nowrap">406.73</td></tr>
+                        <tr><td class="px-4 py-2 whitespace-nowrap">NFLX</td><td class="px-4 py-2 whitespace-nowrap">Netflix Inc.</td><td class="px-4 py-2 whitespace-nowrap">Communication Services</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">381.27</td></tr>
+                    </tbody>
+                </table>
+                <p class="text-xs text-gray-500 mt-2">*Note: Percentages for NVDA, MSFT, AMZN, META, AVGO, NFLX are not explicitly provided for 12/31/2024 in the source data, but their market caps indicate significant weight.</p>
+            </div>
+
+            <h3 class="text-2xl font-semibold mt-10 mb-6 text-center accent-text">The Power of a Few: Concentration Risk</h3>
+             <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
+                The Nasdaq-100's 2024 returns were overwhelmingly driven by its largest constituents, indicating a "narrow market." This concentration presents both opportunities and risks for QQQ investors.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="card">
+                    <div class="stat-value">97.2%</div>
+                    <div class="stat-label">Top 10 Contribution to NDX Return</div>
+                    <p class="text-sm text-gray-600 mt-2">Top 10 highest-weighted companies contributed 25.2% to the index's 25.9% total return.</p>
+                </div>
+                <div class="card">
+                    <div class="stat-value">72%</div>
+                    <div class="stat-label">"Magnificent Seven" Share of NDX 2024 Returns</div>
+                    <p class="text-sm text-gray-600 mt-2">Highlighting extreme concentration of risk and reward.</p>
+                </div>
+                <div class="card">
+                    <div class="stat-value">22%</div>
+                    <div class="stat-label">"Hit Rate" in 2024</div>
+                    <p class="text-sm text-gray-600 mt-2">Percentage of Nasdaq-100 names beating the benchmark, indicating narrow market leadership.</p>
+                </div>
+            </div>
+            <p class="text-md text-gray-600 mt-6 text-center max-w-3xl mx-auto">This extreme concentration means QQQ's performance is highly sensitive to these few giants, making it a high-conviction play rather than a broadly diversified one.</p>
+        </section>
+
+        <section id="stock-lookup" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Explore Individual QQQ Holdings (Top 25)</h2>
+            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
+                Select a company from the dropdown to see more details about its presence within the QQQ Trust. This list focuses on the top 25 representative holdings.
+            </p>
+            <div class="card max-w-xl mx-auto">
+                <div class="mb-4">
+                    <label for="stockSelect" class="block text-gray-700 text-sm font-bold mb-2">Select a QQQ Stock:</label>
+                    <select id="stockSelect" class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-bg focus:border-transparent">
+                        <option value="">-- Select a Stock --</option>
+                    </select>
+                </div>
+                <div id="selectedStockInfo" class="mt-6 p-4 bg-gray-50 rounded-md border border-gray-200 text-gray-800">
+                    Please select a stock from the dropdown above to view its information.
+                </div>
+            </div>
+        </section>
+
+        <section id="sectors" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Sector & Market Cap Breakdown</h2>
+            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
+                QQQ's portfolio is heavily weighted towards Information Technology, followed by Communication Services and Consumer Discretionary. It predominantly comprises Giant-cap and Large-cap companies.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div class="card">
+                    <h3 class="text-2xl font-semibold mb-4 accent-text text-center">QQQ Sector Allocation (Approx. Dec 31, 2024)</h3>
+                    <div class="chart-container h-[350px] md:h-[400px]">
+                        <canvas id="sectorAllocationChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4 text-center">Information Technology dominates, underscoring the fund's tech-centric nature.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold mb-4 accent-text text-center">Market Capitalization Distribution (Proxy May 2025)</h3>
+                     <div class="chart-container h-[350px] md:h-[400px]">
+                        <canvas id="marketCapChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4 text-center">Focus on established, large-scale enterprises.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Performance, Valuation & Forward Look</h2>
+            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
+                While QQQ delivered strong returns in 2024, its high concentration and valuation metrics warrant careful consideration in light of macroeconomic factors and potential market rotations.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card text-center">
+                    <h3 class="text-xl font-semibold mb-2 accent-text">Q4 2024 Dividend</h3>
+                    <p class="text-3xl font-bold highlight-text">$0.83466</p>
+                    <p class="text-sm text-gray-600">per share</p>
+                </div>
+                <div class="card text-center">
+                    <h3 class="text-xl font-semibold mb-2 accent-text">Annual Dividend Yield</h3>
+                    <p class="text-3xl font-bold highlight-text">~0.56%</p>
+                    <p class="text-sm text-gray-600">Relatively low, typical for growth-focused funds.</p>
+                </div>
+                 <div class="card">
+                    <h3 class="text-xl font-semibold mb-2 accent-text text-center">Valuation Snapshot</h3>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li><strong>P/E Ratio (QQQ, May '25):</strong> 25.12</li>
+                        <li><strong>P/B Ratio (QQQ, May '25):</strong> 6.29</li>
+                        <li><strong>P/S Ratio (QQQ, May '25):</strong> 4.86</li>
+                        <li><strong>P/BV (NDX, Dec '24):</strong> 6.11</li>
+                        <li><strong>EV/Sales (NDX, Dec '24):</strong> 4.94</li>
+                    </ul>
+                    <p class="text-xs text-gray-500 mt-2">Reflects premium for growth potential.</p>
+                </div>
+            </div>
+            <div class="card mt-8">
+                <h3 class="text-2xl font-semibold mb-4 accent-text">Key Takeaways & Future Considerations</h3>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>QQQ remains a highly concentrated bet on mega-cap tech and growth leaders.</li>
+                    <li>Performance in 2025 will likely hinge on these few dominant companies and their ability to innovate and maintain profitability.</li>
+                    <li>High valuations and a "higher-for-longer" interest rate environment could pose headwinds.</li>
+                    <li>Potential market rotation towards broader earnings growth could impact QQQ's relative outperformance.</li>
+                    <li>Investors should monitor macroeconomic indicators, Fed policy, and the performance of top holdings closely.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 p-8 text-center">
+        <p>&copy; 2025 QQQ Insights Infographic. Data based on year-end 2024 reports.</p>
+        <p class="text-xs mt-2">This infographic is for informational purposes only and not financial advice.</p>
+    </footer>
+
+    <script>
+        const wrapLabel = (label, maxLength = 16) => {
+            if (typeof label !== 'string' || label.length <= maxLength) {
+                return label;
+            }
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + word).length > maxLength && currentLine.length > 0) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += word + ' ';
+            }
+            if (currentLine.trim().length > 0) {
+                lines.push(currentLine.trim());
+            }
+            return lines.length > 0 ? lines : [label];
+        };
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            if (!item) return '';
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#333333',
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    },
+                    backgroundColor: '#075E54',
+                    titleColor: '#FFFFFF',
+                    bodyColor: '#FFFFFF',
+                    borderColor: '#FFD700',
+                    borderWidth: 1
+                }
+            },
+            scales: {
+                y: {
+                    ticks: { color: '#333333', font: { size: 10 } },
+                    grid: { color: '#e0e0e0' }
+                },
+                x: {
+                    ticks: { color: '#333333', font: { size: 10 } },
+                    grid: { display: false }
+                }
+            }
+        };
+
+        const emeraldGoldPalette = ['#075E54', '#128C7E', '#25D366', '#FFD700', '#064940', '#0E7A6E'];
+
+
+        // Sector Allocation Chart
+        const sectorData = {
+            labels: [
+                wrapLabel('Information Technology'), wrapLabel('Communication Services'), wrapLabel('Consumer Discretionary'),
+                wrapLabel('Consumer Staples'), wrapLabel('Health Care'), wrapLabel('Industrials'),
+                wrapLabel('Utilities'), wrapLabel('Materials'), wrapLabel('Energy'), wrapLabel('Financials')
+            ],
+            datasets: [{
+                label: 'Sector Allocation',
+                data: [52.73, 15.66, 13.87, 6.06, 5.55, 4.86, 1.46, 1.46, 0.52, 0.44],
+                backgroundColor: emeraldGoldPalette,
+                borderColor: '#FFFFFF',
+                borderWidth: 2
+            }]
+        };
+        const sectorAllocationCtx = document.getElementById('sectorAllocationChart').getContext('2d');
+        new Chart(sectorAllocationCtx, {
+            type: 'doughnut',
+            data: sectorData,
+            options: { ...commonChartOptions, cutout: '60%' }
+        });
+
+        // Market Cap Chart
+        const marketCapData = {
+            labels: [wrapLabel('Giant-cap'), wrapLabel('Large-cap'), wrapLabel('Mid-cap')],
+            datasets: [{
+                label: 'Market Cap Distribution (%)',
+                data: [54.48, 34.12, 10.74],
+                backgroundColor: ['#075E54', '#128C7E', '#25D366'],
+                borderColor: '#FFFFFF',
+                borderWidth: 1
+            }]
+        };
+        const marketCapCtx = document.getElementById('marketCapChart').getContext('2d');
+        new Chart(marketCapCtx, {
+            type: 'bar',
+            data: marketCapData,
+            options: {
+                ...commonChartOptions,
+                indexAxis: 'y',
+                 scales: {
+                    y: {
+                        ticks: { color: '#333333', font: { size: 12 }, autoSkip: false },
+                        grid: { display: false }
+                    },
+                    x: {
+                        ticks: { color: '#333333', font: { size: 10 }, callback: function(value) { return value + '%' } },
+                        grid: { color: '#e0e0e0' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: tooltipTitleCallback,
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.parsed.x}%`;
+                            }
+                        },
+                        backgroundColor: '#075E54',
+                        titleColor: '#FFFFFF',
+                        bodyColor: '#FFFFFF',
+                        borderColor: '#FFD700',
+                        borderWidth: 1
+                    }
+                }
+            }
+        });
+
+        // Stock Lookup Dropdown Logic - Now includes top 25 representative stocks
+        const qqqStocks = [
+            { ticker: 'AAPL', name: 'Apple Inc.' },
+            { ticker: 'NVDA', name: 'NVIDIA Corp' },
+            { ticker: 'MSFT', name: 'Microsoft Corp' },
+            { ticker: 'AMZN', name: 'Amazon.com Inc' },
+            { ticker: 'GOOGL', name: 'Alphabet Inc. Class A' },
+            { ticker: 'TSLA', name: 'Tesla Inc.' },
+            { ticker: 'META', name: 'Meta Platforms Inc. Class A' },
+            { ticker: 'AVGO', name: 'Broadcom Inc.' },
+            { ticker: 'COST', name: 'Costco Wholesale Corp' },
+            { ticker: 'NFLX', name: 'Netflix Inc.' },
+            { ticker: 'PLTR', name: 'Palantir Technologies Inc.' },
+            { ticker: 'MSTR', name: 'MicroStrategy Incorporated' },
+            { ticker: 'AXON', name: 'Axon Enterprise, Inc.' },
+            { ticker: 'ADBE', name: 'Adobe Inc.' },
+            { ticker: 'INTC', name: 'Intel Corp.' },
+            { ticker: 'CMCSA', name: 'Comcast Corp.' },
+            { ticker: 'PEP', name: 'PepsiCo Inc.' },
+            { ticker: 'SBUX', name: 'Starbucks Corp.' },
+            { ticker: 'CSCO', name: 'Cisco Systems Inc.' },
+            { ticker: 'QCOM', name: 'Qualcomm Inc.' },
+            { ticker: 'AMD', name: 'Advanced Micro Devices Inc.' },
+            { ticker: 'CMG', name: 'Chipotle Mexican Grill Inc.' },
+            { ticker: 'WDAY', name: 'Workday Inc.' },
+            { ticker: 'MAR', name: 'Marriott International Inc. Class A' },
+            { ticker: 'LRCX', name: 'Lam Research Corp.' }
+        ].sort((a, b) => a.ticker.localeCompare(b.ticker)); // Sort alphabetically by ticker
+
+        const stockSelect = document.getElementById('stockSelect');
+        const selectedStockInfo = document.getElementById('selectedStockInfo');
+
+        qqqStocks.forEach(stock => {
+            const option = document.createElement('option');
+            option.value = stock.ticker;
+            option.textContent = `${stock.ticker} - ${stock.name}`;
+            stockSelect.appendChild(option);
+        });
+
+        stockSelect.addEventListener('change', (event) => {
+            const selectedTicker = event.target.value;
+            if (selectedTicker) {
+                const stock = qqqStocks.find(s => s.ticker === selectedTicker);
+                selectedStockInfo.innerHTML = `
+                    <h4 class="text-xl font-semibold mb-2 accent-text">${stock.name} (${stock.ticker})</h4>
+                    <p class="text-gray-700">
+                        Detailed information for ${stock.name} would be displayed here, including its specific weight in QQQ, recent performance, and relevant news.
+                        This section can be expanded to fetch real-time data or more detailed report insights.
+                    </p>
+                `;
+            } else {
+                selectedStockInfo.innerHTML = `Please select a stock from the dropdown above to view its information.`;
+            }
+        });
+
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                // Active link styling
+                document.querySelectorAll('nav .nav-link').forEach(link => link.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Active link on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('nav .nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 70) { // 70 is approx header height + some buffer
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
+
