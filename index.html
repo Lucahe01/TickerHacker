@@ -99,6 +99,69 @@
                 </a>
             </div>
 
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow" data-ticker="ANET">
+                <h2 class="text-2xl font-semibold text-purple-500 mb-2">Arista Networks (ANET) Analysis</h2>
+                <p class="text-gray-700 mb-4">Explore Arista Networks' cloud networking solutions and market position.</p>
+                <a href="/ANET/" class="inline-block bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                    View ANET Analysis &rarr;
+                </a>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow" data-ticker="APP">
+                <h2 class="text-2xl font-semibold text-pink-500 mb-2">AppLovin (APP) Analysis</h2>
+                <p class="text-gray-700 mb-4">A deep dive into AppLovin's mobile app technology and advertising platform.</p>
+                <a href="/APP/" class="inline-block bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                    View APP Analysis &rarr;
+                </a>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow" data-ticker="INTU">
+                <h2 class="text-2xl font-semibold text-cyan-600 mb-2">Intuit (INTU) Analysis</h2>
+                <p class="text-700 mb-4">Explore Intuit's financial software products like TurboTax and QuickBooks.</p>
+                <a href="/INTU/" class="inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                    View INTU Analysis &rarr;
+                </a>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow" data-ticker="EQT">
+                <h2 class="text-2xl font-semibold text-lime-600 mb-2">EQT Corp. (EQT) Analysis</h2>
+                <p class="text-gray-700 mb-4">A look into EQT's natural gas production and financial performance.</p>
+                <a href="/EQT/" class="inline-block bg-lime-600 hover:bg-lime-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                    View EQT Analysis &rarr;
+                </a>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow" data-ticker="MDB">
+                <h2 class="text-2xl font-semibold text-fuchsia-600 mb-2">MongoDB (MDB) Analysis</h2>
+                <p class="text-gray-700 mb-4">An exploration of MongoDB's NoSQL database platform and cloud services.</p>
+                <a href="/MDB/" class="inline-block bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                    View MDB Analysis &rarr;
+                </a>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow" data-ticker="NEE">
+                <h2 class="text-2xl font-semibold text-emerald-600 mb-2">NextEra Energy (NEE) Analysis</h2>
+                <p class="text-gray-700 mb-4">A comprehensive analysis of NextEra Energy's utility and renewable energy businesses.</p>
+                <a href="/NEE/" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                    View NEE Analysis &rarr;
+                </a>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow" data-ticker="SNOW">
+                <h2 class="text-2xl font-semibold text-sky-600 mb-2">Snowflake (SNOW) Analysis</h2>
+                <p class="text-gray-700 mb-4">Explore Snowflake's cloud data warehousing platform and data analytics solutions.</p>
+                <a href="/SNOW/" class="inline-block bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                    View SNOW Analysis &rarr;
+                </a>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow" data-ticker="TEAM">
+                <h2 class="text-2xl font-semibold text-rose-600 mb-2">Atlassian (TEAM) Analysis</h2>
+                <p class="text-gray-700 mb-4">A deep dive into Atlassian's team collaboration and software development tools.</p>
+                <a href="/TEAM/" class="inline-block bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                    View TEAM Analysis &rarr;
+                </a>
+            </div>
             <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow">
                 <h2 class="text-2xl font-semibold text-purple-600 mb-2">General Topics</h2>
                 <p class="text-gray-700 mb-4">Exploring various interesting data analysis topics beyond specific companies.</p>
@@ -149,7 +212,16 @@
             "AVGO": { company: "Broadcom Inc.", spaPath: "/AVGO/" },
             "ARM": { company: "Arm Holdings", spaPath: "/ARM/" },
             "TDG": { company: "TransDigm Group", spaPath: "/TDG/" },
-            "TSM": { company: "TSMC", spaPath: "/TSM/" }
+            "TSM": { company: "TSMC", spaPath: "/TSM/" },
+            // Newly added dedicated SPA paths
+            "ANET": { company: "Arista Networks", spaPath: "/ANET/" },
+            "APP": { company: "AppLovin", spaPath: "/APP/" },
+            "INTU": { company: "Intuit Inc.", spaPath: "/INTU/" },
+            "EQT": { company: "EQT Corp.", spaPath: "/EQT/" },
+            "MDB": { company: "MongoDB", spaPath: "/MDB/" },
+            "NEE": { company: "NextEra Energy", spaPath: "/NEE/" },
+            "SNOW": { company: "Snowflake", spaPath: "/SNOW/" },
+            "TEAM": { company: "Atlassian Corp. Plc", spaPath: "/TEAM/" }
         };
 
         let allCompaniesForDropdown = {};
@@ -178,6 +250,8 @@
 
         function populateCompanyDropdown() {
             const companySelect = document.getElementById('company-select');
+            // Clear existing options before populating
+            companySelect.innerHTML = '<option value="">-- Select --</option>';
             sortedCompaniesForDropdown.forEach(company => {
                 const option = document.createElement('option');
                 option.value = company.ticker;

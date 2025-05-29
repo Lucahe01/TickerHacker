@@ -3,540 +3,460 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invesco QQQ Trust (QQQ) Insights: Year-End 2024</title>
+    <title>Interactive MongoDB (MDB) Analysis</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F8F9FA; /* Light Gray Background */
-            color: #333333; /* Dark Gray Text */
-        }
-        .header-bg {
-            background-color: #075E54; /* Dark Emerald Green */
-        }
-        .accent-bg {
-            background-color: #128C7E; /* Medium Emerald Green */
-        }
-        .accent-text {
-            color: #128C7E; /* Medium Emerald Green */
-        }
-        .highlight-text {
-            color: #FFD700; /* Gold */
-        }
-        .card {
-            background-color: #FFFFFF; /* Card Background */
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px;
+            max-width: 600px; 
             margin-left: auto;
             margin-right: auto;
-            height: 300px;
-            max-height: 400px;
+            height: 300px; 
+            max-height: 350px;
         }
-        @media (min-width: 768px) {
+         @media (min-width: 768px) { /* md breakpoint */
             .chart-container {
                 height: 350px;
+                max-height: 400px;
             }
         }
-        h1, h2, h3 {
-            color: #075E54; /* Dark Emerald Green */
+        h1.main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+            padding-top: 0.5rem; 
         }
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #FFD700; /* Gold */
+        h2.company-title { 
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #60A5FA; /* blue-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
         }
-        .stat-label {
-            font-size: 0.875rem;
-            color: #075E54; /* Dark Emerald Green */
-            text-transform: uppercase;
+        h3.section-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2DD4BF; /* teal-400 */
+            margin-top: 1.5rem; 
+            margin-bottom: 1rem; /* mb-4 */
         }
-        .table-header {
-            background-color: #128C7E; /* Medium Emerald Green */
-            color: white;
+        h4.subsection-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; 
+            margin-bottom: 0.75rem; 
         }
-        .nav-link {
-            transition: color 0.3s ease;
+        p, li {
+            line-height: 1.75; 
+            margin-bottom: 1rem; 
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem; 
         }
-        .nav-link:hover {
-            color: #FFD700; /* Gold */
+        ul {
+            list-style-type: none; 
+            padding-left: 0; 
         }
-        .nav-link.active {
-            color: #FFD700; /* Gold */
-            border-bottom: 2px solid #FFD700;
+        ul li {
+            padding-left: 1.75rem; 
+            position: relative;
+        }
+        ul li::before { 
+            content: '➔';
+            position: absolute;
+            left: 0;
+            color: #60A5FA; /* blue-400 */
+            font-weight: bold;
+        }
+        .metric-card { 
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem; 
+            text-align: center;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03);
+        }
+        .metric-card-title { 
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem; 
+            font-weight: 500; 
+        }
+        .metric-card-value { 
+            font-size: 1.75rem; /* text-2xl */
+            font-weight: 600; 
+            color: #1F2937; /* gray-800 */
+        }
+        .content-wrapper { 
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); 
+            padding: 1.5rem; 
+            margin-bottom: 2rem; 
         }
     </style>
 </head>
-<body class="antialiased">
 
-    <header class="header-bg text-white p-6 shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
-            <h1 class="text-3xl font-bold mb-4 md:mb-0 text-center md:text-left">Invesco QQQ Trust (QQQ): Year-End 2024 Analysis</h1>
-            <nav>
-                <ul class="flex space-x-4 md:space-x-6">
-                    <li><a href="#overview" class="nav-link">Overview</a></li>
-                    <li><a href="#reconstitution" class="nav-link">Reconstitution</a></li>
-                    <li><a href="#holdings" class="nav-link">Holdings</a></li>
-                    <li><a href="#stock-lookup" class="nav-link">Stock Lookup</a></li>
-                    <li><a href="#sectors" class="nav-link">Sectors</a></li>
-                    <li><a href="#outlook" class="nav-link">Outlook</a></li>
-                </ul>
-            </nav>
+<body class="bg-stone-100 text-gray-700 min-h-screen">
+    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <h1 class="main-title text-3xl">Interactive MongoDB (MDB) Analysis</h1>
         </div>
     </header>
 
-    <main class="container mx-auto p-4 md:p-8">
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+        <section id="mdb-content">
+            <div class="content-wrapper">
+                <h2 class="company-title">MongoDB Inc. (MDB) In-Depth Analysis</h2>
+                <p class="text-gray-600 mb-6 text-base md:text-lg">This interactive report provides a comprehensive analysis of MongoDB Inc. (MDB), a leading modern general-purpose database platform. Explore MongoDB's developer-centric business model, its flagship cloud-native product MongoDB Atlas, its strategic advancements in AI with Atlas Vector Search, its competitive positioning, detailed financial performance, and its outlook in the evolving data landscape.</p>
 
-        <section id="overview" class="mb-12 pt-16 -mt-16">
-            <h2 class="text-3xl font-semibold mb-6 text-center">QQQ at a Glance: Year-End 2024</h2>
-            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
-                The Invesco QQQ Trust, tracking the Nasdaq-100 Index, demonstrated significant growth and market prominence through 2024. This overview highlights key performance indicators and the fund's substantial market presence.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
-                <div class="card">
-                    <div class="stat-value">$318.9B</div>
-                    <div class="stat-label">Assets Under Management (AUM)</div>
-                    <p class="text-sm text-gray-600 mt-2">As of December 31, 2024, reflecting strong investor confidence.</p>
+                <div id="mdb-overview">
+                    <h3 class="section-title">1. Company Overview & Mission</h3>
+                    <p>MongoDB's mission is "To empower innovators to create, transform, and disrupt industries by unleashing the power of software and data." Founded in 2007, MongoDB has evolved from an open-source project into a major publicly traded company, challenging traditional relational databases with its flexible document model. Its vision centers on becoming the go-to data platform for modern applications, emphasizing developer empowerment, multi-cloud flexibility with its Atlas DBaaS, and continuous innovation, particularly in areas like AI and real-time data processing. Core values like "Think Big, Go Far" and "Build Together" underpin its culture and strategic initiatives.</p>
                 </div>
-                <div class="card">
-                    <div class="stat-value">24.88%</div>
-                    <div class="stat-label">Nasdaq-100 Price Return (2024)</div>
-                    <p class="text-sm text-gray-600 mt-2">Building on a 53.81% return in 2023.</p>
-                </div>
-                <div class="card">
-                    <div class="stat-value">0.20%</div>
-                    <div class="stat-label">Expense Ratio</div>
-                    <p class="text-sm text-gray-600 mt-2">A cost-effective way to access Nasdaq-100 companies.</p>
-                </div>
-            </div>
-        </section>
 
-        <section id="reconstitution" class="mb-12 pt-16 -mt-16">
-            <h2 class="text-3xl font-semibold mb-6 text-center">Nasdaq-100 Index Reconstitution: December 2024</h2>
-            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
-                The annual Nasdaq-100 reconstitution, effective December 23, 2024, ensures the index reflects current market leadership. This process involves adding companies with growing significance and removing others, impacting QQQ's portfolio.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card">
-                    <h3 class="text-2xl font-semibold mb-4 accent-text text-center">Companies Added to Nasdaq-100</h3>
-                    <ul class="space-y-3">
-                        <li class="p-3 bg-green-50 rounded-md shadow-sm">
-                            <strong class="text-green-700">Palantir Technologies Inc. (PLTR)</strong>
-                            <p class="text-sm text-gray-600">AI-powered data analytics, signaling focus on AI applications.</p>
-                        </li>
-                        <li class="p-3 bg-green-50 rounded-md shadow-sm">
-                            <strong class="text-green-700">MicroStrategy Incorporated (MSTR)</strong>
-                            <p class="text-sm text-gray-600">Significant Bitcoin holdings, indicating digital asset economy integration.</p>
-                        </li>
-                        <li class="p-3 bg-green-50 rounded-md shadow-sm">
-                            <strong class="text-green-700">Axon Enterprise, Inc. (AXON)</strong>
-                            <p class="text-sm text-gray-600">Growth in public safety technology and software.</p>
-                        </li>
+                <div id="mdb-business-model">
+                    <h3 class="section-title">2. Business Model & Segments</h3>
+                    <p>MongoDB's value proposition is rooted in enhancing developer productivity and agility through its flexible document data model. This model simplifies data handling for modern applications compared to rigid relational structures. Revenue is primarily subscription-based (97% in FY2025), with a strong focus on the consumption-driven MongoDB Atlas.</p>
+                    <h4 class="subsection-title">Product-Centric Segments:</h4>
+                    <ul>
+                        <li><strong>MongoDB Atlas (Cloud-Hosted DBaaS):</strong> The flagship product and primary growth engine (70% of FY2025 revenue). Atlas is a fully managed, multi-cloud database service on AWS, Azure, and GCP. It automates operations and integrates services like Atlas Search, Atlas Vector Search (for AI/RAG), Stream Processing, and Charts. Targeted at developers and organizations of all sizes, its revenue is mainly consumption-based.</li>
+                        <li><strong>MongoDB Enterprise Advanced (Self-Managed):</strong> A commercial, self-managed database server for on-premises or private cloud deployments (24% of FY2025 subscription revenue). It includes advanced security, operational tooling (Ops Manager), and enterprise support, catering to larger enterprises with specific control or data sovereignty needs. Revenue is subscription-based (term licenses).</li>
+                        <li><strong>MongoDB Community Edition (Free Open Source):</strong> The core document database, free to use under the SSPL. It drives developer adoption and serves as a funnel to commercial offerings, playing a crucial strategic role in ecosystem building.</li>
+                    </ul>
+                     <p>This tiered approach allows MongoDB to address a wide market spectrum, guiding users from initial exploration with the Community Edition to scalable, enterprise-grade deployments on Atlas or Enterprise Advanced.</p>
+                </div>
+
+                <div id="mdb-products">
+                    <h3 class="section-title">3. Product Portfolio & Technology</h3>
+                    <p>MongoDB's platform is built on a flexible document data model and a distributed systems architecture, designed for scalability and developer agility.</p>
+                    <h4 class="subsection-title">Core Technology & Architecture:</h4>
+                    <ul>
+                        <li><strong>Document Data Model:</strong> Stores data in JSON-like BSON documents, offering schema flexibility ideal for evolving applications.</li>
+                        <li><strong>Distributed Systems:</strong> Employs replica sets for high availability and sharding for horizontal scalability, handling large datasets and high throughput.</li>
+                        <li><strong>MongoDB Query Language (MQL):</strong> A rich query language supporting diverse operations and indexing.</li>
+                    </ul>
+                    <h4 class="subsection-title">Innovation & R&D (Focus on AI and Developer Experience):</h4>
+                    <p>MongoDB invests heavily in R&D (30.5% of revenue in FY2025). Key innovation areas include:</p>
+                    <ul>
+                        <li><strong>AI and Machine Learning:</strong> Atlas Vector Search is central to its AI strategy, enabling semantic search and RAG for generative AI. Partnerships and acquisitions (like Voyage AI) bolster these capabilities.</li>
+                        <li><strong>Developer Experience:</strong> Continuous improvements to tools like MongoDB Shell, Compass, drivers, and the Atlas CLI.</li>
+                        <li><strong>Platform Enhancements:</strong> Regular updates include features like Atlas Resource Policies, Flex Tier, GraphRAG, and enhanced security.</li>
+                    </ul>
+                     <h4 class="subsection-title">Go-to-Market Strategy:</h4>
+                     <p>MongoDB employs a multi-faceted approach:</p>
+                    <ul>
+                        <li><strong>Developer-Led Adoption:</strong> Leveraging the free Community Edition and Atlas free tier for organic growth.</li>
+                        <li><strong>Direct Sales:</strong> Targeting larger enterprises with a dedicated sales force (88% of FY2025 subscription revenue).</li>
+                        <li><strong>Self-Service (Atlas):</strong> Enabling easy online signup and scaling.</li>
+                        <li><strong>Cloud Marketplaces:</strong> Availability on AWS, Azure, and GCP marketplaces simplifies procurement.</li>
+                        <li><strong>Partnerships:</strong> Collaborations with hyperscalers, technology partners, ISVs, and system integrators.</li>
                     </ul>
                 </div>
-                <div class="card">
-                    <h3 class="text-2xl font-semibold mb-4 text-red-600 text-center">Companies Removed from Nasdaq-100</h3>
-                    <ul class="space-y-3">
-                        <li class="p-3 bg-red-50 rounded-md shadow-sm">
-                            <strong class="text-red-700">Illumina, Inc. (ILMN)</strong>
-                            <p class="text-sm text-gray-600">Genomics leader, potentially signaling market shifts.</p>
-                        </li>
-                        <li class="p-3 bg-red-50 rounded-md shadow-sm">
-                            <strong class="text-red-700">Super Micro Computer, Inc. (SMCI)</strong>
-                            <p class="text-sm text-gray-600">Despite growth, removed due to relative changes or index rules.</p>
-                        </li>
-                        <li class="p-3 bg-red-50 rounded-md shadow-sm">
-                            <strong class="text-red-700">Moderna, Inc. (MRNA)</strong>
-                            <p class="text-sm text-gray-600">Biotech firm, possibly indicating a shift from pandemic-era beneficiaries.</p>
-                        </li>
+
+                <div id="mdb-competition">
+                    <h3 class="section-title">4. Competitive Landscape & Differentiation</h3>
+                    <p>MongoDB operates in a dynamic and competitive database market, facing challenges from cloud providers' native offerings, other NoSQL vendors, and traditional relational databases.</p>
+                    <h4 class="subsection-title">Key Competitors:</h4>
+                    <ul>
+                        <li><strong>Cloud Providers' Native Databases:</strong> AWS (DynamoDB, DocumentDB), Azure (Cosmos DB), GCP (Firestore, Bigtable).</li>
+                        <li><strong>Other NoSQL Vendors:</strong> Couchbase, DataStax, Elastic, Redis.</li>
+                        <li><strong>Relational Database Vendors (Incumbents):</strong> Oracle, Microsoft SQL Server, PostgreSQL, MySQL.</li>
+                        <li><strong>Specialized Vector Database Vendors:</strong> Pinecone, Weaviate. MongoDB counters with integrated Atlas Vector Search.</li>
                     </ul>
+                     <h4 class="subsection-title">MongoDB's Differentiators:</h4>
+                    <ul>
+                        <li><strong>Flexible Document Data Model:</strong> Core to developer agility and rapid development.</li>
+                        <li><strong>MongoDB Atlas (Unified Multi-Cloud Platform):</strong> Offers consistency across AWS, Azure, and GCP, avoiding vendor lock-in. Its fully managed nature and integrated services simplify data architecture.</li>
+                        <li><strong>Strong Developer Community & Ecosystem:</strong> A large, active community provides extensive resources and talent.</li>
+                        <li><strong>Scalability and Performance:</strong> Designed for handling large-scale, high-velocity workloads.</li>
+                        <li><strong>"Run Anywhere" Strategy:</strong> Supports both cloud (Atlas) and self-managed (Enterprise Advanced) deployments.</li>
+                    </ul>
+                    <p>MongoDB's multi-cloud strategy with Atlas, combined with its developer-friendly document model and integrated platform services, creates a strong competitive position.</p>
                 </div>
-            </div>
-            <p class="text-md text-gray-600 mt-6 text-center max-w-3xl mx-auto">This rebalance fine-tuned the index, highlighting emerging themes like AI and digital assets, while recalibrating exposure away from certain biotech segments.</p>
-        </section>
 
-        <section id="holdings" class="mb-12 pt-16 -mt-16">
-            <h2 class="text-3xl font-semibold mb-6 text-center">Deep Dive: QQQ Top Holdings & Concentration</h2>
-            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
-                QQQ's performance is heavily influenced by its top holdings, primarily mega-cap technology and growth companies. The concentration of returns in these few names is a defining characteristic of the fund.
-            </p>
-            <div class="card md:col-span-2 overflow-x-auto">
-                <h3 class="text-2xl font-semibold mb-4 accent-text">Top 10 Holdings (as of December 31, 2024)</h3>
-                <p class="text-sm text-gray-600 mb-4">QQQ mirrors the Nasdaq-100. Data below reflects Nasdaq-100 year-end information. Percentages are approximate where noted.</p>
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="table-header">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Ticker</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Company Name</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">GICS Sector</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">% of QQQ (Approx.)</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Market Cap (USD B)</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr><td class="px-4 py-2 whitespace-nowrap">AAPL</td><td class="px-4 py-2 whitespace-nowrap">Apple Inc.</td><td class="px-4 py-2 whitespace-nowrap">Information Technology</td><td class="px-4 py-2 whitespace-nowrap">9.74%</td><td class="px-4 py-2 whitespace-nowrap">3,785.30</td></tr>
-                        <tr><td class="px-4 py-2 whitespace-nowrap">NVDA</td><td class="px-4 py-2 whitespace-nowrap">NVIDIA Corp</td><td class="px-4 py-2 whitespace-nowrap">Information Technology</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">3,288.76</td></tr>
-                        <tr><td class="px-4 py-2 whitespace-nowrap">MSFT</td><td class="px-4 py-2 whitespace-nowrap">Microsoft Corp</td><td class="px-4 py-2 whitespace-nowrap">Information Technology</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">3,133.80</td></tr>
-                        <tr><td class="px-4 py-2 whitespace-nowrap">AMZN</td><td class="px-4 py-2 whitespace-nowrap">Amazon.com Inc</td><td class="px-4 py-2 whitespace-nowrap">Consumer Discretionary</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">2,306.89</td></tr>
-                        <tr><td class="px-4 py-2 whitespace-nowrap">GOOGL</td><td class="px-4 py-2 whitespace-nowrap">Alphabet Inc. Class A</td><td class="px-4 py-2 whitespace-nowrap">Communication Services</td><td class="px-4 py-2 whitespace-nowrap">2.85%</td><td class="px-4 py-2 whitespace-nowrap">2,159.97</td></tr>
-                        <tr><td class="px-4 py-2 whitespace-nowrap">TSLA</td><td class="px-4 py-2 whitespace-nowrap">Tesla Inc.</td><td class="px-4 py-2 whitespace-nowrap">Consumer Discretionary</td><td class="px-4 py-2 whitespace-nowrap">3.77%</td><td class="px-4 py-2 whitespace-nowrap">1,296.35</td></tr>
-                        <tr><td class="px-4 py-2 whitespace-nowrap">META</td><td class="px-4 py-2 whitespace-nowrap">Meta Platforms Inc. Class A</td><td class="px-4 py-2 whitespace-nowrap">Communication Services</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">1,276.41</td></tr>
-                        <tr><td class="px-4 py-2 whitespace-nowrap">AVGO</td><td class="px-4 py-2 whitespace-nowrap">Broadcom Inc.</td><td class="px-4 py-2 whitespace-nowrap">Information Technology</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">1,086.72</td></tr>
-                        <tr><td class="px-4 py-2 whitespace-nowrap">COST</td><td class="px-4 py-2 whitespace-nowrap">Costco Wholesale Corp</td><td class="px-4 py-2 whitespace-nowrap">Consumer Staples</td><td class="px-4 py-2 whitespace-nowrap">2.57%</td><td class="px-4 py-2 whitespace-nowrap">406.73</td></tr>
-                        <tr><td class="px-4 py-2 whitespace-nowrap">NFLX</td><td class="px-4 py-2 whitespace-nowrap">Netflix Inc.</td><td class="px-4 py-2 whitespace-nowrap">Communication Services</td><td class="px-4 py-2 whitespace-nowrap">High*</td><td class="px-4 py-2 whitespace-nowrap">381.27</td></tr>
-                    </tbody>
-                </table>
-                <p class="text-xs text-gray-500 mt-2">*Note: Percentages for NVDA, MSFT, AMZN, META, AVGO, NFLX are not explicitly provided for 12/31/2024 in the source data, but their market caps indicate significant weight.</p>
-            </div>
-
-            <h3 class="text-2xl font-semibold mt-10 mb-6 text-center accent-text">The Power of a Few: Concentration Risk</h3>
-             <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
-                The Nasdaq-100's 2024 returns were overwhelmingly driven by its largest constituents, indicating a "narrow market." This concentration presents both opportunities and risks for QQQ investors.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                <div class="card">
-                    <div class="stat-value">97.2%</div>
-                    <div class="stat-label">Top 10 Contribution to NDX Return</div>
-                    <p class="text-sm text-gray-600 mt-2">Top 10 highest-weighted companies contributed 25.2% to the index's 25.9% total return.</p>
-                </div>
-                <div class="card">
-                    <div class="stat-value">72%</div>
-                    <div class="stat-label">"Magnificent Seven" Share of NDX 2024 Returns</div>
-                    <p class="text-sm text-gray-600 mt-2">Highlighting extreme concentration of risk and reward.</p>
-                </div>
-                <div class="card">
-                    <div class="stat-value">22%</div>
-                    <div class="stat-label">"Hit Rate" in 2024</div>
-                    <p class="text-sm text-gray-600 mt-2">Percentage of Nasdaq-100 names beating the benchmark, indicating narrow market leadership.</p>
-                </div>
-            </div>
-            <p class="text-md text-gray-600 mt-6 text-center max-w-3xl mx-auto">This extreme concentration means QQQ's performance is highly sensitive to these few giants, making it a high-conviction play rather than a broadly diversified one.</p>
-        </section>
-
-        <section id="stock-lookup" class="mb-12 pt-16 -mt-16">
-            <h2 class="text-3xl font-semibold mb-6 text-center">Explore Individual QQQ Holdings (Top 25)</h2>
-            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
-                Select a company from the dropdown to see more details about its presence within the QQQ Trust. This list focuses on the top 25 representative holdings.
-            </p>
-            <div class="card max-w-xl mx-auto">
-                <div class="mb-4">
-                    <label for="stockSelect" class="block text-gray-700 text-sm font-bold mb-2">Select a QQQ Stock:</label>
-                    <select id="stockSelect" class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-bg focus:border-transparent">
-                        <option value="">-- Select a Stock --</option>
-                    </select>
-                </div>
-                <div id="selectedStockInfo" class="mt-6 p-4 bg-gray-50 rounded-md border border-gray-200 text-gray-800">
-                    Please select a stock from the dropdown above to view its information.
-                </div>
-            </div>
-        </section>
-
-        <section id="sectors" class="mb-12 pt-16 -mt-16">
-            <h2 class="text-3xl font-semibold mb-6 text-center">Sector & Market Cap Breakdown</h2>
-            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
-                QQQ's portfolio is heavily weighted towards Information Technology, followed by Communication Services and Consumer Discretionary. It predominantly comprises Giant-cap and Large-cap companies.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                <div class="card">
-                    <h3 class="text-2xl font-semibold mb-4 accent-text text-center">QQQ Sector Allocation (Approx. Dec 31, 2024)</h3>
-                    <div class="chart-container h-[350px] md:h-[400px]">
-                        <canvas id="sectorAllocationChart"></canvas>
+                <div id="mdb-financials">
+                    <h3 class="section-title">5. Financial Performance Analysis</h3>
+                    <p>MongoDB has demonstrated robust revenue growth, primarily driven by the rapid adoption of MongoDB Atlas. While investing heavily in growth, leading to GAAP net losses, the company shows improving non-GAAP profitability and positive cash flow generation. This section visualizes key financial and operational trends.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY2025 Total Revenue</div>
+                            <div class="metric-card-value">$2.01B</div>
+                            <p class="text-xs text-gray-500 mt-1">19% YoY Increase</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY2025 Atlas Revenue</div>
+                            <div class="metric-card-value">$1.40B</div>
+                             <p class="text-xs text-gray-500 mt-1">70% of Total Revenue</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">FY2025 Non-GAAP Op. Income</div>
+                            <div class="metric-card-value">$299.3M</div>
+                            <p class="text-xs text-gray-500 mt-1">14.9% Margin</p>
+                        </div>
+                         <div class="metric-card">
+                            <div class="metric-card-title">Total Customers (End FY25)</div>
+                            <div class="metric-card-value">54,500+</div>
+                            <p class="text-xs text-gray-500 mt-1">14% YoY Growth</p>
+                        </div>
                     </div>
-                    <p class="text-sm text-gray-600 mt-4 text-center">Information Technology dominates, underscoring the fund's tech-centric nature.</p>
-                </div>
-                <div class="card">
-                    <h3 class="text-2xl font-semibold mb-4 accent-text text-center">Market Capitalization Distribution (Proxy May 2025)</h3>
-                     <div class="chart-container h-[350px] md:h-[400px]">
-                        <canvas id="marketCapChart"></canvas>
+
+                    <h4 class="subsection-title">Total Revenue Trend (Fiscal Years 2021-2025)</h4>
+                    <p>The chart below illustrates MongoDB's consistent and strong revenue growth, with MongoDB Atlas increasingly becoming the dominant contributor.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="mdbRevenueChart"></canvas>
                     </div>
-                    <p class="text-sm text-gray-600 mt-4 text-center">Focus on established, large-scale enterprises.</p>
-                </div>
-            </div>
-        </section>
 
-        <section id="outlook" class="mb-12 pt-16 -mt-16">
-            <h2 class="text-3xl font-semibold mb-6 text-center">Performance, Valuation & Forward Look</h2>
-            <p class="text-lg text-gray-700 mb-8 text-center max-w-3xl mx-auto">
-                While QQQ delivered strong returns in 2024, its high concentration and valuation metrics warrant careful consideration in light of macroeconomic factors and potential market rotations.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="card text-center">
-                    <h3 class="text-xl font-semibold mb-2 accent-text">Q4 2024 Dividend</h3>
-                    <p class="text-3xl font-bold highlight-text">$0.83466</p>
-                    <p class="text-sm text-gray-600">per share</p>
+                    <h4 class="subsection-title">MongoDB Atlas Revenue Trend (Fiscal Years 2021-2025)</h4>
+                    <p>This chart highlights the rapid growth of MongoDB Atlas, showcasing its increasing importance to MongoDB's overall revenue stream.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="mdbAtlasRevenueChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Non-GAAP Operating Margin Trend (Fiscal Years 2021-2025)</h4>
+                    <p>This chart showcases MongoDB's improving operational efficiency on a non-GAAP basis, reflecting better cost management and the scalability of its model, even amidst significant growth investments.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="mdbNonGaapOpMarginChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">GAAP Gross Profit Margin Trend (Fiscal Years 2021-2025)</h4>
+                    <p>MongoDB has consistently maintained high GAAP Gross Profit Margins, indicating strong underlying profitability of its core offerings.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="mdbGaapGrossMarginChart"></canvas>
+                    </div>
+                    
+                    <h4 class="subsection-title">Total Customer Growth Trend (Fiscal Years 2021-2025)</h4>
+                    <p>This chart visualizes the steady growth in MongoDB's total customer base, demonstrating successful market penetration and platform adoption.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="mdbCustomerGrowthChart"></canvas>
+                    </div>
+
+                    <h4 class="subsection-title">Operating Cash Flow Trend (Fiscal Years 2021-2025)</h4>
+                    <p>The trend in Operating Cash Flow (OCF) illustrates MongoDB's improving ability to generate cash from its core business operations.</p>
+                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
+                        <canvas id="mdbOcfChart"></canvas>
+                    </div>
+
+                    <p class="mt-4">MongoDB maintains high gross margins (GAAP 73.3% in FY25). Significant operating expenses are allocated to R&D (30.5% of revenue in FY25) and Sales & Marketing (43.6% in FY25), reflecting its growth-focused strategy. Cash flow from operations turned positive and grew to $150.2 million in FY25, with Free Cash Flow also positive at $120.6 million. The Net ARR Expansion Rate remained strong at ~118% in Q4 FY25, indicating robust growth within the existing customer base.</p>
                 </div>
-                <div class="card text-center">
-                    <h3 class="text-xl font-semibold mb-2 accent-text">Annual Dividend Yield</h3>
-                    <p class="text-3xl font-bold highlight-text">~0.56%</p>
-                    <p class="text-sm text-gray-600">Relatively low, typical for growth-focused funds.</p>
-                </div>
-                 <div class="card">
-                    <h3 class="text-xl font-semibold mb-2 accent-text text-center">Valuation Snapshot</h3>
-                    <ul class="text-sm text-gray-700 space-y-1">
-                        <li><strong>P/E Ratio (QQQ, May '25):</strong> 25.12</li>
-                        <li><strong>P/B Ratio (QQQ, May '25):</strong> 6.29</li>
-                        <li><strong>P/S Ratio (QQQ, May '25):</strong> 4.86</li>
-                        <li><strong>P/BV (NDX, Dec '24):</strong> 6.11</li>
-                        <li><strong>EV/Sales (NDX, Dec '24):</strong> 4.94</li>
+
+                <div id="mdb-outlook">
+                    <h3 class="section-title">6. Strategic Outlook & Future Growth Drivers</h3>
+                    <p>MongoDB is strategically positioned to capitalize on key technology trends including cloud adoption, data proliferation, and the AI revolution. Its future growth is expected to be driven by several factors, balanced against certain market risks.</p>
+                    <h4 class="subsection-title">Key Growth Drivers:</h4>
+                    <ul>
+                        <li><strong>Continued Cloud Adoption & DBaaS Market Expansion:</strong> Benefiting MongoDB Atlas.</li>
+                        <li><strong>AI and Machine Learning Workloads:</strong> Atlas Vector Search positions MongoDB for the AI market, especially RAG applications.</li>
+                        <li><strong>Enterprise Modernization Initiatives:</strong> Platform for modernizing legacy applications.</li>
+                        <li><strong>Expansion Upmarket:</strong> Focus on acquiring and growing large enterprise customers.</li>
+                        <li><strong>Developer Ecosystem Growth:</strong> Continuous investment in developer tools and community.</li>
                     </ul>
-                    <p class="text-xs text-gray-500 mt-2">Reflects premium for growth potential.</p>
+                    <h4 class="subsection-title">Potential Challenges & Risks:</h4>
+                    <ul>
+                        <li><strong>Macroeconomic Environment:</strong> Can impact IT spending and Atlas consumption rates.</li>
+                        <li><strong>Intense Competition:</strong> From cloud providers' native databases and other NoSQL/SQL vendors.</li>
+                        <li><strong>Path to Sustained GAAP Profitability:</strong> Key investor focus, impacted by high SBC and growth investments.</li>
+                        <li><strong>Sales Execution & Scaling:</strong> Effectively scaling its sales organization to capture market share.</li>
+                        <li><strong>Complexity of AI Market Adoption:</strong> Realizing substantial revenue from AI workloads may take time.</li>
+                    </ul>
+                    <h4 class="subsection-title">Overall Outlook:</h4>
+                    <p>MongoDB's developer-centric approach, flexible document model, and robust multi-cloud Atlas platform are significant strengths. The strategic focus on AI, particularly with Atlas Vector Search, aligns it with major market trends. While navigating competition and macroeconomic uncertainties, MongoDB's technological leadership and strong market traction suggest a positive outlook for continued growth as a core developer data platform. Achieving consistent GAAP profitability will be a key milestone in its journey.</p>
                 </div>
             </div>
-            <div class="card mt-8">
-                <h3 class="text-2xl font-semibold mb-4 accent-text">Key Takeaways & Future Considerations</h3>
-                <ul class="list-disc list-inside space-y-2 text-gray-700">
-                    <li>QQQ remains a highly concentrated bet on mega-cap tech and growth leaders.</li>
-                    <li>Performance in 2025 will likely hinge on these few dominant companies and their ability to innovate and maintain profitability.</li>
-                    <li>High valuations and a "higher-for-longer" interest rate environment could pose headwinds.</li>
-                    <li>Potential market rotation towards broader earnings growth could impact QQQ's relative outperformance.</li>
-                    <li>Investors should monitor macroeconomic indicators, Fed policy, and the performance of top holdings closely.</li>
-                </ul>
-            </div>
         </section>
-
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 p-8 text-center">
-        <p>&copy; 2025 QQQ Insights Infographic. Data based on year-end 2024 reports.</p>
-        <p class="text-xs mt-2">This infographic is for informational purposes only and not financial advice.</p>
+    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive MongoDB (MDB) Analysis. For informational purposes only.</p>
+        <p class="text-xs mt-1">Data synthesized from publicly available company reports and market analyses.</p>
     </footer>
 
     <script>
-        const wrapLabel = (label, maxLength = 16) => {
-            if (typeof label !== 'string' || label.length <= maxLength) {
-                return label;
-            }
-            const words = label.split(' ');
-            const lines = [];
-            let currentLine = '';
-            for (const word of words) {
-                if ((currentLine + word).length > maxLength && currentLine.length > 0) {
-                    lines.push(currentLine.trim());
-                    currentLine = '';
-                }
-                currentLine += word + ' ';
-            }
-            if (currentLine.trim().length > 0) {
-                lines.push(currentLine.trim());
-            }
-            return lines.length > 0 ? lines : [label];
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        const CHART_COLORS = { 
+            blue: '#60A5FA',    // blue-400 
+            teal: '#2DD4BF',    // teal-400 
+            amber: '#FDBA74',  // orange-300
+            stone: '#E7E5E4',   
+            gray: '#4B5563',    
+            darkBlue: '#2563EB', // blue-600
+            darkTeal: '#14B8A6', // teal-500
+            darkOrange: '#F97316', //orange-500
+            red: '#EF4444', 
+            orange: '#F97316',
+            purple: '#8B5CF6', // For Customer Growth
+            green: '#10B981'  // For OCF
+        };
+        
+        const mdbRevenueData = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
+            datasets: [{
+                label: 'Total Revenue ($M)',
+                data: [590.4, 873.8, 1284.0, 1683.0, 2006.4],
+                borderColor: CHART_COLORS.red, 
+                backgroundColor: CHART_COLORS.red + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.red,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.red,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const mdbAtlasRevenueData = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
+            datasets: [{
+                label: 'Atlas Revenue ($M)',
+                data: [271.6, 489.3, 809.0, 1110.8, 1404.5],
+                borderColor: CHART_COLORS.blue,
+                backgroundColor: CHART_COLORS.blue + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.blue,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.blue,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const mdbNonGaapOpMarginData = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
+            datasets: [{
+                label: 'Non-GAAP Operating Margin (%)',
+                data: [-8.4, -2.8, 4.8, 16.1, 14.9],
+                borderColor: CHART_COLORS.orange, 
+                backgroundColor: CHART_COLORS.orange + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.orange,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.orange,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const mdbGaapGrossMarginData = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
+            datasets: [{
+                label: 'GAAP Gross Margin (%)',
+                data: [70.0, 70.3, 72.8, 74.8, 73.3],
+                borderColor: CHART_COLORS.teal,
+                backgroundColor: CHART_COLORS.teal + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.teal,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.teal,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const mdbCustomerGrowthData = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
+            datasets: [{
+                label: 'Total Customers (Thousands)',
+                data: [24.8, 33.0, 40.8, 47.8, 54.5], // Data in thousands
+                borderColor: CHART_COLORS.purple,
+                backgroundColor: CHART_COLORS.purple + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.purple,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.purple,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+        const mdbOcfData = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
+            datasets: [{
+                label: 'Operating Cash Flow ($M)',
+                data: [-42.7, 7.0, -13.0, 121.5, 150.2],
+                borderColor: CHART_COLORS.green,
+                backgroundColor: CHART_COLORS.green + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.green,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.green,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
         };
 
-        const tooltipTitleCallback = (tooltipItems) => {
-            const item = tooltipItems[0];
-            if (!item) return '';
-            let label = item.chart.data.labels[item.dataIndex];
-            if (Array.isArray(label)) {
-                return label.join(' ');
-            }
-            return label;
-        };
+        let mdbRevenueChartInstance, mdbAtlasRevenueChartInstance, mdbNonGaapOpMarginChartInstance, mdbGaapGrossMarginChartInstance, mdbCustomerGrowthChartInstance, mdbOcfChartInstance;
 
-        const commonChartOptions = {
+        function createChart(ctx, type, data, options) {
+            if (!ctx) return null;
+            return new Chart(ctx, { type, data, options });
+        }
+        
+        const commonChartOptionsLine = {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#333333',
-                        font: { size: 12 }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        title: tooltipTitleCallback
-                    },
-                    backgroundColor: '#075E54',
-                    titleColor: '#FFFFFF',
-                    bodyColor: '#FFFFFF',
-                    borderColor: '#FFD700',
-                    borderWidth: 1
-                }
-            },
             scales: {
                 y: {
-                    ticks: { color: '#333333', font: { size: 10 } },
-                    grid: { color: '#e0e0e0' }
+                    beginAtZero: false, 
+                    ticks: { color: '#4B5563', font: { size: 11 } },
+                    grid: { color: '#E7E5E4', drawBorder: false }
                 },
                 x: {
-                    ticks: { color: '#333333', font: { size: 10 } },
+                    ticks: { color: '#4B5563', font: { size: 11 } },
                     grid: { display: false }
                 }
-            }
-        };
-
-        const emeraldGoldPalette = ['#075E54', '#128C7E', '#25D366', '#FFD700', '#064940', '#0E7A6E'];
-
-
-        // Sector Allocation Chart
-        const sectorData = {
-            labels: [
-                wrapLabel('Information Technology'), wrapLabel('Communication Services'), wrapLabel('Consumer Discretionary'),
-                wrapLabel('Consumer Staples'), wrapLabel('Health Care'), wrapLabel('Industrials'),
-                wrapLabel('Utilities'), wrapLabel('Materials'), wrapLabel('Energy'), wrapLabel('Financials')
-            ],
-            datasets: [{
-                label: 'Sector Allocation',
-                data: [52.73, 15.66, 13.87, 6.06, 5.55, 4.86, 1.46, 1.46, 0.52, 0.44],
-                backgroundColor: emeraldGoldPalette,
-                borderColor: '#FFFFFF',
-                borderWidth: 2
-            }]
-        };
-        const sectorAllocationCtx = document.getElementById('sectorAllocationChart').getContext('2d');
-        new Chart(sectorAllocationCtx, {
-            type: 'doughnut',
-            data: sectorData,
-            options: { ...commonChartOptions, cutout: '60%' }
-        });
-
-        // Market Cap Chart
-        const marketCapData = {
-            labels: [wrapLabel('Giant-cap'), wrapLabel('Large-cap'), wrapLabel('Mid-cap')],
-            datasets: [{
-                label: 'Market Cap Distribution (%)',
-                data: [54.48, 34.12, 10.74],
-                backgroundColor: ['#075E54', '#128C7E', '#25D366'],
-                borderColor: '#FFFFFF',
-                borderWidth: 1
-            }]
-        };
-        const marketCapCtx = document.getElementById('marketCapChart').getContext('2d');
-        new Chart(marketCapCtx, {
-            type: 'bar',
-            data: marketCapData,
-            options: {
-                ...commonChartOptions,
-                indexAxis: 'y',
-                 scales: {
-                    y: {
-                        ticks: { color: '#333333', font: { size: 12 }, autoSkip: false },
-                        grid: { display: false }
-                    },
-                    x: {
-                        ticks: { color: '#333333', font: { size: 10 }, callback: function(value) { return value + '%' } },
-                        grid: { color: '#e0e0e0' }
-                    }
+            },
+            plugins: {
+                legend: {
+                    position: 'top', align: 'end',
+                    labels: { color: '#374151', font: { size: 12, weight: '500' }, padding: 15, boxWidth: 12, usePointStyle: true }
                 },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            title: tooltipTitleCallback,
-                            label: function(context) {
-                                return `${context.dataset.label}: ${context.parsed.x}%`;
+                tooltip: {
+                    enabled: true, backgroundColor: '#1F2937', titleColor: '#F3F4F6', titleFont: { weight: '600', size: 13 },
+                    bodyColor: '#D1D5DB', bodyFont: { size: 12 }, padding: 10, cornerRadius: 4, displayColors: true,
+                    borderColor: '#4B5563', borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) { label += ': '; }
+                            if (context.parsed.y !== null) {
+                                if (context.dataset.label.includes('Margin') || context.dataset.label.includes('%')) {
+                                     label += context.parsed.y.toFixed(1) + '%';
+                                } else if (context.dataset.label.includes('Customers')) {
+                                    label += context.parsed.y.toLocaleString() + 'K';
+                                }
+                                 else {
+                                     label += '$' + context.parsed.y.toLocaleString() + 'M';
+                                }
                             }
-                        },
-                        backgroundColor: '#075E54',
-                        titleColor: '#FFFFFF',
-                        bodyColor: '#FFFFFF',
-                        borderColor: '#FFD700',
-                        borderWidth: 1
+                            return label;
+                        }
                     }
                 }
+            },
+            animation: { duration: 700, easing: 'easeOutCubic' }
+        };
+        
+        function initializeMdbCharts() { 
+            const mdbRevenueChartCtx = document.getElementById('mdbRevenueChart')?.getContext('2d');
+            const mdbAtlasRevenueChartCtx = document.getElementById('mdbAtlasRevenueChart')?.getContext('2d');
+            const mdbNonGaapOpMarginChartCtx = document.getElementById('mdbNonGaapOpMarginChart')?.getContext('2d');
+            const mdbGaapGrossMarginChartCtx = document.getElementById('mdbGaapGrossMarginChart')?.getContext('2d');
+            const mdbCustomerGrowthChartCtx = document.getElementById('mdbCustomerGrowthChart')?.getContext('2d');
+            const mdbOcfChartCtx = document.getElementById('mdbOcfChart')?.getContext('2d');
+
+            if (mdbRevenueChartCtx && !mdbRevenueChartInstance) {
+                mdbRevenueChartInstance = createChart(mdbRevenueChartCtx, 'line', mdbRevenueData, commonChartOptionsLine);
             }
-        });
-
-        // Stock Lookup Dropdown Logic - Now includes top 25 representative stocks
-        const qqqStocks = [
-            { ticker: 'AAPL', name: 'Apple Inc.' },
-            { ticker: 'NVDA', name: 'NVIDIA Corp' },
-            { ticker: 'MSFT', name: 'Microsoft Corp' },
-            { ticker: 'AMZN', name: 'Amazon.com Inc' },
-            { ticker: 'GOOGL', name: 'Alphabet Inc. Class A' },
-            { ticker: 'TSLA', name: 'Tesla Inc.' },
-            { ticker: 'META', name: 'Meta Platforms Inc. Class A' },
-            { ticker: 'AVGO', name: 'Broadcom Inc.' },
-            { ticker: 'COST', name: 'Costco Wholesale Corp' },
-            { ticker: 'NFLX', name: 'Netflix Inc.' },
-            { ticker: 'PLTR', name: 'Palantir Technologies Inc.' },
-            { ticker: 'MSTR', name: 'MicroStrategy Incorporated' },
-            { ticker: 'AXON', name: 'Axon Enterprise, Inc.' },
-            { ticker: 'ADBE', name: 'Adobe Inc.' },
-            { ticker: 'INTC', name: 'Intel Corp.' },
-            { ticker: 'CMCSA', name: 'Comcast Corp.' },
-            { ticker: 'PEP', name: 'PepsiCo Inc.' },
-            { ticker: 'SBUX', name: 'Starbucks Corp.' },
-            { ticker: 'CSCO', name: 'Cisco Systems Inc.' },
-            { ticker: 'QCOM', name: 'Qualcomm Inc.' },
-            { ticker: 'AMD', name: 'Advanced Micro Devices Inc.' },
-            { ticker: 'CMG', name: 'Chipotle Mexican Grill Inc.' },
-            { ticker: 'WDAY', name: 'Workday Inc.' },
-            { ticker: 'MAR', name: 'Marriott International Inc. Class A' },
-            { ticker: 'LRCX', name: 'Lam Research Corp.' }
-        ].sort((a, b) => a.ticker.localeCompare(b.ticker)); // Sort alphabetically by ticker
-
-        const stockSelect = document.getElementById('stockSelect');
-        const selectedStockInfo = document.getElementById('selectedStockInfo');
-
-        qqqStocks.forEach(stock => {
-            const option = document.createElement('option');
-            option.value = stock.ticker;
-            option.textContent = `${stock.ticker} - ${stock.name}`;
-            stockSelect.appendChild(option);
-        });
-
-        stockSelect.addEventListener('change', (event) => {
-            const selectedTicker = event.target.value;
-            if (selectedTicker) {
-                const stock = qqqStocks.find(s => s.ticker === selectedTicker);
-                selectedStockInfo.innerHTML = `
-                    <h4 class="text-xl font-semibold mb-2 accent-text">${stock.name} (${stock.ticker})</h4>
-                    <p class="text-gray-700">
-                        Detailed information for ${stock.name} would be displayed here, including its specific weight in QQQ, recent performance, and relevant news.
-                        This section can be expanded to fetch real-time data or more detailed report insights.
-                    </p>
-                `;
-            } else {
-                selectedStockInfo.innerHTML = `Please select a stock from the dropdown above to view its information.`;
+            if (mdbAtlasRevenueChartCtx && !mdbAtlasRevenueChartInstance) {
+                mdbAtlasRevenueChartInstance = createChart(mdbAtlasRevenueChartCtx, 'line', mdbAtlasRevenueData, commonChartOptionsLine);
             }
+            if (mdbNonGaapOpMarginChartCtx && !mdbNonGaapOpMarginChartInstance) {
+                mdbNonGaapOpMarginChartInstance = createChart(mdbNonGaapOpMarginChartCtx, 'line', mdbNonGaapOpMarginData, commonChartOptionsLine);
+            }
+            if (mdbGaapGrossMarginChartCtx && !mdbGaapGrossMarginChartInstance) {
+                mdbGaapGrossMarginChartInstance = createChart(mdbGaapGrossMarginChartCtx, 'line', mdbGaapGrossMarginData, commonChartOptionsLine);
+            }
+            if (mdbCustomerGrowthChartCtx && !mdbCustomerGrowthChartInstance) {
+                mdbCustomerGrowthChartInstance = createChart(mdbCustomerGrowthChartCtx, 'line', mdbCustomerGrowthData, commonChartOptionsLine);
+            }
+            if (mdbOcfChartCtx && !mdbOcfChartInstance) {
+                mdbOcfChartInstance = createChart(mdbOcfChartCtx, 'line', mdbOcfData, commonChartOptionsLine);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeMdbCharts(); 
         });
-
-
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-
-                // Active link styling
-                document.querySelectorAll('nav .nav-link').forEach(link => link.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // Active link on scroll
-        const sections = document.querySelectorAll('section[id]');
-        const navLinks = document.querySelectorAll('nav .nav-link');
-
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (pageYOffset >= sectionTop - 70) { // 70 is approx header height + some buffer
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').includes(current)) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Atlassian (TEAM) Analysis</title>
+    <title>Interactive Snowflake (SNOW) Analysis</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -111,162 +111,173 @@
 <body class="bg-stone-100 text-gray-700 min-h-screen">
     <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <h1 class="main-title text-3xl">Interactive Atlassian (TEAM) Analysis</h1>
+            <h1 class="main-title text-3xl">Interactive Snowflake (SNOW) Analysis</h1>
         </div>
     </header>
 
     <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
-        <section id="team-content">
+        <section id="snow-content">
             <div class="content-wrapper">
-                <h2 class="company-title">Atlassian Corporation (TEAM) In-Depth Analysis</h2>
-                <p class="text-gray-600 mb-6 text-base md:text-lg">This interactive report provides a comprehensive analysis of Atlassian Corporation (TEAM), a global leader in collaboration, development, and issue tracking software. Discover Atlassian's strategic focus on its "Cloud-First" transition, its innovative product suite including Jira, Confluence, and Trello, the integration of "Atlassian Intelligence," its unique Product-Led Growth model, competitive positioning, detailed financial performance, and its outlook in the dynamic software industry.</p>
+                <h2 class="company-title">Snowflake Inc. (SNOW) In-Depth Analysis</h2>
+                <p class="text-gray-600 mb-6 text-base md:text-lg">This interactive report provides a comprehensive analysis of Snowflake Inc. (SNOW), a leading company in the AI Data Cloud market. Explore Snowflake's innovative consumption-based business model, its extensive product portfolio focused on AI and data sharing (including Snowpark, Cortex AI, and Apache Iceberg integration), its competitive stance against major cloud providers and specialized data platforms, detailed financial performance, and its strategic vision for empowering enterprises through unified data and AI.</p>
 
-                <div id="team-overview">
-                    <h3 class="section-title">1. Company Overview & Strategy</h3>
-                    <p>Atlassian Corporation's mission is "to help unleash the potential of every team." Founded in 2002, the company has grown into a major provider of software solutions that enhance teamwork, communication, and productivity for a diverse global customer base, from startups to large enterprises. A cornerstone of Atlassian's current strategy is its "Cloud-First" transition, aggressively migrating customers to its cloud platform and emphasizing benefits like scalability and continuous innovation. This involves phasing out server product support (completed February 2024) and encouraging adoption of its Cloud or Data Center offerings. Other key strategic pillars include a "Land and Expand" sales model, fostering a strong third-party app ecosystem via the Atlassian Marketplace, an increasing focus on large enterprise customers, and significant investment in product innovation, most notably the integration of "Atlassian Intelligence (AI)" capabilities across its platform to boost productivity and provide smarter insights. The company is also expanding its product appeal beyond technical teams to serve all knowledge workers.</p>
+                <div id="snow-overview">
+                    <h3 class="section-title">1. Company Overview & The AI Data Cloud Strategy</h3>
+                    <p>Snowflake Inc. positions itself as the AI Data Cloud company, with a mission to "empower every enterprise to achieve its full potential through data and AI." Its core strategy focuses on eliminating data silos and enabling organizations to seamlessly unify, analyze, share, and monetize their data within a global network. Key company values include "Put Customers First" and "Think Big." The "Data Cloud" concept is central, aiming to create an ecosystem where businesses connect not only to their own data but also to each other through effortless and secure data sharing and collaboration, fostering powerful network effects.</p>
                 </div>
 
-                <div id="team-business-model">
-                    <h3 class="section-title">2. Business Model & Revenue Generation</h3>
-                    <p>Atlassian's business model primarily revolves around subscription-based revenue for its software products, with a strategic emphasis on cloud offerings.</p>
-                    <h4 class="subsection-title">Revenue Streams:</h4>
+                <div id="snow-business-model">
+                    <h3 class="section-title">2. Business Model: Consumption & Marketplace</h3>
+                    <p>Snowflake's primary revenue stream is its consumption-based model for its cloud data platform, charging customers based on their usage of compute (via "Snowflake Credits"), storage, and data transfer. This aligns Snowflake's revenue with customer value realization. Compute costs typically form the largest portion of a customer's bill (around 80%).</p>
+                    <h4 class="subsection-title">Revenue Generation Details:</h4>
                     <ul>
-                        <li><strong>Cloud Subscriptions:</strong> The largest and fastest-growing revenue stream, derived from customers subscribing to cloud-hosted versions of products like Jira Cloud and Confluence Cloud. Pricing is typically per-user, per-month, with tiered plans.</li>
-                        <li><strong>Data Center Subscriptions:</strong> Revenue from annual subscriptions to its self-managed Data Center products, catering to larger enterprises with specific governance or operational needs.</li>
-                        <li><strong>Server Maintenance (Legacy & Declining):</strong> Historically, revenue from maintenance on perpetual server licenses. This stream is rapidly diminishing as server support has ended.</li>
-                        <li><strong>Marketplace and Other Revenue:</strong> Commissions from third-party app sales via the Atlassian Marketplace (a significant contributor) and fees for Premier Support offerings.</li>
+                        <li><strong>Snowflake Credits:</strong> The fundamental unit for compute resources, with pricing varying by edition, cloud provider (AWS, Azure, GCP), and region.</li>
+                        <li><strong>Storage Costs:</strong> Charged per terabyte per month.</li>
+                        <li><strong>Data Transfer Costs:</strong> Ingress is generally free; egress and cross-region/cloud transfers incur costs.</li>
+                        <li><strong>Serverless Features:</strong> Features like Snowpipe and Automatic Clustering are priced based on their consumption of Snowflake-managed compute.</li>
                     </ul>
-                    <h4 class="subsection-title">Customer Segments:</h4>
-                     <p>Atlassian serves a broad range of customers globally, from small teams to the world's largest corporations (over 303,000 customers as of March 2024). Its traditional stronghold has been technical teams (software developers, IT operations), but it's increasingly targeting business teams (marketing, HR, finance) with products like Jira Work Management and Trello.</p>
-                    <h4 class="subsection-title">Go-to-Market Strategy:</h4>
-                     <p>Atlassian is known for its efficient Product-Led Growth (PLG) model, where many customers self-discover and adopt products through free trials and online purchases. This is complemented by a "Land and Expand" strategy, word-of-mouth marketing, a global network of Solution Partners, and an expanding enterprise sales team to serve larger clients and facilitate cloud migrations.</p>
+                    <h4 class="subsection-title">Snowflake Marketplace:</h4>
+                    <p>The Marketplace allows data providers and app developers to offer datasets, SaaS connectors, and Snowflake Native Apps. Snowflake facilitates these transactions, and customers can use their committed Snowflake spend for Marketplace purchases, encouraging ecosystem growth and platform utility. This model fosters innovation but requires customers to manage usage for cost predictability.</p>
+                     <h4 class="subsection-title">Product & Service Delivery:</h4>
+                     <p>Snowflake delivers its AI Data Cloud as a fully managed service on AWS, Microsoft Azure, and Google Cloud Platform. Its cloud-native architecture, featuring separation of compute and storage, multi-cluster shared data access, and near-zero management, provides scalability, elasticity, and performance. Snowgrid technology enables cross-cloud data collaboration and governance.</p>
                 </div>
 
-                <div id="team-products">
-                    <h3 class="section-title">3. Product Portfolio & Innovation</h3>
-                    <p>Atlassian offers a broad and increasingly integrated suite of software products designed to help teams plan, track, collaborate, and build. Innovation, particularly in AI, is a key focus.</p>
-                    <h4 class="subsection-title">Key Product Offerings:</h4>
+                <div id="snow-products">
+                    <h3 class="section-title">3. Product & Service Portfolio</h3>
+                    <p>Snowflake offers a comprehensive platform for diverse data workloads, with a strong emphasis on AI/ML and collaboration, positioning itself as the central hub for modern enterprise data strategies.</p>
+                    <h4 class="subsection-title">Core Workloads & Platform Features:</h4>
                     <ul>
-                        <li><strong>Jira Platform:</strong> Includes Jira Software (agile project management), Jira Work Management (for business teams), Jira Service Management (ITSM and customer service), and Jira Align (enterprise agile planning).</li>
-                        <li><strong>Confluence:</strong> A team collaboration and knowledge management platform for creating and sharing content.</li>
-                        <li><strong>Trello:</strong> A visual collaboration tool for organizing projects using boards, lists, and cards.</li>
-                        <li><strong>Bitbucket:</strong> A Git-based source code management solution.</li>
-                        <li><strong>Atlassian Guard:</strong> Enterprise-grade identity and access management for cloud products.</li>
-                        <li><strong>Loom (Acquired Oct 2023):</strong> A video messaging platform for asynchronous communication.</li>
-                        <li><strong>Atlassian Marketplace:</strong> Offers over 7,000 third-party apps and integrations.</li>
+                        <li><strong>Unified Platform:</strong> Handles Data Warehousing, Data Lakes, Data Engineering, and Cybersecurity data analytics.</li>
+                        <li><strong>Key Features:</strong> Near-zero management, zero-copy cloning, Time Travel (data recovery up to 90 days), Fail-Safe (additional 7-day recovery), and micro-partitioning for efficient querying.</li>
                     </ul>
-                    <h4 class="subsection-title">Innovation: Atlassian Intelligence</h4>
-                    <p>A major strategic initiative is the integration of "Atlassian Intelligence" across its cloud platform. This involves embedding AI-powered capabilities like automated task summaries, natural language querying (e.g., JQL generation), AI-assisted content creation, virtual agent capabilities in JSM, and improved search. Atlassian leverages its own AI models and partnerships (e.g., with OpenAI) for these features.</p>
+                    <h4 class="subsection-title">AI and Machine Learning Capabilities:</h4>
+                    <ul>
+                        <li><strong>Snowpark:</strong> Enables Python, Java, and Scala development within Snowflake for data processing and ML, featuring DataFrame APIs and Snowpark ML for the full ML lifecycle.</li>
+                        <li><strong>Cortex AI:</strong> Managed AI services including LLM functions (summarization, translation), Snowflake Copilot (AI assistant), Document AI, Cortex Search (RAG engine), and Cortex Analyst (text-to-SQL).</li>
+                        <li><strong>Snowflake Arctic:</strong> Snowflake's own family of open, enterprise-grade LLMs.</li>
+                        <li><strong>Apache Iceberg Integration:</strong> Supports open table formats, allowing management and querying of Iceberg tables within Snowflake for data interoperability.</li>
+                        <li><strong>Snowpark Container Services:</strong> Allows deployment of containerized applications (including ML models, LLMs) with GPU support directly within Snowflake.</li>
+                    </ul>
+                    <h4 class="subsection-title">Applications & Collaboration:</h4>
+                     <ul>
+                        <li><strong>Snowflake Marketplace:</strong> For discovering and accessing datasets, data services, and Snowflake Native Apps.</li>
+                        <li><strong>Secure Data Sharing:</strong> Enables governed sharing of live data between Snowflake accounts without data movement.</li>
+                        <li><strong>Data Clean Rooms:</strong> Privacy-preserving environments for multi-party data collaboration.</li>
+                        <li><strong>Native App Framework:</strong> Allows developers to build and distribute applications that run directly within a customer's Snowflake account.</li>
+                    </ul>
+                    <h4 class="subsection-title">Professional Services:</h4>
+                    <p>Offers consulting, architectural design, implementation, optimization, and support to help customers maximize platform value. While a smaller revenue stream, these services are crucial for customer adoption and success, especially for large enterprises.</p>
                 </div>
 
-                <div id="team-competition">
+                <div id="snow-competition">
                     <h3 class="section-title">4. Competitive Landscape & Differentiation</h3>
-                    <p>Atlassian operates in several competitive software markets, including work management, IT service management, and developer collaboration.</p>
+                    <p>Snowflake competes with major cloud providers' native data services and other specialized data platforms in a dynamic market.</p>
                     <h4 class="subsection-title">Key Competitors:</h4>
                     <ul>
-                        <li><strong>Work Management & Collaboration:</strong> Microsoft (Azure DevOps, Teams, Planner), Asana, Monday.com, ClickUp, Wrike, ServiceNow, Notion, Slack.</li>
-                        <li><strong>IT Service Management (JSM):</strong> ServiceNow, BMC, Zendesk, Freshservice.</li>
-                        <li><strong>Code Hosting & DevOps (Bitbucket):</strong> GitHub (Microsoft), GitLab.</li>
+                        <li><strong>Cloud Hyperscalers:</strong> Amazon Redshift (AWS), Google BigQuery (GCP), Microsoft Azure Synapse Analytics/Fabric. These benefit from deep ecosystem integration within their respective clouds.</li>
+                        <li><strong>Specialized Data Platforms:</strong> Databricks (particularly strong in data lakes, Spark-based processing, and AI/ML on open formats like Delta Lake).</li>
+                        <li><strong>Legacy On-Premise Vendors:</strong> Teradata, Oracle (for customers migrating from older systems).</li>
                     </ul>
-                     <h4 class="subsection-title">Atlassian's Key Differentiators:</h4>
+                     <h4 class="subsection-title">Snowflake's Differentiators:</h4>
                     <ul>
-                        <li><strong>Breadth and Integration of Product Suite:</strong> Offers a comprehensive suite covering many aspects of team collaboration and software development.</li>
-                        <li><strong>Strong Market Position in Technical Teams:</strong> Jira is a de facto standard for many agile development teams.</li>
-                        <li><strong>Extensive Atlassian Marketplace:</strong> Thousands of apps provide unparalleled extensibility and customization, creating strong network effects.</li>
-                        <li><strong>Unique Go-to-Market Model:</strong> Efficient PLG combined with expanding enterprise sales.</li>
-                        <li><strong>Strategic Cloud Transformation & AI Investment:</strong> Positioning for future growth with a modern cloud platform and integrated AI.</li>
+                        <li><strong>Cloud-Agnostic Architecture:</strong> Operates seamlessly across AWS, Azure, and GCP, offering customers flexibility and avoiding vendor lock-in.</li>
+                        <li><strong>Separation of Compute and Storage:</strong> Allows independent scaling of resources, optimizing cost and performance.</li>
+                        <li><strong>Ease of Use & Near-Zero Management:</strong> Fully managed service reduces administrative overhead.</li>
+                        <li><strong>Seamless & Secure Data Sharing:</strong> A core architectural advantage enabling the Data Cloud vision.</li>
+                        <li><strong>Integrated AI/ML Capabilities:</strong> Comprehensive suite from Snowpark for custom development to managed Cortex AI services.</li>
+                        <li><strong>Growing Ecosystem:</strong> Expanding Snowflake Marketplace and Native App Framework enhance platform value and stickiness.</li>
+                        <li><strong>Support for Open Standards:</strong> Deep integration with Apache Iceberg addresses customer needs for data interoperability.</li>
                     </ul>
                 </div>
 
-                <div id="team-financials">
+                <div id="snow-financials">
                     <h3 class="section-title">5. Financial Performance Analysis</h3>
-                    <p>Atlassian has demonstrated strong revenue growth, driven significantly by its cloud business, and robust cash flow generation. While GAAP profitability has been impacted by investments and stock-based compensation, non-GAAP metrics highlight underlying operational strength. (Note: Atlassian's fiscal year ends June 30th. Charts below use available full fiscal year data.)</p>
+                    <p>Snowflake has demonstrated rapid product revenue growth, high net revenue retention, and an expanding large-customer base. While GAAP profitability is a future goal due to significant investments in R&D and S&M, non-GAAP metrics show improving operational leverage. This section visualizes key financial and operational trends.</p>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
                         <div class="metric-card">
-                            <div class="metric-card-title">Q3 FY24 Total Revenue</div>
-                            <div class="metric-card-value">$1.189B</div>
-                            <p class="text-xs text-gray-500 mt-1">+24% YoY</p>
+                            <div class="metric-card-title">FY2025 Product Revenue</div>
+                            <div class="metric-card-value">$3.396B</div>
+                            <p class="text-xs text-gray-500 mt-1">25% YoY Increase</p>
                         </div>
                         <div class="metric-card">
-                            <div class="metric-card-title">Q3 FY24 Cloud Revenue</div>
-                            <div class="metric-card-value">$902.9M</div>
-                             <p class="text-xs text-gray-500 mt-1">+29% YoY</p>
+                            <div class="metric-card-title">Q4 FY25 Product Revenue</div>
+                            <div class="metric-card-value">$875.5M</div>
+                             <p class="text-xs text-gray-500 mt-1">20% YoY Growth</p>
                         </div>
                         <div class="metric-card">
-                            <div class="metric-card-title">Q3 FY24 Non-GAAP Op. Margin</div>
-                            <div class="metric-card-value">26.9%</div>
-                            <p class="text-xs text-gray-500 mt-1">Strong Profitability</p>
+                            <div class="metric-card-title">Net Revenue Retention</div>
+                            <div class="metric-card-value">128%</div>
+                             <p class="text-xs text-gray-500 mt-1">as of Q4 FY2025</p>
                         </div>
                          <div class="metric-card">
-                            <div class="metric-card-title">Customers (Mar 2024)</div>
-                            <div class="metric-card-value">>303K</div>
-                             <p class="text-xs text-gray-500 mt-1">Expanding Base</p>
+                            <div class="metric-card-title">Customers >$1M Product Rev</div>
+                            <div class="metric-card-value">510</div>
+                             <p class="text-xs text-gray-500 mt-1">as of Q4 FY2025 (22% YoY)</p>
                         </div>
                     </div>
 
-                    <h4 class="subsection-title">Total Revenue Trend (Fiscal Years 2019-2023)</h4>
-                    <p>The chart below illustrates Atlassian's consistent upward trajectory in total revenue over the past five reported fiscal years.</p>
+                    <h4 class="subsection-title">Product Revenue Trend (Fiscal Years 2021-2025)</h4>
+                    <p>The chart below illustrates Snowflake's strong growth in product revenue, driven by increasing customer adoption and consumption of its platform.</p>
                     <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="teamTotalRevenueChart"></canvas>
+                        <canvas id="snowProductRevenueChart"></canvas>
                     </div>
 
-                    <h4 class="subsection-title">Cloud Revenue Trend (Fiscal Years 2019-2023)</h4>
-                    <p>This chart highlights the rapid growth of Atlassian's cloud revenue, a key strategic focus for the company.</p>
+                    <h4 class="subsection-title">Non-GAAP Product Gross Margin Trend (Fiscal Years 2021-2025)</h4>
+                    <p>This chart shows the trend in Snowflake's Non-GAAP Product Gross Margin, reflecting the efficiency of delivering its core platform services.</p>
                     <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="teamCloudRevenueChart"></canvas>
+                        <canvas id="snowGrossMarginChart"></canvas>
                     </div>
                     
-                    <h4 class="subsection-title">Non-GAAP Operating Margin Trend (Fiscal Years 2019-2023)</h4>
-                    <p>This visualization tracks Atlassian's Non-GAAP Operating Margin, providing insight into its operational profitability excluding certain non-cash expenses.</p>
+                    <h4 class="subsection-title">Customers with >$1M Product Revenue Trend (Fiscal Years 2021-2025)</h4>
+                    <p>Growth in the number of large customers spending over $1 million annually on product revenue signifies successful enterprise adoption and expansion.</p>
                     <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="teamNonGaapOpMarginChart"></canvas>
+                        <canvas id="snowLargeCustomerChart"></canvas>
                     </div>
 
-                    <h4 class="subsection-title">Operating Cash Flow Trend (Fiscal Years 2019-2023)</h4>
-                    <p>The chart below shows Atlassian's growing ability to generate cash from its core business operations.</p>
+                    <h4 class="subsection-title">Net Revenue Retention Rate Trend (Fiscal Years 2021-2025)</h4>
+                    <p>Snowflake's high Net Revenue Retention (NRR) rate indicates strong customer satisfaction and expansion of usage within the existing customer base.</p>
                     <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="teamOcfChart"></canvas>
+                        <canvas id="snowNrrChart"></canvas>
                     </div>
                     
-                    <h4 class="subsection-title">Customer Count Growth Trend (Fiscal Years 2019-2023, Q3 FY24)</h4>
-                    <p>This chart illustrates the expansion of Atlassian's customer base over time.</p>
+                    <h4 class="subsection-title">Operating Cash Flow Trend (Fiscal Years 2021-2025)</h4>
+                    <p>This chart displays the trend in Snowflake's Operating Cash Flow, highlighting its ability to generate cash from its core operations.</p>
                     <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="teamCustomerCountChart"></canvas>
+                        <canvas id="snowOcfChart"></canvas>
                     </div>
 
-                    <p class="mt-4">Atlassian's financial results demonstrate a successful scaling of its business, with cloud revenue becoming the dominant contributor. The company maintains high gross margins (typically above 82% GAAP). While GAAP operating income has often been negative due to significant investments in R&D, S&M, and stock-based compensation, its Non-GAAP operating margins have been consistently strong. Robust operating cash flow provides financial flexibility for continued investment and strategic initiatives.</p>
+                    <p class="mt-4">Snowflake's financial narrative is one of rapid scaling. Product revenue reached $3.396 billion in FY2025. Non-GAAP product gross margin has consistently improved, reaching 78% in Q4 FY2025. The company shows positive non-GAAP operating income and strong free cash flow generation ($936M in FY2025). However, GAAP net losses persist due to high operating expenses, particularly R&D and substantial stock-based compensation.</p>
                 </div>
 
-                <div id="team-outlook">
+                <div id="snow-outlook">
                     <h3 class="section-title">6. Strategic Outlook & Future Growth Drivers</h3>
-                    <p>Atlassian is strategically positioned to capitalize on the ongoing digital transformation and the increasing importance of team collaboration and developer productivity. Its future growth is expected to be driven by its cloud transition, enterprise market penetration, and AI innovation.</p>
+                    <p>Snowflake's vision for the AI Data Cloud, emphasizing data unification, comprehensive AI/ML integration (Snowpark, Cortex AI, Arctic), and support for open standards like Apache Iceberg, positions it for continued growth in a rapidly evolving market.</p>
                     <h4 class="subsection-title">Key Growth Drivers:</h4>
                     <ul>
-                        <li><strong>Cloud Migration:</strong> Continued migration of its large existing on-premises customer base to its Cloud and Data Center offerings.</li>
-                        <li><strong>Enterprise Market Penetration:</strong> Expanding its footprint within large enterprises with Cloud Enterprise solutions and Atlassian Guard.</li>
-                        <li><strong>Expansion into Non-Technical Teams:</strong> Broadening the appeal of its products (Jira Work Management, Trello, Confluence) to all knowledge workers.</li>
-                        <li><strong>Atlassian Intelligence:</strong> Leveraging AI to create significant product differentiation, enhance productivity, and unlock new value propositions.</li>
-                        <li><strong>Atlassian Marketplace Growth:</strong> The thriving ecosystem of third-party apps continues to drive platform stickiness and revenue.</li>
-                        <li><strong>International Expansion:</strong> Growing its presence and customer base in international markets.</li>
+                        <li><strong>Enterprise AI Adoption:</strong> Enabling customers to build and deploy AI/ML applications directly on their governed data within Snowflake.</li>
+                        <li><strong>Expansion of Snowflake Marketplace & Native App Ecosystem:</strong> Creating network effects and new revenue streams.</li>
+                        <li><strong>Growth in Cybersecurity Workloads:</strong> Leveraging its platform for large-scale security data analytics.</li>
+                        <li><strong>Industry-Specific Solutions:</strong> Tailoring offerings for key verticals like financial services, healthcare, and retail.</li>
+                        <li><strong>International Expansion:</strong> Growing its global customer base.</li>
                     </ul>
                     <h4 class="subsection-title">Potential Challenges & Risks:</h4>
                     <ul>
-                        <li><strong>Intense Competition:</strong> Faces strong competition from large platform players like Microsoft and specialized SaaS vendors.</li>
-                        <li><strong>Cloud Transition Execution:</strong> Successfully managing the complexities of migrating a large customer base to the cloud.</li>
-                        <li><strong>Macroeconomic Conditions:</strong> IT spending can be impacted by broader economic headwinds.</li>
-                        <li><strong>Maintaining Innovation Pace:</strong> The need to continuously innovate, especially in AI, to stay ahead of competitors.</li>
-                        <li><strong>GAAP Profitability:</strong> Balancing growth investments with the path to sustained GAAP profitability remains a focus.</li>
+                        <li><strong>Intense Competition:</strong> Particularly from cloud hyperscalers (AWS, Azure, GCP) and specialized platforms like Databricks.</li>
+                        <li><strong>Managing Consumption Model Complexity:</strong> Ensuring customer cost predictability and managing potential slowdowns in consumption due to economic factors or optimization efforts.</li>
+                        <li><strong>Achieving Sustained GAAP Profitability:</strong> Balancing high growth investments (R&D, S&M) with the path to GAAP net income.</li>
+                        <li><strong>Execution on AI Strategy:</strong> Successfully monetizing its AI capabilities and competing in the rapidly evolving AI platform space.</li>
+                        <li><strong>Dependence on Public Cloud Infrastructure:</strong> Operational reliance on AWS, Azure, and GCP.</li>
                     </ul>
                     <h4 class="subsection-title">Overall Outlook:</h4>
-                    <p>Atlassian's strategic focus on cloud, enterprise, and AI, coupled with its strong product portfolio and unique go-to-market model, positions it well for continued growth. The success of Atlassian Intelligence and the ongoing cloud transition will be key factors in shaping its future. While navigating a competitive landscape, Atlassian's established market presence and loyal customer base provide a solid foundation for future success in empowering teams globally. The recent leadership transition, with Scott Farquhar stepping down as co-CEO, will be a factor to observe as Mike Cannon-Brookes leads the company as sole CEO.</p>
+                    <p>Snowflake's innovative architecture, strong market traction with large enterprises, and strategic focus on becoming the central platform for data and AI provide a compelling growth narrative. The leadership transition, with Sridhar Ramaswamy as the new CEO, will be a factor to watch as the company navigates its next phase of expansion. Snowflake's ability to continue innovating, particularly in AI and open data ecosystems, while effectively competing and managing its unique business model, will determine its long-term success in shaping the future of data.</p>
                 </div>
             </div>
         </section>
     </main>
 
     <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
-        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Atlassian (TEAM) Analysis. For informational purposes only.</p>
+        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Snowflake (SNOW) Analysis. For informational purposes only.</p>
         <p class="text-xs mt-1">Data synthesized from publicly available company reports and market analyses.</p>
     </footer>
 
@@ -282,29 +293,17 @@
             darkBlue: '#2563EB', 
             darkTeal: '#14B8A6', 
             darkOrange: '#F97316',
-            indigo: '#6366F1', // For Cloud Revenue
-            pink: '#EC4899',   // For Non-GAAP Op Margin
-            green: '#34D399',  // For OCF
-            purple: '#A78BFA' // For Customer Count
+            indigo: '#6366F1', // For Product Revenue
+            lime: '#A3E635',   // For Large Customers
+            pink: '#EC4899',   // For NRR
+            green: '#34D399'  // For OCF
         };
         
-        const teamTotalRevenueData = {
-            labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23'],
+        const snowProductRevenueData = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
             datasets: [{
-                label: 'Total Revenue ($M)',
-                data: [1210.0, 1613.3, 2120.0, 2802.7, 3534.9],
-                borderColor: CHART_COLORS.blue, 
-                backgroundColor: CHART_COLORS.blue + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.blue,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.blue,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
-        const teamCloudRevenueData = {
-            labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23'],
-            datasets: [{
-                label: 'Cloud Revenue ($M)',
-                data: [536.2, 782.6, 1146.8, 1588.4, 2299.1],
+                label: 'Product Revenue ($M)',
+                data: [553.8, 1141.9, 1937.9, 2668.6, 3396.0],
                 borderColor: CHART_COLORS.indigo, 
                 backgroundColor: CHART_COLORS.indigo + '33',
                 fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.indigo,
@@ -312,45 +311,56 @@
                 pointRadius: 4, pointHoverRadius: 6
             }]
         };
-        const teamNonGaapOpMarginData = {
-            labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23'],
+        const snowGrossMarginData = {
+             labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], // Using Q4 for FY representation
             datasets: [{
-                label: 'Non-GAAP Operating Margin (%)',
-                data: [21.5, 24.2, 24.2, 22.2, 22.1],
-                borderColor: CHART_COLORS.pink, 
+                label: 'Non-GAAP Product Gross Margin (%)',
+                data: [69, 72, 75, 77, 78], // Q4 FY25 used for FY25 point
+                borderColor: CHART_COLORS.teal, 
+                backgroundColor: CHART_COLORS.teal + '33',
+                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.teal,
+                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.teal,
+                pointRadius: 4, pointHoverRadius: 6
+            }]
+        };
+         const snowLargeCustomerData = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], // End of Fiscal Year
+            datasets: [{
+                label: 'Customers >$1M Product Revenue',
+                data: [77, 184, 330, 436, 510],
+                backgroundColor: CHART_COLORS.lime + 'CC',
+                borderColor: CHART_COLORS.lime,
+                borderWidth: 1,
+                borderRadius: 4,
+                hoverBackgroundColor: CHART_COLORS.lime
+            }]
+        };
+        const snowNrrData = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], // End of Fiscal Year
+            datasets: [{
+                label: 'Net Revenue Retention Rate (%)',
+                data: [168, 178, 158, 131, 128], // Q4 used for FY representation
+                borderColor: CHART_COLORS.pink,
                 backgroundColor: CHART_COLORS.pink + '33',
                 fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.pink,
                 pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.pink,
                 pointRadius: 4, pointHoverRadius: 6
             }]
         };
-         const teamOcfData = {
-            labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23'],
+        const snowOcfData = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
             datasets: [{
                 label: 'Operating Cash Flow ($M)',
-                data: [432.7, 579.7, 735.3, 893.4, 1038.5],
-                borderColor: CHART_COLORS.green, 
+                data: [-83.3, 64.5, 439.0, 793.2, 936.0], // FY25 OCF is $936M
+                borderColor: CHART_COLORS.green,
                 backgroundColor: CHART_COLORS.green + '33',
                 fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.green,
                 pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.green,
                 pointRadius: 4, pointHoverRadius: 6
             }]
         };
-        const teamCustomerCountData = {
-            labels: ['FY19', 'FY20', 'FY21', 'FY22', 'FY23', 'Q3 FY24'],
-            datasets: [{
-                label: 'Customer Count (Thousands)',
-                data: [150.2, 174.0, 212.0, 242.6, 259.7, 303.0], // Using approx. for FY20, FY21; FY23 used 259.7k from a consistent series point.
-                borderColor: CHART_COLORS.purple, 
-                backgroundColor: CHART_COLORS.purple + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.purple,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.purple,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
 
-
-        let teamTotalRevenueChartInstance, teamCloudRevenueChartInstance, teamNonGaapOpMarginChartInstance, teamOcfChartInstance, teamCustomerCountChartInstance;
+        let snowProductRevenueChartInstance, snowGrossMarginChartInstance, snowLargeCustomerChartInstance, snowNrrChartInstance, snowOcfChartInstance;
 
         function createChart(ctx, type, data, options) {
             if (!ctx) return null;
@@ -385,10 +395,10 @@
                             let label = context.dataset.label || '';
                             if (label) { label += ': '; }
                             if (context.parsed.y !== null) {
-                                if (context.dataset.label.includes('Margin') || context.dataset.label.includes('%')) {
+                                if (context.dataset.label.includes('Margin') || context.dataset.label.includes('Rate')) {
                                      label += context.parsed.y.toFixed(1) + '%';
-                                } else if (context.dataset.label.includes('Customer Count')) {
-                                    label += context.parsed.y.toLocaleString() + 'K';
+                                } else if (context.dataset.label.includes('Customers')) {
+                                    label += context.parsed.y.toLocaleString();
                                 }
                                  else {
                                      label += '$' + context.parsed.y.toLocaleString() + 'M';
@@ -401,36 +411,50 @@
             },
             animation: { duration: 700, easing: 'easeOutCubic' }
         };
+         const commonChartOptionsBar = { 
+            ...commonChartOptionsLine, 
+             scales: { 
+                y: {
+                    beginAtZero: true, 
+                    ticks: { color: '#4B5563', font: { size: 11 } }, 
+                    grid: { color: '#E7E5E4', drawBorder: false }
+                },
+                x: {
+                    ticks: { color: '#4B5563', font: { size: 11 } },
+                    grid: { display: false }
+                }
+            }
+        };
         
-        function initializeTeamCharts() { 
-            const teamTotalRevenueChartCtx = document.getElementById('teamTotalRevenueChart')?.getContext('2d');
-            const teamCloudRevenueChartCtx = document.getElementById('teamCloudRevenueChart')?.getContext('2d');
-            const teamNonGaapOpMarginChartCtx = document.getElementById('teamNonGaapOpMarginChart')?.getContext('2d');
-            const teamOcfChartCtx = document.getElementById('teamOcfChart')?.getContext('2d');
-            const teamCustomerCountChartCtx = document.getElementById('teamCustomerCountChart')?.getContext('2d');
+        function initializeSnowflakeCharts() { 
+            const snowProductRevenueChartCtx = document.getElementById('snowProductRevenueChart')?.getContext('2d');
+            const snowGrossMarginChartCtx = document.getElementById('snowGrossMarginChart')?.getContext('2d');
+            const snowLargeCustomerChartCtx = document.getElementById('snowLargeCustomerChart')?.getContext('2d');
+            const snowNrrChartCtx = document.getElementById('snowNrrChart')?.getContext('2d');
+            const snowOcfChartCtx = document.getElementById('snowOcfChart')?.getContext('2d');
 
-
-            if (teamTotalRevenueChartCtx && !teamTotalRevenueChartInstance) {
-                teamTotalRevenueChartInstance = createChart(teamTotalRevenueChartCtx, 'line', teamTotalRevenueData, commonChartOptionsLine);
+            if (snowProductRevenueChartCtx && !snowProductRevenueChartInstance) {
+                snowProductRevenueChartInstance = createChart(snowProductRevenueChartCtx, 'line', snowProductRevenueData, commonChartOptionsLine);
             }
-            if (teamCloudRevenueChartCtx && !teamCloudRevenueChartInstance) {
-                teamCloudRevenueChartInstance = createChart(teamCloudRevenueChartCtx, 'line', teamCloudRevenueData, commonChartOptionsLine);
+            if (snowGrossMarginChartCtx && !snowGrossMarginChartInstance) {
+                snowGrossMarginChartInstance = createChart(snowGrossMarginChartCtx, 'line', snowGrossMarginData, commonChartOptionsLine);
             }
-            if (teamNonGaapOpMarginChartCtx && !teamNonGaapOpMarginChartInstance) {
-                teamNonGaapOpMarginChartInstance = createChart(teamNonGaapOpMarginChartCtx, 'line', teamNonGaapOpMarginData, commonChartOptionsLine);
+             if (snowLargeCustomerChartCtx && !snowLargeCustomerChartInstance) {
+                snowLargeCustomerChartInstance = createChart(snowLargeCustomerChartCtx, 'bar', snowLargeCustomerData, commonChartOptionsBar);
             }
-            if (teamOcfChartCtx && !teamOcfChartInstance) {
-                teamOcfChartInstance = createChart(teamOcfChartCtx, 'line', teamOcfData, commonChartOptionsLine);
+            if (snowNrrChartCtx && !snowNrrChartInstance) {
+                snowNrrChartInstance = createChart(snowNrrChartCtx, 'line', snowNrrData, commonChartOptionsLine);
             }
-            if (teamCustomerCountChartCtx && !teamCustomerCountChartInstance) {
-                teamCustomerCountChartInstance = createChart(teamCustomerCountChartCtx, 'line', teamCustomerCountData, commonChartOptionsLine);
+            if (snowOcfChartCtx && !snowOcfChartInstance) {
+                snowOcfChartInstance = createChart(snowOcfChartCtx, 'line', snowOcfData, commonChartOptionsLine);
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            initializeTeamCharts(); 
+            initializeSnowflakeCharts(); 
         });
     </script>
 </body>
 </html>
+
 
