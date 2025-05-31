@@ -1,463 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive MongoDB (MDB) Analysis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F5F5F4; /* stone-100 */
-            color: #374151; /* gray-700 */
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px; 
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px; 
-            max-height: 350px;
-        }
-         @media (min-width: 768px) { /* md breakpoint */
-            .chart-container {
-                height: 350px;
-                max-height: 400px;
-            }
-        }
-        h1.main-title {
-            font-size: 2.25rem; /* text-4xl */
-            font-weight: 700; /* font-bold */
-            color: #1F2937; /* gray-800 */
-            margin-bottom: 1rem;
-            text-align: center;
-            padding-top: 0.5rem; 
-        }
-        h2.company-title { 
-            font-size: 1.875rem; /* text-3xl */
-            font-weight: 600; /* font-semibold */
-            color: #60A5FA; /* blue-400 */
-            margin-bottom: 1.5rem; /* mb-6 */
-            padding-bottom: 0.5rem; /* pb-2 */
-            border-bottom: 2px solid #E7E5E4; /* stone-200 */
-        }
-        h3.section-title {
-            font-size: 1.5rem; /* text-2xl */
-            font-weight: 600; /* font-semibold */
-            color: #2DD4BF; /* teal-400 */
-            margin-top: 1.5rem; 
-            margin-bottom: 1rem; /* mb-4 */
-        }
-        h4.subsection-title {
-            font-size: 1.25rem; /* text-xl */
-            font-weight: 600; /* font-semibold */
-            color: #3B82F6; /* blue-500 */
-            margin-top: 1.5rem; 
-            margin-bottom: 0.75rem; 
-        }
-        p, li {
-            line-height: 1.75; 
-            margin-bottom: 1rem; 
-            color: #4B5563; /* gray-600 */
-            font-size: 0.95rem; 
-        }
-        ul {
-            list-style-type: none; 
-            padding-left: 0; 
-        }
-        ul li {
-            padding-left: 1.75rem; 
-            position: relative;
-        }
-        ul li::before { 
-            content: '➔';
-            position: absolute;
-            left: 0;
-            color: #60A5FA; /* blue-400 */
-            font-weight: bold;
-        }
-        .metric-card { 
-            background-color: #F9FAFB; /* gray-50 */
-            border: 1px solid #E7E5E4; /* stone-200 */
-            border-radius: 0.5rem; /* rounded-lg */
-            padding: 1rem; 
-            text-align: center;
-            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03);
-        }
-        .metric-card-title { 
-            font-size: 0.875rem; /* text-sm */
-            color: #6B7280; /* gray-500 */
-            margin-bottom: 0.25rem; 
-            font-weight: 500; 
-        }
-        .metric-card-value { 
-            font-size: 1.75rem; /* text-2xl */
-            font-weight: 600; 
-            color: #1F2937; /* gray-800 */
-        }
-        .content-wrapper { 
-            background-color: #FFFFFF;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); 
-            padding: 1.5rem; 
-            margin-bottom: 2rem; 
-        }
-    </style>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Interactive MongoDB (MDB) Analysis</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+   <!-- Visualization & Content Choices: (Content from original MDB file, styled like SRE/CRWD)
+       - Overview: Text summary.
+       - Business Model: Text descriptions of segments and revenue model.
+       - Products: Lists detailing Core Technology, AI/ML, Go-to-Market.
+       - Competition: Text describing competitors and differentiators.
+       - Financials: KPI cards (green-themed), line charts for financial trends.
+       - Outlook: Lists for Growth Drivers and Challenges.
+       - All charts use Chart.js (Canvas). No SVG/Mermaid. Content maintained. -->
+   <style>
+       html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+       body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; } /* slate-50, slate-800 */
+      
+       .main-container { max-width: 1200px; margin-left: auto; margin-right: auto; padding: 1rem; }
+
+
+       .page-header { text-align: center; padding-top: 2rem; padding-bottom: 1.5rem; }
+       .page-title { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem; } /* emerald-600 (MongoDB Primary) */
+       .page-subtitle { font-size: 1.25rem; color: #475569; } /* slate-600 */
+
+
+       .sticky-nav {
+           position: sticky; top: 0; z-index: 40;
+           background-color: rgba(248, 250, 252, 0.95); /* slate-50 with opacity */
+           backdrop-filter: blur(8px);
+           padding-top: 0.5rem; padding-bottom: 0.5rem;
+           box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+           overflow-x: auto; white-space: nowrap;
+       }
+       .nav-link {
+           padding: 0.65rem 1rem; margin-right: 0.25rem; margin-bottom: 0.25rem;
+           border-radius: 0.375rem; font-weight: 500; font-size: 0.875rem;
+           cursor: pointer; transition: all 0.3s ease;
+           border: 1px solid transparent; color: #047857; /* emerald-700 */
+           display: inline-block;
+       }
+       .nav-link.active {
+           background-color: #059669; /* emerald-600 */
+           color: white; border-color: #059669;
+           font-weight: 600;
+       }
+       .nav-link:not(.active):hover {
+           background-color: #d1fae5; /* emerald-100 */
+           color: #065f46; /* emerald-800 */
+           transform: translateY(-1px);
+       }
+      
+       .content-section { display: block; animation: fadeIn 0.5s ease-out; margin-bottom: 2.5rem; }
+       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+       .section-title {
+           font-size: 1.875rem; line-height: 2.25rem; font-weight: 700;
+           color: #047857; /* emerald-700 (MongoDB Primary) */
+           margin-bottom: 1.5rem; text-align: center;
+       }
+       .card {
+           background-color: white; border-radius: 0.75rem;
+           box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+           padding: 1.5rem; transition: transform 0.3s ease, box-shadow 0.3s ease;
+       }
+       .card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+       }
+      
+       .subsection-title { /* MongoDB Green */
+           font-size: 1.25rem; font-weight: 600; color: #10b981; /* emerald-500 */
+           margin-top: 1.5rem; margin-bottom: 0.75rem;
+       }
+       p, li { line-height: 1.7; margin-bottom: 0.875rem; color: #4b5563; font-size: 0.9rem; } /* Adjusted slightly from MDB original */
+       ul { list-style-type: none; padding-left: 0; }
+       ul li { padding-left: 1.75rem; position: relative; }
+       ul li::before { /* MongoDB Green */
+           content: '➔'; position: absolute; left: 0;
+           color: #10b981; /* emerald-500 */
+           font-weight: bold;
+       }
+
+
+       .metric-card { /* MongoDB Green theme */
+           background-color: #ecfdf5; /* emerald-50 */
+           padding: 1rem; border-radius: 0.5rem;
+           box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05); text-align: center;
+           border-left: 4px solid #059669; /* emerald-600 accent */
+           transition: transform 0.2s ease, box-shadow 0.2s ease;
+       }
+       .metric-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px -3px rgba(5,150,105,0.15); }
+       .metric-card-title { font-size: 0.8rem; color: #065f46; margin-bottom: 0.25rem; font-weight: 500; text-transform: uppercase; } /* emerald-800 */
+       .metric-card-value { font-size: 1.65rem; font-weight: 600; color: #059669; } /* emerald-600 */
+       .metric-card-note { font-size: 0.7rem; color: #475569; margin-top: 0.1rem; } /* slate-600 */
+
+
+       .chart-container { /* Standardized from SRE/CRWD */
+           position: relative; width: 100%; max-width: 650px; margin-left: auto; margin-right: auto;
+           height: 320px; max-height: 380px;
+           background-color: #FFFFFF; border-radius: 0.5rem; padding: 1rem;
+           box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+       }
+       @media (min-width: 768px) { .chart-container { height: 350px; max-height: 400px;} }
+      
+       .footer {
+           background-color: #1e293b; color: #cbd5e1;
+           padding: 2rem 0; margin-top: 3rem; text-align: center;
+       }
+   </style>
 </head>
+<body class="antialiased">
 
-<body class="bg-stone-100 text-gray-700 min-h-screen">
-    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <h1 class="main-title text-3xl">Interactive MongoDB (MDB) Analysis</h1>
-        </div>
-    </header>
 
-    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
-        <section id="mdb-content">
-            <div class="content-wrapper">
-                <h2 class="company-title">MongoDB Inc. (MDB) In-Depth Analysis</h2>
-                <p class="text-gray-600 mb-6 text-base md:text-lg">This interactive report provides a comprehensive analysis of MongoDB Inc. (MDB), a leading modern general-purpose database platform. Explore MongoDB's developer-centric business model, its flagship cloud-native product MongoDB Atlas, its strategic advancements in AI with Atlas Vector Search, its competitive positioning, detailed financial performance, and its outlook in the evolving data landscape.</p>
+   <header class="page-header">
+       <h1 class="page-title">MongoDB (MDB)</h1>
+       <p class="page-subtitle">An Interactive Business Analysis</p>
+   </header>
 
-                <div id="mdb-overview">
-                    <h3 class="section-title">1. Company Overview & Mission</h3>
-                    <p>MongoDB's mission is "To empower innovators to create, transform, and disrupt industries by unleashing the power of software and data." Founded in 2007, MongoDB has evolved from an open-source project into a major publicly traded company, challenging traditional relational databases with its flexible document model. Its vision centers on becoming the go-to data platform for modern applications, emphasizing developer empowerment, multi-cloud flexibility with its Atlas DBaaS, and continuous innovation, particularly in areas like AI and real-time data processing. Core values like "Think Big, Go Far" and "Build Together" underpin its culture and strategic initiatives.</p>
-                </div>
 
-                <div id="mdb-business-model">
-                    <h3 class="section-title">2. Business Model & Segments</h3>
-                    <p>MongoDB's value proposition is rooted in enhancing developer productivity and agility through its flexible document data model. This model simplifies data handling for modern applications compared to rigid relational structures. Revenue is primarily subscription-based (97% in FY2025), with a strong focus on the consumption-driven MongoDB Atlas.</p>
-                    <h4 class="subsection-title">Product-Centric Segments:</h4>
-                    <ul>
-                        <li><strong>MongoDB Atlas (Cloud-Hosted DBaaS):</strong> The flagship product and primary growth engine (70% of FY2025 revenue). Atlas is a fully managed, multi-cloud database service on AWS, Azure, and GCP. It automates operations and integrates services like Atlas Search, Atlas Vector Search (for AI/RAG), Stream Processing, and Charts. Targeted at developers and organizations of all sizes, its revenue is mainly consumption-based.</li>
-                        <li><strong>MongoDB Enterprise Advanced (Self-Managed):</strong> A commercial, self-managed database server for on-premises or private cloud deployments (24% of FY2025 subscription revenue). It includes advanced security, operational tooling (Ops Manager), and enterprise support, catering to larger enterprises with specific control or data sovereignty needs. Revenue is subscription-based (term licenses).</li>
-                        <li><strong>MongoDB Community Edition (Free Open Source):</strong> The core document database, free to use under the SSPL. It drives developer adoption and serves as a funnel to commercial offerings, playing a crucial strategic role in ecosystem building.</li>
-                    </ul>
-                     <p>This tiered approach allows MongoDB to address a wide market spectrum, guiding users from initial exploration with the Community Edition to scalable, enterprise-grade deployments on Atlas or Enterprise Advanced.</p>
-                </div>
+   <nav class="sticky-nav mb-6">
+       <div class="main-container flex flex-wrap justify-center">
+           <a href="#overview" class="nav-link active">Overview</a>
+           <a href="#businessModel" class="nav-link">Business Model</a>
+           <a href="#products" class="nav-link">Products</a>
+           <a href="#competition" class="nav-link">Competition</a>
+           <a href="#financials" class="nav-link">Financials</a>
+           <a href="#outlook" class="nav-link">Outlook</a>
+       </div>
+   </nav>
 
-                <div id="mdb-products">
-                    <h3 class="section-title">3. Product Portfolio & Technology</h3>
-                    <p>MongoDB's platform is built on a flexible document data model and a distributed systems architecture, designed for scalability and developer agility.</p>
-                    <h4 class="subsection-title">Core Technology & Architecture:</h4>
-                    <ul>
-                        <li><strong>Document Data Model:</strong> Stores data in JSON-like BSON documents, offering schema flexibility ideal for evolving applications.</li>
-                        <li><strong>Distributed Systems:</strong> Employs replica sets for high availability and sharding for horizontal scalability, handling large datasets and high throughput.</li>
-                        <li><strong>MongoDB Query Language (MQL):</strong> A rich query language supporting diverse operations and indexing.</li>
-                    </ul>
-                    <h4 class="subsection-title">Innovation & R&D (Focus on AI and Developer Experience):</h4>
-                    <p>MongoDB invests heavily in R&D (30.5% of revenue in FY2025). Key innovation areas include:</p>
-                    <ul>
-                        <li><strong>AI and Machine Learning:</strong> Atlas Vector Search is central to its AI strategy, enabling semantic search and RAG for generative AI. Partnerships and acquisitions (like Voyage AI) bolster these capabilities.</li>
-                        <li><strong>Developer Experience:</strong> Continuous improvements to tools like MongoDB Shell, Compass, drivers, and the Atlas CLI.</li>
-                        <li><strong>Platform Enhancements:</strong> Regular updates include features like Atlas Resource Policies, Flex Tier, GraphRAG, and enhanced security.</li>
-                    </ul>
-                     <h4 class="subsection-title">Go-to-Market Strategy:</h4>
-                     <p>MongoDB employs a multi-faceted approach:</p>
-                    <ul>
-                        <li><strong>Developer-Led Adoption:</strong> Leveraging the free Community Edition and Atlas free tier for organic growth.</li>
-                        <li><strong>Direct Sales:</strong> Targeting larger enterprises with a dedicated sales force (88% of FY2025 subscription revenue).</li>
-                        <li><strong>Self-Service (Atlas):</strong> Enabling easy online signup and scaling.</li>
-                        <li><strong>Cloud Marketplaces:</strong> Availability on AWS, Azure, and GCP marketplaces simplifies procurement.</li>
-                        <li><strong>Partnerships:</strong> Collaborations with hyperscalers, technology partners, ISVs, and system integrators.</li>
-                    </ul>
-                </div>
 
-                <div id="mdb-competition">
-                    <h3 class="section-title">4. Competitive Landscape & Differentiation</h3>
-                    <p>MongoDB operates in a dynamic and competitive database market, facing challenges from cloud providers' native offerings, other NoSQL vendors, and traditional relational databases.</p>
-                    <h4 class="subsection-title">Key Competitors:</h4>
-                    <ul>
-                        <li><strong>Cloud Providers' Native Databases:</strong> AWS (DynamoDB, DocumentDB), Azure (Cosmos DB), GCP (Firestore, Bigtable).</li>
-                        <li><strong>Other NoSQL Vendors:</strong> Couchbase, DataStax, Elastic, Redis.</li>
-                        <li><strong>Relational Database Vendors (Incumbents):</strong> Oracle, Microsoft SQL Server, PostgreSQL, MySQL.</li>
-                        <li><strong>Specialized Vector Database Vendors:</strong> Pinecone, Weaviate. MongoDB counters with integrated Atlas Vector Search.</li>
-                    </ul>
-                     <h4 class="subsection-title">MongoDB's Differentiators:</h4>
-                    <ul>
-                        <li><strong>Flexible Document Data Model:</strong> Core to developer agility and rapid development.</li>
-                        <li><strong>MongoDB Atlas (Unified Multi-Cloud Platform):</strong> Offers consistency across AWS, Azure, and GCP, avoiding vendor lock-in. Its fully managed nature and integrated services simplify data architecture.</li>
-                        <li><strong>Strong Developer Community & Ecosystem:</strong> A large, active community provides extensive resources and talent.</li>
-                        <li><strong>Scalability and Performance:</strong> Designed for handling large-scale, high-velocity workloads.</li>
-                        <li><strong>"Run Anywhere" Strategy:</strong> Supports both cloud (Atlas) and self-managed (Enterprise Advanced) deployments.</li>
-                    </ul>
-                    <p>MongoDB's multi-cloud strategy with Atlas, combined with its developer-friendly document model and integrated platform services, creates a strong competitive position.</p>
-                </div>
+   <main class="main-container">
+       <section id="overview" class="content-section card">
+           <h2 class="section-title">Company Overview & Mission</h2>
+           <p>MongoDB's mission is "To empower innovators to create, transform, and disrupt industries by unleashing the power of software and data." Founded in 2007, it has evolved from an open-source project to a major publicly traded company, challenging traditional relational databases with its flexible document model. Its vision centers on becoming the go-to data platform for modern applications, emphasizing developer empowerment, multi-cloud flexibility (Atlas DBaaS), and innovation in AI and real-time data processing.</p>
+       </section>
 
-                <div id="mdb-financials">
-                    <h3 class="section-title">5. Financial Performance Analysis</h3>
-                    <p>MongoDB has demonstrated robust revenue growth, primarily driven by the rapid adoption of MongoDB Atlas. While investing heavily in growth, leading to GAAP net losses, the company shows improving non-GAAP profitability and positive cash flow generation. This section visualizes key financial and operational trends.</p>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
-                        <div class="metric-card">
-                            <div class="metric-card-title">FY2025 Total Revenue</div>
-                            <div class="metric-card-value">$2.01B</div>
-                            <p class="text-xs text-gray-500 mt-1">19% YoY Increase</p>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-card-title">FY2025 Atlas Revenue</div>
-                            <div class="metric-card-value">$1.40B</div>
-                             <p class="text-xs text-gray-500 mt-1">70% of Total Revenue</p>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-card-title">FY2025 Non-GAAP Op. Income</div>
-                            <div class="metric-card-value">$299.3M</div>
-                            <p class="text-xs text-gray-500 mt-1">14.9% Margin</p>
-                        </div>
-                         <div class="metric-card">
-                            <div class="metric-card-title">Total Customers (End FY25)</div>
-                            <div class="metric-card-value">54,500+</div>
-                            <p class="text-xs text-gray-500 mt-1">14% YoY Growth</p>
-                        </div>
-                    </div>
 
-                    <h4 class="subsection-title">Total Revenue Trend (Fiscal Years 2021-2025)</h4>
-                    <p>The chart below illustrates MongoDB's consistent and strong revenue growth, with MongoDB Atlas increasingly becoming the dominant contributor.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="mdbRevenueChart"></canvas>
-                    </div>
+       <section id="businessModel" class="content-section card">
+           <h2 class="section-title">Business Model & Segments</h2>
+           <p>MongoDB's value proposition enhances developer productivity and agility via its flexible document data model. Revenue is primarily subscription-based (97% in FY2025), with a strong focus on the consumption-driven MongoDB Atlas.</p>
+           <h4 class="subsection-title">Product-Centric Segments:</h4>
+           <ul>
+               <li><strong>MongoDB Atlas (Cloud DBaaS):</strong> Flagship product and growth engine (70% of FY2025 revenue). Fully managed, multi-cloud (AWS, Azure, GCP) service. Integrates Atlas Search, Atlas Vector Search (AI/RAG), Stream Processing, Charts. Mainly consumption-based revenue.</li>
+               <li><strong>MongoDB Enterprise Advanced (Self-Managed):</strong> Commercial server for on-prem or private cloud (24% of FY2025 subscription revenue). Includes advanced security, Ops Manager, enterprise support. Subscription-based (term licenses).</li>
+               <li><strong>MongoDB Community Edition (Free Open Source):</strong> Core document database (SSPL). Drives developer adoption, funnels to commercial offerings.</li>
+           </ul>
+       </section>
 
-                    <h4 class="subsection-title">MongoDB Atlas Revenue Trend (Fiscal Years 2021-2025)</h4>
-                    <p>This chart highlights the rapid growth of MongoDB Atlas, showcasing its increasing importance to MongoDB's overall revenue stream.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="mdbAtlasRevenueChart"></canvas>
-                    </div>
 
-                    <h4 class="subsection-title">Non-GAAP Operating Margin Trend (Fiscal Years 2021-2025)</h4>
-                    <p>This chart showcases MongoDB's improving operational efficiency on a non-GAAP basis, reflecting better cost management and the scalability of its model, even amidst significant growth investments.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="mdbNonGaapOpMarginChart"></canvas>
-                    </div>
+       <section id="products" class="content-section card">
+           <h2 class="section-title">Product Portfolio & Technology</h2>
+           <p>MongoDB's platform uses a flexible document data model and distributed systems architecture for scalability and developer agility.</p>
+           <h4 class="subsection-title">Core Technology & Architecture:</h4>
+           <ul>
+               <li><strong>Document Data Model:</strong> Stores data in JSON-like BSON documents for schema flexibility.</li>
+               <li><strong>Distributed Systems:</strong> Replica sets for high availability, sharding for horizontal scalability.</li>
+               <li><strong>MongoDB Query Language (MQL):</strong> Rich query language with diverse operations and indexing.</li>
+           </ul>
+           <h4 class="subsection-title">Innovation & R&D (AI and Developer Experience):</h4>
+           <p>Heavy R&D investment (30.5% of revenue in FY2025). Key areas:</p>
+           <ul>
+               <li><strong>AI/ML:</strong> Atlas Vector Search for semantic search and RAG. Partnerships (e.g., Voyage AI).</li>
+               <li><strong>Developer Experience:</strong> Improvements to Shell, Compass, drivers, Atlas CLI.</li>
+               <li><strong>Platform Enhancements:</strong> Atlas Resource Policies, Flex Tier, GraphRAG, enhanced security.</li>
+           </ul>
+           <h4 class="subsection-title">Go-to-Market Strategy:</h4>
+           <ul>
+               <li><strong>Developer-Led Adoption:</strong> Free Community Edition and Atlas free tier.</li>
+               <li><strong>Direct Sales:</strong> Targeting larger enterprises (88% of FY2025 subscription revenue).</li>
+               <li><strong>Self-Service (Atlas):</strong> Easy online signup and scaling.</li>
+               <li><strong>Cloud Marketplaces:</strong> AWS, Azure, GCP.</li>
+               <li><strong>Partnerships:</strong> Hyperscalers, tech partners, ISVs, SIs.</li>
+           </ul>
+       </section>
 
-                    <h4 class="subsection-title">GAAP Gross Profit Margin Trend (Fiscal Years 2021-2025)</h4>
-                    <p>MongoDB has consistently maintained high GAAP Gross Profit Margins, indicating strong underlying profitability of its core offerings.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="mdbGaapGrossMarginChart"></canvas>
-                    </div>
-                    
-                    <h4 class="subsection-title">Total Customer Growth Trend (Fiscal Years 2021-2025)</h4>
-                    <p>This chart visualizes the steady growth in MongoDB's total customer base, demonstrating successful market penetration and platform adoption.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="mdbCustomerGrowthChart"></canvas>
-                    </div>
 
-                    <h4 class="subsection-title">Operating Cash Flow Trend (Fiscal Years 2021-2025)</h4>
-                    <p>The trend in Operating Cash Flow (OCF) illustrates MongoDB's improving ability to generate cash from its core business operations.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="mdbOcfChart"></canvas>
-                    </div>
+       <section id="competition" class="content-section card">
+           <h2 class="section-title">Competitive Landscape & Differentiation</h2>
+           <p>MongoDB competes with cloud providers' native offerings, other NoSQL vendors, and traditional relational databases.</p>
+           <h4 class="subsection-title">Key Competitors:</h4>
+           <ul>
+               <li><strong>Cloud Providers' Native Databases:</strong> AWS (DynamoDB, DocumentDB), Azure (Cosmos DB), GCP (Firestore, Bigtable).</li>
+               <li><strong>Other NoSQL Vendors:</strong> Couchbase, DataStax, Elastic, Redis.</li>
+               <li><strong>Relational Database Vendors:</strong> Oracle, Microsoft SQL Server, PostgreSQL, MySQL.</li>
+               <li><strong>Specialized Vector Database Vendors:</strong> Pinecone, Weaviate (countered by Atlas Vector Search).</li>
+           </ul>
+           <h4 class="subsection-title">MongoDB's Differentiators:</h4>
+           <ul>
+               <li><strong>Flexible Document Data Model.</strong></li>
+               <li><strong>MongoDB Atlas (Unified Multi-Cloud Platform):</strong> Consistency across AWS, Azure, GCP; avoids vendor lock-in.</li>
+               <li><strong>Strong Developer Community & Ecosystem.</strong></li>
+               <li><strong>Scalability and Performance.</strong></li>
+               <li><strong>"Run Anywhere" Strategy (Cloud & Self-Managed).</strong></li>
+           </ul>
+       </section>
 
-                    <p class="mt-4">MongoDB maintains high gross margins (GAAP 73.3% in FY25). Significant operating expenses are allocated to R&D (30.5% of revenue in FY25) and Sales & Marketing (43.6% in FY25), reflecting its growth-focused strategy. Cash flow from operations turned positive and grew to $150.2 million in FY25, with Free Cash Flow also positive at $120.6 million. The Net ARR Expansion Rate remained strong at ~118% in Q4 FY25, indicating robust growth within the existing customer base.</p>
-                </div>
 
-                <div id="mdb-outlook">
-                    <h3 class="section-title">6. Strategic Outlook & Future Growth Drivers</h3>
-                    <p>MongoDB is strategically positioned to capitalize on key technology trends including cloud adoption, data proliferation, and the AI revolution. Its future growth is expected to be driven by several factors, balanced against certain market risks.</p>
-                    <h4 class="subsection-title">Key Growth Drivers:</h4>
-                    <ul>
-                        <li><strong>Continued Cloud Adoption & DBaaS Market Expansion:</strong> Benefiting MongoDB Atlas.</li>
-                        <li><strong>AI and Machine Learning Workloads:</strong> Atlas Vector Search positions MongoDB for the AI market, especially RAG applications.</li>
-                        <li><strong>Enterprise Modernization Initiatives:</strong> Platform for modernizing legacy applications.</li>
-                        <li><strong>Expansion Upmarket:</strong> Focus on acquiring and growing large enterprise customers.</li>
-                        <li><strong>Developer Ecosystem Growth:</strong> Continuous investment in developer tools and community.</li>
-                    </ul>
-                    <h4 class="subsection-title">Potential Challenges & Risks:</h4>
-                    <ul>
-                        <li><strong>Macroeconomic Environment:</strong> Can impact IT spending and Atlas consumption rates.</li>
-                        <li><strong>Intense Competition:</strong> From cloud providers' native databases and other NoSQL/SQL vendors.</li>
-                        <li><strong>Path to Sustained GAAP Profitability:</strong> Key investor focus, impacted by high SBC and growth investments.</li>
-                        <li><strong>Sales Execution & Scaling:</strong> Effectively scaling its sales organization to capture market share.</li>
-                        <li><strong>Complexity of AI Market Adoption:</strong> Realizing substantial revenue from AI workloads may take time.</li>
-                    </ul>
-                    <h4 class="subsection-title">Overall Outlook:</h4>
-                    <p>MongoDB's developer-centric approach, flexible document model, and robust multi-cloud Atlas platform are significant strengths. The strategic focus on AI, particularly with Atlas Vector Search, aligns it with major market trends. While navigating competition and macroeconomic uncertainties, MongoDB's technological leadership and strong market traction suggest a positive outlook for continued growth as a core developer data platform. Achieving consistent GAAP profitability will be a key milestone in its journey.</p>
-                </div>
-            </div>
-        </section>
-    </main>
+       <section id="financials" class="content-section card">
+           <h2 class="section-title">Financial Performance Analysis</h2>
+           <p class="text-center max-w-3xl mx-auto mb-6">MongoDB shows robust revenue growth (Atlas primary driver). While investing heavily (GAAP net losses), it demonstrates improving non-GAAP profitability and positive cash flow. All amounts in USD Millions unless noted.</p>
+          
+           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+               <div class="metric-card"><div class="metric-card-title">FY25 Total Revenue</div><div class="metric-card-value">$2.01B</div><p class="metric-card-note">19% YoY</p></div>
+               <div class="metric-card"><div class="metric-card-title">FY25 Atlas Revenue</div><div class="metric-card-value">$1.40B</div><p class="metric-card-note">70% of Total</p></div>
+               <div class="metric-card"><div class="metric-card-title">FY25 Non-GAAP Op. Income</div><div class="metric-card-value">$299.3M</div><p class="metric-card-note">14.9% Margin</p></div>
+               <div class="metric-card"><div class="metric-card-title">Total Customers (FY25)</div><div class="metric-card-value">54,500+</div><p class="metric-card-note">14% YoY</p></div>
+           </div>
 
-    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
-        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive MongoDB (MDB) Analysis. For informational purposes only.</p>
-        <p class="text-xs mt-1">Data synthesized from publicly available company reports and market analyses.</p>
-    </footer>
 
-    <script>
-        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+           <div class="grid md:grid-cols-2 gap-x-8 gap-y-10">
+               <div><h4 class="subsection-title text-center !mt-2 !mb-3">Total Revenue Trend</h4><div class="chart-container"><canvas id="mdbRevenueChart"></canvas></div></div>
+               <div><h4 class="subsection-title text-center !mt-2 !mb-3">Atlas Revenue Trend</h4><div class="chart-container"><canvas id="mdbAtlasRevenueChart"></canvas></div></div>
+               <div><h4 class="subsection-title text-center !mt-2 !mb-3">Non-GAAP Operating Margin (%)</h4><div class="chart-container"><canvas id="mdbNonGaapOpMarginChart"></canvas></div></div>
+               <div><h4 class="subsection-title text-center !mt-2 !mb-3">GAAP Gross Profit Margin (%)</h4><div class="chart-container"><canvas id="mdbGaapGrossMarginChart"></canvas></div></div>
+               <div><h4 class="subsection-title text-center !mt-2 !mb-3">Total Customer Growth (Thousands)</h4><div class="chart-container"><canvas id="mdbCustomerGrowthChart"></canvas></div></div>
+               <div><h4 class="subsection-title text-center !mt-2 !mb-3">Operating Cash Flow</h4><div class="chart-container"><canvas id="mdbOcfChart"></canvas></div></div>
+           </div>
+           <p class="mt-4 text-sm text-center">High GAAP Gross Margins (73.3% FY25). Significant R&D (30.5% of rev) & S&M (43.6% of rev). Positive OCF ($150.2M FY25) & FCF ($120.6M FY25). Net ARR Expansion ~118% (Q4 FY25).</p>
+       </section>
 
-        const CHART_COLORS = { 
-            blue: '#60A5FA',    // blue-400 
-            teal: '#2DD4BF',    // teal-400 
-            amber: '#FDBA74',  // orange-300
-            stone: '#E7E5E4',   
-            gray: '#4B5563',    
-            darkBlue: '#2563EB', // blue-600
-            darkTeal: '#14B8A6', // teal-500
-            darkOrange: '#F97316', //orange-500
-            red: '#EF4444', 
-            orange: '#F97316',
-            purple: '#8B5CF6', // For Customer Growth
-            green: '#10B981'  // For OCF
-        };
-        
-        const mdbRevenueData = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
-            datasets: [{
-                label: 'Total Revenue ($M)',
-                data: [590.4, 873.8, 1284.0, 1683.0, 2006.4],
-                borderColor: CHART_COLORS.red, 
-                backgroundColor: CHART_COLORS.red + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.red,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.red,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
-        const mdbAtlasRevenueData = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
-            datasets: [{
-                label: 'Atlas Revenue ($M)',
-                data: [271.6, 489.3, 809.0, 1110.8, 1404.5],
-                borderColor: CHART_COLORS.blue,
-                backgroundColor: CHART_COLORS.blue + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.blue,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.blue,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
-        const mdbNonGaapOpMarginData = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
-            datasets: [{
-                label: 'Non-GAAP Operating Margin (%)',
-                data: [-8.4, -2.8, 4.8, 16.1, 14.9],
-                borderColor: CHART_COLORS.orange, 
-                backgroundColor: CHART_COLORS.orange + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.orange,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.orange,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
-        const mdbGaapGrossMarginData = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
-            datasets: [{
-                label: 'GAAP Gross Margin (%)',
-                data: [70.0, 70.3, 72.8, 74.8, 73.3],
-                borderColor: CHART_COLORS.teal,
-                backgroundColor: CHART_COLORS.teal + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.teal,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.teal,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
-        const mdbCustomerGrowthData = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
-            datasets: [{
-                label: 'Total Customers (Thousands)',
-                data: [24.8, 33.0, 40.8, 47.8, 54.5], // Data in thousands
-                borderColor: CHART_COLORS.purple,
-                backgroundColor: CHART_COLORS.purple + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.purple,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.purple,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
-        const mdbOcfData = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
-            datasets: [{
-                label: 'Operating Cash Flow ($M)',
-                data: [-42.7, 7.0, -13.0, 121.5, 150.2],
-                borderColor: CHART_COLORS.green,
-                backgroundColor: CHART_COLORS.green + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.green,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.green,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
 
-        let mdbRevenueChartInstance, mdbAtlasRevenueChartInstance, mdbNonGaapOpMarginChartInstance, mdbGaapGrossMarginChartInstance, mdbCustomerGrowthChartInstance, mdbOcfChartInstance;
+       <section id="outlook" class="content-section card">
+           <h2 class="section-title">Strategic Outlook & Future Growth</h2>
+           <p class="text-center max-w-3xl mx-auto mb-6">MongoDB is positioned to capitalize on cloud adoption, data proliferation, and the AI revolution.</p>
+           <div class="grid md:grid-cols-2 gap-6">
+               <div>
+                   <h4 class="subsection-title !text-green-600">Key Growth Drivers:</h4>
+                   <ul>
+                       <li>Continued Cloud Adoption & DBaaS Market Expansion (Atlas).</li>
+                       <li>AI and Machine Learning Workloads (Atlas Vector Search).</li>
+                       <li>Enterprise Modernization Initiatives.</li>
+                       <li>Expansion Upmarket (Large Enterprise Customers).</li>
+                       <li>Developer Ecosystem Growth.</li>
+                   </ul>
+               </div>
+               <div>
+                   <h4 class="subsection-title !text-orange-600">Potential Challenges & Risks:</h4>
+                   <ul>
+                       <li>Macroeconomic Environment impacting IT spend.</li>
+                       <li>Intense Competition (Cloud native, NoSQL/SQL).</li>
+                       <li>Path to Sustained GAAP Profitability.</li>
+                       <li>Sales Execution & Scaling.</li>
+                       <li>Complexity of AI Market Adoption.</li>
+                   </ul>
+               </div>
+           </div>
+           <h4 class="subsection-title mt-6 text-center">Overall Outlook:</h4>
+           <p class="text-center max-w-3xl mx-auto">MongoDB's developer-centric approach, flexible model, and robust Atlas platform are strengths. AI focus aligns with market trends. Navigating competition and achieving GAAP profitability are key. Positive outlook for continued growth as a core developer data platform.</p>
+       </section>
+   </main>
 
-        function createChart(ctx, type, data, options) {
-            if (!ctx) return null;
-            return new Chart(ctx, { type, data, options });
-        }
-        
-        const commonChartOptionsLine = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: false, 
-                    ticks: { color: '#4B5563', font: { size: 11 } },
-                    grid: { color: '#E7E5E4', drawBorder: false }
-                },
-                x: {
-                    ticks: { color: '#4B5563', font: { size: 11 } },
-                    grid: { display: false }
-                }
-            },
-            plugins: {
-                legend: {
-                    position: 'top', align: 'end',
-                    labels: { color: '#374151', font: { size: 12, weight: '500' }, padding: 15, boxWidth: 12, usePointStyle: true }
-                },
-                tooltip: {
-                    enabled: true, backgroundColor: '#1F2937', titleColor: '#F3F4F6', titleFont: { weight: '600', size: 13 },
-                    bodyColor: '#D1D5DB', bodyFont: { size: 12 }, padding: 10, cornerRadius: 4, displayColors: true,
-                    borderColor: '#4B5563', borderWidth: 1,
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) { label += ': '; }
-                            if (context.parsed.y !== null) {
-                                if (context.dataset.label.includes('Margin') || context.dataset.label.includes('%')) {
-                                     label += context.parsed.y.toFixed(1) + '%';
-                                } else if (context.dataset.label.includes('Customers')) {
+
+   <footer class="footer">
+       <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive MongoDB (MDB) Analysis.</p>
+       <p class="text-xs mt-1">Data synthesized from public reports. For informational purposes only.</p>
+   </footer>
+
+
+   <script>
+       document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+
+       const mainNavEl = document.querySelector('.sticky-nav');
+       const navLinks = document.querySelectorAll('.sticky-nav .nav-link');
+       const contentSections = document.querySelectorAll('.content-section');
+       let navHeight = mainNavEl ? mainNavEl.offsetHeight + 20 : 70;
+
+
+       function changeActiveLink() {
+           let index = contentSections.length;
+           while(--index && window.scrollY + navHeight < contentSections[index].offsetTop) {}
+           navLinks.forEach((link) => link.classList.remove('active'));
+           if(navLinks[index]) navLinks[index].classList.add('active');
+       }
+      
+       navLinks.forEach(anchor => {
+           anchor.addEventListener('click', function (e) {
+               e.preventDefault();
+               const targetId = this.getAttribute('href');
+               const targetElement = document.querySelector(targetId);
+               if (targetElement) {
+                   const targetPosition = targetElement.offsetTop - (mainNavEl ? mainNavEl.offsetHeight : 50) + 5;
+                   window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+               }
+           });
+       });
+      
+       window.addEventListener('scroll', changeActiveLink);
+      
+       const CHART_PALETTE_MDB = { // MongoDB Green theme
+           primary: '#10b981',     // emerald-500
+           secondary: '#059669',   // emerald-600
+           accent: '#047857',      // emerald-700
+           light: '#6ee7b7',       // emerald-300
+           neutralGrid: '#e2e8f0', // slate-200
+           neutralText: '#475569', // slate-600
+           tooltipBg: 'rgba(30, 41, 59, 0.9)', // slate-800
+           purple: '#8b5cf6', // For Customer Growth (as per original)
+       };
+      
+       const mdbRevenueData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'Total Revenue ($M)', data: [590.4, 873.8, 1284.0, 1683.0, 2006.4], borderColor: CHART_PALETTE_MDB.primary, backgroundColor: CHART_PALETTE_MDB.primary + '33', fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_PALETTE_MDB.primary }] };
+       const mdbAtlasRevenueData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'Atlas Revenue ($M)', data: [271.6, 489.3, 809.0, 1110.8, 1404.5], borderColor: CHART_PALETTE_MDB.secondary, backgroundColor: CHART_PALETTE_MDB.secondary + '33', fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_PALETTE_MDB.secondary }] };
+       const mdbNonGaapOpMarginData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'Non-GAAP Operating Margin (%)', data: [-8.4, -2.8, 4.8, 16.1, 14.9], borderColor: CHART_PALETTE_MDB.accent, backgroundColor: CHART_PALETTE_MDB.accent + '33', fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_PALETTE_MDB.accent }] };
+       const mdbGaapGrossMarginData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'GAAP Gross Margin (%)', data: [70.0, 70.3, 72.8, 74.8, 73.3], borderColor: CHART_PALETTE_MDB.light, backgroundColor: CHART_PALETTE_MDB.light + '33', fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_PALETTE_MDB.light }] };
+       const mdbCustomerGrowthData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'Total Customers (Thousands)', data: [24.8, 33.0, 40.8, 47.8, 54.5], borderColor: CHART_PALETTE_MDB.purple, backgroundColor: CHART_PALETTE_MDB.purple + '33', fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_PALETTE_MDB.purple }] };
+       const mdbOcfData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'Operating Cash Flow ($M)', data: [-42.7, 7.0, -13.0, 121.5, 150.2], borderColor: CHART_PALETTE_MDB.primary, backgroundColor: CHART_PALETTE_MDB.primary + '22', fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_PALETTE_MDB.primary, yAxisID: 'yOcf' }] };
+
+
+
+
+       let chartInstances = {};
+
+
+       function createChart(ctxId, type, data, options) {
+           const ctx = document.getElementById(ctxId)?.getContext('2d');
+           if (!ctx) return null;
+           if(chartInstances[ctxId]) chartInstances[ctxId].destroy();
+           chartInstances[ctxId] = new Chart(ctx, { type, data, options });
+           return chartInstances[ctxId];
+       }
+      
+       const commonChartOptions = (isPercentage = false, isThousand = false) => ({
+           responsive: true, maintainAspectRatio: false,
+           scales: {
+               y: {
+                   beginAtZero: !isPercentage && !dataValuesAreNegative(chartDataForYScale(this)), // Check if any data is negative for Y-axis start
+                   ticks: { color: CHART_PALETTE_MDB.neutralText, font: { size: 10 },
+                       callback: function(value) {
+                           if (isPercentage) return value + '%';
+                           if (isThousand) return value.toLocaleString() + 'K';
+                           return value.toLocaleString(); // Default for millions or raw numbers
+                       }
+                   },
+                   grid: { color: CHART_PALETTE_MDB.neutralGrid, drawBorder: false }
+               },
+               x: { ticks: { color: CHART_PALETTE_MDB.neutralText, font: { size: 10 } }, grid: { display: false } }
+           },
+           plugins: {
+               legend: { position: 'bottom', align: 'center', labels: { color: CHART_PALETTE_MDB.neutralText, font: { size: 11, weight: '500' }, padding: 15, boxWidth: 12, usePointStyle: true } },
+               tooltip: {
+                   enabled: true, backgroundColor: CHART_PALETTE_MDB.tooltipBg, titleColor: '#f1f5f9', titleFont: { weight: '600', size: 12 },
+                   bodyColor: '#e2e8f0', bodyFont: { size: 11 }, padding: 10, cornerRadius: 4, displayColors: true,
+                   callbacks: {
+                       label: function(context) {
+                           let label = context.dataset.label || '';
+                           if (label) { label += ': '; }
+                           if (context.parsed.y !== null) {
+                               if (context.dataset.label.includes('Margin') || context.dataset.label.includes('%') || isPercentage) {
+                                   label += context.parsed.y.toFixed(1) + '%';
+                               } else if (context.dataset.label.includes('Customers') || isThousand) {
                                     label += context.parsed.y.toLocaleString() + 'K';
-                                }
-                                 else {
-                                     label += '$' + context.parsed.y.toLocaleString() + 'M';
-                                }
-                            }
-                            return label;
-                        }
-                    }
-                }
-            },
-            animation: { duration: 700, easing: 'easeOutCubic' }
-        };
-        
-        function initializeMdbCharts() { 
-            const mdbRevenueChartCtx = document.getElementById('mdbRevenueChart')?.getContext('2d');
-            const mdbAtlasRevenueChartCtx = document.getElementById('mdbAtlasRevenueChart')?.getContext('2d');
-            const mdbNonGaapOpMarginChartCtx = document.getElementById('mdbNonGaapOpMarginChart')?.getContext('2d');
-            const mdbGaapGrossMarginChartCtx = document.getElementById('mdbGaapGrossMarginChart')?.getContext('2d');
-            const mdbCustomerGrowthChartCtx = document.getElementById('mdbCustomerGrowthChart')?.getContext('2d');
-            const mdbOcfChartCtx = document.getElementById('mdbOcfChart')?.getContext('2d');
+                               } else {
+                                   label += '$' + context.parsed.y.toLocaleString() + 'M';
+                               }
+                           }
+                           return label;
+                       }
+                   }
+               }
+           },
+           animation: { duration: 700, easing: 'easeOutCubic' }
+       });
+        // Helper to check for negative values in chart data for y-axis scaling
+       function dataValuesAreNegative(chartInstance) {
+           if (!chartInstance || !chartInstance.data || !chartInstance.data.datasets) return false;
+           for (const dataset of chartInstance.data.datasets) {
+               if (dataset.data && dataset.data.some(val => val < 0)) {
+                   return true;
+               }
+           }
+           return false;
+       }
+       function chartDataForYScale(chartContext) { // A bit hacky, better to pass data directly
+           if (chartContext && chartContext.chart) return chartContext.chart;
+           return null;
+       }
+      
+       function initializeMdbCharts() {
+           createChart('mdbRevenueChart', 'line', mdbRevenueData, commonChartOptions());
+           createChart('mdbAtlasRevenueChart', 'line', mdbAtlasRevenueData, commonChartOptions());
+           createChart('mdbNonGaapOpMarginChart', 'line', mdbNonGaapOpMarginData, commonChartOptions(true));
+           createChart('mdbGaapGrossMarginChart', 'line', mdbGaapGrossMarginData, commonChartOptions(true));
+           createChart('mdbCustomerGrowthChart', 'line', mdbCustomerGrowthData, commonChartOptions(false, true)); // isThousand = true
+           createChart('mdbOcfChart', 'line', mdbOcfData, {
+               ...commonChartOptions(),
+               scales: {
+                   ...commonChartOptions().scales,
+                   yOcf: { // Specific axis ID if needed, otherwise default 'y' is fine
+                        beginAtZero: false, // Allow negative for OCF
+                        ticks: { color: CHART_PALETTE_MDB.neutralText, font: { size: 10 }, callback: function(value) { return value.toLocaleString(); } },
+                        grid: { color: CHART_PALETTE_MDB.neutralGrid, drawBorder: false }
+                   }
+               }
+           });
+       }
 
-            if (mdbRevenueChartCtx && !mdbRevenueChartInstance) {
-                mdbRevenueChartInstance = createChart(mdbRevenueChartCtx, 'line', mdbRevenueData, commonChartOptionsLine);
-            }
-            if (mdbAtlasRevenueChartCtx && !mdbAtlasRevenueChartInstance) {
-                mdbAtlasRevenueChartInstance = createChart(mdbAtlasRevenueChartCtx, 'line', mdbAtlasRevenueData, commonChartOptionsLine);
-            }
-            if (mdbNonGaapOpMarginChartCtx && !mdbNonGaapOpMarginChartInstance) {
-                mdbNonGaapOpMarginChartInstance = createChart(mdbNonGaapOpMarginChartCtx, 'line', mdbNonGaapOpMarginData, commonChartOptionsLine);
-            }
-            if (mdbGaapGrossMarginChartCtx && !mdbGaapGrossMarginChartInstance) {
-                mdbGaapGrossMarginChartInstance = createChart(mdbGaapGrossMarginChartCtx, 'line', mdbGaapGrossMarginData, commonChartOptionsLine);
-            }
-            if (mdbCustomerGrowthChartCtx && !mdbCustomerGrowthChartInstance) {
-                mdbCustomerGrowthChartInstance = createChart(mdbCustomerGrowthChartCtx, 'line', mdbCustomerGrowthData, commonChartOptionsLine);
-            }
-            if (mdbOcfChartCtx && !mdbOcfChartInstance) {
-                mdbOcfChartInstance = createChart(mdbOcfChartCtx, 'line', mdbOcfData, commonChartOptionsLine);
-            }
-        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeMdbCharts(); 
-        });
-    </script>
+       document.addEventListener('DOMContentLoaded', () => {
+           if (mainNavEl) navHeight = mainNavEl.offsetHeight + 20;
+           changeActiveLink();
+           initializeMdbCharts();
+
+
+           const currentHash = window.location.hash || '#overview';
+           navLinks.forEach(link => { link.classList.toggle('active', link.getAttribute('href') === currentHash); });
+           const initialSection = document.querySelector(currentHash);
+           if(initialSection && currentHash !== '#overview') {
+                const targetPosition = initialSection.offsetTop - (mainNavEl ? mainNavEl.offsetHeight : 50) + 5;
+                setTimeout(() => window.scrollTo({ top: targetPosition, behavior: 'smooth' }), 100);
+           } else if (initialSection) {
+                initialSection.scrollIntoView({behavior: 'instant', block: 'start'});
+           }
+       });
+   </script>
 </body>
 </html>
 
