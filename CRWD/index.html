@@ -1,0 +1,645 @@
+<html lang="en" class="scroll-smooth">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>CrowdStrike (CRWD) Interactive Analysis</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+   <style>
+       html { scroll-behavior: smooth; scroll-padding-top: 70px; /* Adjusted for sticky nav */ }
+       body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; /* slate-50, slate-800 (SRE Style) */ }
+       h1, h2, h3, h4, .nav-button, .financial-tab-button, .table-button { font-family: 'Inter', sans-serif; /* Unified to Inter like SRE */ }
+      
+       .main-container { max-width: 1200px; margin-left: auto; margin-right: auto; padding: 1rem; }
+
+
+       .page-header { text-align: center; padding-top: 2rem; padding-bottom: 1.5rem; }
+       .page-title { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; color: #b91c1c; margin-bottom: 0.5rem; } /* red-700 (CRWD Primary) */
+       .page-subtitle { font-size: 1.25rem; color: #475569; } /* slate-600 */
+
+
+       .sticky-nav { position: sticky; top: 0; z-index: 40; background-color: rgba(248, 250, 252, 0.95); /* slate-50 with opacity */ backdrop-filter: blur(8px); padding-top: 0.5rem; padding-bottom: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; }
+       .nav-button { /* Matched to SRE .nav-link style, adapted color */
+           padding: 0.65rem 1rem;
+           margin-right: 0.25rem;
+           border-radius: 0.375rem;
+           font-weight: 500;
+           font-size: 0.875rem;
+           cursor: pointer;
+           transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+           border: 1px solid transparent;
+           color: #c2410c; /* CRWD primary orange-700, for better contrast than pure red text */
+           display: inline-block;
+       }
+       .nav-button.active { /* CRWD Primary */
+           background-color: #dc2626; /* red-600 */
+           color: white;
+           border-color: #dc2626; /* red-600 */
+           font-weight: 600;
+       }
+       .nav-button:not(.active):hover { /* CRWD Primary hover */
+           background-color: #fee2e2; /* red-100 */
+           color: #b91c1c; /* red-700 */
+           transform: translateY(-1px);
+       }
+      
+       .content-section { animation: fadeIn 0.5s ease-out; margin-bottom: 2.5rem; /* Consistent with SRE .card mb-10 */ scroll-margin-top: 70px; /* SRE style */ }
+       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+       .section-title { /* Matched to SRE */
+           font-size: 1.875rem;
+           line-height: 2.25rem;
+           font-weight: 700;
+           color: #b91c1c; /* red-700 (CRWD Primary) */
+           margin-bottom: 1.5rem;
+           text-align: center;
+       }
+       .card { /* Matched to SRE */
+           background-color: white;
+           border-radius: 0.75rem;
+           box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+           padding: 1.5rem;
+           transition: transform 0.3s ease, box-shadow 0.3s ease;
+       }
+       .card:hover { /* Matched to SRE */
+           transform: translateY(-5px);
+           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+       }
+
+
+       .kpi-card { /* Adapted from SRE .kpi-card, CRWD color */
+           background-color: #fef2f2; /* red-50 */
+           padding: 1rem;
+           border-radius: 0.5rem;
+           box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+           text-align: center;
+           border-left: 4px solid #dc2626; /* CRWD Red-600 accent */
+           transition: transform 0.2s ease, box-shadow 0.2s ease;
+       }
+       .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px -3px rgba(220,38,38,0.15); }
+       .kpi-value { font-size: 1.5rem; font-weight: 700; color: #b91c1c; } /* red-700 */
+       .kpi-label { font-size: 0.75rem; color: #475569; margin-top: 0.25rem; } /* slate-600 */
+
+
+       .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 280px; max-height: 320px; }
+       @media (min-width: 768px) { .chart-container { height: 320px; max-height: 350px;} } /* Original CRWD file sizes for these small overview charts */
+       .financial-chart-container { position: relative; width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; height: 350px; max-height: 450px; } /* SRE style for larger financial charts */
+       @media (min-width: 768px) { .financial-chart-container { height: 400px;} }
+
+
+
+
+       .accordion-item { margin-bottom: 0.5rem; }
+       .accordion-button { /* Adapted from SRE accordion-header, CRWD color */
+           cursor: pointer;
+           padding: 0.75rem 1rem;
+           background-color: #fee2e2; /* red-100 */
+           border: 1px solid #fecaca; /* red-200 */
+           border-radius: 0.375rem;
+           font-weight: 600;
+           color: #991b1b; /* red-800 */
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           transition: background-color 0.2s ease;
+           width: 100%;
+           text-align: left;
+       }
+       .accordion-button:hover { background-color: #fecaca; /* red-200 */ }
+       .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out; padding: 0 1rem; background-color: white; border: 1px solid #fecaca; border-top:none; border-radius: 0 0 0.375rem 0.375rem;}
+       .accordion-content.open { padding: 1rem; } /* Add padding when open */
+       .accordion-icon { transform: rotate(0deg); transition: transform 0.3s ease-in-out; color: #dc2626; /* red-600 */ font-size: 1.25rem; }
+       .accordion-icon.rotate-90 { transform: rotate(90deg); }
+      
+       .financial-tab-button { /* Matched to SRE .tab-button, CRWD color */
+           padding: 0.5rem 1rem;
+           margin-right: 0.25rem;
+           margin-bottom: 0.5rem;
+           border-radius: 0.375rem;
+           font-weight: 500;
+           font-size: 0.875rem;
+           cursor: pointer;
+           transition: all 0.3s ease;
+           border: 1px solid #ef4444; /* red-500 */
+           color: #dc2626; /* red-600 */
+       }
+       .financial-tab-button.active { background-color: #dc2626; color: white; } /* red-600 */
+       .financial-tab-button:not(.active):hover { background-color: #fee2e2; /* red-100 */ }
+       .financial-tab-content { display: none; animation: fadeIn 0.5s ease-out; }
+       .financial-tab-content.active { display: block; }
+
+
+       .table-button { /* CRWD color */
+           transition: background-color 0.2s ease, color 0.2s ease;
+           border: 1px solid #fca5a5; /* red-300 */
+           color: #ef4444; /* red-500 */
+       }
+       .table-button.active { background-color: #ef4444; color: white; } /* red-500 */
+       .table-button:not(.active):hover { background-color: #fee2e2; /* red-100 */ }
+
+
+       .footer { /* Matched to SRE */
+           background-color: #1e293b; /* slate-800 */
+           color: #cbd5e1; /* slate-300 */
+           padding: 2rem 0;
+           margin-top: 3rem;
+           text-align: center;
+       }
+   </style>
+</head>
+<body class="antialiased">
+   <header class="page-header">
+       <h1 class="page-title">CrowdStrike (CRWD)</h1>
+       <p class="page-subtitle">An Interactive Business Analysis</p>
+   </header>
+
+
+   <nav class="sticky-nav mb-6">
+       <div class="main-container flex flex-wrap justify-center sm:justify-center">
+           <button data-target="overview" class="nav-button active">Overview</button>
+           <button data-target="business" class="nav-button">Business Model</button>
+           <button data-target="competition" class="nav-button">Competition</button>
+           <button data-target="financials" class="nav-button">Financials</button>
+           <button data-target="strategy" class="nav-button">Strategy</button>
+       </div>
+   </nav>
+
+
+   <main class="main-container">
+       <section id="overview" class="content-section card">
+           <h2 class="section-title">Executive Overview</h2>
+           <p class="mb-6 text-slate-600 leading-relaxed text-sm sm:text-base text-center max-w-4xl mx-auto">
+               This interactive application provides a comprehensive analysis of CrowdStrike (CRWD), a global cybersecurity leader. We delve into its innovative Falcon platform, business model, competitive landscape, financial performance, and strategic outlook. The goal is to offer clear, explorable insights into how CrowdStrike is redefining security for the cloud era.
+           </p>
+           <div class="grid md:grid-cols-3 gap-6 mb-8">
+               <div class="kpi-card">
+                   <h3 class="text-md font-semibold text-red-700 mb-1">Total Revenue (FY25)</h3>
+                   <p class="kpi-value">$3.95B</p>
+                   <p class="kpi-label">29% YoY Growth</p>
+               </div>
+               <div class="kpi-card">
+                   <h3 class="text-md font-semibold text-red-700 mb-1">Ending ARR (FY25)</h3>
+                   <p class="kpi-value">$4.24B</p>
+                   <p class="kpi-label">23% YoY Growth</p>
+               </div>
+               <div class="kpi-card">
+                   <h3 class="text-md font-semibold text-red-700 mb-1">Free Cash Flow (FY25)</h3>
+                   <p class="kpi-value">$1.07B</p>
+                   <p class="kpi-label">27.0% FCF Margin</p>
+               </div>
+           </div>
+           <div class="grid md:grid-cols-3 gap-6 mb-8">
+               <div class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                   <h3 class="text-md font-semibold text-slate-700 mb-2 text-center">Revenue Trend ($B)</h3>
+                   <div class="chart-container"><canvas id="overviewRevenueChart"></canvas></div>
+               </div>
+               <div class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                   <h3 class="text-md font-semibold text-slate-700 mb-2 text-center">ARR Growth ($B)</h3>
+                   <div class="chart-container"><canvas id="overviewArrChart"></canvas></div>
+               </div>
+               <div class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                   <h3 class="text-md font-semibold text-slate-700 mb-2 text-center">FCF Growth ($B)</h3>
+                   <div class="chart-container"><canvas id="overviewFcfChart"></canvas></div>
+               </div>
+           </div>
+       </section>
+
+
+       <section id="business" class="content-section card">
+           <h2 class="section-title">Business Model: The Falcon Platform</h2>
+           <p class="mb-6 text-slate-600 leading-relaxed text-sm sm:text-base text-center max-w-4xl mx-auto">
+               CrowdStrike's business model is primarily a Software-as-a-Service (SaaS) subscription, providing access to its Falcon platform. Revenue is predominantly from Subscription Services (95.1% in FY25), ensuring high recurring revenue. Professional Services (4.9% in FY25) complement this.
+           </p>
+           <div class="grid md:grid-cols-2 gap-6 mb-8">
+               <div class="p-4 bg-red-50 rounded-lg shadow border border-red-200">
+                   <h3 class="text-lg font-semibold text-red-700 mb-2">Core Pillars</h3>
+                   <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                       <li><strong>Cloud-Native Architecture:</strong> Scalable, single lightweight agent.</li>
+                       <li><strong>AI-Powered Threat Graph®:</strong> Real-time telemetry processing trillions of events.</li>
+                       <li><strong>Modular Platform:</strong> 29+ modules across Endpoint, Cloud, Identity, Threat Intel, SecOps, Next-Gen SIEM, Data Protection, and GenAI.</li>
+                   </ul>
+               </div>
+               <div class="p-4 bg-red-50 rounded-lg shadow border border-red-200">
+                   <h3 class="text-lg font-semibold text-red-700 mb-2">Value Proposition</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                       <li>Stopping Breaches: Core focus.</li>
+                       <li>Rapid Time-to-Value & Ease of Use.</li>
+                       <li>Superior Efficacy, Reduced TCO.</li>
+                       <li>Platform Consolidation & Automation.</li>
+                   </ul>
+               </div>
+           </div>
+            <div class="mb-4">
+               <h3 class="text-xl font-semibold text-slate-800 mb-3 text-center">Falcon Platform Modules (Illustrative Categories)</h3>
+               <div id="falconModulesContainer" class="space-y-2">
+               </div>
+           </div>
+       </section>
+
+
+       <section id="competition" class="content-section card">
+           <h2 class="section-title">Competitive Edge</h2>
+            <p class="mb-6 text-slate-600 leading-relaxed text-sm sm:text-base text-center max-w-4xl mx-auto">
+               CrowdStrike operates in a fiercely competitive cybersecurity market, facing EDR/XDR specialists, broader platform vendors, and niche players. Its primary differentiators lie in its cloud-native architecture, single-agent approach, and the AI-driven Threat Graph.
+           </p>
+           <div class="grid md:grid-cols-2 gap-6">
+               <div class="p-4 bg-green-50 rounded-lg shadow border border-green-200">
+                   <h3 class="text-lg font-semibold text-green-700 mb-2">Strengths</h3>
+                   <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                       <li>Technology Leadership (Cloud-native, AI, Threat Graph).</li>
+                       <li>Strong EDR/XDR Capabilities & Market Recognition.</li>
+                       <li>Scalability and Performance, Minimal Endpoint Impact.</li>
+                       <li>Successful "Land-and-Expand" Model (High DBNRR).</li>
+                        <li>Growing Ecosystem and Brand Reputation.</li>
+                   </ul>
+               </div>
+               <div class="p-4 bg-orange-50 rounded-lg shadow border border-orange-200">
+                   <h3 class="text-lg font-semibold text-orange-700 mb-2">Weaknesses</h3>
+                   <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                       <li>Premium Pricing vs. Bundled Competitors.</li>
+                       <li>Intense Competition (Microsoft, Palo Alto Networks).</li>
+                       <li>Potential Complexity for Smaller Teams.</li>
+                       <li>Dependence on Cloud Connectivity for full analytics.</li>
+                   </ul>
+               </div>
+           </div>
+       </section>
+
+
+       <section id="financials" class="content-section card">
+           <h2 class="section-title">Financial Health Dashboard</h2>
+           <p class="mb-6 text-slate-600 leading-relaxed text-sm sm:text-base text-center max-w-4xl mx-auto">
+               CrowdStrike has demonstrated rapid growth, improving non-GAAP profitability, and strong cash flow. This interactive dashboard allows exploration of key financial trends. Use the tabs to navigate.
+           </p>
+           <div class="mb-6">
+               <nav class="flex flex-wrap justify-center -mb-px space-x-1 sm:space-x-2" id="financials-tabs-container">
+                   <button class="financial-tab-button active" data-tab="revenueTrends">Revenue & ARR</button>
+                   <button class="financial-tab-button" data-tab="profitabilityTrends">Profitability</button>
+                   <button class="financial-tab-button" data-tab="cashflowTrends">Cash Flow</button>
+                   <button class="financial-tab-button" data-tab="kpiMetrics">Key Metrics</button>
+                   <button class="financial-tab-button" data-tab="financialTables">Data Tables</button>
+               </nav>
+           </div>
+      
+           <div class="pt-6">
+               <div id="revenueTrends" class="financial-tab-content active">
+                   <h3 class="text-xl font-semibold text-slate-800 mb-4 text-center">Revenue & ARR Growth</h3>
+                   <div class="grid md:grid-cols-2 gap-6">
+                       <div class="bg-slate-50 p-4 rounded-lg shadow-sm">
+                           <h4 class="text-md font-medium text-slate-700 mb-2 text-center">Total Revenue Growth (FY21-FY25)</h4>
+                           <div class="financial-chart-container"><canvas id="totalRevenueChart"></canvas></div>
+                       </div>
+                       <div class="bg-slate-50 p-4 rounded-lg shadow-sm">
+                           <h4 class="text-md font-medium text-slate-700 mb-2 text-center">Annual Recurring Revenue (ARR)</h4>
+                           <div class="financial-chart-container"><canvas id="arrChart"></canvas></div>
+                       </div>
+                   </div>
+               </div>
+
+
+               <div id="profitabilityTrends" class="financial-tab-content">
+                   <h3 class="text-xl font-semibold text-slate-800 mb-4 text-center">Profitability Journey</h3>
+                   <div class="grid md:grid-cols-2 gap-6">
+                       <div class="bg-slate-50 p-4 rounded-lg shadow-sm">
+                           <h4 class="text-md font-medium text-slate-700 mb-2 text-center">Non-GAAP Operating Income ($M)</h4>
+                           <div class="financial-chart-container"><canvas id="nonGaapOpIncomeChart"></canvas></div>
+                       </div>
+                       <div class="bg-slate-50 p-4 rounded-lg shadow-sm">
+                           <h4 class="text-md font-medium text-slate-700 mb-2 text-center">Non-GAAP Operating Margin (%)</h4>
+                           <div class="financial-chart-container"><canvas id="nonGaapOpMarginChart"></canvas></div>
+                       </div>
+                   </div>
+               </div>
+
+
+               <div id="cashflowTrends" class="financial-tab-content">
+                   <h3 class="text-xl font-semibold text-slate-800 mb-4 text-center">Cash Flow Strength</h3>
+                   <div class="grid md:grid-cols-2 gap-6">
+                       <div class="bg-slate-50 p-4 rounded-lg shadow-sm">
+                           <h4 class="text-md font-medium text-slate-700 mb-2 text-center">Operating Cash Flow ($M)</h4>
+                           <div class="financial-chart-container"><canvas id="ocfChart"></canvas></div>
+                       </div>
+                       <div class="bg-slate-50 p-4 rounded-lg shadow-sm">
+                           <h4 class="text-md font-medium text-slate-700 mb-2 text-center">Free Cash Flow & Margin</h4>
+                           <div class="financial-chart-container"><canvas id="fcfChart"></canvas></div>
+                       </div>
+                   </div>
+               </div>
+
+
+               <div id="kpiMetrics" class="financial-tab-content">
+                   <h3 class="text-xl font-semibold text-slate-800 mb-4 text-center">Key Performance Indicators</h3>
+                   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                       <div class="kpi-card p-5"><h4 class="text-sm font-semibold text-red-700">DBNRR</h4><p class="kpi-value mt-1">112%</p><p class="kpi-label mt-1">Jan 31, 2025</p></div>
+                       <div class="kpi-card p-5"><h4 class="text-sm font-semibold text-red-700">Customers w/ 5+ Modules</h4><p class="kpi-value mt-1">67%</p><p class="kpi-label mt-1">Jan 31, 2025</p></div>
+                       <div class="kpi-card p-5"><h4 class="text-sm font-semibold text-red-700">Customers w/ 7+ Modules</h4><p class="kpi-value mt-1">32%</p><p class="kpi-label mt-1">Jan 31, 2025</p></div>
+                   </div>
+               </div>
+              
+               <div id="financialTables" class="financial-tab-content">
+                   <h3 class="text-xl font-semibold text-slate-800 mb-4 text-center">Interactive Financial Data</h3>
+                   <p class="mb-4 text-sm text-slate-600 text-center">Select a fiscal year (amounts in millions USD).</p>
+                   <div class="mb-4 flex justify-center space-x-1">
+                       <button class="table-button active px-3 py-1.5 text-xs sm:text-sm rounded-md" data-year="FY25">FY25</button>
+                       <button class="table-button px-3 py-1.5 text-xs sm:text-sm rounded-md" data-year="FY24">FY24</button>
+                       <button class="table-button px-3 py-1.5 text-xs sm:text-sm rounded-md" data-year="FY23">FY23</button>
+                   </div>
+                   <div class="overflow-x-auto bg-slate-50 p-3 rounded-lg border border-slate-200 shadow-sm">
+                       <table class="min-w-full divide-y divide-slate-200 text-xs sm:text-sm">
+                           <thead class="bg-slate-100"><tr><th class="px-3 py-2 text-left font-semibold text-slate-600">Metric</th><th id="financialTableYearHeader" class="px-3 py-2 text-right font-semibold text-slate-600">FY2025</th></tr></thead>
+                           <tbody id="financialTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                       </table>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+
+       <section id="strategy" class="content-section card">
+           <h2 class="section-title">Strategic Outlook & Future Path</h2>
+           <p class="mb-6 text-slate-600 leading-relaxed text-sm sm:text-base text-center max-w-4xl mx-auto">
+               CrowdStrike is positioned for continued growth, driven by platform innovation, market penetration, and AI leadership. The company aims for a $10B ending ARR target.
+           </p>
+           <div class="grid md:grid-cols-2 gap-6">
+               <div>
+                   <h3 class="text-xl font-semibold text-slate-800 mb-4 text-center">Growth Drivers</h3>
+                   <div id="growthDriversAccordion" class="space-y-1">
+                       <div class="accordion-item"><button class="accordion-button"><span class="font-medium text-sm">Platform Expansion & Innovation</span><span class="accordion-icon">➔</span></button><div class="accordion-content"><p class="mt-2 text-xs text-slate-500">New modules (Falcon LogScale, Data Protection, Charlotte AI, SSPM via Adaptive Shield) expand TAM.</p></div></div>
+                       <div class="accordion-item"><button class="accordion-button"><span class="font-medium text-sm">Market Penetration</span><span class="accordion-icon">➔</span></button><div class="accordion-content"><p class="mt-2 text-xs text-slate-500">Growth in large enterprises, SMBs, public sector, and international markets.</p></div></div>
+                       <div class="accordion-item"><button class="accordion-button"><span class="font-medium text-sm">AI Leadership (Charlotte AI)</span><span class="accordion-icon">➔</span></button><div class="accordion-content"><p class="mt-2 text-xs text-slate-500">Leveraging Generative AI for security automation and insights.</p></div></div>
+                       <div class="accordion-item"><button class="accordion-button"><span class="font-medium text-sm">Consolidation Play</span><span class="accordion-icon">➔</span></button><div class="accordion-content"><p class="mt-2 text-xs text-slate-500">Benefiting from market trend of security platform consolidation.</p></div></div>
+                   </div>
+               </div>
+               <div>
+                   <h3 class="text-xl font-semibold text-slate-800 mb-4 text-center">Potential Risks</h3>
+                   <div id="risksAccordion" class="space-y-1">
+                       <div class="accordion-item"><button class="accordion-button"><span class="font-medium text-sm">Intense Competition</span><span class="accordion-icon">➔</span></button><div class="accordion-content"><p class="mt-2 text-xs text-slate-500">From Microsoft, Palo Alto Networks, SentinelOne; pricing pressure from bundles.</p></div></div>
+                       <div class="accordion-item"><button class="accordion-button"><span class="font-medium text-sm">Market Saturation & Execution</span><span class="accordion-icon">➔</span></button><div class="accordion-content"><p class="mt-2 text-xs text-slate-500">Maturing core markets; execution risk in growth and M&A.</p></div></div>
+                       <div class="accordion-item"><button class="accordion-button"><span class="font-medium text-sm">Macroeconomic & Talent</span><span class="accordion-icon">➔</span></button><div class="accordion-content"><p class="mt-2 text-xs text-slate-500">Economic downturns; cybersecurity talent shortage.</p></div></div>
+                       <div class="accordion-item"><button class="accordion-button"><span class="font-medium text-sm">Evolving Threats & Valuation</span><span class="accordion-icon">➔</span></button><div class="accordion-content"><p class="mt-2 text-xs text-slate-500">Continuous adaptation needed; premium stock valuation.</p></div></div>
+                   </div>
+               </div>
+           </div>
+            <div class="mt-8 p-6 bg-red-50 border-l-4 border-red-500 text-red-800 rounded-lg shadow-sm">
+               <p class="font-semibold text-red-700 mb-2 text-lg text-center">Concluding Assessment</p>
+               <p class="text-sm leading-relaxed text-center">CrowdStrike is a leader with robust technology and financials. Navigating intense competition and execution risks will be key to achieving its $10B ARR target and sustaining market dominance.</p>
+           </div>
+       </section>
+   </main>
+
+
+   <footer class="footer">
+       <p class="text-sm">CrowdStrike (CRWD) Interactive Analysis. Data based on public reports up to Q1 FY25.</p>
+       <p class="text-xs mt-1">&copy; <span id="currentYear">2025</span> Interactive Report. For informational purposes only.</p>
+   </footer>
+
+
+<script>
+   const currentYearEl = document.getElementById('currentYear');
+   if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+
+
+   const mainNav = document.querySelector('.sticky-nav');
+   const navButtons = mainNav.querySelectorAll('.nav-button'); /* Changed from SRE's .nav-link to CRWD's .nav-button */
+   const contentSections = document.querySelectorAll('.content-section');
+   let navHeight = mainNav ? mainNav.offsetHeight + 20 : 70;
+
+
+   function changeActiveNavButton() {
+       let index = contentSections.length;
+       while(--index && window.scrollY + navHeight < contentSections[index].offsetTop) {}
+       navButtons.forEach((button) => button.classList.remove('active'));
+       if(navButtons[index]) navButtons[index].classList.add('active');
+   }
+  
+   navButtons.forEach(button => { /* Changed from SRE's anchor logic */
+       button.addEventListener('click', function (e) {
+           e.preventDefault();
+           navButtons.forEach(btn => btn.classList.remove('active'));
+           this.classList.add('active');
+          
+           const targetId = this.getAttribute('data-target');
+           const targetElement = document.getElementById(targetId);
+          
+           if (targetElement) {
+               const targetPosition = targetElement.offsetTop - (mainNav ? mainNav.offsetHeight : 50) + 5; /* Small offset */
+               window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                if (targetId === 'overview' || targetId === 'financials') {
+                   setTimeout(renderAllCharts, 50); // Ensure section is visible before rendering
+               }
+           }
+       });
+   });
+  
+   window.addEventListener('scroll', changeActiveNavButton);
+  
+   const falconModulesData = [
+       { category: 'Endpoint Security', names: 'Falcon Prevent, Falcon Insight, Falcon Device Control', description: 'NGAV, EDR, USB control, host firewall, mobile EDR.' },
+       { category: 'Cloud Security', names: 'Falcon Cloud Workload Protection, Falcon Horizon, Container Security', description: 'Secures cloud workloads (AWS, Azure, GCP), CSPM, container protection.' },
+       { category: 'Threat Intelligence', names: 'Falcon X, Falcon MalQuery, Falcon Sandbox', description: 'Actionable threat intel, malware research, sandboxing.' },
+       { category: 'Identity Protection', names: 'Falcon Identity Threat Detection/Protection', description: 'Detects/prevents identity-driven breaches via anomaly analysis.' },
+       { category: 'Security & IT Operations', names: 'Falcon Discover, Falcon OverWatch, Falcon Spotlight', description: 'Endpoint visibility, 24/7 managed threat hunting, vulnerability management.' },
+       { category: 'Next-Gen SIEM & Log Mgt.', names: 'Falcon LogScale', description: 'Scalable, real-time log management and streaming observability.' },
+       { category: 'Generative AI', names: 'Charlotte AI', description: 'GenAI to augment analysts, automate investigations, natural language queries.' },
+       { category: 'Data Protection', names: 'Falcon Data Protection', description: 'Prevents data exfiltration with visibility/control over sensitive data.' }
+   ];
+
+
+   function populateFalconModules() {
+       const container = document.getElementById('falconModulesContainer');
+       if (!container) return;
+       container.innerHTML = '';
+       falconModulesData.forEach(module => {
+           const itemDiv = document.createElement('div');
+           itemDiv.className = 'accordion-item';
+           itemDiv.innerHTML = `
+               <button class="accordion-button">
+                   <span class="font-medium text-sm">${module.category}</span>
+                   <span class="accordion-icon">➔</span>
+               </button>
+               <div class="accordion-content">
+                   <p class="mt-2 text-xs text-slate-500"><strong class="text-slate-600">Illustrative Modules:</strong> ${module.names}</p>
+                   <p class="mt-1 text-xs text-slate-500"><strong class="text-slate-600">Description:</strong> ${module.description}</p>
+               </div>
+           `;
+           container.appendChild(itemDiv);
+       });
+       setupAccordionListeners('#falconModulesContainer .accordion-button');
+   }
+
+
+   function setupAccordionListeners(selector) {
+       document.querySelectorAll(selector).forEach(button => {
+           button.addEventListener('click', () => {
+               const content = button.nextElementSibling;
+               const icon = button.querySelector('.accordion-icon');
+               const item = button.parentElement; // Get the .accordion-item
+               const isOpen = item.classList.contains('active');
+              
+               // Optional: Close other items in the same accordion group
+               // const parentAccordion = button.closest('.space-y-1'); // Assuming this is the group container
+               // if(parentAccordion) {
+               //     parentAccordion.querySelectorAll('.accordion-item').forEach(otherItem => {
+               //         if(otherItem !== item) {
+               //             otherItem.classList.remove('active');
+               //             otherItem.querySelector('.accordion-content').style.maxHeight = '0px';
+               //             otherItem.querySelector('.accordion-icon').classList.remove('rotate-90');
+               //         }
+               //     });
+               // }
+
+
+               if (isOpen) {
+                   content.style.maxHeight = '0px';
+                   icon.classList.remove('rotate-90');
+                   item.classList.remove('active');
+                   content.classList.remove('open');
+               } else {
+                   content.style.maxHeight = content.scrollHeight + 'px';
+                   icon.classList.add('rotate-90');
+                   item.classList.add('active');
+                   // Add padding after a short delay to allow for transition
+                   setTimeout(() => { content.classList.add('open'); }, 50);
+               }
+           });
+       });
+   }
+  
+   const financialTabButtons = document.querySelectorAll('.financial-tab-button');
+   const financialTabContents = document.querySelectorAll('.financial-tab-content');
+   financialTabButtons.forEach(button => {
+       button.addEventListener('click', () => {
+           financialTabButtons.forEach(btn => btn.classList.remove('active'));
+           button.classList.add('active');
+           const targetId = button.getAttribute('data-tab');
+           financialTabContents.forEach(content => {
+               content.classList.toggle('active', content.id === targetId);
+           });
+           setTimeout(renderAllCharts, 50); // Re-render charts when tab changes
+       });
+   });
+  
+   const financialData = { /* Same as provided CRWD HTML */
+       FY25: { totalRevenue: 3953.6, subscriptionRevenue: 3761.5, professionalServicesRevenue: 192.1, gaapGrossProfit: 2962.1, gaapOpLoss: -120.4, nonGaapOpIncome: 837.7, gaapNetLoss: -19.3, nonGaapNetIncome: 987.6, cash: 3588.1, shortTermInvestments: 736.2, totalAssets: 8701.6, deferredRevenue: 2888.9, totalLiabilities: 5382.7, totalEquity: 3318.9, ocf: 1381.7, fcf: 1068.7, endingArr: 4240 /* Added for charts */ },
+       FY24: { totalRevenue: 3055.6, subscriptionRevenue: 2870.5, professionalServicesRevenue: 185.0, gaapGrossProfit: 2299.8, gaapOpLoss: -2.0, nonGaapOpIncome: 660.3, gaapNetIncome: 89.3, nonGaapNetIncome: 751.8, cash: 2705.3, shortTermInvestments: 436.9, totalAssets: 7000.0, deferredRevenue: 2404.4, totalLiabilities: 4662.9, totalEquity: 2337.1, ocf: 1166.2, fcf: 938.2, endingArr: 3440 },
+       FY23: { totalRevenue: 2241.9, subscriptionRevenue: 2112.3, professionalServicesRevenue: 129.6, gaapGrossProfit: 1672.2, gaapOpLoss: -158.0, nonGaapOpIncome: 355.6, gaapNetLoss: -183.2, nonGaapNetIncome: 368.4, cash: 2710.0, totalAssets: 5831.0, deferredRevenue: 2171.5, totalLiabilities: 3770.2, totalEquity: 2060.8, ocf: 941.0, fcf: 676.8, endingArr: 2560 },
+       FY22: { totalRevenue: 1451.6, nonGaapOpIncome: 126.5, ocf: 574.8, fcf: 441.8, endingArr: 1730 }, /* Added illustrative data */
+       FY21: { totalRevenue: 874.4, nonGaapOpIncome: 30.1, ocf: 346.7, fcf: 292.6, endingArr: 1050 } /* Added illustrative data */
+   };
+   const financialTableMetrics = [ /* Same as provided CRWD HTML */
+       { label: 'Total Revenue', key: 'totalRevenue', unit: 'M' }, { label: 'Subscription Revenue', key: 'subscriptionRevenue', unit: 'M' }, { label: 'GAAP Operating Income (Loss)', key: 'gaapOpLoss', unit: 'M' }, { label: 'Non-GAAP Operating Income', key: 'nonGaapOpIncome', unit: 'M' }, { label: 'GAAP Net Income (Loss)', key: 'gaapNetLoss', altKey: 'gaapNetIncome', unit: 'M' }, { label: 'Non-GAAP Net Income', key: 'nonGaapNetIncome', unit: 'M' }, { label: 'Operating Cash Flow (OCF)', key: 'ocf', unit: 'M' }, { label: 'Free Cash Flow (FCF)', key: 'fcf', unit: 'M' }, { label: 'Cash & Cash Equivalents', key: 'cash', unit: 'M' }, { label: 'Total Assets', key: 'totalAssets', unit: 'M' }, { label: 'Total Deferred Revenue', key: 'deferredRevenue', unit: 'M' }, { label: 'Total Liabilities', key: 'totalLiabilities', unit: 'M' }, { label: 'Total Stockholders\' Equity', key: 'totalEquity', unit: 'M' },
+   ];
+
+
+   function updateFinancialTable(year) { /* Largely same as provided CRWD HTML */
+       const financialTableBody = document.getElementById('financialTableBody');
+       const financialTableYearHeader = document.getElementById('financialTableYearHeader');
+       if (!financialTableYearHeader || !financialTableBody) return;
+       financialTableYearHeader.textContent = year;
+       financialTableBody.innerHTML = '';
+       const dataForYear = financialData[year];
+       if (!dataForYear) { financialTableBody.innerHTML = `<tr><td colspan="2" class="text-center py-4 px-4 text-slate-500">Data not available for ${year}</td></tr>`; return; }
+       financialTableMetrics.forEach(metric => {
+           const row = financialTableBody.insertRow();
+           row.insertCell().textContent = metric.label;
+           const valueCell = row.insertCell();
+           valueCell.className = 'text-right font-medium';
+           let value = dataForYear[metric.key];
+           if (value === undefined && metric.altKey) value = dataForYear[metric.altKey];
+           valueCell.textContent = (value !== undefined && value !== null) ? `${value.toLocaleString()} ${metric.unit || ''}` : 'N/A';
+       });
+   }
+  
+   document.querySelectorAll('.table-button').forEach(button => {
+       button.addEventListener('click', () => {
+           document.querySelectorAll('.table-button').forEach(btn => btn.classList.remove('active'));
+           button.classList.add('active');
+           updateFinancialTable(button.getAttribute('data-year'));
+       });
+   });
+
+
+   let charts = {};
+   function createOrUpdateChart(chartId, chartConfig) { /* Same as provided CRWD HTML */
+       const canvas = document.getElementById(chartId); if (!canvas) return;
+       let parent = canvas.closest('.financial-tab-content');
+       if (parent && !parent.classList.contains('active') && chartId.indexOf('overview') === -1 ) return; // Don't render hidden financial charts
+       const ctx = canvas.getContext('2d');
+       if (charts[chartId]) charts[chartId].destroy();
+       charts[chartId] = new Chart(ctx, chartConfig);
+   }
+
+
+   const commonChartOptions = (legendDisplay = true, titleText = null, yAxisUnit = '$M') => ({ /* SRE Style Tooltips & Colors */
+       responsive: true, maintainAspectRatio: false,
+       scales: {
+           y: { beginAtZero: yAxisUnit.includes('%') ? false : true, ticks: { color: '#475569', font:{size:9}, callback: function(value) { return yAxisUnit.includes('%') ? value + '%' : value.toLocaleString(); } }, grid: { color: '#e2e8f0' } },
+           x: { ticks: { color: '#475569', font:{size:9} }, grid: { display: false } }
+       },
+       plugins: {
+           legend: { display: legendDisplay, position: 'bottom', labels: { color: '#1e293b', font: {size:10}, boxWidth: 10, padding: 10 } },
+           tooltip: {
+               backgroundColor: 'rgba(30, 41, 59, 0.9)', titleColor: '#ffffff', bodyColor: '#ffffff', titleFont: { weight: '600', size: 12, family: 'Inter' }, bodyFont: { size: 10, family: 'Inter' }, padding: 8, cornerRadius: 4, boxPadding:3,
+               callbacks: {
+                   label: function(context) {
+                       let label = context.dataset.label || '';
+                       if (label) label += ': ';
+                       if (context.parsed.y !== null) {
+                           label += context.parsed.y.toLocaleString() + (context.dataset.unitModifier || '');
+                       }
+                       return label;
+                   }
+               }
+           },
+           title: { display: !!titleText, text: titleText, font:{size:12, family:'Inter', weight:'500'}, color:'#334155', padding:{top:0, bottom:8}}
+       },
+       animation: { duration: 600, easing: 'easeOutQuart' }
+   });
+  
+   function renderAllCharts() {
+       const overviewYears = ['FY23', 'FY24', 'FY25'];
+       createOrUpdateChart('overviewRevenueChart', { type: 'line', data: { labels: overviewYears, datasets: [{ label: 'Total Revenue', data: [financialData.FY23.totalRevenue/1000, financialData.FY24.totalRevenue/1000, financialData.FY25.totalRevenue/1000], borderColor: '#dc2626', tension: 0.3, fill: false, pointBackgroundColor: '#dc2626', unitModifier: 'B' }] }, options: commonChartOptions(false, null, '$B') });
+       createOrUpdateChart('overviewArrChart', { type: 'line', data: { labels: overviewYears, datasets: [{ label: 'Ending ARR', data: [financialData.FY23.endingArr/1000, financialData.FY24.endingArr/1000, financialData.FY25.endingArr/1000], borderColor: '#ef4444', tension: 0.3, fill: false, pointBackgroundColor: '#ef4444', unitModifier: 'B' }] }, options: commonChartOptions(false, null, '$B') });
+       createOrUpdateChart('overviewFcfChart', { type: 'line', data: { labels: overviewYears, datasets: [{ label: 'Free Cash Flow', data: [financialData.FY23.fcf/1000, financialData.FY24.fcf/1000, financialData.FY25.fcf/1000], borderColor: '#f87171', tension: 0.3, fill: false, pointBackgroundColor: '#f87171', unitModifier: 'B' }] }, options: commonChartOptions(false, null, '$B') });
+      
+       const financialYearsFull = ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'];
+       createOrUpdateChart('totalRevenueChart', { type: 'bar', data: { labels: financialYearsFull, datasets: [{ label: 'Total Revenue', data: [financialData.FY21.totalRevenue, financialData.FY22.totalRevenue, financialData.FY23.totalRevenue, financialData.FY24.totalRevenue, financialData.FY25.totalRevenue], backgroundColor: '#f87171', borderColor: '#ef4444', borderWidth: 1, borderRadius: 3, unitModifier: 'M' }] }, options: commonChartOptions(true, null, '$M') });
+       createOrUpdateChart('arrChart', { type: 'line', data: { labels: financialYearsFull, datasets: [{ label: 'Ending ARR', data: [financialData.FY21.endingArr, financialData.FY22.endingArr, financialData.FY23.endingArr, financialData.FY24.endingArr, financialData.FY25.endingArr], borderColor: '#dc2626', backgroundColor: 'rgba(220, 38, 38, 0.1)', fill: true, tension: 0.3, pointBackgroundColor: '#dc2626', unitModifier: 'M' }] }, options: commonChartOptions(true, null, '$M') });
+      
+       const opIncomeYears = ['FY23', 'FY24', 'FY25'];
+       createOrUpdateChart('nonGaapOpIncomeChart', { type: 'bar', data: { labels: opIncomeYears, datasets: [{ label: 'Non-GAAP Op. Income', data: [financialData.FY23.nonGaapOpIncome, financialData.FY24.nonGaapOpIncome, financialData.FY25.nonGaapOpIncome], backgroundColor: '#f87171', borderColor: '#ef4444', borderWidth: 1, borderRadius: 3, unitModifier: 'M' }] }, options: commonChartOptions(true, null, '$M') });
+       createOrUpdateChart('nonGaapOpMarginChart', { type: 'line', data: { labels: opIncomeYears, datasets: [{ label: 'Non-GAAP Op. Margin', data: [15.8, 21.6, 21.2], borderColor: '#dc2626', backgroundColor: 'rgba(220, 38, 38, 0.1)', fill: true, tension: 0.3, pointBackgroundColor: '#dc2626', unitModifier: '%' }] }, options: { ...commonChartOptions(true, null, '%'), scales: { y: { ...commonChartOptions(true, null, '%').scales.y, beginAtZero: false, ticks: { callback: function(value) { return value + '%';}}}}} });
+
+
+       createOrUpdateChart('ocfChart', { type: 'bar', data: { labels: opIncomeYears, datasets: [{ label: 'Operating Cash Flow', data: [financialData.FY23.ocf, financialData.FY24.ocf, financialData.FY25.ocf], backgroundColor: '#f87171', borderColor: '#ef4444', borderWidth: 1, borderRadius: 3, unitModifier: 'M' }] }, options: commonChartOptions(true, null, '$M') });
+       createOrUpdateChart('fcfChart', { type: 'bar', data: { labels: opIncomeYears, datasets: [ { label: 'Free Cash Flow', data: [financialData.FY23.fcf, financialData.FY24.fcf, financialData.FY25.fcf], backgroundColor: '#fb923c', borderColor: '#f97316', yAxisID: 'y', unitModifier: 'M' }, { label: 'FCF Margin (%)', data: [30.2, 30.7, 27.0], type: 'line', borderColor: '#dc2626', backgroundColor: 'transparent', yAxisID: 'y1', tension: 0.3, fill:false, pointBackgroundColor: '#dc2626', unitModifier: '%' } ] },
+           options: { ...commonChartOptions(true, null, '$M'), scales: { ...commonChartOptions(true, null, '$M').scales, y1: { type:'linear', display:true, position:'right', grid:{drawOnChartArea:false}, ticks:{color:'#475569', font:{size:9}, callback: function(value) { return value + '%';}}, title:{display:true, text:'FCF Margin (%)', font:{size:10}, color: '#475569'} } } }
+       });
+   }
+
+
+   document.addEventListener('DOMContentLoaded', () => {
+       populateFalconModules();
+       updateFinancialTable('FY25');
+       setupAccordionListeners('#growthDriversAccordion .accordion-button');
+       setupAccordionListeners('#risksAccordion .accordion-button');
+      
+       if (mainNav) navHeight = mainNav.offsetHeight + 20;
+       changeActiveNavButton(); // Initial check
+       setTimeout(renderAllCharts, 50); // Initial render for visible charts
+      
+       const initialNavButton = mainNav.querySelector('.nav-button[data-target="overview"]');
+       if (initialNavButton) {
+           navButtons.forEach(btn => btn.classList.remove('active'));
+           initialNavButton.classList.add('active');
+       }
+   });
+</script>
+</body>
+</html>
+
+
