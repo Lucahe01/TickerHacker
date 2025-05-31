@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palo Alto Networks - Interactive Analysis (GEV/Atlassian Style)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+            color: #262626; /* neutral-800 */
+            line-height: 1.6;
+        }
+        #main-header {
+            background-color: #f5f5f4; /* stone-100 for non-sticky part */
+        }
+        #main-nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: #f5f5f4; /* stone-100 */
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-link {
+            padding: 0.75rem 1rem; /* Adjusted padding slightly */
+            margin-right: 0.25rem;
+            margin-bottom: 0.25rem; 
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500; /* medium */
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border: 1px solid transparent;
+            color: #404040; /* neutral-700 */
+            display: inline-block; 
+        }
+        .nav-link.active {
+            background-color: #059669; /* emerald-600 */
+            color: white;
+            border-color: #059669; /* emerald-600 */
+        }
+        .nav-link:not(.active):hover {
+            background-color: #d1fae5; /* emerald-100 */
+            color: #059669; /* emerald-600 */
+        }
+        .content-section {
+            display: block;
+            background-color: white; 
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); 
+            padding: 1.5rem; /* p-6 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2.5rem; /* mb-10 */
+            scroll-margin-top: 6rem; /* scroll-mt-24 like example, adjust if nav height differs */
+        }
+        .content-section:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .section-title { /* Main title for each section card */
+            font-size: 1.875rem; /* text-3xl */
+            line-height: 2.25rem; 
+            font-weight: 700; /* bold */
+            color: #047857; /* emerald-700 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+        }
+        .subsection-title { /* Sub-headings within sections */
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* semibold */
+            color: #374151; /* gray-700, GEV style often uses neutral/gray for subheads */
+            margin-bottom: 1rem; /* mb-4 */
+            margin-top: 1.5rem; /* mt-6 */
+        }
+        .card-internal { /* For cards within a content-section, if needed, simpler style */
+             background-color: #f9fafb; /* gray-50 */
+             border: 1px solid #e5e7eb; /* gray-200 */
+             padding: 1rem; 
+             border-radius: 0.5rem; /* rounded-lg */
+             box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; 
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; 
+            max-height: 400px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container { height: 400px; }
+        }
+        .tab-button {
+            padding: 0.5rem 1rem; /* px-4 py-2 */
+            font-weight: 500; /* medium */
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.25rem; /* leading-5 */
+            border-radius: 0.375rem; /* rounded-md */
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+        }
+        .tab-button.active {
+            background-color: #059669; /* emerald-600 */
+            color: white;
+        }
+        .tab-button:not(.active) {
+            color: #374151; /* gray-700 */
+            background-color: #e0f2f1; /* emerald-50 slightly darker for inactive */
+        }
+        .tab-button:not(.active):hover {
+            background-color: #d1fae5; /* emerald-100 */
+            color: #047857; /* emerald-700 */
+        }
+        .metric-card-gev { /* Renamed to avoid conflict if old .metric-card styles linger */
+            padding: 1rem; /* p-4 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            text-align: center;
+        }
+        .metric-title-gev {
+             font-size: 1rem; /* text-lg */
+             font-weight: 600; /* semibold */
+             margin-bottom: 0.25rem; /* mb-1 */
+        }
+        .metric-value-gev {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* bold */
+            color: #374151; /* gray-700 */
+        }
+        .table-container { @apply overflow-x-auto bg-white p-4 rounded-lg shadow-md; }
+        .styled-table { @apply min-w-full divide-y divide-slate-200 border border-slate-300; }
+        .styled-table th { @apply px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider bg-emerald-100; }
+        .styled-table td { @apply px-4 py-3 text-sm text-slate-700 whitespace-normal border-b border-slate-200; }
+        .styled-table tbody tr:nth-child(even) { @apply bg-emerald-50; }
+        .styled-table tbody tr:hover { @apply bg-emerald-100; }
+
+        /* Mobile Menu Icon SVG style if needed */
+        .mobile-menu-icon svg { stroke: #374151; /* gray-700 */ }
+        .mobile-menu-icon:hover svg { stroke: #059669; /* emerald-600 */ }
+
+    </style>
+</head>
+<body class="bg-stone-100 text-neutral-800 antialiased">
+    
+    <div id="main-header" class="container mx-auto p-4 sm:p-6 lg:p-8 text-center">
+        <h1 class="text-4xl font-bold text-emerald-700 mb-1">Palo Alto Networks (PANW)</h1>
+        <p class="text-xl text-neutral-600">An Interactive Business Analysis</p>
+    </div>
+
+    <nav id="main-nav-container">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-center md:justify-between">
+            <div class="hidden md:flex flex-wrap justify-center items-center">
+                <a href="#overview" class="nav-link active">Overview</a>
+                <a href="#business-model" class="nav-link">Business Model</a>
+                <a href="#financials" class="nav-link">Financials</a>
+                <a href="#competition" class="nav-link">Competition</a>
+                <a href="#strategy" class="nav-link">Strategy</a>
+            </div>
+             <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="mobile-menu-icon inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-emerald-700 hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                    <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg mx-4 rounded-md">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#overview" class="nav-link block text-center">Overview</a>
+                <a href="#business-model" class="nav-link block text-center">Business Model</a>
+                <a href="#financials" class="nav-link block text-center">Financials</a>
+                <a href="#competition" class="nav-link block text-center">Competition</a>
+                <a href="#strategy" class="nav-link block text-center">Strategy</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <section id="overview" class="content-section">
+            <h2 class="section-title">Company Overview</h2>
+            <p class="mb-6 text-neutral-700 leading-relaxed">
+                Palo Alto Networks (PANW) stands as a formidable leader in the global cybersecurity market. This interactive analysis explores PANW's navigation of the dynamic threat landscape through continuous innovation and a strategic shift towards a platform-centric, recurring revenue model. Serving a vast customer base, including over 85 of the Fortune 100 companies, PANW offers a comprehensive suite of AI-powered security solutions spanning network security, cloud security, and security operations. We will delve into its business model, financial performance, competitive positioning, and strategic outlook.
+            </p>
+            <div class="grid md:grid-cols-3 gap-6 mb-6">
+                <div class="metric-card-gev bg-emerald-50">
+                    <h3 class="metric-title-gev text-emerald-700">Fortune 100 Customers</h3>
+                    <p class="metric-value-gev">85+</p>
+                </div>
+                <div class="metric-card-gev bg-sky-50">
+                     <h3 class="metric-title-gev text-sky-700">Revenue from Subs. & Support</h3>
+                    <p class="metric-value-gev">>80%</p>
+                </div>
+                <div class="metric-card-gev bg-amber-50">
+                    <h3 class="metric-title-gev text-amber-700">FY2024 Revenue</h3>
+                    <p class="metric-value-gev">$8.03B</p>
+                </div>
+            </div>
+             <div class="card-internal">
+                <h3 class="subsection-title text-center">Strategic Focus: Platformization & AI</h3>
+                <p class="text-neutral-600 mb-3 leading-relaxed">
+                    PANW's core strategy is "platformization," aiming to simplify enterprise security by consolidating numerous point products into an integrated, AI-powered ecosystem. This approach spans network security, cloud security, and security operations. This platform-centric approach is designed to simplify complex security architectures for enterprises.
+                </p>
+                <p class="text-neutral-600 leading-relaxed">
+                    A significant investment in Artificial Intelligence and Machine Learning (AI/ML) underpins PANW's offerings. In 2023 alone, the company deployed 145 distinct machine learning models, which collectively process over 1.2 petabytes of security data on a daily basis. This AI focus is instrumental in delivering advanced threat detection and automated response mechanisms.
+                </p>
+            </div>
+        </section>
+
+        <section id="business-model" class="content-section">
+            <h2 class="section-title">Business Model</h2>
+            <p class="mb-6 text-neutral-700 leading-relaxed">
+                Palo Alto Networks operates through distinct business segments, each targeting critical areas of cybersecurity. Its revenue model has increasingly shifted towards subscriptions, reflecting a move to more predictable income streams and aligning with its platformization strategy.
+            </p>
+
+            <h3 class="subsection-title text-center">Core Business Segments</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="card-internal">
+                    <h4 class="text-lg font-semibold text-emerald-700 mb-2">Network Security (Strata)</h4>
+                    <p class="text-sm text-neutral-600">Encompasses ML-Powered Next-Generation Firewalls (NGFWs), PAN-OS®, SASE solutions, and cloud-delivered security services. Serves over 85,000 enterprise customers.</p>
+                </div>
+                <div class="card-internal">
+                    <h4 class="text-lg font-semibold text-sky-700 mb-2">Cloud Security (Prisma)</h4>
+                    <p class="text-sm text-neutral-600">Focuses on cloud-native security (Prisma Cloud CNAPP), VM-Series/CN-Series firewalls. Protects 65% of Fortune 500 cloud environments.</p>
+                </div>
+                <div class="card-internal">
+                    <h4 class="text-lg font-semibold text-amber-700 mb-2">Security Operations (Cortex)</h4>
+                    <p class="text-sm text-neutral-600">AI-driven security automation (XSIAM), EDR (XDR), SOAR (XSOAR), and attack surface management (Xpanse). Enhanced by QRadar acquisition.</p>
+                </div>
+                <div class="card-internal">
+                    <h4 class="text-lg font-semibold text-indigo-700 mb-2">Threat Intelligence (Unit 42)</h4>
+                    <p class="text-sm text-neutral-600">Threat research, analysis, incident response, and proactive security consulting services.</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title text-center">Revenue Generation & Mix</h3>
+             <p class="text-neutral-700 mb-4 text-center leading-relaxed">
+                PANW generates revenue through Product sales, Subscriptions, and Support services. Subscriptions are now the dominant revenue source.
+            </p>
+            <div class="mb-8">
+                <div class="chart-container mx-auto">
+                    <canvas id="revenueMixStackedBarChart"></canvas>
+                </div>
+                <p class="text-center text-xs text-neutral-500 mt-2">Revenue Mix (% of Total Revenue) - FY2022-FY2024</p>
+            </div>
+
+            <h3 class="subsection-title text-center">Product Development, Production & Delivery</h3>
+             <div class="grid md:grid-cols-2 gap-4">
+                <div class="card-internal">
+                    <h4 class="text-md font-semibold text-neutral-700 mb-2">💡 Innovation & R&D</h4>
+                    <p class="text-sm text-neutral-600">Strong R&D (Cortex XSIAM, PAN-OS 11.0). AI/ML central (145 models, 1.2PB data/day). Strategic acquisitions (Cider Security).</p>
+                </div>
+                 <div class="card-internal">
+                    <h4 class="text-md font-semibold text-neutral-700 mb-2">🏭 Manufacturing & Supply Chain</h4>
+                    <p class="text-sm text-neutral-600">Hardware manufacturing outsourced (Flex). Components sourced globally. Risk: supply chain disruptions.</p>
+                </div>
+                <div class="card-internal">
+                    <h4 class="text-md font-semibold text-neutral-700 mb-2">📈 Go-to-Market</h4>
+                    <p class="text-sm text-neutral-600">Digital marketing, direct sales, 6,800+ channel partners (42% of revenue). S&M $2.17B FY23.</p>
+                </div>
+                 <div class="card-internal">
+                    <h4 class="text-md font-semibold text-neutral-700 mb-2">🤝 Customer Support & Talent</h4>
+                    <p class="text-sm text-neutral-600">Global support tiers, online knowledge base. 9,840+ employees (FY23), $480M talent investment.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="content-section">
+            <h2 class="section-title">Financial Performance & Trends</h2>
+            <p class="mb-6 text-neutral-700 leading-relaxed">
+                Palo Alto Networks has shown strong revenue growth and a significant shift towards sustained GAAP profitability. This section visualizes key financial trends and metrics.
+            </p>
+
+            <div class="mb-8">
+                <div class="flex flex-wrap justify-center gap-1 rounded-lg bg-emerald-50 p-1" role="tablist" aria-orientation="horizontal">
+                    <button id="tab-revenue" role="tab" class="tab-button active" aria-selected="true" data-tab-content="content-revenue">Revenue</button>
+                    <button id="tab-profitability" role="tab" class="tab-button" aria-selected="false" data-tab-content="content-profitability">Profitability</button>
+                    <button id="tab-cashflow" role="tab" class="tab-button" aria-selected="false" data-tab-content="content-cashflow">Cash Flow & ROIC</button>
+                    <button id="tab-keymetrics" role="tab" class="tab-button" aria-selected="false" data-tab-content="content-keymetrics">Key Metrics</button>
+                </div>
+            </div>
+
+            <div id="content-revenue" role="tabpanel">
+                <h3 class="subsection-title text-center">Revenue Trends</h3>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="card-internal">
+                        <div class="chart-container">
+                            <canvas id="totalRevenueChart"></canvas>
+                        </div>
+                        <p class="text-center text-xs text-neutral-500 mt-2">Total Revenue Growth (FY2021-FY2024)</p>
+                    </div>
+                    <div class="card-internal">
+                         <div class="chart-container">
+                            <canvas id="revenueBySegmentChart"></canvas>
+                        </div>
+                        <p class="text-center text-xs text-neutral-500 mt-2">Revenue by Segment ($M) (FY2021-FY2024)</p>
+                    </div>
+                </div>
+                 <div class="card-internal">
+                    <div class="chart-container" style="max-width: 700px;">
+                        <canvas id="revenueByRegionChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-neutral-500 mt-2">Revenue by Geographic Region ($M) (FY2021-FY2024)</p>
+                </div>
+                <p class="text-neutral-600 mt-4 leading-relaxed text-sm">PANW's revenue reached $8.03B in FY24. Subscription revenue leads growth. Americas is the largest market; EMEA and APAC show consistent expansion.</p>
+            </div>
+
+            <div id="content-profitability" role="tabpanel" class="hidden">
+                <h3 class="subsection-title text-center">Profitability Analysis</h3>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="card-internal">
+                        <div class="chart-container">
+                            <canvas id="profitMarginsChart"></canvas>
+                        </div>
+                        <p class="text-center text-xs text-neutral-500 mt-2">Profit Margins (%) (FY2021-FY2023, Q3 FY25)</p>
+                    </div>
+                    <div class="card-internal">
+                        <div class="chart-container">
+                            <canvas id="ebitdaChart"></canvas>
+                        </div>
+                         <p class="text-center text-xs text-neutral-500 mt-2">EBITDA ($M) and EBITDA Margin (%) (FY2021-FY2023)</p>
+                    </div>
+                </div>
+                <p class="text-neutral-600 mt-4 leading-relaxed text-sm">Sustained GAAP profitability from FY23. Q3 FY25: Op. Margin 9.6%, Net Margin 11.4%. EBITDA improving. Gross margins healthy, recent cloud cost pressures noted.</p>
+            </div>
+
+            <div id="content-cashflow" role="tabpanel" class="hidden">
+                <h3 class="subsection-title text-center">Cash Flow & Return on Invested Capital</h3>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="card-internal">
+                        <div class="chart-container">
+                            <canvas id="operatingCashFlowChart"></canvas>
+                        </div>
+                        <p class="text-center text-xs text-neutral-500 mt-2">Operating Cash Flow ($B) (FY2021-FY2023)</p>
+                    </div>
+                     <div class="card-internal">
+                        <div class="chart-container">
+                            <canvas id="roicChart"></canvas>
+                        </div>
+                        <p class="text-center text-xs text-neutral-500 mt-2">Return on Invested Capital (ROIC) (%) (FY2020-FY2024)</p>
+                    </div>
+                </div>
+                <p class="text-neutral-600 mt-4 leading-relaxed text-sm">Operating Cash Flow strong ($2.78B FY23). ROIC turned positive and improved significantly in FY23 (7.4%) and FY24 (13.1%), indicating effective capital use.</p>
+            </div>
+
+            <div id="content-keymetrics" role="tabpanel" class="hidden">
+                <h3 class="subsection-title text-center">Key Operational & Balance Sheet Metrics</h3>
+                 <p class="text-neutral-700 mb-4 text-sm text-center">Metrics like NGS ARR and RPO indicate future revenue visibility.</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="metric-card-gev bg-emerald-50"><h3 class="metric-title-gev text-emerald-700">NGS ARR</h3><p class="metric-value-gev">$5.1B</p><p class="text-xs text-neutral-500">(Apr 2025)</p></div>
+                    <div class="metric-card-gev bg-sky-50"><h3 class="metric-title-gev text-sky-700">Total RPO</h3><p class="metric-value-gev">$13.5B</p><p class="text-xs text-neutral-500">(Apr 2025)</p></div>
+                    <div class="metric-card-gev bg-amber-50"><h3 class="metric-title-gev text-amber-700">Cash & ST Inv.</h3><p class="metric-value-gev">$3.3B</p><p class="text-xs text-neutral-500">(Apr 2025)</p></div>
+                    <div class="metric-card-gev bg-indigo-50"><h3 class="metric-title-gev text-indigo-700">Stockholders' Equity</h3><p class="metric-value-gev">$7.2B</p><p class="text-xs text-neutral-500">(Apr 2025)</p></div>
+                </div>
+                <p class="text-neutral-600 mt-4 leading-relaxed text-sm">Strong NGS ARR and RPO signal robust customer commitment. Balance sheet strengthened with growing cash, reduced debt, and increased equity.</p>
+            </div>
+        </section>
+
+        <section id="competition" class="content-section">
+            <h2 class="section-title">Competitive Landscape</h2>
+            <p class="mb-6 text-neutral-700 leading-relaxed">
+                The cybersecurity market is intensely competitive, with key trends including cloud security, AI/ML integration, SASE, XDR, and platform consolidation. PANW competes against several major players.
+            </p>
+            <h3 class="subsection-title text-center">Key Competitors</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="card-internal"><h4 class="text-md font-semibold text-neutral-700 mb-1">Fortinet (FTNT)</h4><p class="text-xs text-neutral-600">"Security Fabric," strong in NGFW, SASE/SecOps. FY24 Rev: $5.96B.</p></div>
+                <div class="card-internal"><h4 class="text-md font-semibold text-neutral-700 mb-1">Cisco Systems (CSCO)</h4><p class="text-xs text-neutral-600">Networking dominance, recurring revenue shift. Security growth 54% YoY (Q3 FY25).</p></div>
+                <div class="card-internal"><h4 class="text-md font-semibold text-neutral-700 mb-1">CrowdStrike (CRWD)</h4><p class="text-xs text-neutral-600">Cloud-native EPP/EDR (Falcon), SaaS. FY25 Rev: $3.95B, ARR $4.24B.</p></div>
+                <div class="card-internal"><h4 class="text-md font-semibold text-neutral-700 mb-1">Microsoft (MSFT)</h4><p class="text-xs text-neutral-600">Security portfolio integrated with Azure/M365. >$20B annual sales (2022).</p></div>
+            </div>
+            
+            <h3 class="subsection-title text-center">Comparative Analysis: PANW vs. Key Competitors</h3>
+            <div class="table-container mb-6">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Palo Alto Networks (PANW)</th>
+                            <th>Fortinet (FTNT)</th>
+                            <th>Cisco Security (CSCO)</th>
+                            <th>CrowdStrike (CRWD)</th>
+                            <th>Microsoft Security (MSFT)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Primary Focus</strong></td><td>Integrated AI Platform (Net, Cloud, SecOps)</td><td>Security Fabric (NGFW, SASE)</td><td>Network-embedded, Splunk AI</td><td>Cloud-native EDR/XDR (SaaS)</td><td>Ecosystem Integrated (Azure, M365)</td></tr>
+                        <tr><td><strong>Revenue Drivers</strong></td><td>Subscriptions (Cloud, SecOps, SASE)</td><td>Product (FortiGate), Subscriptions</td><td>Recurring Software (Splunk, AI)</td><td>SaaS Subscriptions (Falcon)</td><td>Enterprise Agreements, Cloud</td></tr>
+                        <tr><td><strong>Recent Growth (Sec/Total)</strong></td><td>~15% YoY (Q3 FY25 Total)</td><td>12% YoY (FY24 Total)</td><td>54% YoY (Q3 FY25 Security)</td><td>29% YoY (FY25 Total)</td><td>>$20B (2022 Security Sales)</td></tr>
+                        <tr><td><strong>GAAP Op. Margin</strong></td><td>9.6% (Q3 FY25)</td><td>30% (FY24)</td><td>Highly Profitable (Total)</td><td>Op. Loss (FY25 GAAP)</td><td>Highly Profitable (Total)</td></tr>
+                        <tr><td><strong>Key Strength</strong></td><td>Integrated Hybrid Platform</td><td>HW Performance, Fabric</td><td>Network Integration, Splunk</td><td>Cloud EDR/XDR, SaaS</td><td>Ecosystem, Scale, AI</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="subsection-title text-center">PANW's Differentiating Factors</h3>
+            <div class="card-internal mb-4">
+                 <ul class="list-disc list-inside text-neutral-600 space-y-1 text-sm">
+                    <li><strong>Comprehensive Integrated Platform:</strong> Spanning network, cloud, and SecOps, unified by AI. Addresses hybrid environments holistically.</li>
+                    <li><strong>Deep AI/ML Integration:</strong> Embedded across all platforms for advanced threat detection, automation, and predictive analytics (e.g., 72% reduction in manual intervention).</li>
+                    <li><strong>Successful Revenue Model Shift:</strong> Transitioned to >80% revenue from subscriptions and support. Hybrid GTM with strong direct sales and channel partners.</li>
+                 </ul>
+            </div>
+        </section>
+
+        <section id="strategy" class="content-section">
+            <h2 class="section-title">Strategic Outlook</h2>
+            <p class="mb-6 text-neutral-700 leading-relaxed">
+                Palo Alto Networks is positioned to leverage several growth drivers, but also faces notable risks and challenges in the dynamic cybersecurity landscape. Its "triple play" capability offers a significant competitive advantage.
+            </p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card-internal">
+                    <h3 class="subsection-title">Growth Drivers & Opportunities</h3>
+                    <ul class="list-disc list-inside text-neutral-600 space-y-1 text-sm">
+                        <li>Platform Adoption (NGS ARR $5.1B, RPO $13.5B).</li>
+                        <li>Cloud Security Expansion (Prisma Cloud).</li>
+                        <li>AI-driven SecOps Transformation (Cortex XSIAM).</li>
+                        <li>SASE Market Growth (Prisma Access & SD-WAN).</li>
+                        <li>International Expansion.</li>
+                        <li>Upselling/Cross-selling to 85,000+ customers.</li>
+                    </ul>
+                </div>
+                <div class="card-internal">
+                    <h3 class="subsection-title">Potential Risks & Challenges</h3>
+                     <ul class="list-disc list-inside text-neutral-600 space-y-1 text-sm">
+                        <li>Intense Competition.</li>
+                        <li>Platform Execution Risk & Integration.</li>
+                        <li>Sustaining High Growth.</li>
+                        <li>Macroeconomic Headwinds.</li>
+                        <li>Supply Chain Disruptions.</li>
+                        <li>Talent Acquisition/Retention.</li>
+                    </ul>
+                </div>
+            </div>
+             <div class="card-internal mt-6">
+                <h3 class="subsection-title text-center">Concluding Remarks</h3>
+                <p class="text-neutral-600 mb-3 text-sm leading-relaxed">PANW has successfully transitioned to a recurring revenue model and platform-centric strategy, positioning it as a leader in cloud security, AI-driven SecOps, and SASE. Sustained GAAP profitability is key.</p>
+                <p class="text-neutral-600 text-sm leading-relaxed">Future success hinges on continued innovation (AI/cloud), effective platform execution, international market penetration, and capitalizing on the evolving threat landscape. Balancing growth investments and margin expansion will be critical.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-neutral-700 text-neutral-300 py-8 mt-12"> <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Interactive Analysis. Data derived from public information about Palo Alto Networks.</p>
+            <p class="text-xs mt-1">This is a conceptual application for information exploration purposes.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mainNavContainer = document.getElementById('main-nav-container');
+        let navHeight = mainNavContainer ? mainNavContainer.offsetHeight : 70; 
+
+        mobileMenuButton.addEventListener('click', () => {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuButton.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                navHeight = mainNavContainer ? mainNavContainer.offsetHeight : 70; 
+                const targetSection = document.querySelector(this.getAttribute('href'));
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - navHeight +1, // +1 for slight visual adjustment
+                        behavior: 'smooth'
+                    });
+                }
+                document.querySelectorAll('#main-nav-container a.nav-link, #mobile-menu a.nav-link').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                // Add active to clicked link in main nav (if it's there)
+                const mainNavLink = document.querySelector(`#main-nav-container a.nav-link[href="${this.getAttribute('href')}"]`);
+                if (mainNavLink) mainNavLink.classList.add('active');
+                // Add active to clicked link in mobile nav (if it's there)
+                const mobileNavLink = document.querySelector(`#mobile-menu a.nav-link[href="${this.getAttribute('href')}"]`);
+                if (mobileNavLink) mobileNavLink.classList.add('active');
+                
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenuButton.click(); // Close mobile menu
+                }
+            });
+        });
+        
+        const sections = document.querySelectorAll('section.content-section');
+        const desktopNavLinks = document.querySelectorAll('#main-nav-container a.nav-link');
+        const mobileNavLinks = document.querySelectorAll('#mobile-menu a.nav-link');
+
+        window.onscroll = () => {
+            navHeight = mainNavContainer ? mainNavContainer.offsetHeight : 70; 
+            let currentSectionId = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - navHeight - 5) { // 5px tolerance
+                    currentSectionId = section.getAttribute('id');
+                }
+            });
+
+            [...desktopNavLinks, ...mobileNavLinks].forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') && link.getAttribute('href').substring(1) === currentSectionId) {
+                    link.classList.add('active');
+                }
+            });
+             // Default to overview if at top or no section matches
+            if (!currentSectionId && window.pageYOffset < (sections[0] ? sections[0].offsetTop - navHeight : 0)) {
+                 document.querySelectorAll('#main-nav-container a.nav-link[href="#overview"], #mobile-menu a.nav-link[href="#overview"]').forEach(l => l.classList.add('active'));
+            }
+        };
+
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('[role="tabpanel"]');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active', 'bg-emerald-600', 'text-white');
+                    btn.classList.add('text-gray-700', 'bg-emerald-50', 'hover:bg-emerald-100', 'hover:text-emerald-700');
+                    btn.setAttribute('aria-selected', 'false');
+                });
+                button.classList.add('active', 'bg-emerald-600', 'text-white');
+                button.classList.remove('text-gray-700', 'bg-emerald-50', 'hover:bg-emerald-100', 'hover:text-emerald-700');
+                button.setAttribute('aria-selected', 'true');
+                const targetContentId = button.getAttribute('data-tab-content');
+                tabContents.forEach(content => {
+                    content.id === targetContentId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+        
+        const chartPrimaryFontColor = '#262626'; // neutral-800 (GEV Atlassian example legend text color)
+        const chartSecondaryFontColor = '#525252'; // neutral-600 (GEV Atlassian example tick color)
+        const chartGridColor = '#e5e5e5'; // neutral-300 (GEV Atlassian example grid color)
+        const chartTitleFontSize = 16; // Match PANW previous
+
+        const gevDefaultChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { 
+                    beginAtZero: false, 
+                    ticks: { color: chartSecondaryFontColor, font: {size: 11} },
+                    grid: { color: chartGridColor, drawBorder: false }
+                },
+                x: { 
+                    ticks: { color: chartSecondaryFontColor, font: {size: 11} },
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                legend: { 
+                    position: 'bottom', // GEV typically top or bottom
+                    labels: { color: chartPrimaryFontColor, font: {size: 12}, padding: 15 }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.85)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    titleFont: { size: 13, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    padding: 10,
+                    cornerRadius: 4,
+                    displayColors: true,
+                    boxPadding: 3
+                }
+            },
+            animation: {
+                duration: 800, // slightly faster
+                easing: 'easeInOutQuart'
+            }
+        };
+        
+        // Revenue Mix Stacked Bar Chart (Percentages)
+        const revenueMixStackedBarCtx = document.getElementById('revenueMixStackedBarChart').getContext('2d');
+        new Chart(revenueMixStackedBarCtx, {
+            type: 'bar',
+            data: {
+                labels: ['FY2022', 'FY2023', 'FY2024'],
+                datasets: [
+                    { label: 'Product Revenue (%)', data: [24.78, 22.9, 19.97], backgroundColor: 'rgba(16, 185, 129, 0.7)'}, // emerald
+                    { label: 'Subscription Revenue (%)', data: [46.15, 48.39, 52.18], backgroundColor: 'rgba(6, 182, 212, 0.7)'}, // cyan
+                    { label: 'Support Revenue (%)', data: [29.07, 28.71, 27.85], backgroundColor: 'rgba(99, 102, 241, 0.7)'} // indigo
+                ]
+            },
+            options: { 
+                ...JSON.parse(JSON.stringify(gevDefaultChartOptions)),
+                plugins: { ...gevDefaultChartOptions.plugins, title: { display: true, text: 'Revenue Mix (% of Total Revenue)', font: { size: chartTitleFontSize }, color: chartPrimaryFontColor, padding: {bottom: 10} }, tooltip: { ...gevDefaultChartOptions.plugins.tooltip, callbacks: { label: context => `${context.dataset.label}: ${context.raw.toFixed(2)}%` }}},
+                scales: { ...gevDefaultChartOptions.scales, x: { ...gevDefaultChartOptions.scales.x, stacked: true }, y: { ...gevDefaultChartOptions.scales.y, stacked: true, max: 100, title: { display: true, text: '% of Total Revenue', color: chartSecondaryFontColor, font: { size: 12, weight: '500' } }, ticks: { ...gevDefaultChartOptions.scales.y.ticks, callback: value => `${value}%` }}}
+            }
+        });
+        
+        const totalRevenueCtx = document.getElementById('totalRevenueChart').getContext('2d');
+        new Chart(totalRevenueCtx, {
+            type: 'bar',
+            data: { labels: ['FY2021', 'FY2022', 'FY2023', 'FY2024'], datasets: [{ label: 'Total Revenue ($B)', data: [4.29, 5.50, 6.89, 8.03], backgroundColor: 'rgba(6, 182, 212, 0.7)', borderColor: 'rgb(6, 182, 212)', borderWidth: 1 }]}, // cyan
+            options: { ...JSON.parse(JSON.stringify(gevDefaultChartOptions)), plugins: { ...gevDefaultChartOptions.plugins, title: { display: true, text: 'Total Revenue Growth', font: { size: chartTitleFontSize }, color: chartPrimaryFontColor, padding: {bottom: 10} }, tooltip: { ...gevDefaultChartOptions.plugins.tooltip, callbacks: { label: context => `${context.dataset.label}: $${context.raw.toFixed(2)}B` }}, legend: { display: false }}, scales: { ...gevDefaultChartOptions.scales, y: { ...gevDefaultChartOptions.scales.y, beginAtZero: true, title: { display: true, text: 'Revenue ($B)', color: chartSecondaryFontColor, font: { size: 12, weight: '500' }}}}}
+        });
+
+        const revenueBySegmentCtx = document.getElementById('revenueBySegmentChart').getContext('2d');
+        new Chart(revenueBySegmentCtx, {
+            type: 'line',
+            data: { labels: ['FY2021', 'FY2022', 'FY2023', 'FY2024'], datasets: [
+                    { label: 'Product Revenue ($M)', data: [1120.0, 1360.0, 1580.0, 1600.0], borderColor: 'rgb(219, 39, 119)', backgroundColor: 'rgba(219, 39, 119, 0.1)', tension: 0.2, fill: false, pointRadius: 3, pointBackgroundColor: 'rgb(219, 39, 119)' }, // fuchsia
+                    { label: 'Subscription Revenue ($M)', data: [1900.0, 2540.0, 3340.0, 4190.0], borderColor: 'rgb(6, 182, 212)', backgroundColor: 'rgba(6, 182, 212, 0.1)', tension: 0.2, fill: false, pointRadius: 3, pointBackgroundColor: 'rgb(6, 182, 212)'  }, // cyan
+                    { label: 'Support Revenue ($M)', data: [1240.0, 1600.0, 1980.0, 2240.0], borderColor: 'rgb(245, 158, 11)', backgroundColor: 'rgba(245, 158, 11, 0.1)', tension: 0.2, fill: false, pointRadius: 3, pointBackgroundColor: 'rgb(245, 158, 11)' } // amber
+            ]},
+            options: { ...JSON.parse(JSON.stringify(gevDefaultChartOptions)), plugins: { ...gevDefaultChartOptions.plugins, title: { display: true, text: 'Revenue by Segment ($M)', font: { size: chartTitleFontSize }, color: chartPrimaryFontColor, padding: {bottom: 10} }, tooltip: { ...gevDefaultChartOptions.plugins.tooltip, callbacks: { label: context => `${context.dataset.label}: $${context.raw.toLocaleString()}M` }}}, scales: { ...gevDefaultChartOptions.scales, y: { ...gevDefaultChartOptions.scales.y, beginAtZero: false, title: { display: true, text: 'Revenue ($M)', color: chartSecondaryFontColor, font: { size: 12, weight: '500' } }, ticks: { ...gevDefaultChartOptions.scales.y.ticks, callback: value => value.toLocaleString() }}}}
+        });
+        
+        const revenueByRegionCtx = document.getElementById('revenueByRegionChart').getContext('2d');
+        new Chart(revenueByRegionCtx, {
+            type: 'bar',
+            data: { labels: ['FY2021', 'FY2022', 'FY2023', 'FY2024'], datasets: [
+                    { label: 'Americas ($M)', data: [2940.0, 3792.6, 4719.9, 5480.0], backgroundColor: 'rgba(16, 185, 129, 0.7)' }, // emerald
+                    { label: 'EMEA ($M)', data: [817.3, 1055.8, 1359.6, 1600.0], backgroundColor: 'rgba(6, 182, 212, 0.7)' }, // cyan
+                    { label: 'APAC ($M)', data: [501.3, 643.1, 813.2, 942.6], backgroundColor: 'rgba(99, 102, 241, 0.7)' } // indigo
+            ]},
+            options: { ...JSON.parse(JSON.stringify(gevDefaultChartOptions)), plugins: { ...gevDefaultChartOptions.plugins, title: { display: true, text: 'Revenue by Geographic Region ($M)', font: { size: chartTitleFontSize }, color: chartPrimaryFontColor, padding: {bottom: 10} }, tooltip: { ...gevDefaultChartOptions.plugins.tooltip, callbacks: { label: context => `${context.dataset.label}: $${context.raw.toLocaleString()}M` }}}, scales: { ...gevDefaultChartOptions.scales, x: { ...gevDefaultChartOptions.scales.x, stacked: true}, y: { ...gevDefaultChartOptions.scales.y, beginAtZero: true, stacked: true, title: { display: true, text: 'Revenue ($M)', color: chartSecondaryFontColor, font: { size: 12, weight: '500' } }, ticks: { ...gevDefaultChartOptions.scales.y.ticks, callback: value => value.toLocaleString() }}}}
+        });
+
+        const profitMarginsCtx = document.getElementById('profitMarginsChart').getContext('2d');
+        new Chart(profitMarginsCtx, {
+            type: 'line',
+            data: { labels: ['FY2021', 'FY2022', 'FY2023', 'Q3 FY25'], datasets: [
+                    { label: 'Gross Margin (%)', data: [70.1, 68.8, 72.3, 72.9], borderColor: 'rgb(16, 185, 129)', tension: 0.2, fill: false, pointRadius: 3, pointBackgroundColor: 'rgb(16, 185, 129)' }, // emerald
+                    { label: 'Operating Margin (%)', data: [-3.3, -3.4, 5.6, 9.6], borderColor: 'rgb(6, 182, 212)', tension: 0.2, fill: false, pointRadius: 3, pointBackgroundColor: 'rgb(6, 182, 212)' }, // cyan
+                    { label: 'Net Profit Margin (%)', data: [-11.6, -4.8, 6.4, 11.4], borderColor: 'rgb(99, 102, 241)', tension: 0.2, fill: false, pointRadius: 3, pointBackgroundColor: 'rgb(99, 102, 241)' } // indigo
+            ]},
+            options: { ...JSON.parse(JSON.stringify(gevDefaultChartOptions)), plugins: { ...gevDefaultChartOptions.plugins, title: { display: true, text: 'Profitability Margins (%)', font: { size: chartTitleFontSize }, color: chartPrimaryFontColor, padding: {bottom: 10} }, tooltip: { ...gevDefaultChartOptions.plugins.tooltip, callbacks: { label: context => `${context.dataset.label}: ${context.raw.toFixed(1)}%` }}}, scales: { ...gevDefaultChartOptions.scales, y: { ...gevDefaultChartOptions.scales.y, title: { display: true, text: 'Margin (%)', color: chartSecondaryFontColor, font: { size: 12, weight: '500' } }, ticks: { ...gevDefaultChartOptions.scales.y.ticks, callback: value => `${value.toFixed(1)}%` }}}}
+        });
+
+        const ebitdaCtx = document.getElementById('ebitdaChart').getContext('2d');
+        new Chart(ebitdaCtx, {
+            type: 'bar',
+            data: { labels: ['FY2021', 'FY2022', 'FY2023'], datasets: [
+                    { label: 'EBITDA ($M)', data: [240.7, 205.0, 755.2], backgroundColor: 'rgba(16, 185, 129, 0.7)', yAxisID: 'y-ebitda' }, // emerald
+                    { label: 'EBITDA Margin (%)', data: [5.6, 3.7, 11.0], type: 'line', borderColor: 'rgb(6, 182, 212)', yAxisID: 'y-margin', tension: 0.2, fill: false, pointRadius: 3, pointBackgroundColor: 'rgb(6, 182, 212)' } // cyan line
+            ]},
+            options: { ...JSON.parse(JSON.stringify(gevDefaultChartOptions)), plugins: { ...gevDefaultChartOptions.plugins, title: { display: true, text: 'EBITDA ($M) & EBITDA Margin (%)', font: { size: chartTitleFontSize }, color: chartPrimaryFontColor, padding: {bottom: 10} }, tooltip: { ...gevDefaultChartOptions.plugins.tooltip, callbacks: { label: function(context) { let label = context.dataset.label || ''; if (label) { label += ': '; } if (context.dataset.yAxisID === 'y-ebitda') { label += `$${context.raw.toLocaleString()}M`; } else { label += `${context.raw.toFixed(1)}%`; } return label; }}}}, 
+                scales: { ...gevDefaultChartOptions.scales, 
+                    'y-ebitda': { type: 'linear', position: 'left', title: { display: true, text: 'EBITDA ($M)', color: chartSecondaryFontColor, font: { size: 12, weight: '500' } }, ticks: { color: chartSecondaryFontColor, callback: value => `$${value.toLocaleString()}M` }, grid: { color: chartGridColor } },
+                    'y-margin': { type: 'linear', position: 'right', title: { display: true, text: 'EBITDA Margin (%)', color: chartSecondaryFontColor, font: { size: 12, weight: '500' } }, ticks: { color: chartSecondaryFontColor, callback: value => `${value.toFixed(1)}%` }, grid: { drawOnChartArea: false } },
+                    x: { ...gevDefaultChartOptions.scales.x }
+                }
+            }
+        });
+        
+        const ocfCtx = document.getElementById('operatingCashFlowChart').getContext('2d');
+        new Chart(ocfCtx, {
+            type: 'line',
+            data: { labels: ['FY2021', 'FY2022', 'FY2023'], datasets: [{ label: 'Operating Cash Flow ($B)', data: [1.507, 1.985, 2.778], borderColor: 'rgb(16, 185, 129)', backgroundColor: 'rgba(16, 185, 129, 0.2)', tension: 0.2, fill: true, pointRadius: 3, pointBackgroundColor: 'rgb(16, 185, 129)' }]}, // emerald
+            options: { ...JSON.parse(JSON.stringify(gevDefaultChartOptions)), plugins: { ...gevDefaultChartOptions.plugins, title: { display: true, text: 'Operating Cash Flow ($B)', font: { size: chartTitleFontSize }, color: chartPrimaryFontColor, padding: {bottom: 10} }, tooltip: { ...gevDefaultChartOptions.plugins.tooltip, callbacks: { label: context => `${context.dataset.label}: $${context.raw.toFixed(3)}B` }}, legend: { display: false }}, scales: { ...gevDefaultChartOptions.scales, y: { ...gevDefaultChartOptions.scales.y, beginAtZero: true, title: { display: true, text: 'Cash Flow ($B)', color: chartSecondaryFontColor, font: { size: 12, weight: '500' } }}}}
+        });
+
+        const roicCtx = document.getElementById('roicChart').getContext('2d');
+        new Chart(roicCtx, {
+            type: 'bar',
+            data: { labels: ['FY2020', 'FY2021', 'FY2022', 'FY2023', 'FY2024'], datasets: [{ label: 'ROIC (%)', data: [-3.7, -5.5, -3.5, 7.4, 13.1], backgroundColor: (context) => context.raw >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.6)', borderColor: (context) => context.raw >= 0 ? 'rgb(16, 185, 129)' : 'rgb(239, 68, 68)', borderWidth: 1 }]},
+            options: { ...JSON.parse(JSON.stringify(gevDefaultChartOptions)), plugins: { ...gevDefaultChartOptions.plugins, title: { display: true, text: 'Return on Invested Capital (ROIC) (%)', font: { size: chartTitleFontSize }, color: chartPrimaryFontColor, padding: {bottom: 10} }, tooltip: { ...gevDefaultChartOptions.plugins.tooltip, callbacks: { label: context => `${context.dataset.label}: ${context.raw.toFixed(1)}%` }}, legend: { display: false }}, scales: { ...gevDefaultChartOptions.scales, y: { ...gevDefaultChartOptions.scales.y, title: { display: true, text: 'ROIC (%)', color: chartSecondaryFontColor, font: { size: 12, weight: '500' } }, ticks: { ...gevDefaultChartOptions.scales.y.ticks, callback: value => `${value.toFixed(1)}%` }}}}
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            navHeight = mainNavContainer ? mainNavContainer.offsetHeight : 70;
+            const overviewLink = document.querySelector('#main-nav-container a.nav-link[href="#overview"], #mobile-menu a.nav-link[href="#overview"]');
+            if (overviewLink) overviewLink.classList.add('active'); // Set initial active
+             window.dispatchEvent(new Event('scroll')); // Trigger scroll handler to set correct initial active link
+        });
+    </script>
+</body>
+</html>
+

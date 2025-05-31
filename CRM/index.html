@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesforce (CRM) Interactive Analysis - Scrollable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - Overview: Text block for context. Goal: Inform.
+        - Business Model: Structured text and lists for core model, value prop, revenue streams, resources/activities. Goal: Inform, Organize.
+        - Products & Delivery: Text for SaaS model/infra. Interactive cards/accordions for business segments, with a bar chart for segment revenue share (Chart.js). Goal: Inform, Compare.
+        - Competition: Text for overview, bar chart for market share (Chart.js), HTML table for competitor comparison. Goal: Inform, Compare.
+        - Financials: HTML table for key metrics. Line charts for revenue, operating margin, OCF/FCF trends (Chart.js). Pie chart for geographical revenue (Chart.js). Goal: Inform, Change, Compare.
+        - Strategy & Outlook: Interactive HTML/CSS for SWOT (clickable/hoverable items). List for growth drivers. Text for conclusion. Goal: Inform, Organize.
+        - All Chart.js visualizations will be responsive, use canvas, and have appropriate tooltips and label handling. No SVG/Mermaid used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; } /* Added scroll-behavior for fallback */
+        .chart-container { position: relative; width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; height: 350px; max-height: 450px; }
+        @media (max-width: 768px) { .chart-container { height: 300px; max-height: 400px; } }
+        .nav-button { transition: background-color 0.3s ease, color 0.3s ease; }
+        .nav-button.active { background-color: #0284c7; color: white; }
+        .nav-button:not(.active):hover { background-color: #f0f9ff; }
+        /* Removed display: none/block for content-section, they are now always visible */
+        .content-section { padding-top: 70px; margin-top: -70px; } /* Offset for sticky nav */
+        .swot-item { transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
+        .swot-item:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .kpi-card { background-color: white; border-radius: 0.5rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #e5e7eb; padding: 0.75rem; text-align: left; }
+        th { background-color: #f3f4f6; }
+        /* Removed .tab-content and fadeIn animation as sections are always visible */
+    </style>
+</head>
+<body class="bg-stone-100 text-neutral-800">
+
+    <header class="bg-sky-700 text-white p-6 shadow-md">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold">Salesforce (CRM) Interactive Business Analysis</h1>
+            <p class="text-sky-100">An exploration of Salesforce's business model, market position, and financial health.</p>
+        </div>
+    </header>
+
+    <nav id="mainNav" class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto flex flex-wrap justify-center space-x-1 sm:space-x-2 p-2">
+            <button data-tab="overview" class="nav-button active text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-neutral-700">Overview</button>
+            <button data-tab="businessModel" class="nav-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-neutral-700">Business Model</button>
+            <button data-tab="productsDelivery" class="nav-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-neutral-700">Products & Delivery</button>
+            <button data-tab="competition" class="nav-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-neutral-700">Competition</button>
+            <button data-tab="financials" class="nav-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-neutral-700">Financials</button>
+            <button data-tab="strategyOutlook" class="nav-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-neutral-700">Strategy & Outlook</button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 sm:p-6">
+        <div id="overview" class="content-section">
+            <h2 class="text-2xl font-semibold text-sky-700 mb-4">I. Introduction</h2>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <p class="mb-4">Salesforce, Inc. (NYSE: CRM) stands as a colossus in the enterprise software landscape, fundamentally reshaping how businesses connect with their customers. As the world's leading provider of Customer Relationship Management (CRM) software, Salesforce has pioneered the Software-as-a-Service (SaaS) model and continues to drive innovation through its comprehensive Customer 360 platform. This platform integrates sales, service, marketing, commerce, analytics, and application development, augmented by advancements in artificial intelligence (AI) and data management.</p>
+                <p>This interactive application provides a detailed analysis of Salesforce's multifaceted business. It dissects the company's business model, product delivery, competitive environment, and financial performance, offering a holistic view of Salesforce's operations and strategic positioning based on the provided report.</p>
+            </div>
+        </div>
+
+        <div id="businessModel" class="content-section">
+            <h2 class="text-2xl font-semibold text-sky-700 mb-4">II. Salesforce's Business Model</h2>
+             <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">A. Core Business Model and Value Proposition</h3>
+                <p class="mb-3">Salesforce's core business model is built upon providing a comprehensive suite of CRM applications and tools through a Software-as-a-Service (SaaS) approach. This model delivers scalable and customizable solutions directly via the internet, eliminating the need for customers to manage complex on-premise hardware and software. The central value proposition is the "Customer 360" platform, which aims to provide a single, shared view of every customer across all departments – sales, service, marketing, commerce, and IT.</p>
+                <p class="mb-2 font-medium">Key elements of its value proposition include:</p>
+                <ul class="list-disc list-inside space-y-1 text-neutral-600">
+                    <li><strong>Comprehensive Solutions:</strong> Wide array of applications (Sales, Service, Marketing, Commerce Clouds, Data Cloud, Tableau).</li>
+                    <li><strong>Innovation:</strong> Continuous enhancement with AI (Einstein, Agentforce), analytics, and collaboration tools (Slack).</li>
+                    <li><strong>Scalability and Customization:</strong> Solutions for all business sizes, highly customizable.</li>
+                    <li><strong>Ecosystem and Integration:</strong> Vast partner ecosystem and AppExchange marketplace.</li>
+                    <li><strong>Customer Success Focus:</strong> Emphasis on helping customers achieve goals via services, training, and community.</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">B. How Salesforce Makes Money</h3>
+                 <p class="mb-4">Salesforce's revenue generation is primarily driven by its subscription-based model, which provides a reliable and recurring income stream. For FY2025, subscription and support revenues accounted for approximately 94% of total revenues.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold text-sky-600 mb-2">Primary Revenue Streams</h4>
+                        <ul class="list-disc list-inside space-y-1 text-neutral-600">
+                            <li><strong>Subscription Fees:</strong> Largest source, from cloud-based CRM solutions (per-user, per-month, often billed annually).</li>
+                            <li><strong>Professional Services:</strong> Consulting, deployment, optimization, and customization services.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-sky-600 mb-2">Secondary Revenue Streams</h4>
+                        <ul class="list-disc list-inside space-y-1 text-neutral-600">
+                            <li><strong>AppExchange Income:</strong> Fees from third-party app listings/sales.</li>
+                            <li><strong>Training and Certification:</strong> Revenue from educational services (e.g., Trailhead).</li>
+                            <li><strong>Premium Support Services:</strong> Enhanced support plans for additional fees.</li>
+                            <li><strong>Advertising/Marketing Services (minor):</strong> Some Marketing Cloud offerings.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">C. Key Resources and Activities</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold text-sky-600 mb-2">Key Resources</h4>
+                        <ul class="list-disc list-inside space-y-1 text-neutral-600">
+                            <li>Platform and Technology (Customer 360, Hyperforce)</li>
+                            <li>Expert Workforce</li>
+                            <li>Brand Reputation</li>
+                            <li>Customer Relationships & Base</li>
+                            <li>Intellectual Property & Patents</li>
+                            <li>Partner Network (AppExchange)</li>
+                            <li>Data Centers & Cloud Infrastructure</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-sky-600 mb-2">Key Activities</h4>
+                        <ul class="list-disc list-inside space-y-1 text-neutral-600">
+                            <li>Platform Development & Innovation (esp. AI, Data)</li>
+                            <li>Sales and Marketing</li>
+                            <li>Customer Support and Success</li>
+                            <li>Ecosystem Management (AppExchange)</li>
+                            <li>Infrastructure Management</li>
+                            <li>Security and Compliance</li>
+                        </ul>
+                    </div>
+                </div>
+                 <p class="mt-4 text-sm text-neutral-500">Strategic acquisitions like Slack, Tableau, and MuleSoft further strengthen these capabilities in collaboration, analytics, and integration.</p>
+            </div>
+        </div>
+
+        <div id="productsDelivery" class="content-section">
+            <h2 class="text-2xl font-semibold text-sky-700 mb-4">III. Product/Service Production and Delivery</h2>
+            <p class="mb-6 bg-sky-50 p-4 rounded-lg text-sky-800">This section outlines how Salesforce develops and delivers its cloud-native solutions, its infrastructure strategy, sales channels, and a breakdown of its core business segments. Salesforce pioneered the SaaS model, delivering applications over the internet, which reduces IT overhead for customers and provides a recurring revenue stream for the company.</p>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-neutral-700 mb-3">A. Cloud-Based SaaS Model</h3>
+                    <p class="mb-2">Salesforce delivers applications remotely over the internet. Key benefits:</p>
+                    <ul class="list-disc list-inside space-y-1 text-neutral-600">
+                        <li>Accessibility from anywhere</li>
+                        <li>Scalability for customers</li>
+                        <li>Automatic updates</li>
+                        <li>Reduced IT overhead for customers</li>
+                        <li>Predictable subscription revenue for Salesforce</li>
+                        <li>Faster deployment</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-neutral-700 mb-3">B. Infrastructure Strategy</h3>
+                    <p class="mb-2">A hybrid strategy combining own data centers and public cloud:</p>
+                    <ul class="list-disc list-inside space-y-1 text-neutral-600">
+                        <li><strong>Traditional Data Centers:</strong> Globally located third-party facilities.</li>
+                        <li><strong>Hyperforce:</strong> Next-gen architecture on public cloud, enabling data residency and rapid deployment.</li>
+                        <li><strong>Public Cloud Usage (IaaS):</strong> Flexibility for new regions and specific data privacy needs.</li>
+                        <li>Continuous investment in infrastructure capacity.</li>
+                    </ul>
+                </div>
+            </div>
+             <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">C. Sales and Distribution Channels</h3>
+                <p class="mb-2">A multi-channel strategy to reach diverse customers:</p>
+                <ul class="list-disc list-inside space-y-1 text-neutral-600">
+                    <li><strong>Direct Sales:</strong> Large sales force, especially for enterprises.</li>
+                    <li><strong>Partner Ecosystem (Indirect):</strong> Consulting partners, ISVs (AppExchange), Resellers.</li>
+                    <li><strong>Online Channels:</strong> Website, digital platforms for marketing and lead generation.</li>
+                    <li><strong>Customer Success Group:</strong> Drives retention, upselling/cross-selling.</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">D. Business Segments & FY2025 Revenue</h3>
+                <p class="mb-4 text-sm text-neutral-600">Salesforce organizes its offerings into key segments, primarily generating revenue through subscriptions. Total FY2025 subscription & support revenue: $35.7B (94% of total). Click on a segment for more details (simulated).</p>
+                <div class="mb-6">
+                    <div class="chart-container h-[300px] md:h-[350px]">
+                        <canvas id="segmentRevenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-4" id="segmentDetailsContainer">
+                </div>
+            </div>
+        </div>
+
+        <div id="competition" class="content-section">
+            <h2 class="text-2xl font-semibold text-sky-700 mb-4">IV. Competitive Landscape</h2>
+            <p class="mb-6 bg-sky-50 p-4 rounded-lg text-sky-800">Salesforce operates in a dynamic and highly competitive CRM market. This section examines the market overview, Salesforce's leading position, and provides a comparative look at its key competitors.</p>
+
+            <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">A. Market Overview and Salesforce's Position</h3>
+                <p class="mb-3">The global CRM market is substantial and growing. Salesforce has consistently been the dominant leader. In 2023, Salesforce's market share was reported at 29.2%.</p>
+                <div class="chart-container h-[300px] md:h-[350px] mb-4">
+                    <canvas id="crmMarketShareChart"></canvas>
+                </div>
+                <p class="text-sm text-neutral-500">The market sees heavy investment from large enterprises, particularly in Finance & Insurance, Public Administration, and Manufacturing. North America is the largest regional market.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">B. Deep Dive into Key Competitors</h3>
+                <p class="mb-3">Salesforce faces competition from various players. Below is a summary comparison:</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr>
+                                <th class="w-1/6">Competitor</th>
+                                <th class="w-1/4">Core Offerings/Focus</th>
+                                <th class="w-1/6">Target Market</th>
+                                <th class="w-1/4">Key Strengths</th>
+                                <th>Differentiation from Salesforce</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr>
+                                <td class="font-semibold">Microsoft Dynamics 365</td>
+                                <td>CRM and ERP</td>
+                                <td>Mid-to-large, Microsoft ecosystem</td>
+                                <td>Seamless Microsoft suite integration, AI via Power BI, cost-effective for MS-centric</td>
+                                <td>Leverages existing MS enterprise ties; CRM/ERP integration is key.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">SAP CRM</td>
+                                <td>ERP first, CRM second; finance, logistics</td>
+                                <td>Large enterprises (manufacturing, logistics)</td>
+                                <td>Deep ERP integration, strong for backend, on-prem/hybrid options</td>
+                                <td>CRM often part of larger ERP sale; focus on operational integration.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">Oracle CX</td>
+                                <td>Broad CRM components</td>
+                                <td>Large B2C enterprises (comm, media, finance)</td>
+                                <td>Strong database/backend for Oracle eco., AI analytics</td>
+                                <td>Leverages strong database footprint; enterprise niches.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">Adobe Experience Cloud</td>
+                                <td>Digital marketing, content, analytics</td>
+                                <td>Marketing depts, digital experience focus</td>
+                                <td>Strong in content, digital asset mgmt, marketing analytics</td>
+                                <td>Strength in creative/marketing lifecycle; competes with SF Marketing Cloud.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">HubSpot</td>
+                                <td>Inbound marketing, sales/service hubs</td>
+                                <td>SMBs, mid-market, content-focused B2B</td>
+                                <td>User-friendly, strong inbound tools, free basic CRM</td>
+                                <td>Freemium model; simpler, focused on inbound methodology.</td>
+                            </tr>
+                             <tr>
+                                <td class="font-semibold">Zoho CRM</td>
+                                <td>Cost-effective CRM, broad business app suite</td>
+                                <td>SMBs, startups</td>
+                                <td>Affordable, good for Zoho eco. users, broad suite</td>
+                                <td>Focus on wide array of affordable apps for SMBs; less enterprise depth.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-3 text-sm text-neutral-500">A critical emerging battleground is AI, where Salesforce promotes Einstein AI and Agentforce, while competitors also invest heavily.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">C. Salesforce's Competitive Advantages</h3>
+                 <p class="mb-2">Salesforce differentiates itself through several key advantages:</p>
+                <ul class="list-disc list-inside space-y-1 text-neutral-600">
+                    <li><strong>Comprehensive and Integrated Platform (Customer 360):</strong> Holistic customer view.</li>
+                    <li><strong>Extensive Ecosystem (AppExchange):</strong> Massive marketplace, strong network effects, customer stickiness.</li>
+                    <li><strong>Scalability:</strong> Caters to all business sizes.</li>
+                    <li><strong>Continuous Innovation (AI, Data Cloud):</strong> Investment in R&D and strategic acquisitions (e.g., pending Informatica).</li>
+                    <li><strong>Cloud-Native Architecture and Hyperforce:</strong> Advantages in deployment, updates, global scalability.</li>
+                    <li><strong>Industry-Specific Solutions:</strong> Tailored "Industry Clouds" for deeper market penetration.</li>
+                    <li><strong>Strong Brand Reputation and Trust:</strong> Market leadership and emphasis on data security.</li>
+                </ul>
+                <p class="mt-3 text-sm text-neutral-500">Strategic acquisitions (MuleSoft, Tableau, Slack) are pivotal, making the ecosystem comprehensive and difficult to displace.</p>
+            </div>
+        </div>
+
+        <div id="financials" class="content-section">
+            <h2 class="text-2xl font-semibold text-sky-700 mb-4">V. In-depth Financial Performance Analysis</h2>
+            <p class="mb-6 bg-sky-50 p-4 rounded-lg text-sky-800">This section delves into Salesforce's financial performance, analyzing trends in revenue, profitability, cash flow, and key SaaS metrics. Data is primarily from annual 10-K filings and recent quarterly reports (Salesforce fiscal year ends Jan 31).</p>
+
+            <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">Key Financial Metrics Summary (FY2021-Q1 FY2026)</h3>
+                <div class="overflow-x-auto">
+                    <table id="financialMetricsTable" class="min-w-full text-sm">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>FY2021</th>
+                                <th>FY2022</th>
+                                <th>FY2023</th>
+                                <th>FY2024</th>
+                                <th>FY2025</th>
+                                <th>Q1 FY2026</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-neutral-500 mt-2">All $ figures in Billions, except EPS. Some figures are approximate or calculated.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-lg shadow">
+                     <h3 class="text-xl font-semibold text-neutral-700 mb-3">Revenue Trends</h3>
+                     <div class="chart-container"><canvas id="revenueTrendChart"></canvas></div>
+                     <p class="text-sm text-neutral-600 mt-2">Consistent strong revenue growth, reaching $37.90B in FY2025. Q1 FY2026 revenue was $9.8B (8% YoY growth).</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-neutral-700 mb-3">Operating Margin Trends</h3>
+                    <div class="chart-container"><canvas id="operatingMarginChart"></canvas></div>
+                    <p class="text-sm text-neutral-600 mt-2">Significant improvement in GAAP Op. Margin (19.0% in FY2025). Non-GAAP Op. Margin robust (33.0% in FY2025).</p>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-neutral-700 mb-3">Cash Flow Strength</h3>
+                    <div class="chart-container"><canvas id="cashFlowChart"></canvas></div>
+                    <p class="text-sm text-neutral-600 mt-2">Strong OCF ($13.09B in FY2025) and FCF ($12.4B in FY2025) generation, supporting investments and shareholder returns.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-neutral-700 mb-3">Geographical Revenue (FY2025)</h3>
+                    <div class="chart-container h-[280px] md:h-[320px]"><canvas id="geoRevenueChart"></canvas></div>
+                    <p class="text-sm text-neutral-600 mt-2">Americas: 66%, Europe: 24%, APAC: 10%.</p>
+                </div>
+            </div>
+             <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">Key Performance Indicators (KPIs)</h3>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="kpi-card">
+                        <h4 class="font-semibold text-sky-600">cRPO (Q1 FY26)</h4>
+                        <p class="text-2xl font-bold">$29.6 B</p>
+                        <p class="text-sm text-green-600">+12% YoY</p>
+                        <p class="text-xs text-neutral-500">Future revenue (next 12 months).</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4 class="font-semibold text-sky-600">Total RPO (FY25)</h4>
+                        <p class="text-2xl font-bold">$63.4 B</p>
+                        <p class="text-sm text-green-600">+11% YoY</p>
+                        <p class="text-xs text-neutral-500">Total future revenue under contract.</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4 class="font-semibold text-sky-600">ROIC (FY25 Est.)</h4>
+                        <p class="text-2xl font-bold">~9.84%</p>
+                        <p class="text-xs text-neutral-500">Return on Invested Capital.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-sm text-neutral-600">Recent Q1 FY2026 results showed continued growth (8% revenue YoY) and focus on Data Cloud & AI (ARR > $1B, +120% YoY).</p>
+            </div>
+        </div>
+
+        <div id="strategyOutlook" class="content-section">
+            <h2 class="text-2xl font-semibold text-sky-700 mb-4">VI. Strategic Outlook and Concluding Analysis</h2>
+            <p class="mb-6 bg-sky-50 p-4 rounded-lg text-sky-800">This section explores Salesforce's strategic direction, encompassing its strengths, weaknesses, opportunities, and threats (SWOT), key future growth drivers, and a final analysis of its market position and prospects.</p>
+
+            <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">A. SWOT Analysis</h3>
+                <p class="mb-3 text-sm text-neutral-600">Salesforce's strategic position can be understood through its core strengths, weaknesses, opportunities, and threats. Hover over or tap items for simulated detail prompts.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-green-50 p-4 rounded-lg swot-item">
+                        <h4 class="text-lg font-semibold text-green-700 mb-2">Strengths 💪</h4>
+                        <ul class="list-disc list-inside space-y-1 text-green-600 text-sm">
+                            <li>Dominant Market Share</li>
+                            <li>Comprehensive Customer 360 Platform</li>
+                            <li>Strong Brand and Trust</li>
+                            <li>Large and Loyal Customer Base</li>
+                            <li>Extensive Partner Ecosystem (AppExchange)</li>
+                            <li>Robust SaaS Recurring Revenue Model</li>
+                            <li>Innovation in AI and Data Cloud</li>
+                            <li>Strong Financial Position</li>
+                        </ul>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-lg swot-item">
+                        <h4 class="text-lg font-semibold text-red-700 mb-2">Weaknesses ⚠️</h4>
+                        <ul class="list-disc list-inside space-y-1 text-red-600 text-sm">
+                            <li>Platform Complexity and Cost</li>
+                            <li>GAAP vs. Non-GAAP Profitability Gap (Improving)</li>
+                            <li>Maturing Core Markets</li>
+                            <li>Dependence on Acquisitions (Integration Risks)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg swot-item">
+                        <h4 class="text-lg font-semibold text-blue-700 mb-2">Opportunities 🚀</h4>
+                        <ul class="list-disc list-inside space-y-1 text-blue-600 text-sm">
+                            <li>AI and Data Cloud Expansion (e.g., Informatica)</li>
+                            <li>International Market Penetration</li>
+                            <li>Industry-Specific Solutions (Verticalization)</li>
+                            <li>Upselling/Cross-selling to Existing Base</li>
+                            <li>Growth in Professional Services</li>
+                        </ul>
+                    </div>
+                    <div class="bg-yellow-50 p-4 rounded-lg swot-item">
+                        <h4 class="text-lg font-semibold text-yellow-700 mb-2">Threats 📉</h4>
+                        <ul class="list-disc list-inside space-y-1 text-yellow-600 text-sm">
+                            <li>Intense Competition</li>
+                            <li>Evolving Data Privacy/Security Regulations</li>
+                            <li>Macroeconomic Uncertainty</li>
+                            <li>Integration Risks from Acquisitions</li>
+                            <li>Maintaining Innovation Pace</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">B. Future Growth Drivers</h3>
+                <p class="mb-2 text-sm text-neutral-600">Salesforce's future growth is expected to be propelled by:</p>
+                <ol class="list-decimal list-inside space-y-1 text-neutral-600">
+                    <li><strong>Artificial Intelligence (AI):</strong> Einstein AI, Agentforce, generative AI.</li>
+                    <li><strong>Data Cloud:</strong> Unifying customer data for personalization and AI.</li>
+                    <li><strong>Industry-Specific Solutions:</strong> Tailored offerings for key verticals.</li>
+                    <li><strong>Ecosystem Expansion:</strong> AppExchange and strategic partnerships.</li>
+                    <li><strong>International Expansion:</strong> Growth in Europe and APAC, aided by Hyperforce.</li>
+                    <li><strong>Strategic Acquisitions:</strong> E.g., pending Informatica deal for AI/data capabilities.</li>
+                </ol>
+                <p class="mt-3 text-sm text-neutral-500">The convergence of Data Cloud and AI is positioned as the next major growth frontier.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold text-neutral-700 mb-3">C. Concluding Analysis</h3>
+                <p class="mb-3 text-neutral-600">Salesforce has established itself as the dominant force in CRM, evolving into a comprehensive, AI-powered platform. Its robust business model fuels strong financial performance with sustained growth and improving profitability.</p>
+                <p class="mb-3 text-neutral-600">Key strengths include market leadership, its Customer 360 platform, innovation (AI/data), and its ecosystem. However, it faces challenges from platform complexity, competition, and integration risks.</p>
+                <p class="text-neutral-600">Looking ahead, Salesforce's prospects appear strong, well-positioned to capitalize on digital transformation and the increasing importance of customer data and AI. Success will depend on execution in integrating offerings, simplifying adoption, and delivering demonstrable value. If managed effectively, Salesforce is poised to continue its pivotal role in enterprise software.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-neutral-800 text-neutral-300 text-center p-6 mt-8">
+        <p class="text-sm">&copy; 2025 Interactive Analysis. Content derived from Salesforce Business Model Analysis Report.</p>
+        <p class="text-xs mt-1">This is a conceptual application for illustrative purposes.</p>
+    </footer>
+
+<script>
+    const financialData = {
+        metrics: ["Total Revenue", "Subscription & Support Rev.", "Professional Services Rev.", "GAAP Operating Income", "GAAP Operating Margin (%)", "Non-GAAP Operating Income", "Non-GAAP Operating Margin (%)", "GAAP Net Income", "GAAP Diluted EPS ($)", "Non-GAAP Diluted EPS ($)", "Operating Cash Flow (OCF)", "Free Cash Flow (FCF)", "cRPO"],
+        FY2021: [21.25, 19.98, 1.27, 0.85, "4.0%", "~$3.57 (16.8%)", "16.8%", 4.07, "4.38", "4.92", 5.28, 4.47, 18.0],
+        FY2022: [26.49, 24.66, 1.84, 0.55, "2.1%", "~$4.95 (18.7%)", "18.7%", 1.44, "1.48", "4.78", 6.00, 4.94, 22.0],
+        FY2023: [31.35, 29.02, 2.33, 1.03, "3.3%", "~$7.05 (22.5%)", "22.5%", 0.22, "0.22", "5.24", 7.10, 6.27, 24.6],
+        FY2024: [34.86, 32.54, 2.32, 5.01, "14.4%", "~$10.28 (29.5%)", "29.5%", 4.14, "4.20", "8.22", 10.23, 9.49, 27.6],
+        FY2025: [37.90, 35.68, 2.22, 7.21, "19.0%", "~$12.51 (33.0%)", "33.0%", "~$6.20", "6.36", "9.82", 13.09, 12.40, 30.2],
+        Q1FY2026: [9.80, 9.30, "~$0.50", 1.94, "19.8%", "~$3.16 (32.3%)", "32.3%", "~$1.75", "1.80-1.82", "2.76-2.78", 6.50, 6.30, 29.6]
+    };
+
+    const businessSegmentsData = [
+        { name: "Sales Cloud", revenue: 8.32, percentage: 23.32, offerings: "Sales force automation, lead management, opportunity tracking, Einstein AI for Sales, CPQ.", pricing: "$25-$500/user/month (various editions)." },
+        { name: "Service Cloud", revenue: 9.05, percentage: 25.38, offerings: "Customer service/support across channels, case management, field service, Einstein Bots.", pricing: "$25-$330/user/month (various editions)." },
+        { name: "Marketing & Commerce", revenue: 5.28, percentage: 14.80, offerings: "Digital marketing automation, email/mobile/social marketing, Journey Builder, e-commerce solutions (B2C/B2B).", pricing: "Marketing Cloud from $1,250-$1,500/org/month. Commerce Cloud often GMV-based." },
+        { name: "Platform & Other", revenue: 7.25, percentage: 20.31, offerings: "Salesforce Platform (Lightning, Heroku for custom apps), Slack (collaboration), AppExchange.", pricing: "Platform $25-$100/user/month. Heroku tiered. Slack tiered." },
+        { name: "Integration & Analytics", revenue: 5.78, percentage: 16.19, offerings: "MuleSoft (integration), Tableau (analytics/BI).", pricing: "Tableau $15-$75/user/month. MuleSoft subscription based on capacity/features." }
+    ];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const navButtons = document.querySelectorAll('.nav-button');
+        const contentSections = document.querySelectorAll('.content-section');
+        const mainNav = document.getElementById('mainNav');
+        let navHeight = mainNav ? mainNav.offsetHeight : 70; // Default nav height if not found
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-tab');
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection) {
+                    // Temporarily remove active class from all, then set current one, then scroll
+                    // This avoids scrollspy fighting click event for active state immediately
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Calculate scroll position considering sticky nav
+                    const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        function updateNavHeight() {
+            if (mainNav) navHeight = mainNav.offsetHeight;
+        }
+        window.addEventListener('resize', updateNavHeight);
+        updateNavHeight(); // Initial calculation
+
+        function handleScrollSpy() {
+            let currentSectionId = '';
+            const scrollPosition = window.pageYOffset + navHeight + 50; // Adjusted for nav and buffer
+
+            contentSections.forEach(section => {
+                if (section.offsetTop <= scrollPosition && (section.offsetTop + section.offsetHeight) > scrollPosition) {
+                    currentSectionId = section.id;
+                }
+            });
+
+            // If scrolled to the very bottom, and no section is perfectly matched, activate the last one.
+            if (currentSectionId === '' && (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 20) {
+                 currentSectionId = contentSections[contentSections.length - 1].id;
+            }
+
+
+            navButtons.forEach(button => {
+                if (button.getAttribute('data-tab') === currentSectionId) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScrollSpy);
+        handleScrollSpy(); // Call once on load to set initial state
+
+        function populateFinancialTable() {
+            const tableBody = document.querySelector('#financialMetricsTable tbody');
+            if (!tableBody) return;
+            financialData.metrics.forEach((metric, index) => {
+                const row = tableBody.insertRow();
+                row.insertCell().textContent = metric;
+                ['FY2021', 'FY2022', 'FY2023', 'FY2024', 'FY2025', 'Q1FY2026'].forEach(year => {
+                    row.insertCell().textContent = financialData[year][index];
+                });
+            });
+        }
+        populateFinancialTable();
+        
+        function populateSegmentDetails() {
+            const container = document.getElementById('segmentDetailsContainer');
+            if (!container) return;
+            businessSegmentsData.forEach(segment => {
+                const div = document.createElement('div');
+                div.className = 'p-4 border border-stone-200 rounded-lg bg-stone-50 cursor-pointer hover:shadow-md';
+                div.innerHTML = `
+                    <h4 class="text-lg font-semibold text-sky-600">${segment.name} - FY2025 Revenue: $${segment.revenue}B (${segment.percentage}%)</h4>
+                    <div class="segment-info hidden mt-2 text-sm text-neutral-600">
+                        <p><strong>Offerings:</strong> ${segment.offerings}</p>
+                        <p><strong>Pricing Highlights:</strong> ${segment.pricing}</p>
+                    </div>
+                `;
+                div.addEventListener('click', () => {
+                    div.querySelector('.segment-info').classList.toggle('hidden');
+                });
+                container.appendChild(div);
+            });
+        }
+        populateSegmentDetails();
+
+        function createChart(ctx, type, data, options) {
+            if (ctx) {
+                new Chart(ctx, { type, data, options });
+            }
+        }
+        
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) { label += ': '; }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y;
+                                if (context.dataset.label.toLowerCase().includes('margin') || context.dataset.label.toLowerCase().includes('%')) {
+                                    label += '%';
+                                } else if (!context.dataset.label.toLowerCase().includes('eps')) {
+                                    label += 'B';
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: { 
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value, index, values) {
+                            if (this.axis === 'y' && (this.chart.config.type === 'line' || this.chart.config.type === 'bar')) {
+                               if (value >= 1000000000) return (value / 1000000000) + 'B';
+                               if (value >= 1000000) return (value / 1000000) + 'M';
+                               if (value >= 1000) return (value / 1000) + 'K';
+                            }
+                            return value;
+                        }
+                    } 
+                },
+                x: { ticks: { autoSkip: true, maxRotation: 45, minRotation: 0 } }
+            }
+        };
+
+        const fiscalYears = ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'];
+        
+        createChart(document.getElementById('segmentRevenueChart')?.getContext('2d'), 'bar', {
+            labels: businessSegmentsData.map(s => s.name.replace(' & ', '&\n')),
+            datasets: [{
+                label: 'FY2025 Revenue ($B)',
+                data: businessSegmentsData.map(s => s.revenue),
+                backgroundColor: ['#0ea5e9', '#38bdf8', '#7dd3fc', '#bae6fd', '#e0f2fe'],
+                borderColor: '#0284c7',
+                borderWidth: 1
+            }]
+        }, {...commonChartOptions, scales: {...commonChartOptions.scales, x: { ticks: { callback: function(value, index) { return this.getLabelForValue(value).split('\n'); } }}}});
+        
+        createChart(document.getElementById('crmMarketShareChart')?.getContext('2d'), 'bar', {
+            labels: ['Salesforce', 'Adobe', 'Oracle', 'Other Top 10', 'Rest of Market'],
+            datasets: [{
+                label: 'CRM Market Share (2023, %)',
+                data: [29.2, 13.0, 7.9, 20, (100-29.2-13.0-7.9-20)],
+                backgroundColor: ['#0ea5e9', '#38bdf8', '#7dd3fc', '#bae6fd', '#e0f2fe'],
+                borderColor: '#0284c7',
+                borderWidth: 1
+            }]
+        }, commonChartOptions);
+
+        createChart(document.getElementById('revenueTrendChart')?.getContext('2d'), 'line', {
+            labels: fiscalYears,
+            datasets: [
+                { label: 'Total Revenue', data: [21.25, 26.49, 31.35, 34.86, 37.90], borderColor: '#0284c7', tension: 0.1, fill: false },
+                { label: 'Subscription & Support Rev.', data: [19.98, 24.66, 29.02, 32.54, 35.68], borderColor: '#38bdf8', tension: 0.1, fill: false }
+            ]
+        }, commonChartOptions);
+
+        createChart(document.getElementById('operatingMarginChart')?.getContext('2d'), 'line', {
+            labels: fiscalYears,
+            datasets: [
+                { label: 'GAAP Op. Margin (%)', data: [4.0, 2.1, 3.3, 14.4, 19.0], borderColor: '#0284c7', tension: 0.1, fill: false },
+                { label: 'Non-GAAP Op. Margin (%)', data: [16.8, 18.7, 22.5, 29.5, 33.0], borderColor: '#38bdf8', tension: 0.1, fill: false }
+            ]
+        }, {...commonChartOptions, scales: {...commonChartOptions.scales, y: { beginAtZero: false, ticks: {callback: function(value) { return value + '%'; }} }}});
+
+        createChart(document.getElementById('cashFlowChart')?.getContext('2d'), 'line', {
+            labels: fiscalYears,
+            datasets: [
+                { label: 'Operating Cash Flow (OCF)', data: [5.28, 6.00, 7.10, 10.23, 13.09], borderColor: '#0284c7', tension: 0.1, fill: false },
+                { label: 'Free Cash Flow (FCF)', data: [4.47, 4.94, 6.27, 9.49, 12.40], borderColor: '#38bdf8', tension: 0.1, fill: false }
+            ]
+        }, commonChartOptions);
+        
+        createChart(document.getElementById('geoRevenueChart')?.getContext('2d'), 'pie', {
+            labels: ['Americas (66%)', 'Europe (24%)', 'APAC (10%)'],
+            datasets: [{
+                label: 'FY2025 Geographical Revenue',
+                data: [66, 24, 10],
+                backgroundColor: ['#0ea5e9', '#38bdf8', '#7dd3fc'],
+                hoverOffset: 4
+            }]
+        }, { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: function(context) { return `${context.label}: ${context.raw}%`; }}}} });
+    });
+</script>
+</body>
+</html>
+
