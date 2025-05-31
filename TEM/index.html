@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempus AI Interactive Analysis (Spotify Theme)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles from Spotify example */
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* stone-100 from Spotify */
+            color: #404040; /* neutral-700 for base text */
+            margin: 0; /* Ensure no default margin */
+        }
+
+        /* Container for main content */
+        .container-main {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 1rem; /* p-4 equivalent */
+        }
+        @media (min-width: 640px) { /* sm */
+            .container-main { padding: 0 1.5rem; } /* p-6 */
+        }
+        @media (min-width: 1024px) { /* lg */
+            .container-main { padding: 0 2rem; } /* px-8 */
+        }
+
+        /* Page Header (like Spotify's top title header) */
+        .page-header {
+            text-align: center;
+            padding-top: 2rem; /* py-8 */
+            padding-bottom: 2rem;
+            background-color: white;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+        }
+        .page-title {
+            font-size: 2.25rem; /* text-4xl */
+            line-height: 2.5rem;
+            font-weight: 700; /* bold */
+            color: #047857; /* emerald-700 from Spotify */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .page-subtitle {
+            font-size: 1.25rem; /* text-xl */
+            color: #525252; /* neutral-600 from Spotify */
+            margin-bottom: 1rem;
+        }
+
+        /* Navigation Bar */
+        .main-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: #f5f5f4; /* stone-100 */
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .nav-container { /* To center nav links */
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (min-width: 640px) { .nav-container { padding: 0 1.5rem; } }
+        @media (min-width: 1024px) { .nav-container { padding: 0 2rem; } }
+
+        .nav-link {
+            padding: 0.6rem 1rem;
+            margin: 0.25rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500; /* medium */
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border: 1px solid transparent;
+            color: #404040; /* neutral-700 */
+            display: inline-block;
+            text-decoration: none;
+        }
+        .nav-link.active {
+            background-color: #059669; /* emerald-600 */
+            color: white;
+            border-color: #059669; /* emerald-600 */
+        }
+        .nav-link:not(.active):hover {
+            background-color: #d1fae5; /* emerald-100 */
+            color: #059669; /* emerald-600 */
+        }
+
+        /* Mobile Menu Styles */
+        .mobile-menu-button-container { /* For positioning the button */
+            display: none; /* Hidden by default, shown in media query */
+        }
+        @media (max-width: 767px) { /* md breakpoint Tailwind */
+            .nav-container {
+                justify-content: space-between; /* Space for title and button */
+            }
+            .nav-container > a.nav-link { /* Hide desktop links on mobile */
+                display: none;
+            }
+            .mobile-menu-button-container {
+                display: block; /* Show button on mobile */
+                margin-left: auto; /* Push to right */
+            }
+        }
+        .mobile-menu-button {
+            padding: 0.5rem; /* p-2 */
+            border-radius: 0.375rem; /* rounded-md */
+            color: #52525b; /* neutral-500 */
+            background-color: transparent;
+            border: none;
+        }
+        .mobile-menu-button:hover {
+            color: #059669; /* emerald-600 */
+            background-color: #d1fae5; /* emerald-100 */
+        }
+        .mobile-menu {
+             background-color: #262626; /* neutral-800 from Spotify mobile menu */
+             border-top: 1px solid #3f3f46; /* neutral-700 */
+        }
+        .mobile-nav-link {
+             display: block;
+             padding: 0.75rem 1rem;
+             color: #d4d4d4; /* neutral-300 */
+             font-weight: 500;
+             text-decoration: none;
+        }
+        .mobile-nav-link:hover {
+            background-color: #3f3f46; /* neutral-700 */
+            color: white;
+        }
+        .mobile-nav-link.active {
+            background-color: #059669; /* emerald-600 */
+            color: white;
+        }
+
+        /* Section Card (main content blocks) */
+        .section-card {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2.5rem; /* mb-10 */
+            scroll-margin-top: 6rem; /* Adjusted for sticky nav height */
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            line-height: 2.25rem;
+            font-weight: 700; /* bold */
+            color: #047857; /* emerald-700 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #6ee7b7; /* emerald-300 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* semibold */
+            color: #1f2937; /* neutral-800 */
+            margin-top: 2rem;
+            margin-bottom: 1rem; /* mb-4 */
+            text-align: left;
+        }
+        .subsection-title.centered { /* For centered subsection titles */
+            text-align: center;
+        }
+
+
+        /* Paragraphs and Lists */
+        p {
+            line-height: 1.625; /* leading-relaxed */
+            margin-bottom: 1rem; /* mb-4 */
+            color: #525252; /* neutral-600 */
+            font-size: 0.925rem; /* Slightly adjusted for readability */
+        }
+        ul {
+            list-style: disc;
+            padding-left: 1.25rem; /* pl-5 */
+            margin-bottom: 1rem; /* mb-4 */
+            color: #525252; /* neutral-600 */
+        }
+        ul li {
+            margin-bottom: 0.5rem; /* mb-2 */
+            font-size: 0.875rem; /* text-sm */
+        }
+        /* Styled info blocks like in Spotify Operations section */
+        .info-block {
+            padding: 1rem; /* p-4 */
+            background-color: #f0fdf4; /* emerald-50 or similar light green */
+            border-radius: 0.375rem; /* rounded-md */
+            border: 1px solid #a7f3d0; /* emerald-200 or similar */
+            margin-bottom: 1rem;
+        }
+        .info-block-title {
+            font-size: 1rem; /* text-md */
+            font-weight: 600; /* semibold */
+            color: #065f46; /* emerald-700 or 800 */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .info-block p, .info-block ul {
+            font-size: 0.875rem; /* text-sm */
+            color: #374151; /* neutral-700 */
+        }
+        .info-block ul {
+            padding-left: 1rem; /* Adjust list padding inside info block */
+        }
+
+
+        /* KPI Card Styles (like Spotify's info-card) */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem; /* gap-4 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .kpi-card {
+            background-color: #f9fafb; /* neutral-50 */
+            padding: 1rem; /* p-4 */
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid #e5e7eb; /* neutral-200 */
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px; /* Ensure consistent height */
+        }
+        .kpi-value {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* bold */
+            color: #059669; /* emerald-600 for emphasis */
+            margin-bottom: 0.25rem; /* mb-1 */
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #52525b; /* neutral-500 */
+            font-weight: 500; /* medium */
+        }
+
+        /* Chart Styles */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 1.5rem auto;
+            height: 350px;
+            padding: 1rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            background-color: #fff;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+        @media (max-width: 768px) {
+            .chart-container { height: 280px; }
+        }
+        /* Pie chart specific sizing */
+        .pie-chart-container {
+            max-width: 450px;
+            height: 280px;
+        }
+
+        /* Tab Buttons for Financials */
+        .tab-buttons-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem; /* mb-6 */
+            border-bottom: 1px solid #e5e7eb; /* neutral-200 */
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* medium */
+            color: #52525b; /* neutral-500 */
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin-left: 0.25rem;
+            margin-right: 0.25rem;
+        }
+        .tab-button:hover {
+            color: #059669; /* emerald-600 */
+            border-bottom-color: #a7f3d0; /* emerald-200 */
+        }
+        .tab-button.active {
+            color: #047857; /* emerald-700 */
+            font-weight: 600; /* semibold */
+            border-bottom-color: #059669; /* emerald-600 */
+        }
+
+        /* Table Styles (matched to Spotify) */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 1.5rem; /* mb-6 */
+            background-color: white;
+            padding: 0.75rem; /* p-3 */
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid #e5e7eb; /* border-stone-200 */
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03); /* shadow-sm */
+        }
+        .table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+        .table thead {
+            background-color: #f9fafb; /* bg-stone-50 (neutral-50) */
+        }
+        .table th {
+            padding: 0.75rem 0.75rem; /* px-3 py-2 */
+            text-align: left;
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 500; /* font-medium */
+            color: #52525b; /* text-neutral-500 */
+            text-transform: uppercase;
+            letter-spacing: 0.05em; /* tracking-wider */
+            border-bottom: 1px solid #e5e7eb; /* divide-stone-200 */
+        }
+        .table td {
+            padding: 0.75rem 0.75rem; /* px-3 py-2 */
+            text-align: left;
+            font-size: 0.875rem; /* text-sm */
+            color: #374151; /* text-neutral-700 */
+            border-bottom: 1px solid #f3f4f6; /* divide-stone-100 (neutral-100) */
+        }
+        .table tbody tr:last-child td { border-bottom: none; }
+        .table tbody tr:hover { background-color: #f9fafb; /* neutral-50 for hover */ }
+        .table td.font-medium { font-weight: 500; } /* For specific td emphasis */
+        .table td.text-xs { font-size: 0.75rem; } /* For smaller text in table cells */
+        
+        /* Text note below charts/tables */
+        .text-note {
+            font-size: 0.75rem; /* text-xs */
+            text-align: center;
+            color: #737373; /* neutral-500 */
+            margin-top: 0.5rem; /* mt-2 */
+        }
+
+        /* Alert-like box (used in Spotify conclusion) */
+        .alert-box {
+            background-color: #ecfdf5; /* emerald-50 */
+            padding: 1rem; /* p-4 */
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid #a7f3d0; /* border-emerald-200 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .alert-box p {
+            margin-bottom: 0;
+            font-size: 0.925rem; /* text-md in Spotify example, using slightly smaller */
+            color: #065f46; /* emerald-800 */
+            line-height: 1.625; /* leading-relaxed */
+        }
+
+
+        /* Footer Styles (matched to Spotify) */
+        .footer {
+            background-color: #262626; /* neutral-800 */
+            color: #d4d4d4; /* neutral-300 */
+            text-align: center;
+            padding: 1.5rem 0; /* p-6 */
+            margin-top: 3rem; /* mt-12 */
+        }
+        .footer p {
+            font-size: 0.875rem; /* text-sm */
+            margin-bottom: 0.25rem;
+            color: #d4d4d4;
+            line-height: 1.5;
+        }
+        .footer p.text-xs {
+            font-size: 0.75rem;
+            margin-top: 0.25rem; /* mt-1 */
+        }
+
+        /* Scrollbar (matched to Spotify) */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e5e7eb; /* neutral-200 */ border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #9ca3af; /* neutral-400 */ border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; /* neutral-500 */ }
+
+        /* Utility class for hidden */
+        .hidden { display: none !important; }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="page-header">
+        <h1 class="page-title">Tempus AI Interactive Analysis</h1>
+        <p class="page-subtitle">Exploring the Intersection of AI, Genomics, and Healthcare Data</p>
+    </header>
+
+    <nav class="main-nav" id="mainNavElement">
+        <div class="nav-container">
+            <a href="#overview" class="nav-link active">Overview</a>
+            <a href="#business-model" class="nav-link">Business Model</a>
+            <a href="#financials" class="nav-link">Financials</a>
+            <a href="#competition" class="nav-link">Competition</a>
+            <a href="#differentiators" class="nav-link">Differentiators</a>
+            <a href="#conclusion" class="nav-link">Conclusion</a>
+            <div class="mobile-menu-button-container">
+                <button id="mobileMenuButton" class="mobile-menu-button focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="height: 1.5rem; width: 1.5rem;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="md:hidden hidden mobile-menu">
+            <a href="#overview" class="mobile-nav-link">Overview</a>
+            <a href="#business-model" class="mobile-nav-link">Business Model</a>
+            <a href="#financials" class="mobile-nav-link">Financials</a>
+            <a href="#competition" class="mobile-nav-link">Competition</a>
+            <a href="#differentiators" class="mobile-nav-link">Differentiators</a>
+            <a href="#conclusion" class="mobile-nav-link">Conclusion</a>
+        </div>
+    </nav>
+
+    <main class="container-main">
+
+        <section id="overview" class="section-card">
+            <h2 class="section-title">Company Overview</h2>
+            <p>Tempus AI, Inc. (NASDAQ: TEM) is a healthcare technology company focused on advancing precision medicine by integrating artificial intelligence with vast amounts of clinical and molecular data. Founded in 2015, its mission is to develop "Intelligent Diagnostics" that personalize patient care, initially in oncology and expanding into other areas like cardiology and radiology. The Tempus Platform aims to liberate and make actionable siloed healthcare data, leveraging one of the world's largest libraries of clinical and molecular oncology data.</p>
+            <p>This section provides a high-level introduction to Tempus AI, its mission, and strategic focus. It sets the stage for understanding the company's role in the evolving landscape of AI-driven healthcare and precision medicine. Users will find a summary of Tempus's core objectives and the foundational principles upon which its business is built.</p>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-value">2015</div>
+                    <div class="kpi-label">Year Established</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">TEM</div>
+                    <div class="kpi-label">NASDAQ Ticker</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">Precision AI</div>
+                    <div class="kpi-label">Core Focus</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="business-model" class="section-card">
+            <h2 class="section-title">Business Model & Operations</h2>
+            <p>Tempus AI operates a synergistic business model centered around two core segments: Genomics and Data & Services. The Genomics segment generates high-quality molecular and clinical data through diagnostic testing, which then fuels the Data & Services segment. This latter segment leverages the data via AI for insights, research collaborations, and platform solutions. This section delves into how Tempus creates value, generates revenue, and delivers its products and services. Users will explore the interplay between data generation and data monetization, which is central to Tempus's strategy.</p>
+
+            <h3 class="subsection-title">Core Business Segments</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="info-block"> {/* Using info-block for these descriptions */}
+                    <h4 class="info-block-title">1. Genomics</h4>
+                    <p>Focuses on intelligent molecular diagnostic testing to guide patient treatment.</p>
+                    <ul class="list-disc list-inside">
+                        <li><strong>Oncology Testing:</strong> Comprehensive genomic profiling (xT), liquid biopsies (xF/xF+), exome sequencing (xE), tumor origin identification (TO). Includes ADLT-priced xT CDx.</li>
+                        <li><strong>Hereditary Testing (Ambry Genetics):</strong> Germline assays (xG/xG+) for inherited cancer risk (e.g., CancerNext, BRCAplus).</li>
+                    </ul>
+                </div>
+                <div class="info-block">
+                    <h4 class="info-block-title">2. Data and Services</h4>
+                    <p>Capitalizes on the extensive multimodal data library and AI capabilities.</p>
+                    <ul class="list-disc list-inside">
+                        <li><strong>Insights (Data Licensing):</strong> Licensing de-identified clinical, molecular, and imaging data to pharma for R&D. Significant growth driver.</li>
+                        <li><strong>AI Model Development & Analytics:</strong> Collaborations (e.g., AstraZeneca) to build AI models; bespoke analytical services.</li>
+                        <li><strong>Platforms & Other Services:</strong> Trials/TIME (trial matching), Next (care gap identification), Algos (algorithmic tests), Hub (clinician portal), Lens (research platform), olivia (patient app).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Revenue Generation</h3>
+            <p class="mb-4">Revenue is generated through test fees in the Genomics segment and through data licensing, AI model development fees, platform access, and clinical trial services in the Data & Services segment. The diversification, especially the growth in data-centric revenues, is key to Tempus's financial strategy.</p>
+            <div class="chart-container pie-chart-container mx-auto">
+                <canvas id="revenueSegmentsChart"></canvas>
+            </div>
+            <p class="text-note">Illustrative Revenue Contribution by Segment (Q1 2025)</p>
+
+            <h3 class="subsection-title">Operational Model: The Tempus Platform</h3>
+            <p>Operations revolve around the Tempus Platform, an integrated system for data acquisition (from labs, EHRs, imaging), processing, AI-driven analysis, and delivery of insights. This platform aims to be an "operating system" for healthcare data, creating a virtuous cycle: testing generates data, data trains AI, AI improves diagnostics and creates data products, driving more testing and services.</p>
+        </section>
+
+        <section id="financials" class="section-card">
+            <h2 class="section-title">Financial Performance</h2>
+            <p>This section provides an interactive exploration of Tempus AI's financial performance, highlighting key trends in revenue, profitability, and cash flow. The company is in a rapid growth phase, marked by strong revenue increases and significant investments. Users can examine various financial metrics through dynamic charts to understand Tempus's financial trajectory and its progress towards profitability targets, such as the projected positive Adjusted EBITDA for 2025.</p>
+            
+            <div class="tab-buttons-container">
+                <button class="financial-tab-button tab-button active" data-chart="revenueTrendChart">Revenue Trends</button>
+                <button class="financial-tab-button tab-button" data-chart="profitabilityTrendChart">Profitability Trends</button>
+                <button class="financial-tab-button tab-button" data-chart="balanceSheetChart">Balance Sheet Highlights</button>
+            </div>
+            <div id="financial-charts-container">
+                <div class="chart-container" id="revenueTrendChartContainer">
+                    <canvas id="revenueTrendChart"></canvas>
+                </div>
+                <div class="chart-container hidden" id="profitabilityTrendChartContainer">
+                    <canvas id="profitabilityTrendChart"></canvas>
+                </div>
+                 <div class="chart-container hidden" id="balanceSheetChartContainer">
+                    <canvas id="balanceSheetChart"></canvas>
+                </div>
+            </div>
+
+            <h3 class="subsection-title centered !mb-4">Key Financial Highlights (Q1 2025 YoY Growth)</h3>
+             <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-value">75.4%</div>
+                    <div class="kpi-label">Total Revenue Growth</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">88.9%</div>
+                    <div class="kpi-label">Genomics Revenue Growth</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">58.0%</div>
+                    <div class="kpi-label">Insights (Data Licensing) Growth</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">60.7%</div>
+                    <div class="kpi-label">Gross Margin (Q1 2025)</div>
+                </div>
+                 <div class="kpi-card">
+                    <div class="kpi-value">-$16.2M</div>
+                    <div class="kpi-label">Adjusted EBITDA (Q1 2025)</div>
+                </div>
+                 <div class="kpi-card">
+                    <div class="kpi-value">$5M</div>
+                    <div class="kpi-label">FY2025 Adj. EBITDA Target (Proj.)</div>
+                </div>
+            </div>
+            <p>Tempus AI demonstrates robust revenue growth and improving gross margins. While GAAP net losses persist, largely due to non-cash stock-based compensation and growth investments, Adjusted EBITDA is trending positively. The company is focused on managing operating expenses while scaling, with a key target of achieving positive Adjusted EBITDA in 2025.</p>
+        </section>
+
+        <section id="competition" class="section-card">
+            <h2 class="section-title">Competitive Landscape</h2>
+            <p>Tempus AI operates in a dynamic and competitive sector, facing companies specializing in genomics, diagnostics, healthcare data, and AI. This section outlines the key competitors and the general market environment. Understanding this landscape is crucial to appreciating Tempus's strategic positioning and challenges. Users will find a summary of different competitor types and a table detailing some major players.</p>
+            
+            <p class="mb-4">The competitive field includes genomics specialists (e.g., Foundation Medicine, Guardant Health, Caris Life Sciences) and healthcare data/AI platforms (e.g., ConcertAI, IQVIA). Competition is driven by technological innovation, R&D investment, and strategic partnerships.</p>
+
+            <h3 class="subsection-title centered !mb-4">Key Competitor Overview</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Competitor</th>
+                            <th>Primary Focus</th>
+                            <th>Key Offerings</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Foundation Medicine</td>
+                            <td>Genomic Testing (CGP)</td>
+                            <td>FoundationOne CDx, Liquid CDx</td>
+                            <td>Subsidiary of Roche</td>
+                        </tr>
+                        <tr>
+                            <td>Guardant Health</td>
+                            <td>Liquid Biopsy, MRD, RWD</td>
+                            <td>Guardant360, Reveal, Shield</td>
+                            <td>Public (NASDAQ: GH)</td>
+                        </tr>
+                        <tr>
+                            <td>Caris Life Sciences</td>
+                            <td>Genomic Testing (WES, WTS), AI, RWD</td>
+                            <td>MI Profile, Caris Assure</td>
+                            <td>Filed for IPO (May 2025)</td>
+                        </tr>
+                        <tr>
+                            <td>ConcertAI</td>
+                            <td>Real-World Data, Clinical AI</td>
+                            <td>eurekaHealth, Patient360™</td>
+                            <td>Private</td>
+                        </tr>
+                        <tr>
+                            <td>IQVIA</td>
+                            <td>RWD, Analytics, CRO</td>
+                            <td>IQVIA CORE™</td>
+                            <td>Public (NYSE: IQV)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+             <p class="text-note">This table is illustrative and not exhaustive.</p>
+        </section>
+
+        <section id="differentiators" class="section-card">
+            <h2 class="section-title">Key Differentiators</h2>
+            <p>Tempus AI strives to differentiate itself through a combination of its integrated multimodal data approach, its "Intelligent Diagnostics" philosophy, its comprehensive Tempus Platform, the scale of its data and AI capabilities, and its dual focus on diagnostics and data/AI services. This section explores these unique aspects and how they compare to competitors. Users can understand the core strengths Tempus leverages to build its competitive advantage.</p>
+            
+            <div class="info-block mb-6">
+                <h4 class="info-block-title">Core Differentiating Factors:</h4>
+                <ul class="list-disc list-inside">
+                    <li><strong>Integrated Multimodal Data:</strong> Large, proprietary library of linked clinical, molecular, imaging, and pathology data, forming a rich substrate for AI.</li>
+                    <li><strong>"Intelligent Diagnostics":</strong> AI (including generative AI) used to contextualize lab results with comprehensive patient data for personalized insights.</li>
+                    <li><strong>Tempus Platform as an "Operating System":</strong> A suite of integrated software tools (Hub, Lens, Next, TIME, olivia) embedded in user workflows.</li>
+                    <li><strong>Scale of Data & AI:</strong> One of the largest clinical/molecular oncology datasets, augmented by strategic AI collaborations (e.g., AstraZeneca, Illumina).</li>
+                    <li><strong>Dual Focus:</strong> Synergistic model where Genomics testing feeds data for high-value Data & AI Services, creating a virtuous cycle.</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title centered !mb-4">Business Model Comparison Snippet</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Differentiating Factor</th>
+                            <th>Tempus AI</th>
+                            <th>Guardant Health (Illustrative)</th>
+                            <th>Foundation Medicine (Illustrative)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-medium">Data Strategy</td>
+                            <td class="text-xs">Linked multimodal (clinical, molecular, imaging); "OS" for data</td>
+                            <td class="text-xs">Genomic & clinical (GuardantINFORM); liquid biopsy focus</td>
+                            <td class="text-xs">Genomic data from CGP; Roche ecosystem</td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">AI Integration</td>
+                            <td class="text-xs">Central to "Intelligent Diagnostics"; generative AI</td>
+                            <td class="text-xs">AI in test dev, data analysis</td>
+                            <td class="text-xs">AI in variant interpretation; Roche AI</td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">Platform Ecosystem</td>
+                            <td class="text-xs">Integrated suite (Hub, Lens, Next, etc.)</td>
+                            <td class="text-xs">Guardant Connect; LIMS</td>
+                            <td class="text-xs">Physician portals; Roche systems</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-note">Simplified comparison based on report details.</p>
+        </section>
+        
+        <section id="conclusion" class="section-card">
+            <h2 class="section-title">Concluding Remarks</h2>
+            <div class="alert-box">
+                 <p>Tempus AI is a rapidly growing company at the intersection of genomics, big data, and AI, aiming to revolutionize precision medicine. Its integrated business model, focusing on generating and leveraging multimodal data through its Tempus Platform, shows strong revenue growth and improving operational metrics, with a target for positive Adjusted EBITDA in 2025.</p>
+            </div>
+            <p>Key challenges include achieving sustained GAAP profitability, managing high operating expenses during scaling, and continuously demonstrating clinical and economic value in a competitive landscape. Success hinges on data expansion, AI advancement, market penetration, and disciplined financial management. Tempus AI represents a compelling, maturing enterprise with significant potential to impact precision medicine.</p>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>&copy; <span id="footerYear"></span> Interactive Report Analysis.</p>
+        <p>For informational purposes only. Data derived from Tempus AI, Inc. public disclosures and analysis report.</p>
+        <p class="text-xs mt-1">This is a conceptual application for illustrative purposes.</p>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mainNavElement = document.getElementById('mainNavElement'); // Get the nav element
+        let navHeight = 70; // Default nav height
+
+        function updateNavHeight() {
+            if (mainNavElement) {
+                navHeight = mainNavElement.offsetHeight + 20; // Base nav height + padding
+            }
+        }
+        updateNavHeight(); // Initial calculation
+
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                updateNavHeight(); // Recalculate nav height if mobile menu visibility changes layout
+            });
+        }
+        
+        // Close mobile menu on link click
+        document.querySelectorAll('#mobileMenu a.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    updateNavHeight();
+                }
+            });
+        });
+
+        // Smooth scroll and active link highlighting
+        const allNavLinks = document.querySelectorAll('.main-nav a.nav-link, #mobileMenu a.mobile-nav-link');
+        const sections = document.querySelectorAll('section[id]');
+
+        allNavLinks.forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                updateNavHeight(); // Ensure navHeight is current before scrolling
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - navHeight;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        window.addEventListener('scroll', () => {
+            updateNavHeight(); // Keep navHeight updated on scroll (e.g., if content loads and changes nav position)
+            let currentSectionId = '';
+            const scrollPosition = window.pageYOffset + navHeight + 30; // Adjusted for better active state trigger
+
+            sections.forEach(section => {
+                if (section.offsetTop <= scrollPosition && (section.offsetTop + section.offsetHeight) > scrollPosition) {
+                    currentSectionId = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('.main-nav .nav-container > a.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === currentSectionId) {
+                    link.classList.add('active');
+                }
+            });
+            document.querySelectorAll('#mobileMenu a.mobile-nav-link').forEach(link => {
+                 link.classList.remove('active');
+                 if (link.getAttribute('href').substring(1) === currentSectionId) {
+                    link.classList.add('active');
+                 }
+            });
+        });
+        
+        // Initial active link state and nav height on load/resize
+        window.addEventListener('load', () => {
+            updateNavHeight();
+            window.dispatchEvent(new Event('scroll')); // Trigger scroll handler to set initial active link
+        });
+        window.addEventListener('resize', () => {
+            updateNavHeight();
+            window.dispatchEvent(new Event('scroll')); // Re-evaluate active link on resize
+        });
+
+
+        // Financial Data for Tempus AI
+        const tempusFinancialData = {
+            revenue: {
+                labels: ['FY 2022', 'FY 2023', 'FY 2024', 'Q1 2024', 'Q1 2025'],
+                total: [321.0, 531.8, 693.4, 145.8, 255.7],
+                genomics: [198.0, 363.0, 451.7, 102.6, 193.8],
+                dataServices: [122.7, 168.8, 241.6, 43.2, 61.9]
+            },
+            profitability: {
+                labels: ['FY 2022', 'FY 2023', 'FY 2024', 'Q1 2024', 'Q1 2025'],
+                grossProfit: [122.0, 286.2, 381.1, 77.7, 155.2],
+                grossMargin: [38.0, 53.8, 55.0, 53.3, 60.7], // As percentages
+                netLoss: [-289.8, -214.1, -705.8, -64.7, -68.0],
+                adjEbitda: [-100, -154.2, -104.7, -43.9, -16.2] // Example: Made FY22 non-null for chart
+            },
+            balanceSheet: {
+                labels: ['YE 2022', 'YE 2023', 'YE 2024', 'Q1 2025'],
+                cashAndSTInv: [303.0, 198.2, 448.1, 218.8],
+                totalAssets: [450.0, 548.6, 1180.0, 1540.0],  // Example: Made YE22 non-null
+                totalLiabilities: [580.0, 675.9, 1650.0, 1220.0], // Example: Made YE22 non-null
+                totalEquity: [-130.0, -127.3, -470.0, 326.2]  // Example: Made YE22 non-null
+            },
+            revenueSegmentsQ12025: {
+                labels: ['Genomics Revenue', 'Data & Services Revenue'],
+                data: [193.8, 61.9] 
+            }
+        };
+        
+        // Spotify-like Chart Colors
+        const spotifyChartColors = {
+            emerald500_7: 'rgba(16, 185, 129, 0.7)',
+            emerald400_7: 'rgba(52, 211, 153, 0.7)',
+            emerald600_7: 'rgba(5, 150, 105, 0.7)',
+            blue500_7: 'rgba(59, 130, 246, 0.7)',
+            purple500_7: 'rgba(139, 92, 246, 0.7)',
+            orange500_7: 'rgba(249, 115, 22, 0.7)',
+            red500_7: 'rgba(239, 68, 68, 0.7)',
+            gray500_7: 'rgba(107, 114, 128, 0.7)',
+            
+            emerald500: 'rgb(16, 185, 129)',
+            gray500: 'rgb(107, 114, 128)',
+            blue500: 'rgb(59, 130, 246)',
+            orange500: 'rgb(249, 115, 22)',
+            purple500: 'rgb(139, 92, 246)',
+        };
+
+        // Base Chart Options
+        const chartOptionsBase = (titleText) => ({
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: titleText,
+                    font: { size: 14, weight: '600' },
+                    color: '#047857', // emerald-700
+                    padding: { top: 5, bottom: 15 }
+                },
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#52525b', // neutral-500
+                        font: { size: 10 },
+                        boxWidth: 12,
+                        padding: 15
+                    } 
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleFont: { weight: '600', size: 12 },
+                    bodyFont: { size: 11 },
+                    padding: 8,
+                    cornerRadius: 4,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) { label += ': '; }
+                            if (context.parsed.y !== null) {
+                                let val = context.parsed.y;
+                                if (context.dataset.label && context.dataset.label.includes('%')) {
+                                    label += val.toFixed(1) + '%';
+                                } else {
+                                    label += val.toLocaleString('en-US', { maximumFractionDigits: 1 }) + 'M';
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: { 
+                        color: '#52525b', font: {size: 9},
+                        callback: function(value) { return value.toLocaleString('en-US', { maximumFractionDigits: 0 }) + 'M'; }
+                    },
+                    grid: { color: '#e5e7eb', borderColor: '#e5e7eb' } 
+                },
+                x: {
+                    ticks: { color: '#52525b', font: {size: 9} },
+                    grid: { display: false }
+                }
+            },
+            animation: { duration: 600, easing: 'easeOutCubic' }
+        });
+        
+        let chartInstances = {}; // To store chart instances for potential resize/destroy
+
+        // Pie Chart (Revenue Segments)
+        if (document.getElementById('revenueSegmentsChart')) {
+            chartInstances.revenueSegmentsChart = new Chart(document.getElementById('revenueSegmentsChart'), {
+                type: 'pie',
+                data: {
+                    labels: tempusFinancialData.revenueSegmentsQ12025.labels,
+                    datasets: [{
+                        label: 'Revenue Q1 2025 ($M)',
+                        data: tempusFinancialData.revenueSegmentsQ12025.data,
+                        backgroundColor: [spotifyChartColors.emerald500_7, spotifyChartColors.blue500_7],
+                        borderColor: '#FFFFFF', borderWidth: 2, hoverOffset: 4
+                    }]
+                },
+                options: {
+                     ...chartOptionsBase('Revenue Contribution by Segment (Q1 2025)'),
+                     plugins: {
+                        ...chartOptionsBase().plugins, // Get base plugins
+                        title: chartOptionsBase('Revenue Contribution by Segment (Q1 2025)').plugins.title, // Keep title
+                        legend: { position: 'right', labels: {font:{size:9}, padding:10, color: '#404040'}}, // Override legend
+                        tooltip: chartOptionsBase().plugins.tooltip // Keep tooltip
+                     }
+                }
+            });
+        }
+
+
+        // Revenue Trend Chart
+        if (document.getElementById('revenueTrendChart')) {
+            chartInstances.revenueTrendChart = new Chart(document.getElementById('revenueTrendChart'), {
+                type: 'bar',
+                data: {
+                    labels: tempusFinancialData.revenue.labels,
+                    datasets: [
+                        {
+                            label: 'Genomics Revenue', data: tempusFinancialData.revenue.genomics,
+                            backgroundColor: spotifyChartColors.emerald500_7, borderColor: spotifyChartColors.emerald500, borderWidth: 1
+                        },
+                        {
+                            label: 'Data & Services Revenue', data: tempusFinancialData.revenue.dataServices,
+                            backgroundColor: spotifyChartColors.blue500_7, borderColor: spotifyChartColors.blue500, borderWidth: 1
+                        },
+                         {
+                            label: 'Total Revenue', data: tempusFinancialData.revenue.total, type: 'line',
+                            borderColor: spotifyChartColors.gray500, backgroundColor: 'transparent', borderWidth: 2.5, fill: false, tension: 0.3,
+                            pointBackgroundColor: spotifyChartColors.gray500, pointRadius: 3, yAxisID: 'y' 
+                        }
+                    ]
+                },
+                options: chartOptionsBase('Revenue Trends (USD Millions)')
+            });
+        }
+
+        // Profitability Trend Chart
+        if (document.getElementById('profitabilityTrendChart')) {
+            chartInstances.profitabilityTrendChart = new Chart(document.getElementById('profitabilityTrendChart'), {
+                type: 'bar',
+                data: {
+                    labels: tempusFinancialData.profitability.labels,
+                    datasets: [
+                        { label: 'Gross Profit', data: tempusFinancialData.profitability.grossProfit, backgroundColor: spotifyChartColors.emerald400_7, yAxisID: 'yAmount' },
+                        { label: 'Net Loss', data: tempusFinancialData.profitability.netLoss, backgroundColor: spotifyChartColors.red500_7, yAxisID: 'yAmount' },
+                        { label: 'Adjusted EBITDA', data: tempusFinancialData.profitability.adjEbitda, backgroundColor: spotifyChartColors.orange500_7, yAxisID: 'yAmount' },
+                        {
+                            label: 'Gross Margin (%)', data: tempusFinancialData.profitability.grossMargin, type: 'line',
+                            borderColor: spotifyChartColors.purple500, backgroundColor: 'transparent', fill: false, tension: 0.3, borderWidth: 2.5,
+                            pointBackgroundColor: spotifyChartColors.purple500, pointRadius: 3, yAxisID: 'yPercentage'
+                        }
+                    ]
+                },
+                options: {
+                    ...chartOptionsBase('Profitability Trends (USD Millions / %)'),
+                    scales: {
+                        yAmount: {
+                            type: 'linear', position: 'left', title: { display: true, text: 'Amount (USD Millions)', font:{size:9}, color:'#52525b'},
+                            ticks: { color: '#52525b', font:{size:9}, callback: function(value) { return value.toLocaleString('en-US', { maximumFractionDigits: 0 }) + 'M'; }},
+                            grid: { color: '#e5e7eb' }
+                        },
+                        yPercentage: {
+                            type: 'linear', position: 'right', title: { display: true, text: 'Gross Margin (%)', font:{size:9}, color:'#52525b'},
+                            ticks: { color: '#52525b', font:{size:9}, callback: function(value) { return value.toFixed(0) + '%'; }},
+                            grid: { drawOnChartArea: false } 
+                        },
+                        x: { ticks: { color: '#52525b', font:{size:9} }, grid: {display: false} }
+                    }
+                }
+            });
+        }
+
+        // Balance Sheet Chart
+        if (document.getElementById('balanceSheetChart')) {
+            chartInstances.balanceSheetChart = new Chart(document.getElementById('balanceSheetChart'), {
+                type: 'bar',
+                data: {
+                    labels: tempusFinancialData.balanceSheet.labels,
+                    datasets: [
+                        { label: 'Cash & ST Investments', data: tempusFinancialData.balanceSheet.cashAndSTInv, backgroundColor: spotifyChartColors.emerald600_7, },
+                        { label: 'Total Assets', data: tempusFinancialData.balanceSheet.totalAssets, backgroundColor: spotifyChartColors.blue500_7, },
+                        { label: 'Total Liabilities', data: tempusFinancialData.balanceSheet.totalLiabilities, backgroundColor: spotifyChartColors.orange500_7, },
+                        { label: 'Total Equity/(Deficit)', data: tempusFinancialData.balanceSheet.totalEquity, backgroundColor: spotifyChartColors.gray500_7, }
+                    ]
+                },
+                options: chartOptionsBase('Balance Sheet Highlights (USD Millions)')
+            });
+        }
+
+        // Tab switching for financial charts
+        const financialTabButtons = document.querySelectorAll('.financial-tab-button');
+        const financialChartContainers = {
+            revenueTrendChart: document.getElementById('revenueTrendChartContainer'),
+            profitabilityTrendChart: document.getElementById('profitabilityTrendChartContainer'),
+            balanceSheetChart: document.getElementById('balanceSheetChartContainer')
+        };
+
+        financialTabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                financialTabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                const chartToShow = button.dataset.chart;
+                Object.values(financialChartContainers).forEach(container => {
+                    if (container) container.classList.add('hidden');
+                });
+                if (financialChartContainers[chartToShow]) {
+                    financialChartContainers[chartToShow].classList.remove('hidden');
+                    // Resize chart after its container is made visible
+                    if (chartInstances[chartToShow] && typeof chartInstances[chartToShow].resize === 'function') {
+                        setTimeout(() => chartInstances[chartToShow].resize(), 0); // Delay slightly for rendering
+                    }
+                }
+            });
+        });
+
+        // Initial chart resize for the visible chart on load
+        window.addEventListener('load', () => {
+            const activeTab = document.querySelector('.financial-tab-button.active');
+            if (activeTab) {
+                const chartId = activeTab.dataset.chart;
+                if (chartInstances[chartId] && typeof chartInstances[chartId].resize === 'function') {
+                     setTimeout(() => chartInstances[chartId].resize(), 0);
+                }
+            } else if (chartInstances.revenueTrendChart) { // Default to resizing the first chart if no tab is active initially
+                 setTimeout(() => chartInstances.revenueTrendChart.resize(), 0);
+            }
+        });
+
+    </script>
+</body>
+</html>
