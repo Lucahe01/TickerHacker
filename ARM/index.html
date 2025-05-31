@@ -1,889 +1,409 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arm Holdings: Interactive Business Analysis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Visualization & Content Choices:
-        - Report Info: Executive Summary, Company Background -> Goal: Overview -> Viz: Key stats (HTML), Intro text -> Interaction: None -> Justification: Quick summary -> Library: HTML/Tailwind.
-        - Report Info: Financial Tables (1, 2, 3, 5, 6 from report) -> Goal: Show trends & composition -> Viz: Line charts (Revenue, Margins, OCF/FCF, ROIC), Stacked Bar (Revenue Mix) -> Interaction: Tooltips, legend clicking -> Justification: Clear visual trend analysis -> Library: Chart.js. Line charts will not have fill.
-        - Report Info: Product Portfolio (Table 7 from report) -> Goal: Explore products -> Viz: HTML table -> Interaction: None (static table for clarity) -> Justification: Easy product lookup -> Library: HTML/Tailwind. Table will be light-themed.
-        - Report Info: Competitive Landscape (Table 8 from report, x86 vs Arm market share) -> Goal: Compare -> Viz: Comparative HTML table, Bar chart for market share -> Interaction: Table, Chart tooltips -> Justification: Direct comparison -> Library: HTML/Tailwind/Chart.js. Table will be light-themed.
-        - Report Info: Business Model description, Strategic Evolution -> Goal: Understand mechanics & shifts -> Viz: Structured text, key points -> Interaction: None -> Justification: Clear explanation -> Library: HTML/Tailwind/JS.
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F5F5F4; /* stone-100 - Light overall background */
-            color: #374151; /* gray-700 - Default dark text */
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px; 
-            max-height: 350px;
-            background-color: #FFFFFF; /* Always white background for charts */
-            border-radius: 0.5rem;
-            padding: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-        }
-        @media (min-width: 768px) { /* md */
-            .chart-container {
-                height: 350px;
-                max-height: 400px;
-            }
-        }
-        .section-card { /* General cards for content sections */
-            background-color: #FFFFFF; /* White background for cards */
-            border-radius: 0.75rem; 
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); 
-            padding: 1.5rem; 
-            margin-bottom: 2rem; 
-        }
-        .main-page-title { 
-            font-size: 1.5rem; 
-            font-weight: 700; 
-            color: #60A5FA; /* blue-400 */
-        }
-        .section-title {
-            font-size: 1.875rem; 
-            font-weight: 600; 
-            color: #60A5FA; /* blue-400 */
-            margin-bottom: 1.5rem; 
-            padding-bottom: 0.5rem; 
-            border-bottom: 2px solid #E7E5E4; /* stone-200 */
-        }
-        .subsection-title {
-            font-size: 1.5rem; 
-            font-weight: 600; 
-            color: #2DD4BF; /* teal-400 */
-            margin-top: 1.5rem; 
-            margin-bottom: 1rem; 
-        }
-        .content-text {
-            line-height: 1.75;
-            color: #4B5563; /* gray-600 */
-            font-size: 0.95rem;
-        }
-        .highlight { 
-            color: #F97316; /* orange-500 */
-            font-weight: 600;
-        }
-        header.sticky nav a.nav-link { /* Specific to sticky header nav links */
-            padding: 0.75rem 0.5rem;
-            border-bottom: 4px solid transparent;
-            font-weight: 500;
-            color: #374151; /* gray-700 for light theme */
-            transition: all 0.2s ease-in-out;
-            white-space: nowrap;
-        }
-        header.sticky nav a.nav-link.active {
-            border-bottom-color: #3B82F6; /* blue-500 */
-            color: #2563EB; /* blue-600 */
-            font-weight: 600;
-        }
-        header.sticky nav a.nav-link:not(.active):hover {
-            background-color: #EFF6FF; /* blue-50 for hover */
-            color: #1D4ED8; /* blue-700 for hover text */
-        }
-         @media (min-width: 768px) { /* md */
-            header.sticky nav a.nav-link {
-                padding: 0.75rem 1rem;
-            }
-        }
-
-        .kpi-card {
-            background-color: #F9FAFB; /* gray-50 */
-            border: 1px solid #E7E5E4; /* stone-200 */
-            border-radius: 0.5rem; 
-            padding: 1rem;
-            text-align: center;
-        }
-        .kpi-label {
-            font-size: 0.875rem; 
-            color: #6B7280; /* gray-500 */
-            margin-bottom: 0.25rem;
-        }
-        .kpi-value {
-            font-size: 1.75rem; 
-            font-weight: 600;
-            color: #1F2937; /* gray-800 */
-        }
-        .table-container {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        /* Ensure tables always have light background and dark text */
-        table thead {
-            background-color: #f3f4f6; /* gray-100 */
-        }
-        table thead th {
-            color: #1f2937; /* gray-800 */
-            padding: 0.75rem 1rem;
-            text-align: left;
-            font-size: 0.75rem; /* text-xs */
-            font-weight: 500; /* font-medium */
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        table tbody {
-            background-color: #ffffff; /* white */
-        }
-        table tbody td {
-            color: #374151; /* gray-700 */
-            padding: 0.75rem 1rem;
-            font-size: 0.875rem; /* text-sm */
-        }
-        table tbody tr:nth-child(even) {
-            background-color: #f9fafb; /* gray-50 */
-        }
-        table tbody tr {
-            border-bottom: 1px solid #e5e7eb; /* gray-200 */
-        }
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Arm Holdings: Interactive Business Analysis</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+   <!-- Visualization & Content Choices: (Content from original ARM file, styled like SRE/CRWD)
+       - Overview: Key stats (KPI cards, amber-themed), Intro text.
+       - Business Model: Structured text cards explaining revenue streams, IP delivery, and strategic evolution.
+       - Products & Markets: Text descriptions in themed cards, HTML table for product portfolio.
+       - Financials: Line charts (Revenue, Margins, OCF/FCF, ROIC), Stacked Bar (Revenue Mix), styled with amber/orange theme.
+       - Competition: Comparative HTML table, Bar chart for market share (amber/orange themed).
+       - Strategic Outlook: Cards for Strengths, Vulnerabilities, Catalysts, Headwinds.
+       - All charts use Chart.js (Canvas). No SVG/Mermaid. Content maintained. -->
+   <style>
+       html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+       body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; } /* slate-50, slate-800 */
+      
+       .main-container { max-width: 1200px; margin-left: auto; margin-right: auto; padding: 1rem; }
 
 
-        main section[id] { /* For scrollspy offset */
-            scroll-margin-top: 80px; /* Adjust based on sticky header height */
-        }
-        
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #A8A29E; border-radius: 10px; } /* stone-400 */
-        ::-webkit-scrollbar-thumb:hover { background: #78716C; } /* stone-500 */
-
-        /* No dark mode specific overrides that would make backgrounds dark */
-        /* General text color for dark mode on body is fine, but components should maintain light theme */
-         @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #1f2937; /* gray-800 - Page background can be dark */
-                color: #d1d5db; /* gray-300 - Default text for dark mode */
-            }
-            /* Section cards remain light */
-            .section-card {
-                background-color: #FFFFFF; /* White */
-                color: #374151; /* gray-700 for text within cards */
-            }
-            .section-card .content-text { color: #4B5563; }
-            .section-card .section-title { color: #60A5FA; border-bottom-color: #E7E5E4;}
-            .section-card .subsection-title { color: #2DD4BF; }
-            .section-card .highlight { color: #F97316; }
+       .page-header { text-align: center; padding-top: 2rem; padding-bottom: 1.5rem; }
+       .page-title { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; color: #b45309; margin-bottom: 0.5rem; } /* amber-700 (ARM Primary) */
+       .page-subtitle { font-size: 1.25rem; color: #475569; } /* slate-600 */
 
 
-            header.sticky { /* Header in dark mode */
-                 background-color: #374151; /* gray-700 */
-                 box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -1px rgba(0,0,0,0.2);
-            }
-            header.sticky nav a.nav-link {
-                color: #d1d5db; /* gray-300 */
-            }
-            header.sticky nav a.nav-link.active {
-                border-bottom-color: #93C5FD; /* blue-300 */
-                color: #E0F2FE; /* blue-100 */
-            }
-            header.sticky nav a.nav-link:not(.active):hover {
-                background-color: #4b5563; /* gray-600 */
-                color: #F9FAFB; /* gray-50 */
-            }
-            header.sticky .main-page-title { color: #93C5FD; } /* blue-300 */
+       .sticky-nav {
+           position: sticky; top: 0; z-index: 40;
+           background-color: rgba(248, 250, 252, 0.95); /* slate-50 with opacity */
+           backdrop-filter: blur(8px);
+           padding-top: 0.5rem; padding-bottom: 0.5rem;
+           box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+           overflow-x: auto; white-space: nowrap;
+       }
+       .nav-link {
+           padding: 0.65rem 1rem; margin-right: 0.25rem; margin-bottom: 0.25rem;
+           border-radius: 0.375rem; font-weight: 500; font-size: 0.875rem;
+           cursor: pointer; transition: all 0.3s ease;
+           border: 1px solid transparent; color: #92400e; /* amber-800 */
+           display: inline-block;
+       }
+       .nav-link.active {
+           background-color: #b45309; /* amber-700 */
+           color: white; border-color: #b45309;
+           font-weight: 600;
+       }
+       .nav-link:not(.active):hover {
+           background-color: #fef3c7; /* amber-100 */
+           color: #78350f; /* amber-900 */
+           transform: translateY(-1px);
+       }
+      
+       .content-section { display: block; animation: fadeIn 0.5s ease-out; margin-bottom: 2.5rem; }
+       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 
-            .kpi-card { /* KPI cards remain light */
-                background-color: #F9FAFB; 
-                border-color: #E7E5E4; 
-            }
-            .kpi-card .kpi-label { color: #6B7280; }
-            .kpi-card .kpi-value { color: #1F2937; }
-            .kpi-card .text-xs { color: #6B7280; }
-
-            /* Specific containers within sections that might have their own background */
-            .bg-stone-50 { background-color: #F9FAFB !important; color: #374151 !important; }
-            .bg-stone-50 .subsection-title { color: #2DD4BF !important; }
-            .bg-stone-50 .content-text { color: #4B5563 !important; }
-            .bg-stone-50 .text-gray-700 { color: #374151 !important; }
-            .bg-stone-50 .text-gray-500 { color: #6B7280 !important; }
-            .bg-stone-50 .text-blue-500 { color: #3B82F6 !important; }
-
-
-            .bg-orange-50 { background-color: #FFF7ED !important; color: #374151 !important;}
-            .bg-orange-50 .subsection-title { color: #c2410c !important; } /* orange-700 */
-            .bg-orange-50 .content-text { color: #4B5563 !important; }
-
-
-            .bg-green-50 { background-color: #F0FDF4 !important; color: #374151 !important;}
-            .bg-green-50 .subsection-title { color: #15803d !important; } /* green-700 */
-            .bg-green-50 .content-text { color: #4B5563 !important; }
-
-            .bg-red-50 { background-color: #FEF2F2 !important; color: #374151 !important;}
-            .bg-red-50 .subsection-title { color: #b91c1c !important; } /* red-700 */
-            .bg-red-50 .content-text { color: #4B5563 !important; }
-
-            .bg-sky-50 { background-color: #F0F9FF !important; color: #374151 !important;}
-            .bg-sky-50 .subsection-title { color: #0369a1 !important; } /* sky-700 */
-            .bg-sky-50 .content-text { color: #4B5563 !important; }
-            
-            .bg-amber-50 { background-color: #FFFBEB !important; color: #374151 !important;}
-            .bg-amber-50 .subsection-title { color: #b45309 !important; } /* amber-700 */
-            .bg-amber-50 .content-text { color: #4B5563 !important; }
+       .section-title {
+           font-size: 1.875rem; line-height: 2.25rem; font-weight: 700;
+           color: #92400e; /* amber-800 (ARM Primary) */
+           margin-bottom: 1.5rem; text-align: center;
+       }
+       .card {
+           background-color: white; border-radius: 0.75rem;
+           box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+           padding: 1.5rem; transition: transform 0.3s ease, box-shadow 0.3s ease;
+       }
+       .card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+       }
+      
+       .subsection-title {
+           font-size: 1.5rem; font-weight: 600; color: #d97706; /* amber-600 */
+           margin-top: 1.5rem; margin-bottom: 1rem;
+       }
+       .content-text { line-height: 1.75; color: #4b5563; font-size: 0.9rem; margin-bottom:1rem; }
+       .highlight { color: #f59e0b; font-weight: 600; } /* amber-500 */
 
 
-            footer {
-                background-color: #1f2937; /* gray-800 */
-                color: #9ca3af; /* gray-400 */
-            }
-        }
+       .kpi-card {
+           background-color: #fffbeb; /* amber-50 */
+           padding: 1rem; border-radius: 0.5rem;
+           box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05); text-align: center;
+           border-left: 4px solid #b45309; /* amber-700 accent */
+           transition: transform 0.2s ease, box-shadow 0.2s ease;
+       }
+       .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px -3px rgba(180,83,9,0.15); }
+       .kpi-label { font-size: 0.75rem; color: #78350f; margin-bottom: 0.25rem; font-weight: 500; text-transform: uppercase;} /* amber-900 */
+       .kpi-value { font-size: 1.65rem; font-weight: 600; color: #b45309; } /* amber-700 */
+       .kpi-note { font-size: 0.7rem; color: #44403c; margin-top: 0.1rem; } /* stone-700 */
 
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+       .chart-container {
+           position: relative; width: 100%; max-width: 650px; margin-left: auto; margin-right: auto;
+           height: 320px; max-height: 380px;
+           background-color: #FFFFFF; border-radius: 0.5rem; padding: 1rem;
+           box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+       }
+       @media (min-width: 768px) { .chart-container { height: 350px; max-height: 400px;} }
+      
+       .table-container { max-height: 400px; overflow-y: auto; border: 1px solid #e7e5e4; border-radius: 0.375rem; } /* stone-200 */
+       table thead { background-color: #fef3c7; } /* amber-100 */
+       table thead th { color: #78350f; padding: 0.75rem 1rem; text-align: left; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;} /* amber-900 */
+       table tbody { background-color: #ffffff; }
+       table tbody td { color: #374151; padding: 0.75rem 1rem; font-size: 0.875rem; }
+       table tbody tr:nth-child(even) { background-color: #fffbeb; } /* amber-50 */
+       table tbody tr { border-bottom: 1px solid #fef3c7; } /* amber-100 */
+      
+       .footer {
+           background-color: #1e293b; color: #cbd5e1;
+           padding: 2rem 0; margin-top: 3rem; text-align: center;
+       }
+       h1,h2,h3,h4 { font-weight: 600; } /* From original ARM file */
+   </style>
 </head>
-<body class="min-h-screen">
+<body class="antialiased">
 
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex-shrink-0">
-                    <span class="main-page-title">Arm Holdings plc</span>
-                </div>
-                <nav class="hidden md:flex items-baseline space-x-1 lg:space-x-2">
-                    <a href="#overview" class="nav-link active">Overview</a>
-                    <a href="#businessModel" class="nav-link">Business Model</a>
-                    <a href="#productsMarkets" class="nav-link">Products & Markets</a>
-                    <a href="#financials" class="nav-link">Financials</a>
-                    <a href="#competition" class="nav-link">Competition</a>
-                    <a href="#outlook" class="nav-link">Strategic Outlook</a>
-                </nav>
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
-                        <span class="sr-only">Open main menu</span>
-                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
-                </div>
-            </div>
-             <div class="md:hidden hidden" id="mobile-menu">
-                <nav class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <a href="#overview" class="nav-link active block text-base">Overview</a>
-                    <a href="#businessModel" class="nav-link block text-base">Business Model</a>
-                    <a href="#productsMarkets" class="nav-link block text-base">Products & Markets</a>
-                    <a href="#financials" class="nav-link block text-base">Financials</a>
-                    <a href="#competition" class="nav-link block text-base">Competition</a>
-                    <a href="#outlook" class="nav-link block text-base">Strategic Outlook</a>
-                </nav>
-            </div>
-        </div>
-    </header>
 
-    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4 space-y-12">
-        <section id="overview" class="section-card">
-            <h2 class="section-title">Overview of Arm Holdings</h2>
-            <p class="content-text mb-6">Arm Holdings plc is a central figure in the global semiconductor industry. Its intellectual property (IP) forms the foundation for the vast majority of mobile devices and is increasingly pivotal in data centers, automotive technology, and the Internet of Things (IoT). This interactive report delves into Arm's business model, financial performance, competitive positioning, and strategic direction.</p>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                <div class="kpi-card">
-                    <p class="kpi-label">Global Reach</p>
-                    <p class="kpi-value">70%</p>
-                    <p class="text-xs text-gray-500 mt-1">of world's population uses Arm-based products.</p>
-                </div>
-                <div class="kpi-card">
-                    <p class="kpi-label">Chips Shipped</p>
-                    <p class="kpi-value">300B+</p>
-                    <p class="text-xs text-gray-500 mt-1">Arm-based chips shipped by partners.</p>
-                </div>
-                <div class="kpi-card">
-                    <p class="kpi-label">Smartphone Dominance</p>
-                    <p class="kpi-value">99%</p>
-                    <p class="text-xs text-gray-500 mt-1">of smartphones run on Arm processors.</p>
-                </div>
-                 <div class="kpi-card">
-                    <p class="kpi-label">FY2025 Revenue</p>
-                    <p class="kpi-value">$4.007B</p>
-                    <p class="text-xs text-gray-500 mt-1">Record annual revenue.</p>
-                </div>
-                <div class="kpi-card">
-                    <p class="kpi-label">Developer Ecosystem</p>
-                    <p class="kpi-value">22M+</p>
-                    <p class="text-xs text-gray-500 mt-1">software developers worldwide.</p>
-                </div>
-                 <div class="kpi-card">
-                    <p class="kpi-label">Market Share (Chip Value FY25)</p>
-                    <p class="kpi-value">49%</p>
-                    <p class="text-xs text-gray-500 mt-1">Gaining on x86's 39%.</p>
-                </div>
-            </div>
+   <header class="page-header">
+       <h1 class="page-title">Arm Holdings plc</h1>
+       <p class="page-subtitle">Interactive Business Analysis</p>
+   </header>
 
-            <p class="content-text mb-4">Arm's traditional model of licensing energy-efficient processor designs and collecting royalties has fostered a vast ecosystem. Recent financial success, including record revenues in FY2025, highlights the strength of this model, further boosted by strategic upselling to higher-value Armv9 architectures and Compute Subsystems (CSS). These initiatives increase royalty per chip, a key growth driver.</p>
-            <p class="content-text">However, Arm is at an inflection point, reportedly exploring direct chip design and sales (fabless model), especially for AI and data centers. This presents opportunities but also risks altering relationships with licensees. Arm faces competition from x86 rivals (Intel, AMD) and the open-source RISC-V architecture. This SPA explores these dynamics in detail.</p>
-        </section>
 
-        <section id="businessModel" class="section-card">
-            <h2 class="section-title">Arm's Value Creation Engine</h2>
-            <p class="content-text mb-6">Arm's business model is centered on creating and licensing semiconductor intellectual property (IP). Unlike traditional chip makers, Arm designs processor architectures and technologies that others license to build their System-on-Chips (SoCs). This section explores Arm's revenue streams, IP delivery, and ecosystem enablement.</p>
+   <nav class="sticky-nav mb-6">
+       <div class="main-container flex flex-wrap justify-center">
+           <a href="#overview" class="nav-link active">Overview</a>
+           <a href="#businessModel" class="nav-link">Business Model</a>
+           <a href="#productsMarkets" class="nav-link">Products & Markets</a>
+           <a href="#financials" class="nav-link">Financials</a>
+           <a href="#competition" class="nav-link">Competition</a>
+           <a href="#outlook" class="nav-link">Strategic Outlook</a>
+       </div>
+   </nav>
 
-            <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6">
-                <h3 class="subsection-title !mt-0">Core Revenue Streams</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h4 class="text-xl font-semibold text-gray-700 mb-2">1. Licensing Revenue</h4>
-                        <p class="content-text mb-2 text-sm">Fees paid by customers to access Arm's IP portfolio for their chip designs. Types of licenses include:</p>
-                        <ul class="list-disc list-inside content-text text-sm space-y-1">
-                            <li><strong>Processor IP Licensing (Core Licenses):</strong> For specific Arm cores (e.g., Cortex-A, Neoverse).</li>
-                            <li><strong>Architecture Licensing (ALA):</strong> Grants rights to design custom CPU cores based on Arm's ISA (e.g., Apple, Qualcomm).</li>
-                            <li><strong>Subscription Access (Arm Total Access - ATA / Flexible Access - AFA):</strong> Annual fee for access to a broad IP portfolio, reducing upfront costs. ATA licenses grew to 44 and AFA customers to 314 by Q4 FYE25.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-xl font-semibold text-gray-700 mb-2">2. Royalty Revenue</h4>
-                        <p class="content-text mb-2 text-sm">Recurring per-unit fees for each chip manufactured and sold that incorporates Arm IP. Typically a percentage of chip ASP or a fixed fee. Influenced by:</p>
-                        <ul class="list-disc list-inside content-text text-sm space-y-1">
-                            <li><strong>Adoption of Advanced Architectures (e.g., Armv9):</strong> Higher royalty rates for newer, higher-value IP.</li>
-                            <li><strong>Deployment of Compute Subsystems (CSS):</strong> Increases Arm content per chip, leading to higher royalties.</li>
-                            <li><strong>Market Segment Mix:</strong> Growth in high-value segments (data centers, automotive) boosts royalty income.</li>
-                            <li><strong>Volume of Chip Shipments:</strong> Fundamental driver of total royalty revenue.</li>
-                        </ul>
-                        <p class="mt-3 font-medium content-text text-sm">Arm actively aims to increase "royalty per chip." For example, FYE25 smartphone royalty revenue grew ~30% YoY, while unit shipments grew &lt;2%, indicating successful value capture.</p>
-                    </div>
-                </div>
-            </div>
 
-            <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6">
-                <h3 class="subsection-title !mt-0">IP Delivery and Ecosystem Enablement</h3>
-                 <p class="content-text mb-4 text-sm">Arm's value delivery involves rigorous R&D, innovative solutions like Compute Subsystems, and extensive ecosystem support. It maintains a "fabless" IP model, focusing on design and licensing, not manufacturing.</p>
-                <h4 class="text-xl font-semibold text-gray-700 mb-2">Accelerating Innovation: Compute Subsystems (CSS) & Virtual Prototyping</h4>
-                <p class="content-text mb-2 text-sm">CSS are pre-integrated, pre-verified configurations of Arm IP (CPUs, GPUs, System IP) that offer:</p>
-                <ul class="list-disc list-inside content-text text-sm space-y-1 mb-3">
-                    <li>Reduced time-to-market (potentially by up to a year).</li>
-                    <li>Lower development costs and risks.</li>
-                    <li>Allows licensees to focus on differentiation.</li>
-                </ul>
-                <p class="content-text mb-4 text-sm">Arm offers CSS for Client, Neoverse (Cloud/AI), and Automotive. Virtual prototyping allows early software development before silicon availability, speeding up product cycles.</p>
+   <main class="main-container">
+       <section id="overview" class="content-section card">
+           <h2 class="section-title">Overview of Arm Holdings</h2>
+           <p class="content-text mb-6 text-center max-w-4xl mx-auto">Arm Holdings plc is central to the global semiconductor industry. Its intellectual property (IP) underpins most mobile devices and is increasingly vital in data centers, automotive, and IoT. This report explores Arm's model, financials, competition, and strategy.</p>
+          
+           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+               <div class="kpi-card"><p class="kpi-label">Global Reach</p><p class="kpi-value">70%</p><p class="kpi-note">of world uses Arm-based products.</p></div>
+               <div class="kpi-card"><p class="kpi-label">Chips Shipped</p><p class="kpi-value">300B+</p><p class="kpi-note">Arm-based chips by partners.</p></div>
+               <div class="kpi-card"><p class="kpi-label">Smartphone Dominance</p><p class="kpi-value">99%</p><p class="kpi-note">of smartphones run on Arm.</p></div>
+               <div class="kpi-card"><p class="kpi-label">FY2025 Revenue</p><p class="kpi-value">$4.007B</p><p class="kpi-note">Record annual revenue.</p></div>
+               <div class="kpi-card"><p class="kpi-label">Developer Ecosystem</p><p class="kpi-value">22M+</p><p class="kpi-note">software developers worldwide.</p></div>
+               <div class="kpi-card"><p class="kpi-label">Market Share (Chip Value FY25)</p><p class="kpi-value">49%</p><p class="kpi-note">Gaining on x86's 39%.</p></div>
+           </div>
+           <p class="content-text text-center max-w-3xl mx-auto text-sm">Arm's IP licensing and royalty model, boosted by upselling to Armv9 and Compute Subsystems (CSS), drives growth. However, it faces competition and is exploring direct chip design, creating new dynamics.</p>
+       </section>
 
-                <h4 class="text-xl font-semibold text-gray-700 mb-2">Nurturing the Ecosystem</h4>
-                <p class="content-text mb-2 text-sm">Arm supports its ~22 million software developers with:</p>
-                <ul class="list-disc list-inside content-text text-sm space-y-1">
-                    <li><strong>Development Tools:</strong> Arm Development Studio, Keil MDK, compilers, debug probes.</li>
-                    <li><strong>Software and Libraries:</strong> Firmware, OS ports, Arm Kleidi for AI performance.</li>
-                    <li><strong>Partnerships:</strong> Collaboration with silicon vendors, foundries, EDA providers, ISVs, OS vendors (e.g., "Arm Total Design" for Neoverse CSS).</li>
-                </ul>
-            </div>
-             <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                <h3 class="subsection-title !mt-0 !text-orange-700">Strategic Evolution: Venturing into In-House Chip Solutions</h3>
-                <p class="content-text mb-2 text-sm">Arm is reportedly planning to develop and sell its own chips (fabless model), starting with an AI-focused chip in 2025. Drivers include:</p>
-                <ul class="list-disc list-inside content-text text-sm space-y-1 mb-3">
-                    <li><strong>AI Revolution:</strong> Demand for specialized AI processors.</li>
-                    <li><strong>Custom Silicon Demand:</strong> Catering to hyperscalers and OEMs.</li>
-                    <li><strong>Value Capture:</strong> Securing a larger share of chip revenue/profit.</li>
-                    <li><strong>Showcasing Architecture:</strong> Demonstrating capabilities with flagship chips.</li>
-                </ul>
-                <p class="font-medium content-text text-sm">Implications:</p>
-                <ul class="list-disc list-inside content-text text-sm space-y-1">
-                    <li>Arm may compete with key licensees (e.g., Qualcomm, Nvidia).</li>
-                    <li>Potential challenge to Arm's traditional neutrality.</li>
-                    <li>Ecosystem impact: Licensees might explore alternatives like RISC-V.</li>
-                    <li>Requires new capabilities in chip sales, marketing, and support.</li>
-                </ul>
-                <p class="mt-2 content-text text-xs">Initial focus is reportedly on data center server CPUs, with Meta as a potential early customer, manufactured by TSMC.</p>
-            </div>
-        </section>
 
-        <section id="productsMarkets" class="section-card">
-            <h2 class="section-title">Arm's Product Arsenal and Market Segments</h2>
-            <p class="content-text mb-6">Arm's extensive IP portfolio serves a wide array of applications. This section outlines its key product lines and the primary markets it targets, highlighting strategic growth areas.</p>
-            
-            <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6">
-                <h3 class="subsection-title !mt-0">Key Product Lines</h3>
-                <div class="space-y-2 content-text text-sm">
-                    <p><strong>Compute IP (CPUs):</strong> Cortex-A (smartphones, automotive IVI), Cortex-M (IoT, wearables), Cortex-R (real-time automotive/industrial), Cortex-X (custom high-performance), Neoverse (data centers, cloud, 5G), Ethos NPUs (AI/ML acceleration), SecurCore (security).</p>
-                    <p><strong>Graphics & Multimedia IP:</strong> Mali GPUs (smartphones, DTVs), Immortalis GPUs (premium mobile, ray tracing).</p>
-                    <p><strong>System, Physical, Security & Subsystem IP:</strong> CoreLink System IP (interconnects, controllers), Physical IP (standard cells, memory compilers), Security IP (TrustZone, CryptoCell), Subsystem IP (Corstone for IoT, Compute Subsystems - CSS).</p>
-                    <p><strong>Development Tools & Software:</strong> Compilers, debuggers (Arm Development Studio, Keil MDK), performance tools, Fixed Virtual Platforms, Arm Kleidi (AI libraries).</p>
-                </div>
-            </div>
+       <section id="businessModel" class="content-section card">
+           <h2 class="section-title">Arm's Value Creation Engine</h2>
+           <p class="content-text mb-6 text-center max-w-4xl mx-auto">Arm's business model centers on creating and licensing semiconductor IP. It designs processor architectures that others license to build System-on-Chips (SoCs).</p>
 
-            <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6">
-                 <h3 class="subsection-title !mt-0">Primary Target Markets & Growth Verticals</h3>
-                <div class="space-y-2 content-text text-sm">
-                    <p><strong>Smartphones/Mobile:</strong> Traditional stronghold (99% market share). Focus on premium experiences and increasing Arm IP value per device (Cortex-A/X, Immortalis GPUs).</p>
-                    <p><strong>Data Center & Cloud Computing:</strong> Significant growth vector challenging x86 with Neoverse CPUs and CSS. Aiming for 10-15% of Arm's revenue; ~50% of new server chips to top hyperscalers in 2025 expected to be Arm-based.</p>
-                    <p><strong>Automotive:</strong> Capitalizing on software-defined vehicles, EV, autonomous driving with Cortex-A (IVI), Cortex-R (safety), Mali GPUs, CSS for Automotive. First CSS for Automotive license with a leading EV maker.</p>
-                    <p><strong>Internet of Things (IoT):</strong> Diverse market served by Cortex-M MCUs, Ethos NPUs, Corstone IoT subsystems.</p>
-                    <p><strong>Client Computing (PCs/Laptops):</strong> Renewed push into x86-dominated PC market with power-efficient Cortex CPUs for Windows on Arm (WoA) devices (e.g., Qualcomm Snapdragon X series).</p>
-                </div>
-                <p class="mt-3 font-medium content-text text-sm">Overall product strategy: Increase intrinsic IP value per device via Armv9, specialized co-processors, and CSS, driving higher royalties/fees beyond unit volume growth.</p>
-            </div>
 
-            <div class="bg-stone-50 p-4 rounded-lg border border-stone-200">
-                <h3 class="subsection-title !mt-0">Product Portfolio Overview (Illustrative)</h3>
-                <div class="table-container">
-                    <table class="min-w-full">
-                        <thead>
-                            <tr>
-                                <th>Product Line/Family</th>
-                                <th>Primary Target Market(s)</th>
-                                <th>Example Use Cases</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Cortex-A Series CPUs</td><td>Smartphones, Tablets, Laptops, Automotive IVI</td><td>Mobile Apps, Digital Cockpits</td></tr>
-                            <tr><td>Cortex-M Series CPUs</td><td>IoT, Microcontrollers, Wearables</td><td>Sensor Hubs, Smart Meters</td></tr>
-                            <tr><td>Cortex-R Series CPUs</td><td>Automotive (ADAS, Powertrain), Storage</td><td>Safety-Critical Systems, SSDs</td></tr>
-                            <tr><td>Neoverse Series CPUs</td><td>Data Centers, Cloud, Networking</td><td>Cloud Servers, 5G Base Stations, AI</td></tr>
-                            <tr><td>Ethos Series NPUs</td><td>Edge AI, IoT, Smartphones</td><td>On-Device AI, Computer Vision</td></tr>
-                            <tr><td>Immortalis Series GPUs</td><td>Premium Smartphones</td><td>AAA Mobile Gaming, Ray Tracing</td></tr>
-                            <tr><td>Compute Subsystems (CSS)</td><td>Client, Infrastructure, Automotive</td><td>Accelerated SoC Development</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="text-xs text-gray-500 mt-2">Table derived from report's Table 7, showing a selection for brevity.</p>
-            </div>
-        </section>
+           <div class="bg-amber-50 p-4 rounded-lg border border-amber-200 mb-6">
+               <h3 class="subsection-title !mt-0 !text-amber-700">Core Revenue Streams</h3>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div>
+                       <h4 class="text-lg font-semibold text-amber-600 mb-2">1. Licensing Revenue</h4>
+                       <p class="content-text mb-2 text-xs">Fees for IP access. Types: Processor IP, Architecture (ALA), Subscriptions (Arm Total Access - ATA / Flexible Access - AFA).</p>
+                   </div>
+                   <div>
+                       <h4 class="text-lg font-semibold text-amber-600 mb-2">2. Royalty Revenue</h4>
+                       <p class="content-text mb-2 text-xs">Recurring per-unit fees. Influenced by Armv9 adoption, Compute Subsystems (CSS), market mix, and chip volume. FY25 smartphone royalty revenue grew ~30% YoY on &lt;2% unit growth.</p>
+                   </div>
+               </div>
+           </div>
 
-        <section id="financials" class="section-card">
-            <h2 class="section-title">Financial Deep Dive (FY2021-FY2025)</h2>
-            <p class="content-text mb-6">Arm's financial performance reflects significant growth and strategic investments. This section visualizes key financial metrics over the past five fiscal years (ending March 31), including revenue trends, profitability, and cash flow generation.</p>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 chart-container-wrapper">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2 text-center">Total Revenue Growth</h3>
-                    <div class="chart-container"><canvas id="totalRevenueChart"></canvas></div>
-                    <p class="text-xs text-gray-500 mt-2 text-center">Record revenue of $4.007B in FY2025.</p>
-                </div>
-                <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 chart-container-wrapper">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2 text-center">Revenue Breakdown (Licensing vs. Royalty)</h3>
-                    <div class="chart-container"><canvas id="revenueMixChart"></canvas></div>
-                     <p class="text-xs text-gray-500 mt-2 text-center">Growing royalty contribution, especially in FY25.</p>
-                </div>
-                <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 chart-container-wrapper">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2 text-center">Profitability Margins (GAAP)</h3>
-                    <div class="chart-container"><canvas id="profitMarginsChart"></canvas></div>
-                    <p class="text-xs text-gray-500 mt-2 text-center">Gross margin consistently high (95%+). Operating/Net margins impacted in FY24 by IPO costs, recovered in FY25.</p>
-                </div>
-                <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 chart-container-wrapper">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2 text-center">Operating & Free Cash Flow</h3>
-                    <div class="chart-container"><canvas id="cashFlowChart"></canvas></div>
-                    <p class="text-xs text-gray-500 mt-2 text-center">OCF/FCF variability; FY25 impacted by working capital changes.</p>
-                </div>
-                 <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 chart-container-wrapper">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2 text-center">Return on Invested Capital (ROIC)</h3>
-                    <div class="chart-container"><canvas id="roicChart"></canvas></div>
-                    <p class="text-xs text-gray-500 mt-2 text-center">Strong capital efficiency in FY23 & FY25.</p>
-                </div>
-                 <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 chart-container-wrapper">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2 text-center">Key Balance Sheet Items (End of FY)</h3>
-                    <div class="chart-container"><canvas id="balanceSheetChart"></canvas></div>
-                    <p class="text-xs text-gray-500 mt-2 text-center">Growing equity and robust cash position.</p>
-                </div>
-            </div>
-            <div class="bg-stone-50 p-4 rounded-lg border border-stone-200">
-                <h3 class="subsection-title !mt-0">Financial Highlights & Commentary</h3>
-                <ul class="list-disc list-inside content-text text-sm space-y-2">
-                    <li><strong>Revenue Growth:</strong> Strong YoY growth in FY22, FY24, and FY25, driven by licensing and increasing royalty per chip (Armv9, CSS adoption).</li>
-                    <li><strong>Profitability:</strong> Exceptionally high gross margins (avg. >95%). Operating and net margins dipped in FY2024 due to IPO-related share-based compensation but recovered strongly in FY2025.</li>
-                    <li><strong>R&D Investment:</strong> Significant and increasing R&D spend is crucial for technological leadership. FY24 R&D ($1.98B) and FY25 R&D ($2.07B) were notably high.</li>
-                    <li><strong>Cash Flow:</strong> Operating Cash Flow (OCF) showed variability. FY2025 OCF ($397M) and FCF ($178M) were lower despite record net income, primarily due to significant negative changes in working capital (increased accounts receivable).</li>
-                    <li><strong>Balance Sheet:</strong> Strong and liquid, with robust cash & short-term investments ($2.825B at FYE25) and minimal financial debt. Growing equity.</li>
-                    <li><strong>Leading Indicators:</strong> Annualized Contract Value (ACV) grew 15% YoY to $1.365B (Q4 FY25). Remaining Performance Obligations (RPO) at $2.23B (Q4 FY25), indicating healthy future revenue pipeline.</li>
-                </ul>
-            </div>
-        </section>
+           <div class="bg-amber-50 p-4 rounded-lg border border-amber-200 mb-6">
+               <h3 class="subsection-title !mt-0 !text-amber-700">IP Delivery and Ecosystem</h3>
+               <p class="content-text mb-2 text-xs">Compute Subsystems (CSS) reduce time-to-market. Virtual prototyping aids early software dev. Arm supports its 22M+ developers with tools, software, and partnerships.</p>
+           </div>
+          
+           <div class="bg-orange-100 p-4 rounded-lg border border-orange-300">
+               <h3 class="subsection-title !mt-0 !text-orange-700">Strategic Evolution: In-House Chip Solutions</h3>
+               <p class="content-text mb-2 text-xs">Arm plans to develop and sell its own chips (fabless), starting with AI chips in 2025. This targets AI demand and custom silicon needs but may alter licensee relationships and requires new sales capabilities.</p>
+           </div>
+       </section>
 
-        <section id="competition" class="section-card">
-            <h2 class="section-title">The Competitive Arena</h2>
-            <p class="content-text mb-6">Arm operates in a dynamic and competitive semiconductor landscape. This section examines its key architectural rivals, the challenge from open-source alternatives, and the complex "co-opetition" with its own licensees.</p>
 
-            <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6">
-                <h3 class="subsection-title !mt-0">Architectural Rivals</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                    <div>
-                        <h4 class="text-xl font-semibold text-gray-700 mb-2">1. x86 Incumbents (Intel, AMD)</h4>
-                        <p class="content-text mb-2 text-sm">Dominant in PCs and servers. Business models differ:</p>
-                        <ul class="list-disc list-inside content-text text-sm space-y-1">
-                            <li><strong>Intel:</strong> Integrated Device Manufacturer (IDM) - designs, manufactures, sells own chips. Investing in foundry services (IFS).</li>
-                            <li><strong>AMD:</strong> Fabless - designs and sells own chips, outsources manufacturing (e.g., to TSMC). Gained market share recently.</li>
-                        </ul>
-                        <p class="mt-2 content-text text-sm">Arm challenges x86 in data centers (Neoverse for power efficiency/TCO) and PCs (Windows on Arm). FY25 data shows Arm's market share by chip value at 49%, vs. x86's 39% (a shift from FY21's Arm 38%, x86 53%).</p>
-                    </div>
-                    <div>
-                        <h4 class="text-xl font-semibold text-gray-700 mb-2">2. The Rise of RISC-V</h4>
-                        <p class="content-text mb-2 text-sm">Open-standard ISA, free to use, modify, extend. No ISA licensing fees. Appeal:</p>
-                        <ul class="list-disc list-inside content-text text-sm space-y-1">
-                            <li>Cost reduction, customization, technological sovereignty.</li>
-                            <li>Companies like SiFive offer RISC-V IP cores (licensing/royalty model).</li>
-                        </ul>
-                        <p class="mt-2 content-text text-sm">Challenges for RISC-V: Ecosystem maturity (software, tools), proven high-performance cores, fragmentation risk, security/verification complexity. Arm responds with flexible licensing (AFA/ATA) and CSS.</p>
-                    </div>
-                </div>
-                 <div class="bg-white p-3 rounded-md border border-stone-200 shadow-inner chart-container-wrapper">
-                    <h4 class="text-lg font-semibold text-blue-500 mb-2 text-center">Processor Architecture Market Share (Chip Value)</h4>
-                    <div class="chart-container" style="max-width: 450px; height: 280px;"><canvas id="marketShareChart"></canvas></div>
-                </div>
-            </div>
-            
-            <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6">
-                <h3 class="subsection-title !mt-0">Other IP/EDA Competitors & "Co-opetition"</h3>
-                <p class="content-text mb-2 text-sm"><strong>Synopsys, Cadence:</strong> EDA giants, also offer semiconductor IP (interface, foundational). They are partners but also compete in some IP segments.</p>
-                <p class="content-text text-sm"><strong>Licensees as Potential Competitors ("Co-opetition"):</strong> Major licensees (Apple, Qualcomm, Samsung, Nvidia) develop custom solutions, sometimes leading to tensions (e.g., Arm vs. Qualcomm/Nuvia dispute). Arm's own chip development could intensify this, as these customers might see Arm as a direct competitor.</p>
-            </div>
+       <section id="productsMarkets" class="content-section card">
+           <h2 class="section-title">Arm's Product Arsenal & Markets</h2>
+           <p class="content-text mb-6 text-center max-w-4xl mx-auto">Arm's IP serves diverse applications, from mobile to data centers and automotive.</p>
+          
+           <div class="grid md:grid-cols-2 gap-6 mb-6">
+               <div class="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                   <h3 class="subsection-title !mt-0 !text-amber-700">Key Product Lines</h3>
+                   <ul class="list-disc list-inside content-text text-xs space-y-1">
+                       <li><strong>Compute IP (CPUs):</strong> Cortex-A, Cortex-M, Cortex-R, Neoverse, Ethos NPUs.</li>
+                       <li><strong>Graphics & Multimedia IP:</strong> Mali GPUs, Immortalis GPUs.</li>
+                       <li><strong>System & Subsystem IP:</strong> CoreLink, Physical IP, Security IP, CSS.</li>
+                       <li><strong>Dev Tools & Software:</strong> Arm Dev Studio, Keil MDK, Compilers, Kleidi.</li>
+                   </ul>
+               </div>
+               <div class="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                   <h3 class="subsection-title !mt-0 !text-amber-700">Target Markets & Growth</h3>
+                   <ul class="list-disc list-inside content-text text-xs space-y-1">
+                       <li><strong>Mobile:</strong> Traditional stronghold (99% share).</li>
+                       <li><strong>Data Center/Cloud:</strong> Growth via Neoverse, CSS. Aiming for 10-15% of Arm's revenue.</li>
+                       <li><strong>Automotive:</strong> Software-defined vehicles, EV, ADAS.</li>
+                       <li><strong>IoT:</strong> Cortex-M, Ethos NPUs, Corstone.</li>
+                       <li><strong>Client Computing (PCs):</strong> Renewed WoA push.</li>
+                   </ul>
+               </div>
+           </div>
 
-            <div class="bg-stone-50 p-4 rounded-lg border border-stone-200">
-                <h3 class="subsection-title !mt-0">Arm's Sustained Competitive Advantages</h3>
-                 <ul class="list-disc list-inside content-text text-sm space-y-2">
-                    <li><strong>Vast & Mature Ecosystem:</strong> 22M+ developers, 300B+ chips shipped, strong network effects, high switching costs.</li>
-                    <li><strong>Power Efficiency Leadership:</strong> Critical for mobile, data centers, automotive.</li>
-                    <li><strong>Scalability & Breadth of Portfolio:</strong> From MCUs to server CPUs, GPUs, NPUs.</li>
-                    <li><strong>Proven Technology & Reliability:</strong> Decades of deployment.</li>
-                    <li><strong>Strong Partner Relationships (Historically):</strong> Though evolving with new chip strategy.</li>
-                </ul>
-                <p class="mt-3 font-medium content-text text-sm">Key Differentiation: Arm's IP licensing enables a broad ecosystem vs. Intel/AMD's direct chip sales. Vs. RISC-V, Arm offers a proprietary, mature commercial ecosystem, while RISC-V is open and royalty-free.</p>
-            </div>
-        </section>
 
-        <section id="outlook" class="section-card">
-            <h2 class="section-title">Strategic Outlook and Insights</h2>
-            <p class="content-text mb-6">Arm is at a pivotal juncture, leveraging its IP dominance while navigating strategic shifts. This section summarizes its strengths, vulnerabilities, growth drivers, and challenges, offering an assessment of its future prospects.</p>
+           <div class="bg-stone-50 p-4 rounded-lg border border-stone-200">
+               <h3 class="subsection-title !mt-0 text-center">Product Portfolio (Illustrative)</h3>
+               <div class="table-container text-xs"><table class="min-w-full"><thead><tr><th>Product Line</th><th>Target Market(s)</th><th>Example Uses</th></tr></thead><tbody>
+                   <tr><td>Cortex-A CPUs</td><td>Smartphones, Automotive IVI</td><td>Mobile Apps, Cockpits</td></tr>
+                   <tr><td>Cortex-M CPUs</td><td>IoT, MCUs, Wearables</td><td>Sensor Hubs, Smart Meters</td></tr>
+                   <tr><td>Neoverse CPUs</td><td>Data Centers, Cloud</td><td>Servers, 5G, AI</td></tr>
+                   <tr><td>Immortalis GPUs</td><td>Premium Smartphones</td><td>Mobile Gaming, Ray Tracing</td></tr>
+                   <tr><td>Compute Subsystems</td><td>Client, Infra, Auto</td><td>Accelerated SoC Dev</td></tr>
+               </tbody></table></div>
+           </div>
+       </section>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <h3 class="subsection-title !mt-0 !text-green-700">Key Strengths ✅</h3>
-                    <ul class="list-disc list-inside content-text text-sm space-y-1">
-                        <li>Dominant market share & vast ecosystem (mobile, IoT, auto).</li>
-                        <li>Leadership in power-efficient processor design.</li>
-                        <li>Broad, scalable IP portfolio (Cortex, Neoverse, Mali, Ethos, CSS).</li>
-                        <li>Strong financials: high gross margins, robust balance sheet, growing ACV/RPO.</li>
-                    </ul>
-                </div>
-                <div class="bg-red-50 p-4 rounded-lg border border-red-200">
-                    <h3 class="subsection-title !mt-0 !text-red-700">Potential Vulnerabilities ⚠️</h3>
-                    <ul class="list-disc list-inside content-text text-sm space-y-1">
-                        <li>Dependence on key markets (e.g., smartphones) and large customers.</li>
-                        <li>Intensifying competition (x86, RISC-V).</li>
-                        <li>Channel conflict risk from in-house chip strategy.</li>
-                        <li>Geopolitical/supply chain risks.</li>
-                        <li>Execution risk with new direct chip sales model.</li>
-                    </ul>
-                </div>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="bg-sky-50 p-4 rounded-lg border border-sky-200">
-                    <h3 class="subsection-title !mt-0 !text-sky-700">Future Growth Catalysts 🚀</h3>
-                    <ul class="list-disc list-inside content-text text-sm space-y-1">
-                        <li>Artificial Intelligence (AI) proliferation (cloud to edge).</li>
-                        <li>Data center expansion (Neoverse, CSS adoption by hyperscalers).</li>
-                        <li>Automotive electronics growth (ADAS, IVI, EV).</li>
-                        <li>Continued adoption of Armv9 and CSS (higher royalty per chip).</li>
-                        <li>IoT expansion across various sectors.</li>
-                    </ul>
-                </div>
-                 <div class="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                    <h3 class="subsection-title !mt-0 !text-amber-700">Potential Headwinds 📉</h3>
-                    <ul class="list-disc list-inside content-text text-sm space-y-1">
-                        <li>Sustained competitive pressure from Intel, AMD, and maturing RISC-V.</li>
-                        <li>Macroeconomic uncertainty impacting device demand.</li>
-                        <li>Maintaining ecosystem neutrality while selling own chips.</li>
-                        <li>Complexity of penetrating new high-performance markets.</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="bg-stone-50 p-4 rounded-lg border border-stone-200">
-                <h3 class="subsection-title !mt-0">Overall Assessment and Future Prospects</h3>
-                <p class="content-text mb-3 text-sm">Arm is exceptionally well-positioned to capitalize on long-term tech trends like AI, data center growth, automotive evolution, and IoT. Its IP licensing model is proven and highly profitable.</p>
-                <p class="content-text mb-3 text-sm">The strategy to increase IP value per device (via Armv9, CSS) is sound for driving revenue beyond unit volumes. The "royalty per chip" metric is crucial here.</p>
-                <p class="content-text mb-3 text-sm">Venturing into own-chip design is a major evolution. It targets high-growth markets (AI, custom server silicon) but carries risks of channel conflict and requires new operational capabilities. Careful market segmentation for direct sales will be key.</p>
-                <p class="content-text mb-3 text-sm">RISC-V competition warrants attention. Arm's mature ecosystem is a strong defense, but RISC-V's openness is appealing. Arm's R&D, flexible licensing, and comprehensive solutions are vital responses.</p>
-                <p class="font-semibold content-text text-sm">Conclusion: Arm possesses entrenched technological leadership and a resilient business model. Its future hinges on executing its multifaceted strategy: innovating IP for licensees, navigating its new direct-chip initiatives, and maintaining ecosystem balance. Success in these areas will keep Arm a central and influential player in computing's future.</p>
-            </div>
-        </section>
-    </main>
+       <section id="financials" class="content-section card">
+           <h2 class="section-title">Financial Deep Dive (FY21-FY25)</h2>
+           <p class="content-text mb-6 text-center max-w-4xl mx-auto">Arm's financials show significant growth and strategic R&D investment. All amounts in USD Millions unless noted.</p>
+           <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-10">
+               <div><h3 class="text-lg font-semibold text-slate-700 mb-1 text-center">Total Revenue Growth</h3><div class="chart-container"><canvas id="totalRevenueChart"></canvas></div><p class="text-xs text-slate-500 mt-2 text-center">Record $4.007B in FY25.</p></div>
+               <div><h3 class="text-lg font-semibold text-slate-700 mb-1 text-center">Revenue Mix (Licensing vs. Royalty)</h3><div class="chart-container"><canvas id="revenueMixChart"></canvas></div><p class="text-xs text-slate-500 mt-2 text-center">Growing royalty share.</p></div>
+               <div><h3 class="text-lg font-semibold text-slate-700 mb-1 text-center">Profitability Margins (GAAP %)</h3><div class="chart-container"><canvas id="profitMarginsChart"></canvas></div><p class="text-xs text-slate-500 mt-2 text-center">Gross margin >95%. Op/Net recovered FY25.</p></div>
+               <div><h3 class="text-lg font-semibold text-slate-700 mb-1 text-center">Operating & Free Cash Flow</h3><div class="chart-container"><canvas id="cashFlowChart"></canvas></div><p class="text-xs text-slate-500 mt-2 text-center">FY25 OCF/FCF lower due to working capital.</p></div>
+               <div class="lg:col-span-2"><h3 class="text-lg font-semibold text-slate-700 mb-1 text-center">Return on Invested Capital (ROIC %)</h3><div class="chart-container mx-auto"><canvas id="roicChart"></canvas></div><p class="text-xs text-slate-500 mt-2 text-center">Strong in FY23 & FY25.</p></div>
+           </div>
+       </section>
 
-    <footer class="bg-stone-800 text-stone-300 text-center py-8 mt-12">
-        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Analysis of Arm Holdings plc. Data derived from public reports.</p>
-        <p class="text-xs mt-1">For informational purposes only.</p>
-    </footer>
+
+       <section id="competition" class="content-section card">
+           <h2 class="section-title">The Competitive Arena</h2>
+           <p class="content-text mb-6 text-center max-w-4xl mx-auto">Arm faces architectural rivals, open-source challenges, and "co-opetition" with licensees.</p>
+           <div class="grid md:grid-cols-2 gap-6 mb-6">
+               <div class="bg-amber-50 p-4 rounded-lg border border-amber-200"><h3 class="subsection-title !mt-0 !text-amber-700">x86 Incumbents (Intel, AMD)</h3><p class="content-text text-xs">Dominant in PCs/servers. Intel (IDM), AMD (fabless). Arm challenges with Neoverse & WoA. Arm market share (value) grew to 49% in FY25 vs x86's 39%.</p></div>
+               <div class="bg-amber-50 p-4 rounded-lg border border-amber-200"><h3 class="subsection-title !mt-0 !text-amber-700">Rise of RISC-V</h3><p class="content-text text-xs">Open-standard ISA, free. Appeals for cost, customization. Challenges: ecosystem maturity, high-performance cores. Arm responds with flexible licensing.</p></div>
+           </div>
+           <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6"><h3 class="text-lg font-semibold text-slate-700 mb-2 text-center">Processor Architecture Market Share (Chip Value %)</h3><div class="chart-container" style="max-width:450px; height:280px;"><canvas id="marketShareChart"></canvas></div></div>
+       </section>
+
+
+       <section id="outlook" class="content-section card">
+           <h2 class="section-title">Strategic Outlook and Insights</h2>
+           <p class="content-text mb-6 text-center max-w-4xl mx-auto">Arm is leveraging IP dominance while navigating strategic shifts, aiming for continued growth in AI, data centers, and automotive.</p>
+           <div class="grid md:grid-cols-2 gap-6 mb-6">
+               <div class="p-4 bg-green-50 rounded-lg border border-green-200"><h3 class="subsection-title !mt-0 !text-green-700">Key Strengths ✅</h3><ul class="list-disc list-inside content-text text-xs space-y-1"><li>Dominant market share & ecosystem.</li><li>Power efficiency leadership.</li><li>Broad IP portfolio.</li><li>Strong financials.</li></ul></div>
+               <div class="p-4 bg-orange-50 rounded-lg border border-orange-200"><h3 class="subsection-title !mt-0 !text-orange-700">Vulnerabilities ⚠️</h3><ul class="list-disc list-inside content-text text-xs space-y-1"><li>Dependence on key markets.</li><li>Intense competition (x86, RISC-V).</li><li>Channel conflict from own-chip strategy.</li><li>Geopolitical/supply chain risks.</li></ul></div>
+               <div class="p-4 bg-sky-50 rounded-lg border border-sky-200"><h3 class="subsection-title !mt-0 !text-sky-700">Growth Catalysts 🚀</h3><ul class="list-disc list-inside content-text text-xs space-y-1"><li>AI proliferation.</li><li>Data center expansion (Neoverse).</li><li>Automotive electronics.</li><li>Armv9 & CSS adoption.</li><li>IoT expansion.</li></ul></div>
+               <div class="p-4 bg-red-50 rounded-lg border border-red-200"><h3 class="subsection-title !mt-0 !text-red-700">Headwinds 📉</h3><ul class="list-disc list-inside content-text text-xs space-y-1"><li>Sustained competitive pressure.</li><li>Macroeconomic uncertainty.</li><li>Maintaining ecosystem neutrality.</li><li>Complexity of new markets.</li></ul></div>
+           </div>
+           <div class="p-4 bg-amber-50 rounded-lg border border-amber-200"><h3 class="subsection-title !mt-0 !text-amber-700 text-center">Overall Assessment</h3><p class="content-text text-sm text-center">Arm is exceptionally well-positioned. Its strategy to increase IP value per device is sound. Venturing into own-chip design is a major evolution with risks and rewards. Success hinges on executing its multifaceted strategy and maintaining ecosystem balance.</p></div>
+       </section>
+   </main>
+
+
+   <footer class="footer">
+       <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Arm Holdings Analysis.</p>
+       <p class="text-xs mt-1">Data derived from public reports. For informational purposes only.</p>
+   </footer>
+
 
 <script>
-    document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+   document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
 
-    const CHART_COLORS = {
-        blue: '#60A5FA',    
-        teal: '#5EEAD4',    
-        orange: '#FDBA74',  
-        stone: '#E7E5E4',   
-        gray: '#4B5563', 
-        red: '#F87171',     
-        green: '#4ADE80',   
-        amber: '#FBBF24',   
-        darkBlue: '#3B82F6', 
-        darkTeal: '#14B8A6', 
-        darkOrange: '#F97316'
-    };
-    
-    Chart.defaults.font.family = 'Inter, sans-serif';
-    Chart.defaults.color = CHART_COLORS.gray; 
-    Chart.defaults.borderColor = '#E7E5E4'; 
 
-    const fiscalYears = ['FY2021', 'FY2022', 'FY2023', 'FY2024', 'FY2025'];
-    const financialData = {
-        totalRevenue: [2027, 2703, 2679, 3233, 4007],
-        licensingRevenue: [1130, 1161, 1000, 1368, 1839], 
-        royaltyRevenue: [897, 1542, 1679, 1865, 2168], 
-        grossMargin: [92.85, 95.15, 96.04, 95.24, 96.98],
-        operatingMargin: [11.94, 25.15, 26.60, 2.37, 20.74],
-        netMargin: [19.14, 20.31, 19.56, 9.46, 19.77],
-        ebitdaMargin: [20.82, 30.72, 32.10, 6.93, 25.31],
-        operatingCashFlow: [1233, 458, 739, 1090, 397],
-        freeCashFlow: [1129, 424, 675, 998, 178],
-        roic: [null, null, 26.39, 4.79, 26.40], 
-        balanceSheet: {
-            cashAndEquivalents: [null, 1004, 1554, 1923, 2085], 
-            shortTermInvestments: [null, 631, 661, 1000, 740],
-            totalDebt: [null, 261, 207, 194, 346],
-            totalEquity: [null, 3548, 4051, 5295, 6839]
-        },
-        marketShare: { years: ['FY2021', 'FY2025'], arm: [38, 49], x86: [53, 39] } 
-    };
-    const roicData = financialData.roic; 
+   const mainNavEl = document.querySelector('.sticky-nav');
+   const navLinks = document.querySelectorAll('.sticky-nav .nav-link');
+   const contentSections = document.querySelectorAll('.content-section');
+   let navHeight = mainNavEl ? mainNavEl.offsetHeight + 20 : 70;
 
-    function createLineChart(canvasId, label, data, yLabel = 'USD Millions', chartColor = CHART_COLORS.blue) {
-        const ctx = document.getElementById(canvasId)?.getContext('2d');
-        if (!ctx) return;
-        if (Chart.getChart(canvasId)) { Chart.getChart(canvasId).destroy(); }
-        return new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: fiscalYears,
-                datasets: [{
-                    label: label, data: data, borderColor: chartColor,
-                    backgroundColor: chartColor + '1A', 
-                    tension: 0.1, fill: false, 
-                    pointRadius: 3, pointBackgroundColor: chartColor,
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: false, title: { display: true, text: yLabel, color: CHART_COLORS.gray }, ticks: { callback: (v) => yLabel === '%' ? v.toFixed(1) + '%' : v, color: CHART_COLORS.gray } },
-                    x: { title: { display: true, text: 'Fiscal Year End', color: CHART_COLORS.gray }, ticks: { color: CHART_COLORS.gray } }
-                },
-                plugins: { legend: { display: true, position: 'bottom', labels:{ boxWidth:15, padding:15, color: CHART_COLORS.gray } }, tooltip: { callbacks: { label: (c) => `${c.dataset.label || ''}: ${yLabel === '%' ? c.parsed.y.toFixed(2) + '%' : '$' + c.parsed.y + 'M'}` } } },
-                interaction: { intersect: false, mode: 'index' },
-            }
-        });
-    }
-    
-    function createMultiLineChart(canvasId, datasetsConfig, yLabel = '%') {
-        const ctx = document.getElementById(canvasId)?.getContext('2d');
-        if (!ctx) return;
-        if (Chart.getChart(canvasId)) { Chart.getChart(canvasId).destroy(); }
-        const datasets = datasetsConfig.map(config => ({
-            label: config.label, data: config.data, borderColor: config.color,
-            backgroundColor: config.color + '1A', 
-            tension: 0.1, fill: false, pointRadius: 3, pointBackgroundColor: config.color,
-        }));
-        return new Chart(ctx, {
-            type: 'line',
-            data: { labels: fiscalYears, datasets: datasets },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: false, title: { display: true, text: yLabel, color: CHART_COLORS.gray }, ticks: { callback: (v) => v.toFixed(1) + '%', color: CHART_COLORS.gray } },
-                    x: { title: { display: true, text: 'Fiscal Year End', color: CHART_COLORS.gray }, ticks: { color: CHART_COLORS.gray } }
-                },
-                plugins: { legend: { display: true, position: 'bottom', labels:{ boxWidth:15, padding:15, color: CHART_COLORS.gray } }, tooltip: { callbacks: { label: (c) => `${c.dataset.label || ''}: ${c.parsed.y.toFixed(2)}%` } } },
-                interaction: { intersect: false, mode: 'index' },
-            }
-        });
-    }
 
-    function createStackedBarChart(canvasId, data1, data2, label1, label2) {
-        const ctx = document.getElementById(canvasId)?.getContext('2d');
-        if (!ctx) return;
-        if (Chart.getChart(canvasId)) { Chart.getChart(canvasId).destroy(); }
-        return new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: fiscalYears,
-                datasets: [
-                    { label: label1, data: data1, backgroundColor: CHART_COLORS.blue },
-                    { label: label2, data: data2, backgroundColor: CHART_COLORS.teal }
-                ]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: {
-                    x: { stacked: true, title: { display: true, text: 'Fiscal Year End', color: CHART_COLORS.gray }, ticks: {color: CHART_COLORS.gray} },
-                    y: { stacked: true, title: { display: true, text: 'USD Millions', color: CHART_COLORS.gray }, beginAtZero: true, ticks: {color: CHART_COLORS.gray} }
-                },
-                plugins: { legend: { display: true, position: 'bottom', labels:{ boxWidth:15, padding:15, color: CHART_COLORS.gray } }, tooltip: { callbacks: { label: (c) => `${c.dataset.label || ''}: $${c.parsed.y}M` } } }
-            }
-        });
-    }
+   function changeActiveLink() {
+       let index = contentSections.length;
+       while(--index && window.scrollY + navHeight < contentSections[index].offsetTop) {}
+       navLinks.forEach((link) => link.classList.remove('active'));
+       if(navLinks[index]) navLinks[index].classList.add('active');
+   }
+  
+   navLinks.forEach(anchor => {
+       anchor.addEventListener('click', function (e) {
+           e.preventDefault();
+           const targetId = this.getAttribute('href');
+           const targetElement = document.querySelector(targetId);
+           if (targetElement) {
+               const targetPosition = targetElement.offsetTop - (mainNavEl ? mainNavEl.offsetHeight : 50) + 5;
+               window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+               if (targetId === '#financials' || targetId === '#competition') { // Sections with charts
+                   setTimeout(renderAllCharts, 50);
+               }
+           }
+       });
+   });
+  
+   window.addEventListener('scroll', changeActiveLink);
 
-    function createDualLineChart(canvasId, data1, data2, label1, label2, yLabel = 'USD Millions') {
-        const ctx = document.getElementById(canvasId)?.getContext('2d');
-        if (!ctx) return;
-        if (Chart.getChart(canvasId)) { Chart.getChart(canvasId).destroy(); }
-        return new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: fiscalYears,
-                datasets: [
-                    { label: label1, data: data1, borderColor: CHART_COLORS.blue, backgroundColor: CHART_COLORS.blue + '1A', tension: 0.1, fill: false, pointRadius: 3, pointBackgroundColor: CHART_COLORS.blue },
-                    { label: label2, data: data2, borderColor: CHART_COLORS.teal, backgroundColor: CHART_COLORS.teal + '1A', tension: 0.1, fill: false, pointRadius: 3, pointBackgroundColor: CHART_COLORS.teal }
-                ]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: false, title: { display: true, text: yLabel, color: CHART_COLORS.gray }, ticks: { callback: (v) => yLabel === '%' ? v.toFixed(1) + '%' : v, color: CHART_COLORS.gray } },
-                    x: { title: { display: true, text: 'Fiscal Year End', color: CHART_COLORS.gray }, ticks: { color: CHART_COLORS.gray } }
-                },
-                plugins: { legend: { display: true, position: 'bottom', labels:{ boxWidth:15, padding:15, color: CHART_COLORS.gray } }, tooltip: { callbacks: { label: (c) => `${c.dataset.label || ''}: ${yLabel === '%' ? c.parsed.y.toFixed(2) + '%' : '$' + c.parsed.y + 'M'}` } } },
-                interaction: { intersect: false, mode: 'index' },
-            }
-        });
-    }
-    
-    function createMarketShareChart() {
-        const ctx = document.getElementById('marketShareChart')?.getContext('2d');
-        if (!ctx) return;
-        if (Chart.getChart(ctx)) { Chart.getChart(ctx).destroy(); }
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: financialData.marketShare.years,
-                datasets: [
-                    { label: 'Arm Share (%)', data: financialData.marketShare.arm, backgroundColor: CHART_COLORS.blue },
-                    { label: 'x86 Share (%)', data: financialData.marketShare.x86, backgroundColor: CHART_COLORS.amber }
-                ]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, max: 70, title: { display: true, text: 'Market Share by Chip Value (%)', color: CHART_COLORS.gray }, ticks: {color: CHART_COLORS.gray} },
-                    x: { title: { display: true, text: 'Fiscal Year', color: CHART_COLORS.gray }, ticks: {color: CHART_COLORS.gray} }
-                },
-                plugins: { legend: { display: true, position: 'bottom', labels:{ boxWidth:15, padding:15, color: CHART_COLORS.gray } }, tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + c.parsed.y.toFixed(1) + '%' } } }
-            }
-        });
-    }
 
-    const chartsToInitialize = {
-        financials: () => {
-            createLineChart('totalRevenueChart', 'Total Revenue', financialData.totalRevenue, 'USD Millions', CHART_COLORS.blue);
-            createStackedBarChart('revenueMixChart', financialData.licensingRevenue, financialData.royaltyRevenue, 'Licensing Revenue', 'Royalty Revenue');
-            createMultiLineChart('profitMarginsChart', [
-                { label: 'Gross Margin', data: financialData.grossMargin, color: CHART_COLORS.blue },
-                { label: 'Operating Margin', data: financialData.operatingMargin, color: CHART_COLORS.teal },
-                { label: 'Net Margin', data: financialData.netMargin, color: CHART_COLORS.green },
-                { label: 'EBITDA Margin', data: financialData.ebitdaMargin, color: CHART_COLORS.amber }
-            ]);
-            createDualLineChart('cashFlowChart', financialData.operatingCashFlow, financialData.freeCashFlow, 'Operating Cash Flow', 'Free Cash Flow');
-            createLineChart('roicChart', 'ROIC', roicData, '%', CHART_COLORS.orange);
+   const CHART_PALETTE_ARM = { // Arm Amber/Orange & Neutrals
+       primary: '#d97706',      // amber-600
+       secondary: '#f59e0b',    // amber-500
+       accent1: '#fbbf24',     // amber-400
+       accent2: '#fcd34d',     // amber-300
+       neutralGrid: '#e7e5e4',  // stone-200
+       neutralText: '#57534e',  // stone-600
+       tooltipBg: 'rgba(55, 65, 81, 0.9)', // gray-700
+       green: '#10b981', // emerald-500 For positive indicators
+       red: '#ef4444' // red-500 For debt or negative indicators
+   };
+  
+   Chart.defaults.font.family = 'Inter, sans-serif';
+   Chart.defaults.color = CHART_PALETTE_ARM.neutralText;
+   Chart.defaults.borderColor = CHART_PALETTE_ARM.neutralGrid;
 
-            const balanceSheetYears = fiscalYears.slice(1); 
-            const bsCtx = document.getElementById('balanceSheetChart')?.getContext('2d');
-            if (bsCtx) {
-                if (Chart.getChart(bsCtx)) { Chart.getChart(bsCtx).destroy(); }
-                new Chart(bsCtx, {
-                    type: 'line',
-                    data: {
-                        labels: balanceSheetYears,
-                        datasets: [
-                            { label: 'Cash & Equivalents', data: financialData.balanceSheet.cashAndEquivalents.slice(1), borderColor: CHART_COLORS.green, fill: false, pointRadius: 3 },
-                            { label: 'Short-Term Investments', data: financialData.balanceSheet.shortTermInvestments.slice(1), borderColor: CHART_COLORS.teal, fill: false, pointRadius: 3 },
-                            { label: 'Total Debt', data: financialData.balanceSheet.totalDebt.slice(1), borderColor: CHART_COLORS.red, fill: false, pointRadius: 3 },
-                            { label: 'Total Equity', data: financialData.balanceSheet.totalEquity.slice(1), borderColor: CHART_COLORS.blue, fill: false, pointRadius: 3 }
-                        ]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        scales: { 
-                            y: { title: {display: true, text: 'USD Millions', color: CHART_COLORS.gray}, ticks: {color: CHART_COLORS.gray}}, 
-                            x: {title: {display: true, text: 'Fiscal Year End', color: CHART_COLORS.gray}, ticks: {color: CHART_COLORS.gray}}
-                        },
-                        plugins: { legend: {position: 'bottom', labels:{ boxWidth:15, padding:15, color: CHART_COLORS.gray }}, tooltip: { callbacks: { label: (c) => `${c.dataset.label}: $${c.parsed.y}M`}}}
-                    }
-                });
-            }
-        },
-        competition: () => {
-            createMarketShareChart();
-        }
-    };
-    
-    const chartInitializationFlags = {};
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const navLinks = document.querySelectorAll('header nav a.nav-link'); 
-        const sections = document.querySelectorAll('main section[id]');
-        const mobileMenuBtn = document.getElementById('mobile-menu-button');
-        const mobileMenuEl = document.getElementById('mobile-menu');
+   const fiscalYears = ['FY21', 'FY22', 'FY23', 'FY24', 'FY25']; // Corrected to match data length
+   const financialData = {
+       totalRevenue: [2027, 2703, 2679, 3233, 4007],
+       licensingRevenue: [1130, 1161, 1000, 1368, 1839],
+       royaltyRevenue: [897, 1542, 1679, 1865, 2168],
+       grossMargin: [92.85, 95.15, 96.04, 95.24, 96.98],
+       operatingMargin: [11.94, 25.15, 26.60, 2.37, 20.74],
+       netMargin: [19.14, 20.31, 19.56, 9.46, 19.77],
+       ebitdaMargin: [20.82, 30.72, 32.10, 6.93, 25.31],
+       operatingCashFlow: [1233, 458, 739, 1090, 397],
+       freeCashFlow: [1129, 424, 675, 998, 178],
+       roic: [null, null, 26.39, 4.79, 26.40],
+       marketShare: { years: ['FY21', 'FY25'], arm: [38, 49], x86: [53, 39] }
+   };
 
-        // Scrollspy and chart initialization logic
-        const sectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const id = entry.target.getAttribute('id');
-                const navLink = document.querySelector(`header nav a[href="#${id}"]`);
-                const mobileNavLink = document.querySelector(`#mobile-menu a[href="#${id}"]`);
 
-                if (entry.isIntersecting && entry.intersectionRatio >= 0.2) { // Trigger when 20% of section is visible
-                    navLinks.forEach(link => link.classList.remove('active'));
-                    if(navLink) navLink.classList.add('active');
-                    if(mobileNavLink) mobileNavLink.classList.add('active'); // Also activate mobile link
+   let chartInstances = {};
+   function createOrUpdateChart(canvasId, chartConfig) {
+       const canvas = document.getElementById(canvasId); if (!canvas) return;
+       const ctx = canvas.getContext('2d');
+       if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+       chartInstances[canvasId] = new Chart(ctx, chartConfig);
+   }
 
-                    // Initialize charts for the visible section if not already done
-                    if (chartsToInitialize[id] && !chartInitializationFlags[id]) {
-                        chartsToInitialize[id]();
-                        chartInitializationFlags[id] = true;
-                    }
-                } else {
-                    if(navLink) navLink.classList.remove('active');
-                    if(mobileNavLink) mobileNavLink.classList.remove('active');
-                }
-            });
-        }, { root: null, rootMargin: "-100px 0px -50% 0px", threshold: [0.2, 0.8] }); // Adjust rootMargin and threshold
 
-        sections.forEach(section => {
-            sectionObserver.observe(section);
-        });
-        
-        // Smooth scroll for nav links and close mobile menu
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                // For mobile menu, close it after click
-                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
-                   if (mobileMenuBtn.getAttribute('aria-expanded') === 'true') {
-                        mobileMenuBtn.click();
-                   }
-                }
-            });
-        });
-        
-        if (mobileMenuBtn && mobileMenuEl) {
-            mobileMenuBtn.addEventListener('click', () => {
-                const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true' || false;
-                mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
-                mobileMenuEl.classList.toggle('hidden');
-                mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
-            });
-        }
-        
-        // Initialize charts for the initially visible section (Overview)
-        // Overview section does not have charts, so this is not strictly needed for it.
-        // But if the default active section had charts, this would be the place.
-        // The IntersectionObserver will handle chart init for other sections as they scroll into view.
-        const initialActiveSectionId = 'overview'; // Default section
-        if (chartsToInitialize[initialActiveSectionId] && !chartInitializationFlags[initialActiveSectionId]) {
-             // chartsToInitialize[initialActiveSectionId](); // No charts in overview
-             // chartInitializationFlags[initialActiveSectionId] = true;
-        }
+   const commonChartOptions = (yLabel = 'USD Millions', isPercentage = false) => ({
+       responsive: true, maintainAspectRatio: false,
+       scales: {
+           y: { beginAtZero: !isPercentage, title: { display: true, text: yLabel, color: CHART_PALETTE_ARM.neutralText, font:{size:10} }, ticks: { callback: (v) => isPercentage ? v.toFixed(1) + '%' : v.toLocaleString(), color: CHART_PALETTE_ARM.neutralText, font:{size:9} }, grid: {color: CHART_PALETTE_ARM.neutralGrid} },
+           x: { title: { display: true, text: 'Fiscal Year End', color: CHART_PALETTE_ARM.neutralText, font:{size:10} }, ticks: { color: CHART_PALETTE_ARM.neutralText, font:{size:9} }, grid: {display: false} }
+       },
+       plugins: {
+           legend: { display: true, position: 'bottom', labels:{ boxWidth:12, padding:10, color: CHART_PALETTE_ARM.neutralText, font:{size:10} } },
+           tooltip: {
+               backgroundColor: CHART_PALETTE_ARM.tooltipBg, titleFont: { weight: '600', size:12 }, bodyFont: {size:10}, padding: 8, cornerRadius: 4,
+               callbacks: { label: (c) => `${c.dataset.label || ''}: ${isPercentage ? c.parsed.y.toFixed(2) + '%' : '$' + c.parsed.y.toLocaleString() + (yLabel.includes('Millions') ? 'M':'')}` }
+           }
+       },
+       interaction: { intersect: false, mode: 'index' },
+   });
 
-    });
+
+   function renderAllCharts() {
+       createOrUpdateChart('totalRevenueChart', { type: 'line', data: { labels: fiscalYears, datasets: [{ label: 'Total Revenue', data: financialData.totalRevenue, borderColor: CHART_PALETTE_ARM.primary, backgroundColor: CHART_PALETTE_ARM.primary + '2A', tension: 0.1, fill: false, pointRadius: 3, pointBackgroundColor: CHART_PALETTE_ARM.primary }] }, options: commonChartOptions('USD Millions') });
+       createOrUpdateChart('revenueMixChart', { type: 'bar', data: { labels: fiscalYears, datasets: [ { label: 'Licensing Revenue', data: financialData.licensingRevenue, backgroundColor: CHART_PALETTE_ARM.accent1 }, { label: 'Royalty Revenue', data: financialData.royaltyRevenue, backgroundColor: CHART_PALETTE_ARM.secondary } ] }, options: {...commonChartOptions('USD Millions'), scales: {...commonChartOptions('USD Millions').scales, x: {...commonChartOptions('USD Millions').scales.x, stacked: true}, y: {...commonChartOptions('USD Millions').scales.y, stacked: true, beginAtZero: true}}} });
+       createOrUpdateChart('profitMarginsChart', { type: 'line', data: { labels: fiscalYears, datasets: [ { label: 'Gross Margin', data: financialData.grossMargin, borderColor: CHART_PALETTE_ARM.primary, fill:false, pointRadius:2 }, { label: 'Operating Margin', data: financialData.operatingMargin, borderColor: CHART_PALETTE_ARM.secondary, fill:false, pointRadius:2 }, { label: 'Net Margin', data: financialData.netMargin, borderColor: CHART_PALETTE_ARM.accent1, fill:false, pointRadius:2 } ] }, options: commonChartOptions('%', true) });
+       createOrUpdateChart('cashFlowChart', { type: 'line', data: { labels: fiscalYears, datasets: [ { label: 'Operating Cash Flow', data: financialData.operatingCashFlow, borderColor: CHART_PALETTE_ARM.green, fill:false, pointRadius:3 }, { label: 'Free Cash Flow', data: financialData.freeCashFlow, borderColor: CHART_PALETTE_ARM.accent2, fill:false, pointRadius:3 } ] }, options: commonChartOptions('USD Millions') });
+       createOrUpdateChart('roicChart', { type: 'line', data: { labels: fiscalYears, datasets: [{ label: 'ROIC', data: financialData.roic, borderColor: CHART_PALETTE_ARM.darkOrange, spanGaps: true, fill:false, pointRadius:3 }] }, options: commonChartOptions('%', true) });
+       createOrUpdateChart('marketShareChart', { type: 'bar', data: { labels: financialData.marketShare.years, datasets: [ { label: 'Arm Share', data: financialData.marketShare.arm, backgroundColor: CHART_PALETTE_ARM.primary }, { label: 'x86 Share', data: financialData.marketShare.x86, backgroundColor: CHART_PALETTE_ARM.accent2 } ] }, options: {...commonChartOptions('%', true), scales: {...commonChartOptions('%',true).scales, y: {...commonChartOptions('%',true).scales.y, max:70, title:{display:true, text:'Market Share by Chip Value (%)'}}}} });
+   }
+
+
+   document.addEventListener('DOMContentLoaded', () => {
+       if (mainNavEl) navHeight = mainNavEl.offsetHeight + 20;
+       changeActiveLink(); // Initial check for active link
+      
+       const mobileMenuBtn = document.getElementById('mobile-menu-button');
+       const mobileMenuEl = document.getElementById('mobile-menu');
+       if (mobileMenuBtn && mobileMenuEl) {
+           mobileMenuBtn.addEventListener('click', () => {
+               mobileMenuEl.classList.toggle('hidden');
+               mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+           });
+       }
+      
+       // Close mobile menu on link click
+       document.querySelectorAll('#mobile-menu a.nav-link').forEach(link => {
+           link.addEventListener('click', () => {
+               if (!mobileMenuEl.classList.contains('hidden')) {
+                   mobileMenuBtn.click();
+               }
+           });
+       });
+
+
+       // Initial chart render for potentially visible sections on load
+       // Overview has no charts in this structure. Financials and Competition are primary.
+       setTimeout(() => {
+           if (document.getElementById('financials')) renderAllCharts(); // Render all charts if financials section exists
+       }, 50);
+   });
 </script>
 </body>
 </html>
+

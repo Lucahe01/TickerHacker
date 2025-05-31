@@ -1,460 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Snowflake (SNOW) Analysis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F5F5F4; /* stone-100 */
-            color: #374151; /* gray-700 */
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px; 
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px; 
-            max-height: 350px;
-        }
-         @media (min-width: 768px) { /* md breakpoint */
-            .chart-container {
-                height: 350px;
-                max-height: 400px;
-            }
-        }
-        h1.main-title {
-            font-size: 2.25rem; /* text-4xl */
-            font-weight: 700; /* font-bold */
-            color: #1F2937; /* gray-800 */
-            margin-bottom: 1rem;
-            text-align: center;
-            padding-top: 0.5rem; 
-        }
-        h2.company-title { 
-            font-size: 1.875rem; /* text-3xl */
-            font-weight: 600; /* font-semibold */
-            color: #60A5FA; /* blue-400 */
-            margin-bottom: 1.5rem; /* mb-6 */
-            padding-bottom: 0.5rem; /* pb-2 */
-            border-bottom: 2px solid #E7E5E4; /* stone-200 */
-        }
-        h3.section-title {
-            font-size: 1.5rem; /* text-2xl */
-            font-weight: 600; /* font-semibold */
-            color: #2DD4BF; /* teal-400 */
-            margin-top: 1.5rem; 
-            margin-bottom: 1rem; /* mb-4 */
-        }
-        h4.subsection-title {
-            font-size: 1.25rem; /* text-xl */
-            font-weight: 600; /* font-semibold */
-            color: #3B82F6; /* blue-500 */
-            margin-top: 1.5rem; 
-            margin-bottom: 0.75rem; 
-        }
-        p, li {
-            line-height: 1.75; 
-            margin-bottom: 1rem; 
-            color: #4B5563; /* gray-600 */
-            font-size: 0.95rem; 
-        }
-        ul {
-            list-style-type: none; 
-            padding-left: 0; 
-        }
-        ul li {
-            padding-left: 1.75rem; 
-            position: relative;
-        }
-        ul li::before { 
-            content: '➔';
-            position: absolute;
-            left: 0;
-            color: #60A5FA; /* blue-400 */
-            font-weight: bold;
-        }
-        .metric-card { 
-            background-color: #F9FAFB; /* gray-50 */
-            border: 1px solid #E7E5E4; /* stone-200 */
-            border-radius: 0.5rem; /* rounded-lg */
-            padding: 1rem; 
-            text-align: center;
-            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03);
-        }
-        .metric-card-title { 
-            font-size: 0.875rem; /* text-sm */
-            color: #6B7280; /* gray-500 */
-            margin-bottom: 0.25rem; 
-            font-weight: 500; 
-        }
-        .metric-card-value { 
-            font-size: 1.75rem; /* text-2xl */
-            font-weight: 600; 
-            color: #1F2937; /* gray-800 */
-        }
-        .content-wrapper { 
-            background-color: #FFFFFF;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); 
-            padding: 1.5rem; 
-            margin-bottom: 2rem; 
-        }
-    </style>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Interactive Snowflake (SNOW) Analysis</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+   <!-- Visualization & Content Choices: (Content from original SNOW file, styled like SRE/CRWD)
+       - Overview: Text summary.
+       - Business Model: Text descriptions of consumption model and Marketplace.
+       - Products: Lists detailing Core Workloads, AI/ML, Applications, and Professional Services.
+       - Competition: Text describing competitors and differentiators.
+       - Financials: KPI cards (blue/cyan-themed), line/bar charts for financial trends.
+       - Outlook: Lists for Growth Drivers and Challenges.
+       - All charts use Chart.js (Canvas). No SVG/Mermaid. Content maintained. -->
+   <style>
+       html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+       body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; } /* slate-50, slate-800 */
+      
+       .main-container { max-width: 1200px; margin-left: auto; margin-right: auto; padding: 1rem; }
+
+
+       .page-header { text-align: center; padding-top: 2rem; padding-bottom: 1.5rem; }
+       .page-title { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; color: #0891b2; margin-bottom: 0.5rem; } /* cyan-600 (Snowflake Primary) */
+       .page-subtitle { font-size: 1.25rem; color: #475569; } /* slate-600 */
+
+
+       .sticky-nav {
+           position: sticky; top: 0; z-index: 40;
+           background-color: rgba(248, 250, 252, 0.95); /* slate-50 with opacity */
+           backdrop-filter: blur(8px);
+           padding-top: 0.5rem; padding-bottom: 0.5rem;
+           box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+           overflow-x: auto; white-space: nowrap;
+       }
+       .nav-link {
+           padding: 0.65rem 1rem; margin-right: 0.25rem; margin-bottom: 0.25rem;
+           border-radius: 0.375rem; font-weight: 500; font-size: 0.875rem;
+           cursor: pointer; transition: all 0.3s ease;
+           border: 1px solid transparent; color: #0e7490; /* cyan-700 */
+           display: inline-block;
+       }
+       .nav-link.active {
+           background-color: #0891b2; /* cyan-600 */
+           color: white; border-color: #0891b2;
+           font-weight: 600;
+       }
+       .nav-link:not(.active):hover {
+           background-color: #cffafe; /* cyan-100 */
+           color: #155e75; /* cyan-800 */
+           transform: translateY(-1px);
+       }
+      
+       .content-section { display: block; animation: fadeIn 0.5s ease-out; margin-bottom: 2.5rem; }
+       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+       .section-title {
+           font-size: 1.875rem; line-height: 2.25rem; font-weight: 700;
+           color: #0e7490; /* cyan-700 (Snowflake Primary) */
+           margin-bottom: 1.5rem; text-align: center;
+       }
+       .card {
+           background-color: white; border-radius: 0.75rem;
+           box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+           padding: 1.5rem; transition: transform 0.3s ease, box-shadow 0.3s ease;
+       }
+       .card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+       }
+      
+       .subsection-title { /* Adapted from original SNOW, Snowflake Blue */
+           font-size: 1.25rem; font-weight: 600; color: #0ea5e9; /* sky-500 */
+           margin-top: 1.5rem; margin-bottom: 0.75rem;
+       }
+       p, li { line-height: 1.75; margin-bottom: 1rem; color: #4b5563; font-size: 0.9rem; } /* Slightly smaller for density */
+       ul { list-style-type: none; padding-left: 0; }
+       ul li { padding-left: 1.75rem; position: relative; }
+       ul li::before { /* Original SNOW arrow style, Snowflake Blue */
+           content: '➔'; position: absolute; left: 0;
+           color: #0ea5e9; /* sky-500 */
+           font-weight: bold;
+       }
+
+
+       .metric-card { /* Adapted from SRE .kpi-card, Snowflake Blue */
+           background-color: #ecfeff; /* cyan-50 */
+           padding: 1rem; border-radius: 0.5rem;
+           box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05); text-align: center;
+           border-left: 4px solid #0891b2; /* cyan-600 accent */
+           transition: transform 0.2s ease, box-shadow 0.2s ease;
+       }
+       .metric-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px -3px rgba(8,145,178,0.15); }
+       .metric-card-title { font-size: 0.8rem; color: #155e75; margin-bottom: 0.25rem; font-weight: 500; text-transform: uppercase; } /* cyan-800 */
+       .metric-card-value { font-size: 1.65rem; font-weight: 600; color: #0891b2; } /* cyan-600 */
+       .metric-card-note { font-size: 0.7rem; color: #475569; margin-top: 0.1rem; } /* slate-600 */
+
+
+       .chart-container { /* Standardized from SRE/CRWD */
+           position: relative; width: 100%; max-width: 650px; margin-left: auto; margin-right: auto; height: 320px; max-height: 380px;
+       }
+       @media (min-width: 768px) { .chart-container { height: 350px; max-height: 400px;} }
+      
+       .footer {
+           background-color: #1e293b; color: #cbd5e1;
+           padding: 2rem 0; margin-top: 3rem; text-align: center;
+       }
+   </style>
 </head>
+<body class="antialiased">
 
-<body class="bg-stone-100 text-gray-700 min-h-screen">
-    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <h1 class="main-title text-3xl">Interactive Snowflake (SNOW) Analysis</h1>
-        </div>
-    </header>
 
-    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
-        <section id="snow-content">
-            <div class="content-wrapper">
-                <h2 class="company-title">Snowflake Inc. (SNOW) In-Depth Analysis</h2>
-                <p class="text-gray-600 mb-6 text-base md:text-lg">This interactive report provides a comprehensive analysis of Snowflake Inc. (SNOW), a leading company in the AI Data Cloud market. Explore Snowflake's innovative consumption-based business model, its extensive product portfolio focused on AI and data sharing (including Snowpark, Cortex AI, and Apache Iceberg integration), its competitive stance against major cloud providers and specialized data platforms, detailed financial performance, and its strategic vision for empowering enterprises through unified data and AI.</p>
+   <header class="page-header">
+       <h1 class="page-title">Snowflake (SNOW)</h1>
+       <p class="page-subtitle">An Interactive Business Analysis</p>
+   </header>
 
-                <div id="snow-overview">
-                    <h3 class="section-title">1. Company Overview & The AI Data Cloud Strategy</h3>
-                    <p>Snowflake Inc. positions itself as the AI Data Cloud company, with a mission to "empower every enterprise to achieve its full potential through data and AI." Its core strategy focuses on eliminating data silos and enabling organizations to seamlessly unify, analyze, share, and monetize their data within a global network. Key company values include "Put Customers First" and "Think Big." The "Data Cloud" concept is central, aiming to create an ecosystem where businesses connect not only to their own data but also to each other through effortless and secure data sharing and collaboration, fostering powerful network effects.</p>
-                </div>
 
-                <div id="snow-business-model">
-                    <h3 class="section-title">2. Business Model: Consumption & Marketplace</h3>
-                    <p>Snowflake's primary revenue stream is its consumption-based model for its cloud data platform, charging customers based on their usage of compute (via "Snowflake Credits"), storage, and data transfer. This aligns Snowflake's revenue with customer value realization. Compute costs typically form the largest portion of a customer's bill (around 80%).</p>
-                    <h4 class="subsection-title">Revenue Generation Details:</h4>
-                    <ul>
-                        <li><strong>Snowflake Credits:</strong> The fundamental unit for compute resources, with pricing varying by edition, cloud provider (AWS, Azure, GCP), and region.</li>
-                        <li><strong>Storage Costs:</strong> Charged per terabyte per month.</li>
-                        <li><strong>Data Transfer Costs:</strong> Ingress is generally free; egress and cross-region/cloud transfers incur costs.</li>
-                        <li><strong>Serverless Features:</strong> Features like Snowpipe and Automatic Clustering are priced based on their consumption of Snowflake-managed compute.</li>
-                    </ul>
-                    <h4 class="subsection-title">Snowflake Marketplace:</h4>
-                    <p>The Marketplace allows data providers and app developers to offer datasets, SaaS connectors, and Snowflake Native Apps. Snowflake facilitates these transactions, and customers can use their committed Snowflake spend for Marketplace purchases, encouraging ecosystem growth and platform utility. This model fosters innovation but requires customers to manage usage for cost predictability.</p>
-                     <h4 class="subsection-title">Product & Service Delivery:</h4>
-                     <p>Snowflake delivers its AI Data Cloud as a fully managed service on AWS, Microsoft Azure, and Google Cloud Platform. Its cloud-native architecture, featuring separation of compute and storage, multi-cluster shared data access, and near-zero management, provides scalability, elasticity, and performance. Snowgrid technology enables cross-cloud data collaboration and governance.</p>
-                </div>
+   <nav class="sticky-nav mb-6">
+       <div class="main-container flex flex-wrap justify-center">
+           <a href="#overview" class="nav-link active">Overview</a>
+           <a href="#businessModel" class="nav-link">Business Model</a>
+           <a href="#products" class="nav-link">Products</a>
+           <a href="#competition" class="nav-link">Competition</a>
+           <a href="#financials" class="nav-link">Financials</a>
+           <a href="#outlook" class="nav-link">Outlook</a>
+       </div>
+   </nav>
 
-                <div id="snow-products">
-                    <h3 class="section-title">3. Product & Service Portfolio</h3>
-                    <p>Snowflake offers a comprehensive platform for diverse data workloads, with a strong emphasis on AI/ML and collaboration, positioning itself as the central hub for modern enterprise data strategies.</p>
-                    <h4 class="subsection-title">Core Workloads & Platform Features:</h4>
-                    <ul>
-                        <li><strong>Unified Platform:</strong> Handles Data Warehousing, Data Lakes, Data Engineering, and Cybersecurity data analytics.</li>
-                        <li><strong>Key Features:</strong> Near-zero management, zero-copy cloning, Time Travel (data recovery up to 90 days), Fail-Safe (additional 7-day recovery), and micro-partitioning for efficient querying.</li>
-                    </ul>
-                    <h4 class="subsection-title">AI and Machine Learning Capabilities:</h4>
-                    <ul>
-                        <li><strong>Snowpark:</strong> Enables Python, Java, and Scala development within Snowflake for data processing and ML, featuring DataFrame APIs and Snowpark ML for the full ML lifecycle.</li>
-                        <li><strong>Cortex AI:</strong> Managed AI services including LLM functions (summarization, translation), Snowflake Copilot (AI assistant), Document AI, Cortex Search (RAG engine), and Cortex Analyst (text-to-SQL).</li>
-                        <li><strong>Snowflake Arctic:</strong> Snowflake's own family of open, enterprise-grade LLMs.</li>
-                        <li><strong>Apache Iceberg Integration:</strong> Supports open table formats, allowing management and querying of Iceberg tables within Snowflake for data interoperability.</li>
-                        <li><strong>Snowpark Container Services:</strong> Allows deployment of containerized applications (including ML models, LLMs) with GPU support directly within Snowflake.</li>
-                    </ul>
-                    <h4 class="subsection-title">Applications & Collaboration:</h4>
-                     <ul>
-                        <li><strong>Snowflake Marketplace:</strong> For discovering and accessing datasets, data services, and Snowflake Native Apps.</li>
-                        <li><strong>Secure Data Sharing:</strong> Enables governed sharing of live data between Snowflake accounts without data movement.</li>
-                        <li><strong>Data Clean Rooms:</strong> Privacy-preserving environments for multi-party data collaboration.</li>
-                        <li><strong>Native App Framework:</strong> Allows developers to build and distribute applications that run directly within a customer's Snowflake account.</li>
-                    </ul>
-                    <h4 class="subsection-title">Professional Services:</h4>
-                    <p>Offers consulting, architectural design, implementation, optimization, and support to help customers maximize platform value. While a smaller revenue stream, these services are crucial for customer adoption and success, especially for large enterprises.</p>
-                </div>
 
-                <div id="snow-competition">
-                    <h3 class="section-title">4. Competitive Landscape & Differentiation</h3>
-                    <p>Snowflake competes with major cloud providers' native data services and other specialized data platforms in a dynamic market.</p>
-                    <h4 class="subsection-title">Key Competitors:</h4>
-                    <ul>
-                        <li><strong>Cloud Hyperscalers:</strong> Amazon Redshift (AWS), Google BigQuery (GCP), Microsoft Azure Synapse Analytics/Fabric. These benefit from deep ecosystem integration within their respective clouds.</li>
-                        <li><strong>Specialized Data Platforms:</strong> Databricks (particularly strong in data lakes, Spark-based processing, and AI/ML on open formats like Delta Lake).</li>
-                        <li><strong>Legacy On-Premise Vendors:</strong> Teradata, Oracle (for customers migrating from older systems).</li>
-                    </ul>
-                     <h4 class="subsection-title">Snowflake's Differentiators:</h4>
-                    <ul>
-                        <li><strong>Cloud-Agnostic Architecture:</strong> Operates seamlessly across AWS, Azure, and GCP, offering customers flexibility and avoiding vendor lock-in.</li>
-                        <li><strong>Separation of Compute and Storage:</strong> Allows independent scaling of resources, optimizing cost and performance.</li>
-                        <li><strong>Ease of Use & Near-Zero Management:</strong> Fully managed service reduces administrative overhead.</li>
-                        <li><strong>Seamless & Secure Data Sharing:</strong> A core architectural advantage enabling the Data Cloud vision.</li>
-                        <li><strong>Integrated AI/ML Capabilities:</strong> Comprehensive suite from Snowpark for custom development to managed Cortex AI services.</li>
-                        <li><strong>Growing Ecosystem:</strong> Expanding Snowflake Marketplace and Native App Framework enhance platform value and stickiness.</li>
-                        <li><strong>Support for Open Standards:</strong> Deep integration with Apache Iceberg addresses customer needs for data interoperability.</li>
-                    </ul>
-                </div>
+   <main class="main-container">
+       <section id="overview" class="content-section card">
+           <h2 class="section-title">Company Overview & AI Data Cloud Strategy</h2>
+           <p>Snowflake Inc. positions itself as the AI Data Cloud company, aiming to "empower every enterprise to achieve its full potential through data and AI." Its strategy focuses on eliminating data silos, enabling organizations to unify, analyze, share, and monetize data within a global network. The "Data Cloud" concept fosters an ecosystem where businesses connect to their own and each other's data securely.</p>
+       </section>
 
-                <div id="snow-financials">
-                    <h3 class="section-title">5. Financial Performance Analysis</h3>
-                    <p>Snowflake has demonstrated rapid product revenue growth, high net revenue retention, and an expanding large-customer base. While GAAP profitability is a future goal due to significant investments in R&D and S&M, non-GAAP metrics show improving operational leverage. This section visualizes key financial and operational trends.</p>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
-                        <div class="metric-card">
-                            <div class="metric-card-title">FY2025 Product Revenue</div>
-                            <div class="metric-card-value">$3.396B</div>
-                            <p class="text-xs text-gray-500 mt-1">25% YoY Increase</p>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-card-title">Q4 FY25 Product Revenue</div>
-                            <div class="metric-card-value">$875.5M</div>
-                             <p class="text-xs text-gray-500 mt-1">20% YoY Growth</p>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-card-title">Net Revenue Retention</div>
-                            <div class="metric-card-value">128%</div>
-                             <p class="text-xs text-gray-500 mt-1">as of Q4 FY2025</p>
-                        </div>
-                         <div class="metric-card">
-                            <div class="metric-card-title">Customers >$1M Product Rev</div>
-                            <div class="metric-card-value">510</div>
-                             <p class="text-xs text-gray-500 mt-1">as of Q4 FY2025 (22% YoY)</p>
-                        </div>
-                    </div>
 
-                    <h4 class="subsection-title">Product Revenue Trend (Fiscal Years 2021-2025)</h4>
-                    <p>The chart below illustrates Snowflake's strong growth in product revenue, driven by increasing customer adoption and consumption of its platform.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="snowProductRevenueChart"></canvas>
-                    </div>
+       <section id="businessModel" class="content-section card">
+           <h2 class="section-title">Business Model: Consumption & Marketplace</h2>
+           <p>Snowflake's primary revenue is consumption-based, charging for compute (via "Snowflake Credits" - ~80% of bill), storage, and data transfer. This aligns revenue with customer value.</p>
+           <h4 class="subsection-title">Revenue Generation:</h4>
+           <ul>
+               <li><strong>Snowflake Credits:</strong> For compute, priced by edition, cloud provider (AWS, Azure, GCP), and region.</li>
+               <li><strong>Storage Costs:</strong> Per terabyte per month.</li>
+               <li><strong>Data Transfer Costs:</strong> Egress and cross-region/cloud transfers incur costs.</li>
+               <li><strong>Serverless Features:</strong> Priced by consumption (e.g., Snowpipe, Automatic Clustering).</li>
+           </ul>
+           <h4 class="subsection-title">Snowflake Marketplace:</h4>
+           <p>Offers datasets, SaaS connectors, and Snowflake Native Apps. Customers can use committed Snowflake spend for Marketplace purchases, fostering ecosystem growth.</p>
+           <h4 class="subsection-title">Product & Service Delivery:</h4>
+           <p>A fully managed service on AWS, Azure, and GCP. Features cloud-native architecture (separate compute/storage), multi-cluster shared data access, and Snowgrid for cross-cloud collaboration.</p>
+       </section>
 
-                    <h4 class="subsection-title">Non-GAAP Product Gross Margin Trend (Fiscal Years 2021-2025)</h4>
-                    <p>This chart shows the trend in Snowflake's Non-GAAP Product Gross Margin, reflecting the efficiency of delivering its core platform services.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="snowGrossMarginChart"></canvas>
-                    </div>
-                    
-                    <h4 class="subsection-title">Customers with >$1M Product Revenue Trend (Fiscal Years 2021-2025)</h4>
-                    <p>Growth in the number of large customers spending over $1 million annually on product revenue signifies successful enterprise adoption and expansion.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="snowLargeCustomerChart"></canvas>
-                    </div>
 
-                    <h4 class="subsection-title">Net Revenue Retention Rate Trend (Fiscal Years 2021-2025)</h4>
-                    <p>Snowflake's high Net Revenue Retention (NRR) rate indicates strong customer satisfaction and expansion of usage within the existing customer base.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="snowNrrChart"></canvas>
-                    </div>
-                    
-                    <h4 class="subsection-title">Operating Cash Flow Trend (Fiscal Years 2021-2025)</h4>
-                    <p>This chart displays the trend in Snowflake's Operating Cash Flow, highlighting its ability to generate cash from its core operations.</p>
-                    <div class="chart-container my-6 bg-white p-4 rounded-lg shadow">
-                        <canvas id="snowOcfChart"></canvas>
-                    </div>
+       <section id="products" class="content-section card">
+           <h2 class="section-title">Product & Service Portfolio</h2>
+           <p>Snowflake provides a comprehensive platform for diverse data workloads, emphasizing AI/ML and collaboration.</p>
+           <h4 class="subsection-title">Core Workloads & Platform:</h4>
+           <ul>
+               <li><strong>Unified Platform:</strong> Data Warehousing, Data Lakes, Data Engineering, Cybersecurity data analytics.</li>
+               <li><strong>Key Features:</strong> Near-zero management, zero-copy cloning, Time Travel, Fail-Safe, micro-partitioning.</li>
+           </ul>
+           <h4 class="subsection-title">AI and Machine Learning:</h4>
+           <ul>
+               <li><strong>Snowpark:</strong> Python, Java, Scala development; Snowpark ML for full ML lifecycle.</li>
+               <li><strong>Cortex AI:</strong> Managed AI services (LLM functions, Copilot, Document AI, Cortex Search, Cortex Analyst).</li>
+               <li><strong>Snowflake Arctic:</strong> Snowflake's open, enterprise-grade LLMs.</li>
+               <li><strong>Apache Iceberg Integration:</strong> Manages and queries Iceberg tables.</li>
+               <li><strong>Snowpark Container Services:</strong> Deploys containerized apps (ML models, LLMs) with GPU support.</li>
+           </ul>
+           <h4 class="subsection-title">Applications & Collaboration:</h4>
+           <ul>
+               <li><strong>Snowflake Marketplace:</strong> For datasets, services, and Native Apps.</li>
+               <li><strong>Secure Data Sharing:</strong> Governed sharing of live data without movement.</li>
+               <li><strong>Data Clean Rooms:</strong> Privacy-preserving multi-party collaboration.</li>
+               <li><strong>Native App Framework:</strong> Build and distribute apps running in customer's Snowflake account.</li>
+           </ul>
+           <h4 class="subsection-title">Professional Services:</h4>
+           <p>Consulting, design, implementation, optimization, and support. Crucial for customer adoption and success.</p>
+       </section>
 
-                    <p class="mt-4">Snowflake's financial narrative is one of rapid scaling. Product revenue reached $3.396 billion in FY2025. Non-GAAP product gross margin has consistently improved, reaching 78% in Q4 FY2025. The company shows positive non-GAAP operating income and strong free cash flow generation ($936M in FY2025). However, GAAP net losses persist due to high operating expenses, particularly R&D and substantial stock-based compensation.</p>
-                </div>
 
-                <div id="snow-outlook">
-                    <h3 class="section-title">6. Strategic Outlook & Future Growth Drivers</h3>
-                    <p>Snowflake's vision for the AI Data Cloud, emphasizing data unification, comprehensive AI/ML integration (Snowpark, Cortex AI, Arctic), and support for open standards like Apache Iceberg, positions it for continued growth in a rapidly evolving market.</p>
-                    <h4 class="subsection-title">Key Growth Drivers:</h4>
-                    <ul>
-                        <li><strong>Enterprise AI Adoption:</strong> Enabling customers to build and deploy AI/ML applications directly on their governed data within Snowflake.</li>
-                        <li><strong>Expansion of Snowflake Marketplace & Native App Ecosystem:</strong> Creating network effects and new revenue streams.</li>
-                        <li><strong>Growth in Cybersecurity Workloads:</strong> Leveraging its platform for large-scale security data analytics.</li>
-                        <li><strong>Industry-Specific Solutions:</strong> Tailoring offerings for key verticals like financial services, healthcare, and retail.</li>
-                        <li><strong>International Expansion:</strong> Growing its global customer base.</li>
-                    </ul>
-                    <h4 class="subsection-title">Potential Challenges & Risks:</h4>
-                    <ul>
-                        <li><strong>Intense Competition:</strong> Particularly from cloud hyperscalers (AWS, Azure, GCP) and specialized platforms like Databricks.</li>
-                        <li><strong>Managing Consumption Model Complexity:</strong> Ensuring customer cost predictability and managing potential slowdowns in consumption due to economic factors or optimization efforts.</li>
-                        <li><strong>Achieving Sustained GAAP Profitability:</strong> Balancing high growth investments (R&D, S&M) with the path to GAAP net income.</li>
-                        <li><strong>Execution on AI Strategy:</strong> Successfully monetizing its AI capabilities and competing in the rapidly evolving AI platform space.</li>
-                        <li><strong>Dependence on Public Cloud Infrastructure:</strong> Operational reliance on AWS, Azure, and GCP.</li>
-                    </ul>
-                    <h4 class="subsection-title">Overall Outlook:</h4>
-                    <p>Snowflake's innovative architecture, strong market traction with large enterprises, and strategic focus on becoming the central platform for data and AI provide a compelling growth narrative. The leadership transition, with Sridhar Ramaswamy as the new CEO, will be a factor to watch as the company navigates its next phase of expansion. Snowflake's ability to continue innovating, particularly in AI and open data ecosystems, while effectively competing and managing its unique business model, will determine its long-term success in shaping the future of data.</p>
-                </div>
-            </div>
-        </section>
-    </main>
+       <section id="competition" class="content-section card">
+           <h2 class="section-title">Competitive Landscape & Differentiation</h2>
+           <p>Snowflake competes with cloud providers' native services and specialized data platforms.</p>
+           <h4 class="subsection-title">Key Competitors:</h4>
+           <ul>
+               <li><strong>Cloud Hyperscalers:</strong> Amazon Redshift, Google BigQuery, Microsoft Azure Synapse/Fabric.</li>
+               <li><strong>Specialized Platforms:</strong> Databricks (strong in data lakes, Spark, AI/ML on open formats).</li>
+               <li><strong>Legacy Vendors:</strong> Teradata, Oracle (for migrations).</li>
+           </ul>
+           <h4 class="subsection-title">Snowflake's Differentiators:</h4>
+           <ul>
+               <li><strong>Cloud-Agnostic Architecture:</strong> Operates across AWS, Azure, GCP.</li>
+               <li><strong>Separation of Compute and Storage:</strong> Optimizes cost and performance.</li>
+               <li><strong>Ease of Use & Near-Zero Management.</strong></li>
+               <li><strong>Seamless & Secure Data Sharing (Data Cloud).</strong></li>
+               <li><strong>Integrated AI/ML Capabilities (Snowpark, Cortex AI).</strong></li>
+               <li><strong>Growing Ecosystem (Marketplace, Native Apps).</strong></li>
+               <li><strong>Support for Open Standards (Apache Iceberg).</strong></li>
+           </ul>
+       </section>
 
-    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
-        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Snowflake (SNOW) Analysis. For informational purposes only.</p>
-        <p class="text-xs mt-1">Data synthesized from publicly available company reports and market analyses.</p>
-    </footer>
 
-    <script>
-        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+       <section id="financials" class="content-section card">
+           <h2 class="section-title">Financial Performance Analysis</h2>
+           <p class="text-center max-w-3xl mx-auto mb-6">Snowflake shows rapid product revenue growth, high net revenue retention, and an expanding large-customer base. Non-GAAP metrics indicate improving operational leverage, while GAAP profitability is a future goal due to significant R&D and S&M investments.</p>
+          
+           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+               <div class="metric-card"><div class="metric-card-title">FY25 Product Revenue</div><div class="metric-card-value">$3.396B</div><p class="metric-card-note">25% YoY</p></div>
+               <div class="metric-card"><div class="metric-card-title">Q4 FY25 Product Revenue</div><div class="metric-card-value">$875.5M</div><p class="metric-card-note">20% YoY</p></div>
+               <div class="metric-card"><div class="metric-card-title">Net Revenue Retention</div><div class="metric-card-value">128%</div><p class="metric-card-note">Q4 FY25</p></div>
+               <div class="metric-card"><div class="metric-card-title">Customers >$1M Prod Rev</div><div class="metric-card-value">510</div><p class="metric-card-note">Q4 FY25 (22% YoY)</p></div>
+           </div>
 
-        const CHART_COLORS = { 
-            blue: '#60A5FA',    
-            teal: '#2DD4BF',    
-            amber: '#FDBA74',  
-            stone: '#E7E5E4',   
-            gray: '#4B5563',    
-            darkBlue: '#2563EB', 
-            darkTeal: '#14B8A6', 
-            darkOrange: '#F97316',
-            indigo: '#6366F1', // For Product Revenue
-            lime: '#A3E635',   // For Large Customers
-            pink: '#EC4899',   // For NRR
-            green: '#34D399'  // For OCF
-        };
-        
-        const snowProductRevenueData = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
-            datasets: [{
-                label: 'Product Revenue ($M)',
-                data: [553.8, 1141.9, 1937.9, 2668.6, 3396.0],
-                borderColor: CHART_COLORS.indigo, 
-                backgroundColor: CHART_COLORS.indigo + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.indigo,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.indigo,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
-        const snowGrossMarginData = {
-             labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], // Using Q4 for FY representation
-            datasets: [{
-                label: 'Non-GAAP Product Gross Margin (%)',
-                data: [69, 72, 75, 77, 78], // Q4 FY25 used for FY25 point
-                borderColor: CHART_COLORS.teal, 
-                backgroundColor: CHART_COLORS.teal + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.teal,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.teal,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
-         const snowLargeCustomerData = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], // End of Fiscal Year
-            datasets: [{
-                label: 'Customers >$1M Product Revenue',
-                data: [77, 184, 330, 436, 510],
-                backgroundColor: CHART_COLORS.lime + 'CC',
-                borderColor: CHART_COLORS.lime,
-                borderWidth: 1,
-                borderRadius: 4,
-                hoverBackgroundColor: CHART_COLORS.lime
-            }]
-        };
-        const snowNrrData = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], // End of Fiscal Year
-            datasets: [{
-                label: 'Net Revenue Retention Rate (%)',
-                data: [168, 178, 158, 131, 128], // Q4 used for FY representation
-                borderColor: CHART_COLORS.pink,
-                backgroundColor: CHART_COLORS.pink + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.pink,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.pink,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
-        const snowOcfData = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
-            datasets: [{
-                label: 'Operating Cash Flow ($M)',
-                data: [-83.3, 64.5, 439.0, 793.2, 936.0], // FY25 OCF is $936M
-                borderColor: CHART_COLORS.green,
-                backgroundColor: CHART_COLORS.green + '33',
-                fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_COLORS.green,
-                pointBorderColor: '#ffffff', pointHoverBackgroundColor: '#ffffff', pointHoverBorderColor: CHART_COLORS.green,
-                pointRadius: 4, pointHoverRadius: 6
-            }]
-        };
 
-        let snowProductRevenueChartInstance, snowGrossMarginChartInstance, snowLargeCustomerChartInstance, snowNrrChartInstance, snowOcfChartInstance;
+           <div class="grid md:grid-cols-2 gap-x-8 gap-y-10">
+               <div><h4 class="subsection-title text-center !mt-2 !mb-3">Product Revenue Trend ($M)</h4><div class="chart-container"><canvas id="snowProductRevenueChart"></canvas></div></div>
+               <div><h4 class="subsection-title text-center !mt-2 !mb-3">Non-GAAP Product Gross Margin (%)</h4><div class="chart-container"><canvas id="snowGrossMarginChart"></canvas></div></div>
+               <div><h4 class="subsection-title text-center !mt-2 !mb-3">Customers >$1M Product Revenue</h4><div class="chart-container"><canvas id="snowLargeCustomerChart"></canvas></div></div>
+               <div><h4 class="subsection-title text-center !mt-2 !mb-3">Net Revenue Retention Rate (%)</h4><div class="chart-container"><canvas id="snowNrrChart"></canvas></div></div>
+               <div class="md:col-span-2"><h4 class="subsection-title text-center !mt-2 !mb-3">Operating Cash Flow ($M)</h4><div class="chart-container mx-auto"><canvas id="snowOcfChart"></canvas></div></div>
+           </div>
+       </section>
 
-        function createChart(ctx, type, data, options) {
-            if (!ctx) return null;
-            return new Chart(ctx, { type, data, options });
-        }
-        
-        const commonChartOptionsLine = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    ticks: { color: '#4B5563', font: { size: 11 } },
-                    grid: { color: '#E7E5E4', drawBorder: false }
-                },
-                x: {
-                    ticks: { color: '#4B5563', font: { size: 11 } },
-                    grid: { display: false }
-                }
-            },
-            plugins: {
-                legend: {
-                    position: 'top', align: 'end',
-                    labels: { color: '#374151', font: { size: 12, weight: '500' }, padding: 15, boxWidth: 12, usePointStyle: true }
-                },
-                tooltip: {
-                    enabled: true, backgroundColor: '#1F2937', titleColor: '#F3F4F6', titleFont: { weight: '600', size: 13 },
-                    bodyColor: '#D1D5DB', bodyFont: { size: 12 }, padding: 10, cornerRadius: 4, displayColors: true,
-                    borderColor: '#4B5563', borderWidth: 1,
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) { label += ': '; }
-                            if (context.parsed.y !== null) {
-                                if (context.dataset.label.includes('Margin') || context.dataset.label.includes('Rate')) {
-                                     label += context.parsed.y.toFixed(1) + '%';
-                                } else if (context.dataset.label.includes('Customers')) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                 else {
-                                     label += '$' + context.parsed.y.toLocaleString() + 'M';
-                                }
-                            }
-                            return label;
-                        }
-                    }
-                }
-            },
-            animation: { duration: 700, easing: 'easeOutCubic' }
-        };
-         const commonChartOptionsBar = { 
-            ...commonChartOptionsLine, 
-             scales: { 
-                y: {
-                    beginAtZero: true, 
-                    ticks: { color: '#4B5563', font: { size: 11 } }, 
-                    grid: { color: '#E7E5E4', drawBorder: false }
-                },
-                x: {
-                    ticks: { color: '#4B5563', font: { size: 11 } },
-                    grid: { display: false }
-                }
-            }
-        };
-        
-        function initializeSnowflakeCharts() { 
-            const snowProductRevenueChartCtx = document.getElementById('snowProductRevenueChart')?.getContext('2d');
-            const snowGrossMarginChartCtx = document.getElementById('snowGrossMarginChart')?.getContext('2d');
-            const snowLargeCustomerChartCtx = document.getElementById('snowLargeCustomerChart')?.getContext('2d');
-            const snowNrrChartCtx = document.getElementById('snowNrrChart')?.getContext('2d');
-            const snowOcfChartCtx = document.getElementById('snowOcfChart')?.getContext('2d');
 
-            if (snowProductRevenueChartCtx && !snowProductRevenueChartInstance) {
-                snowProductRevenueChartInstance = createChart(snowProductRevenueChartCtx, 'line', snowProductRevenueData, commonChartOptionsLine);
-            }
-            if (snowGrossMarginChartCtx && !snowGrossMarginChartInstance) {
-                snowGrossMarginChartInstance = createChart(snowGrossMarginChartCtx, 'line', snowGrossMarginData, commonChartOptionsLine);
-            }
-             if (snowLargeCustomerChartCtx && !snowLargeCustomerChartInstance) {
-                snowLargeCustomerChartInstance = createChart(snowLargeCustomerChartCtx, 'bar', snowLargeCustomerData, commonChartOptionsBar);
-            }
-            if (snowNrrChartCtx && !snowNrrChartInstance) {
-                snowNrrChartInstance = createChart(snowNrrChartCtx, 'line', snowNrrData, commonChartOptionsLine);
-            }
-            if (snowOcfChartCtx && !snowOcfChartInstance) {
-                snowOcfChartInstance = createChart(snowOcfChartCtx, 'line', snowOcfData, commonChartOptionsLine);
-            }
-        }
+       <section id="outlook" class="content-section card">
+           <h2 class="section-title">Strategic Outlook & Future Growth</h2>
+           <p class="text-center max-w-3xl mx-auto mb-6">Snowflake's AI Data Cloud vision, emphasizing data unification, AI/ML integration, and open standards, positions it for growth.</p>
+           <div class="grid md:grid-cols-2 gap-6">
+               <div>
+                   <h4 class="subsection-title !text-green-600">Key Growth Drivers:</h4>
+                   <ul>
+                       <li>Enterprise AI Adoption (Snowpark, Cortex AI, Arctic).</li>
+                       <li>Expansion of Marketplace & Native App Ecosystem.</li>
+                       <li>Growth in Cybersecurity Workloads.</li>
+                       <li>Industry-Specific Solutions (Financials, Healthcare, Retail).</li>
+                       <li>International Expansion.</li>
+                   </ul>
+               </div>
+               <div>
+                   <h4 class="subsection-title !text-orange-600">Potential Challenges & Risks:</h4>
+                   <ul>
+                       <li>Intense Competition (Hyperscalers, Databricks).</li>
+                       <li>Managing Consumption Model Complexity & Cost Predictability.</li>
+                       <li>Achieving Sustained GAAP Profitability.</li>
+                       <li>Execution on AI Strategy & Monetization.</li>
+                       <li>Dependence on Public Cloud Infrastructure.</li>
+                   </ul>
+               </div>
+           </div>
+           <h4 class="subsection-title mt-6 text-center">Overall Outlook:</h4>
+           <p class="text-center max-w-3xl mx-auto">Snowflake's innovative architecture and focus on data and AI provide a compelling narrative. The leadership transition and ability to execute against competition will shape its long-term success.</p>
+       </section>
+   </main>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeSnowflakeCharts(); 
-        });
-    </script>
+
+   <footer class="footer">
+       <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Snowflake (SNOW) Analysis.</p>
+       <p class="text-xs mt-1">Data synthesized from public reports. For informational purposes only.</p>
+   </footer>
+
+
+   <script>
+       document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+
+       const mainNavEl = document.querySelector('.sticky-nav');
+       const navLinks = document.querySelectorAll('.sticky-nav .nav-link');
+       const contentSections = document.querySelectorAll('.content-section');
+       let navHeight = mainNavEl ? mainNavEl.offsetHeight + 20 : 70;
+
+
+       function changeActiveLink() {
+           let index = contentSections.length;
+           while(--index && window.scrollY + navHeight < contentSections[index].offsetTop) {}
+           navLinks.forEach((link) => link.classList.remove('active'));
+           if(navLinks[index]) navLinks[index].classList.add('active');
+       }
+      
+       navLinks.forEach(anchor => {
+           anchor.addEventListener('click', function (e) {
+               e.preventDefault();
+               const targetId = this.getAttribute('href');
+               const targetElement = document.querySelector(targetId);
+               if (targetElement) {
+                   const targetPosition = targetElement.offsetTop - (mainNavEl ? mainNavEl.offsetHeight : 50) + 5;
+                   window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+               }
+           });
+       });
+      
+       window.addEventListener('scroll', changeActiveLink);
+      
+       const CHART_PALETTE = { // Snowflake Inspired Blues/Teals
+           primary: '#0ea5e9',        // sky-500
+           secondary: '#0891b2',      // cyan-600
+           accent: '#06b6d4',         // cyan-500
+           light: '#67e8f9',          // cyan-300
+           neutralGrid: '#e2e8f0',    // slate-200
+           neutralText: '#475569',    // slate-600
+           tooltipBg: 'rgba(30, 41, 59, 0.9)', // slate-800
+       };
+
+
+       const snowProductRevenueData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'Product Revenue ($M)', data: [553.8, 1141.9, 1937.9, 2668.6, 3396.0], borderColor: CHART_PALETTE.primary, backgroundColor: CHART_PALETTE.primary + '33', fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_PALETTE.primary }] };
+       const snowGrossMarginData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'Non-GAAP Product Gross Margin (%)', data: [69, 72, 75, 77, 78], borderColor: CHART_PALETTE.secondary, backgroundColor: CHART_PALETTE.secondary + '33', fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_PALETTE.secondary }] };
+       const snowLargeCustomerData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'Customers >$1M Product Revenue', data: [77, 184, 330, 436, 510], backgroundColor: CHART_PALETTE.accent + 'CC', borderColor: CHART_PALETTE.accent, borderWidth: 1, borderRadius: 4 }] };
+       const snowNrrData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'Net Revenue Retention Rate (%)', data: [168, 178, 158, 131, 128], borderColor: CHART_PALETTE.light, backgroundColor: CHART_PALETTE.light + '33', fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_PALETTE.light }] };
+       const snowOcfData = { labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'], datasets: [{ label: 'Operating Cash Flow ($M)', data: [-83.3, 64.5, 439.0, 793.2, 936.0], borderColor: CHART_PALETTE.primary, backgroundColor: CHART_PALETTE.primary + '22', fill: true, tension: 0.2, borderWidth: 2, pointBackgroundColor: CHART_PALETTE.primary }] };
+
+
+       let chartInstances = {};
+
+
+       function createChart(ctxId, type, data, options) {
+           const ctx = document.getElementById(ctxId)?.getContext('2d');
+           if (!ctx) return null;
+           if(chartInstances[ctxId]) chartInstances[ctxId].destroy();
+           chartInstances[ctxId] = new Chart(ctx, { type, data, options });
+           return chartInstances[ctxId];
+       }
+      
+       const commonChartOptions = (isPercentage = false) => ({
+           responsive: true, maintainAspectRatio: false,
+           scales: {
+               y: { beginAtZero: !isPercentage, ticks: { color: CHART_PALETTE.neutralText, font: { size: 10 }, callback: function(value) { return isPercentage ? value + '%' : value.toLocaleString(); } }, grid: { color: CHART_PALETTE.neutralGrid, drawBorder: false } },
+               x: { ticks: { color: CHART_PALETTE.neutralText, font: { size: 10 } }, grid: { display: false } }
+           },
+           plugins: {
+               legend: { position: 'bottom', align: 'center', labels: { color: CHART_PALETTE.neutralText, font: { size: 11, weight: '500' }, padding: 15, boxWidth: 12, usePointStyle: true } },
+               tooltip: {
+                   enabled: true, backgroundColor: CHART_PALETTE.tooltipBg, titleColor: '#f1f5f9', titleFont: { weight: '600', size: 12 },
+                   bodyColor: '#e2e8f0', bodyFont: { size: 11 }, padding: 10, cornerRadius: 4, displayColors: true,
+                   callbacks: {
+                       label: function(context) {
+                           let label = context.dataset.label || '';
+                           if (label) { label += ': '; }
+                           if (context.parsed.y !== null) {
+                               label += context.parsed.y.toLocaleString() + (context.dataset.label.includes('%') || isPercentage ? '%' : (context.dataset.label.includes('Customers') ? '' : 'M'));
+                           }
+                           return label;
+                       }
+                   }
+               }
+           },
+           animation: { duration: 700, easing: 'easeOutCubic' }
+       });
+      
+       function initializeSnowflakeCharts() {
+           createChart('snowProductRevenueChart', 'line', snowProductRevenueData, commonChartOptions());
+           createChart('snowGrossMarginChart', 'line', snowGrossMarginData, commonChartOptions(true));
+           createChart('snowLargeCustomerChart', 'bar', snowLargeCustomerData, commonChartOptions());
+           createChart('snowNrrChart', 'line', snowNrrData, commonChartOptions(true));
+           createChart('snowOcfChart', 'line', snowOcfData, commonChartOptions());
+       }
+
+
+       document.addEventListener('DOMContentLoaded', () => {
+           if (mainNavEl) navHeight = mainNavEl.offsetHeight + 20;
+           changeActiveLink();
+           initializeSnowflakeCharts();
+
+
+           const currentHash = window.location.hash || '#overview';
+           navLinks.forEach(link => { link.classList.toggle('active', link.getAttribute('href') === currentHash); });
+           const initialSection = document.querySelector(currentHash);
+           if(initialSection && currentHash !== '#overview') { // Only scroll if not overview to avoid jump on initial load
+                const targetPosition = initialSection.offsetTop - (mainNavEl ? mainNavEl.offsetHeight : 50) +5;
+                setTimeout(() => window.scrollTo({ top: targetPosition, behavior: 'smooth' }), 100); // Delay scroll slightly
+           } else if (initialSection) { // For #overview, ensure it's properly in view without jarring scroll
+                initialSection.scrollIntoView({behavior: 'instant', block: 'start'});
+           }
+       });
+   </script>
 </body>
 </html>
-
 
