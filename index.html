@@ -220,7 +220,10 @@
                        setTimeout(() => spaCard.classList.remove('highlight-border'), 2500);
                    }
                    viewButton.disabled = false;
-                   viewButton.onclick = () => { window.location.href = selectedCompany.spaPath; };
+                   viewButton.onclick = () => {
+                       console.log("Navigating to:", selectedCompany.spaPath); // Debugging line
+                       window.location.href = selectedCompany.spaPath;
+                   };
                } else {
                    selectedCompanyNameSpan.textContent = selectedCompany ? selectedCompany.company : "this company";
                    messageDiv.classList.remove('hidden');
