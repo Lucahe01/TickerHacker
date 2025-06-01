@@ -46,19 +46,16 @@
        </div>
 
 
-       <!-- Featured Analyses Section -->
        <section class="mb-12">
            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">Featured Analyses</h2>
            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <!-- Mega 7 Section -->
                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="MEGA7">
                    <h3 class="text-2xl font-semibold text-cyan-600 mb-2">Mega 7 Stocks Analysis</h3>
                    <p class="text-gray-700 mb-4 flex-grow">An analysis of the seven largest US tech stocks: Apple, Microsoft, Alphabet, Amazon, Nvidia, Meta, and Tesla.</p>
-                   <a href="/MEGA7/" class="mt-auto inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">
+                   <a href="/MEGA7/MEGA7.html" class="mt-auto inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">
                        View Mega 7 Analysis &rarr;
                    </a>
                </div>
-               <!-- QQQ Section -->
                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="QQQ">
                    <h3 class="text-2xl font-semibold text-purple-700 mb-2">Invesco QQQ Trust (QQQ) Insights</h3>
                    <p class="text-gray-700 mb-4 flex-grow">A comprehensive analysis of the Nasdaq-100 index, its top holdings, sector breakdown, and performance.</p>
@@ -70,7 +67,6 @@
        </section>
 
 
-       <!-- Individual Stock Analysis Section -->
        <section>
            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">Individual Stock Analysis</h2>
            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -128,7 +124,7 @@
 
 
        const dedicatedSpaCardsInfo = {
-           "MEGA7": { company: "Mega 7 Stocks Analysis", spaPath: "/MEGA7/" },
+           "MEGA7": { company: "Mega 7 Stocks Analysis", spaPath: "/MEGA7/MEGA7.html" }, // Corrected path to include folder
            "QQQ": { company: "Invesco QQQ Trust", spaPath: "/QQQ/" },
            "PLTR": { company: "Palantir Technologies", spaPath: "/PLTR/" },
            "MRVL": { company: "Marvell Technology", spaPath: "/MRVL/" },
@@ -243,4 +239,3 @@
    </script>
 </body>
 </html>
-
