@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega 7 Stocks Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-button.active {
+            border-color: #3b82f6; /* blue-500 */
+            color: #3b82f6;
+            background-color: #eff6ff; /* blue-50 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col items-center py-10 px-4">
+    <div class="container mx-auto max-w-4xl">
+
+        <header class="text-center mb-12 w-full">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-600">Mega 7 Stocks Analysis</h1>
+            <p class="text-lg text-gray-600 mt-2">Explore the individual performance and insights for the seven largest US tech stocks.</p>
+            <a href="/index.html" class="mt-4 inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors">
+                &larr; Back to Main Analyses
+            </a>
+        </header>
+
+        <div class="bg-white p-6 rounded-xl shadow-lg mb-8 w-full">
+            <div class="flex border-b border-gray-200 mb-6">
+                <button class="tab-button py-3 px-6 text-lg font-medium text-gray-600 border-b-2 border-transparent hover:border-blue-300 hover:text-blue-700 transition-colors duration-200 active" data-tab="AAPL">Apple (AAPL)</button>
+                <button class="tab-button py-3 px-6 text-lg font-medium text-gray-600 border-b-2 border-transparent hover:border-blue-300 hover:text-blue-700 transition-colors duration-200" data-tab="MSFT">Microsoft (MSFT)</button>
+                <button class="tab-button py-3 px-6 text-lg font-medium text-gray-600 border-b-2 border-transparent hover:border-blue-300 hover:text-blue-700 transition-colors duration-200" data-tab="GOOGL">Alphabet (GOOGL)</button>
+                <button class="tab-button py-3 px-6 text-lg font-medium text-gray-600 border-b-2 border-transparent hover:border-blue-300 hover:text-blue-700 transition-colors duration-200" data-tab="AMZN">Amazon (AMZN)</button>
+                <button class="tab-button py-3 px-6 text-lg font-medium text-gray-600 border-b-2 border-transparent hover:border-blue-300 hover:text-blue-700 transition-colors duration-200" data-tab="NVDA">NVIDIA (NVDA)</button>
+                <button class="tab-button py-3 px-6 text-lg font-medium text-gray-600 border-b-2 border-transparent hover:border-blue-300 hover:text-blue-700 transition-colors duration-200" data-tab="META">Meta (META)</button>
+                <button class="tab-button py-3 px-6 text-lg font-medium text-gray-600 border-b-2 border-transparent hover:border-blue-300 hover:text-blue-700 transition-colors duration-200" data-tab="TSLA">Tesla (TSLA)</button>
+            </div>
+
+            <div id="tab-content-container">
+                <div class="tab-content" id="content-AAPL">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Apple Inc. (AAPL) Analysis</h3>
+                    <p class="text-gray-700 mb-6">Dive into Apple's ecosystem, product innovations, financial performance, and market leadership.</p>
+                    <a href="/AAPL.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all">
+                        View AAPL SPA &rarr;
+                    </a>
+                </div>
+
+                <div class="tab-content hidden" id="content-MSFT">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Microsoft Corp (MSFT) Analysis</h3>
+                    <p class="text-gray-700 mb-6">Explore Microsoft's cloud dominance (Azure), enterprise software, and gaming ventures.</p>
+                    <a href="/MSFT.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all">
+                        View MSFT SPA &rarr;
+                    </a>
+                </div>
+
+                <div class="tab-content hidden" id="content-GOOGL">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Alphabet Inc. (GOOGL) Analysis</h3>
+                    <p class="text-gray-700 mb-6">Discover Alphabet's advertising empire, AI advancements, and "Other Bets" innovations.</p>
+                    <a href="/GOOGL.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all">
+                        View GOOGL SPA &rarr;
+                    </a>
+                </div>
+
+                <div class="tab-content hidden" id="content-AMZN">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Amazon.com Inc (AMZN) Analysis</h3>
+                    <p class="text-gray-700 mb-6">Examine Amazon's e-commerce dominance, AWS cloud services, and logistics network.</p>
+                    <a href="/AMZN.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all">
+                        View AMZN SPA &rarr;
+                    </a>
+                </div>
+
+                <div class="tab-content hidden" id="content-NVDA">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">NVIDIA Corp (NVDA) Analysis</h3>
+                    <p class="text-gray-700 mb-6">Uncover NVIDIA's leadership in AI, graphics processing, and data center technologies.</p>
+                    <a href="/NVDA.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all">
+                        View NVDA SPA &rarr;
+                    </a>
+                </div>
+
+                <div class="tab-content hidden" id="content-META">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Meta Platforms Inc. (META) Analysis</h3>
+                    <p class="text-gray-700 mb-6">Explore Meta's social media platforms (Facebook, Instagram) and metaverse ambitions.</p>
+                    <a href="/META.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all">
+                        View META SPA &rarr;
+                    </a>
+                </div>
+
+                <div class="tab-content hidden" id="content-TSLA">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Tesla Inc. (TSLA) Analysis</h3>
+                    <p class="text-gray-700 mb-6">Analyze Tesla's electric vehicle innovation, battery technology, and energy solutions.</p>
+                    <a href="/TSLA.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all">
+                        View TSLA SPA &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center mt-16 py-6 border-t border-gray-300 w-full">
+            <p class="text-gray-600">&copy; <span id="year"></span> Duke. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            function showTab(tabId) {
+                tabContents.forEach(content => {
+                    if (content.id === `content-${tabId}`) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+
+                tabButtons.forEach(button => {
+                    if (button.dataset.tab === tabId) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+            }
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    showTab(button.dataset.tab);
+                });
+            });
+
+            // Show the first tab by default
+            if (tabButtons.length > 0) {
+                showTab(tabButtons[0].dataset.tab);
+            }
+        });
+    </script>
+</body>
+</html>
