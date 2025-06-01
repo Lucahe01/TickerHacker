@@ -1,534 +1,516 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.5">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.7px Arial; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Platforms Inc. (META) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #60A5FA; /* blue-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2DD4BF; /* teal-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #60A5FA; /* blue-400 */
+            color: #FFFFFF;
+            border-color: #3B82F6; /* blue-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #60A5FA; /* blue-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F0F9FF; /* sky-50 */
+            border: 1px solid #BAE6FD; /* sky-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
 </head>
-<body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="en" class="scroll-smooth"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;title&gt;Meta Platforms Inc. (META) - TickerHack Deep Research&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;style&gt;</span></p>
-<p class="p1"><span class="s1">        body {</span></p>
-<p class="p1"><span class="s1">            font-family: 'Inter', sans-serif;</span></p>
-<p class="p1"><span class="s1">            background-color: #F5F5F4; /* stone-100 */</span></p>
-<p class="p1"><span class="s1">            color: #374151; /* gray-700 */</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .chart-container {</span></p>
-<p class="p1"><span class="s1">            position: relative;</span></p>
-<p class="p1"><span class="s1">            width: 100%;</span></p>
-<p class="p1"><span class="s1">            max-width: 600px;</span></p>
-<p class="p1"><span class="s1">            margin-left: auto;</span></p>
-<p class="p1"><span class="s1">            margin-right: auto;</span></p>
-<p class="p1"><span class="s1">            height: 300px;</span></p>
-<p class="p1"><span class="s1">            max-height: 350px;</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        @media (min-width: 768px) { /* md */</span></p>
-<p class="p1"><span class="s1">            .chart-container {</span></p>
-<p class="p1"><span class="s1">                height: 350px;</span></p>
-<p class="p1"><span class="s1">                max-height: 400px;</span></p>
-<p class="p1"><span class="s1">            }</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .section-card {</span></p>
-<p class="p1"><span class="s1">            background-color: #FFFFFF;</span></p>
-<p class="p1"><span class="s1">            border-radius: 0.75rem; /* rounded-xl */</span></p>
-<p class="p1"><span class="s1">            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */</span></p>
-<p class="p1"><span class="s1">            padding: 1.5rem; /* p-6 */</span></p>
-<p class="p1"><span class="s1">            margin-bottom: 2rem; /* mb-8 */</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .main-title {</span></p>
-<p class="p1"><span class="s1">            font-size: 2.25rem; /* text-4xl */</span></p>
-<p class="p1"><span class="s1">            font-weight: 700; /* font-bold */</span></p>
-<p class="p1"><span class="s1">            color: #1F2937; /* gray-800 */</span></p>
-<p class="p1"><span class="s1">            margin-bottom: 1rem;</span></p>
-<p class="p1"><span class="s1">            text-align: center;</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .section-title {</span></p>
-<p class="p1"><span class="s1">            font-size: 1.875rem; /* text-3xl */</span></p>
-<p class="p1"><span class="s1">            font-weight: 600; /* font-semibold */</span></p>
-<p class="p1"><span class="s1">            color: #60A5FA; /* blue-400 */</span></p>
-<p class="p1"><span class="s1">            margin-bottom: 1.5rem; /* mb-6 */</span></p>
-<p class="p1"><span class="s1">            padding-bottom: 0.5rem; /* pb-2 */</span></p>
-<p class="p1"><span class="s1">            border-bottom: 2px solid #E7E5E4; /* stone-200 */</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .subsection-title {</span></p>
-<p class="p1"><span class="s1">            font-size: 1.5rem; /* text-2xl */</span></p>
-<p class="p1"><span class="s1">            font-weight: 600; /* font-semibold */</span></p>
-<p class="p1"><span class="s1">            color: #2DD4BF; /* teal-400 */</span></p>
-<p class="p1"><span class="s1">            margin-top: 1.5rem; /* mt-6 */</span></p>
-<p class="p1"><span class="s1">            margin-bottom: 1rem; /* mb-4 */</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .content-text {</span></p>
-<p class="p1"><span class="s1">            line-height: 1.75;</span></p>
-<p class="p1"><span class="s1">            color: #4B5563; /* gray-600 */</span></p>
-<p class="p1"><span class="s1">            font-size: 0.95rem;</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .highlight {</span></p>
-<p class="p1"><span class="s1">            color: #F97316; /* orange-500 */</span></p>
-<p class="p1"><span class="s1">            font-weight: 600;</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .tab-button {</span></p>
-<p class="p1"><span class="s1">            padding: 0.5rem 1rem;</span></p>
-<p class="p1"><span class="s1">            border-radius: 0.375rem; /* rounded-md */</span></p>
-<p class="p1"><span class="s1">            font-weight: 500;</span></p>
-<p class="p1"><span class="s1">            font-size: 0.875rem; /* text-sm */</span></p>
-<p class="p1"><span class="s1">            cursor: pointer;</span></p>
-<p class="p1"><span class="s1">            transition: background-color 0.3s, color 0.3s;</span></p>
-<p class="p1"><span class="s1">            background-color: #E7E5E4; /* stone-200 */</span></p>
-<p class="p1"><span class="s1">            color: #374151; /* gray-700 */</span></p>
-<p class="p1"><span class="s1">            border: 1px solid transparent;</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .tab-button.active {</span></p>
-<p class="p1"><span class="s1">            background-color: #60A5FA; /* blue-400 */</span></p>
-<p class="p1"><span class="s1">            color: #FFFFFF;</span></p>
-<p class="p1"><span class="s1">            border-color: #3B82F6; /* blue-500 */</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .nav-link {</span></p>
-<p class="p1"><span class="s1">            padding: 0.5rem 1rem;</span></p>
-<p class="p1"><span class="s1">            border-radius: 0.375rem; /* rounded-md */</span></p>
-<p class="p1"><span class="s1">            font-weight: 500;</span></p>
-<p class="p1"><span class="s1">            color: #374151; /* gray-700 */</span></p>
-<p class="p1"><span class="s1">            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;</span></p>
-<p class="p1"><span class="s1">            white-space: nowrap;</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .nav-link:hover, .nav-link.active {</span></p>
-<p class="p1"><span class="s1">            background-color: #60A5FA; /* blue-400 */</span></p>
-<p class="p1"><span class="s1">            color: #FFFFFF;</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .kpi-card {</span></p>
-<p class="p1"><span class="s1">            background-color: #F0F9FF; /* sky-50 */</span></p>
-<p class="p1"><span class="s1">            border: 1px solid #BAE6FD; /* sky-200 */</span></p>
-<p class="p1"><span class="s1">            border-radius: 0.5rem; /* rounded-lg */</span></p>
-<p class="p1"><span class="s1">            padding: 1rem;</span></p>
-<p class="p1"><span class="s1">            text-align: center;</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .kpi-label {</span></p>
-<p class="p1"><span class="s1">            font-size: 0.875rem; /* text-sm */</span></p>
-<p class="p1"><span class="s1">            color: #6B7280; /* gray-500 */</span></p>
-<p class="p1"><span class="s1">            margin-bottom: 0.25rem;</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        .kpi-value {</span></p>
-<p class="p1"><span class="s1">            font-size: 1.75rem; /* text-2xl or 3xl */</span></p>
-<p class="p1"><span class="s1">            font-weight: 600;</span></p>
-<p class="p1"><span class="s1">            color: #1F2937; /* gray-800 */</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">    &lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body class="min-h-screen"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">    &lt;header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md"&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;nav class="container mx-auto px-4 sm:px-6 lg:px-8"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="flex items-center justify-between h-16"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div class="flex-shrink-0"&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;h1 class="text-xl font-bold" style="color: #60A5FA;"&gt;Meta (META) Analysis&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div class="hidden md:block"&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;div class="ml-10 flex items-baseline space-x-1 lg:space-x-2"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;a href="#overview" class="nav-link"&gt;Overview&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;a href="#segments" class="nav-link"&gt;Business Segments&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;a href="#financials" class="nav-link"&gt;Financials&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;a href="#competition" class="nav-link"&gt;Competitive Moat&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;a href="#outlook" class="nav-link"&gt;Outlook&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div class="md:hidden"&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;span class="sr-only"&gt;Open main menu&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /&gt;&lt;/svg&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"&gt;&lt;path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /&gt;&lt;/svg&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="md:hidden hidden" id="mobile-menu"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div class="px-2 pt-2 pb-3 space-y-1 sm:px-3"&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;a href="#overview" class="nav-link block text-base"&gt;Overview&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;a href="#segments" class="nav-link block text-base"&gt;Business Segments&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;a href="#financials" class="nav-link block text-base"&gt;Financials&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;a href="#competition" class="nav-link block text-base"&gt;Competitive Moat&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;a href="#outlook" class="nav-link block text-base"&gt;Outlook&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/nav&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;/header&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">    &lt;main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        &lt;section id="overview" class="section-card scroll-mt-20"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;h2 class="section-title"&gt;Meta: The Global Digital Town Square&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;p class="content-text mb-6"&gt;Meta Platforms is the world's largest social media company, connecting billions of people through its Family of Apps: Facebook, Instagram, WhatsApp, and Messenger. Its business model is overwhelmingly powered by digital advertising, leveraging its massive user base and sophisticated AI-driven targeting. While its core business remains a cash-generating machine, Meta is embarking on two transformative, capital-intensive pivots: a full-stack integration of Artificial Intelligence to boost engagement and ad performance, and a long-term, high-risk bet on building the metaverse via its Reality Labs segment.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">            </span></p>
-<p class="p1"><span class="s1">            &lt;div class="grid md:grid-cols-2 gap-6 items-start"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;h3 class="subsection-title !mt-0"&gt;Core Business Strategy&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;p class="content-text mb-4"&gt;Meta's strategy revolves around three core tenets:&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;ul class="list-disc list-inside content-text space-y-1 pl-4"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong class="font-semibold text-gray-700"&gt;Grow the Core Network:&lt;/strong&gt; Maximizing user engagement across the Family of Apps, primarily through short-form video (Reels) and messaging.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong class="font-semibold text-gray-700"&gt;AI-Powered Advertising:&lt;/strong&gt; Integrating advanced AI to enhance content discovery, improve ad targeting (mitigating signal loss from privacy changes), and increase return on ad spend for marketers.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong class="font-semibold text-gray-700"&gt;Invent the Future (Metaverse):&lt;/strong&gt; Investing heavily in R&amp;D and hardware (Quest headsets) to build the next generation of social computing platforms in augmented and virtual reality.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/ul&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div class="kpi-card bg-blue-50 border-blue-200"&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;p class="kpi-label"&gt;Family Daily Active People (Q1 2025)&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;p class="kpi-value text-blue-600"&gt;3.43 Billion&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;p class="content-text text-sm mt-2"&gt;This staggering reach is the foundation of Meta's network effect and its dominance in the digital advertising market.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        &lt;section id="segments" class="section-card scroll-mt-20"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;h2 class="section-title"&gt;A Tale of Two Segments&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;p class="content-text mb-6"&gt;Meta operates and reports as two distinct segments. The &lt;span class="font-semibold"&gt;Family of Apps (FoA)&lt;/span&gt; is the highly profitable core business. &lt;span class="font-semibold"&gt;Reality Labs (RL)&lt;/span&gt; is the future-facing, cash-burning venture tasked with building the metaverse. The financial disparity between them is stark and central to understanding Meta's strategy.&lt;/p&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">            &lt;div class="mb-6 border-b border-stone-200"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;nav class="-mb-px flex space-x-4" aria-label="Tabs"&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;button class="segment-tab-button active" data-target="foa"&gt;Family of Apps (FoA)&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;button class="segment-tab-button" data-target="rl"&gt;Reality Labs (RL)&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/nav&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">            &lt;div id="segmentDetails"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div id="foaContent" class="segment-content"&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;h3 class="subsection-title"&gt;Family of Apps: The Ad Juggernaut&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;div class="grid grid-cols-1 md:grid-cols-2 gap-6"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;div&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;p class="content-text mb-2"&gt;This segment includes Facebook, Instagram, Messenger, and WhatsApp and generates nearly all of company revenue and all of its profit. For fiscal year 2024, FoA generated &lt;span class="highlight"&gt;$162.4 billion&lt;/span&gt; in revenue, almost entirely from advertising. Its operating margin is robust, funding the entire company's R&amp;D and growth initiatives.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                             &lt;ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4"&gt;</span></p>
-<p class="p1"><span class="s1">                                &lt;li&gt;&lt;strong&gt;Facebook:&lt;/strong&gt; The original social network, a hub for community and connection.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                                &lt;li&gt;&lt;strong&gt;Instagram:&lt;/strong&gt; A visual-first platform, leading the charge in short-form video with Reels.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                                &lt;li&gt;&lt;strong&gt;WhatsApp &amp; Messenger:&lt;/strong&gt; Dominant messaging apps, with growing business-to-consumer interaction features.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;/ul&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;div class="chart-container h-72 md:h-80"&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;canvas id="revenueBreakdownChart"&gt;&lt;/canvas&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div id="rlContent" class="segment-content hidden"&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;h3 class="subsection-title"&gt;Reality Labs: The Metaverse Bet&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">                     &lt;div class="grid grid-cols-1 md:grid-cols-2 gap-6"&gt;</span></p>
-<p class="p1"><span class="s1">                         &lt;div&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;p class="content-text mb-2"&gt;Reality Labs is Meta's ambitious, long-term R&amp;D initiative to build the metaverse. This segment generates minimal revenue from sales of Quest VR headsets. It is a significant cost center, posting an operating loss of over &lt;span class="highlight"&gt;$18 billion&lt;/span&gt; in 2024. Success is not guaranteed and requires sustained, massive investment.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4"&gt;</span></p>
-<p class="p1"><span class="s1">                                &lt;li&gt;&lt;strong&gt;Hardware:&lt;/strong&gt; Meta Quest line of virtual reality headsets (Quest 3).&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                                &lt;li&gt;&lt;strong&gt;Software &amp; Content:&lt;/strong&gt; The Horizon Worlds social platform and a growing ecosystem of VR games and apps.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                                &lt;li&gt;&lt;strong&gt;Research &amp; Development:&lt;/strong&gt; Pushing the boundaries of AR/VR technology, including neural interfaces and photorealistic avatars.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;/ul&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;div class="chart-container h-72 md:h-80"&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;canvas id="rlPerformanceChart"&gt;&lt;/canvas&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        &lt;section id="financials" class="section-card scroll-mt-20"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;h2 class="section-title"&gt;Financial Deep Dive&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;p class="content-text mb-6"&gt;After a challenging 2022, Meta's "Year of Efficiency" in 2023 led to a dramatic rebound in profitability and cash flow. The company is now leaner and more focused, driving strong top-line growth while continuing its massive investments in AI and Reality Labs. Explore key financial trends using the dropdowns below.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">            </span></p>
-<p class="p1"><span class="s1">            &lt;div class="grid grid-cols-1 md:grid-cols-2 gap-8"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;h3 class="subsection-title"&gt;Fiscal Year Trends (2020-2024)&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;div class="mb-4"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1"&gt;Select Annual Metric:&lt;/label&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;option value="totalRevenue" selected&gt;Total Revenue ($B)&lt;/option&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;option value="operatingIncome"&gt;Operating Income ($B)&lt;/option&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;option value="netIncome"&gt;Net Income ($B)&lt;/option&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;option value="operatingMargin"&gt;Operating Margin (%)&lt;/option&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/select&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;canvas id="yearlyFinancialChart"&gt;&lt;/canvas&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">                &lt;div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;h3 class="subsection-title"&gt;Quarterly Trends (Recent 8 Qtrs)&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">                     &lt;div class="mb-4"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1"&gt;Select Quarterly Metric:&lt;/label&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;option value="totalRevenue" selected&gt;Total Revenue ($B)&lt;/option&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;option value="operatingIncome"&gt;Operating Income ($B)&lt;/option&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;option value="netIncome"&gt;Net Income ($B)&lt;/option&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/select&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;canvas id="quarterlyFinancialChart"&gt;&lt;/canvas&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">             &lt;p class="content-text text-sm mt-6 text-center"&gt;The financial charts showcase the rebound in 2023-2024 and strong growth into 2025, driven by a recovery in the digital ad market and internal efficiency measures.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        &lt;section id="competition" class="section-card scroll-mt-20"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;h2 class="section-title"&gt;Competitive Moat: The Unrivaled Network&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;p class="content-text mb-6"&gt;Meta's competitive moat is one of the most powerful in the digital economy. It is built on a foundational network effect of immense scale, making it incredibly difficult for rivals to replicate the value it offers to users and advertisers.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">            </span></p>
-<p class="p1"><span class="s1">            &lt;div class="grid md:grid-cols-2 gap-8"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;h3 class="subsection-title !mt-0"&gt;Key Moats&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;ul class="list-none space-y-3"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li class="flex items-start"&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="text-blue-500 mr-2 mt-1"&gt;➔&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="content-text"&gt;&lt;strong class="text-gray-700"&gt;Network Effects:&lt;/strong&gt; Meta's strongest moat. With over 3.4 billion daily active people, the value of the platform increases with each new user. Friends, family, and businesses are already there, creating high switching costs.&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li class="flex items-start"&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="text-blue-500 mr-2 mt-1"&gt;➔&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="content-text"&gt;&lt;strong class="text-gray-700"&gt;Intangible Assets (Data):&lt;/strong&gt; Years of user-generated data on preferences, connections, and behavior provide a massive, proprietary dataset that powers its content recommendation and ad-targeting AI engines.&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li class="flex items-start"&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="text-blue-500 mr-2 mt-1"&gt;➔&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="content-text"&gt;&lt;strong class="text-gray-700"&gt;Scale &amp; AI Infrastructure:&lt;/strong&gt; The sheer scale of its operations allows for massive investment in data centers and custom AI chips, creating a cost and technology advantage in building and deploying advanced AI models like Llama.&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/ul&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;h3 class="subsection-title !mt-0"&gt;Primary Competitors&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">                     &lt;ul class="list-none space-y-3"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li class="flex items-start"&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="text-teal-500 mr-2 mt-1"&gt;●&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="content-text"&gt;&lt;strong class="text-gray-700"&gt;Attention &amp; Engagement:&lt;/strong&gt; TikTok is the most significant threat, capturing a large share of short-form video engagement. YouTube (Google) also competes heavily for video screen time.&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li class="flex items-start"&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="text-teal-500 mr-2 mt-1"&gt;●&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="content-text"&gt;&lt;strong class="text-gray-700"&gt;Digital Advertising:&lt;/strong&gt; Competes for ad budgets with Google (Search, YouTube) and Amazon (e-commerce ads), which have different but powerful user intent data.&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li class="flex items-start"&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="text-teal-500 mr-2 mt-1"&gt;●&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                            &lt;span class="content-text"&gt;&lt;strong class="text-gray-700"&gt;Future Platforms (AR/VR/AI):&lt;/strong&gt; Apple is a major potential competitor in the AR/VR space with its Vision Pro. Microsoft and Google are also formidable rivals in foundational AI model development.&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/ul&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        &lt;section id="outlook" class="section-card scroll-mt-20"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;h2 class="section-title"&gt;Strategic Outlook: Risks &amp; Rewards&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;p class="content-text mb-6"&gt;Meta stands at a crossroads. Its core business is thriving, but its future depends on navigating significant regulatory threats and successfully executing on its enormously expensive pivot to AI and the metaverse.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="grid md:grid-cols-2 gap-8"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;h3 class="subsection-title !mt-0 text-green-600"&gt;Rewards &amp; Opportunities 🚀&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;ul class="list-disc list-inside content-text space-y-2 pl-4"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;AI-Driven Ad Revival:&lt;/strong&gt; Continued improvements in AI can further enhance ad targeting and ROI, driving revenue growth.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;Monetization of Reels &amp; Messaging:&lt;/strong&gt; Significant untapped potential to increase ad load and new formats in Reels and business messaging on WhatsApp.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;Metaverse Leadership:&lt;/strong&gt; If the metaverse vision materializes, Meta's early and aggressive investment could give it a dominant, platform-owner position similar to Apple's iOS.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;Open Source AI (Llama):&lt;/strong&gt; Llama 3 and future models could build a powerful developer ecosystem around Meta's AI, creating a strategic counter to Google and OpenAI.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/ul&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;h3 class="subsection-title !mt-0 text-red-600"&gt;Risks &amp; Challenges 📉&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;ul class="list-disc list-inside content-text space-y-2 pl-4"&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;Regulatory Headwinds:&lt;/strong&gt; Global antitrust lawsuits and data privacy regulations (like GDPR and potential US federal laws) could force structural changes or limit data usage, harming the core ad business.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;Reality Labs Execution Risk:&lt;/strong&gt; The metaverse is a massive cash drain with an uncertain timeline and outcome. A failure to achieve mainstream adoption would result in enormous shareholder value destruction.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;Intense Competition:&lt;/strong&gt; The relentless battle for user attention against TikTok and others requires constant innovation and could pressure ad pricing.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                        &lt;li&gt;&lt;strong&gt;Geopolitical &amp; Macroeconomic Risk:&lt;/strong&gt; Reliance on a global advertising market makes it vulnerable to economic downturns. Tensions, particularly around China, could impact ad demand.&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;/ul&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        &lt;footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;p class="text-sm"&gt;&amp;copy; &lt;span id="currentYearFooter"&gt;&lt;/span&gt; TickerHack Deep Research. For informational purposes only.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;p class="text-xs mt-1"&gt;Data synthesized from Meta Platforms, Inc. public filings and credible financial news sources as of May 2025.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/footer&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">    &lt;script&gt;</span></p>
-<p class="p1"><span class="s1">        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        // Mobile menu toggle</span></p>
-<p class="p1"><span class="s1">        const mobileMenuBtn = document.getElementById('mobile-menu-button');</span></p>
-<p class="p1"><span class="s1">        const mobileMenuEl = document.getElementById('mobile-menu');</span></p>
-<p class="p1"><span class="s1">        mobileMenuBtn.addEventListener('click', () =&gt; {</span></p>
-<p class="p1"><span class="s1">            mobileMenuEl.classList.toggle('hidden');</span></p>
-<p class="p1"><span class="s1">            mobileMenuBtn.querySelectorAll('svg').forEach(svg =&gt; svg.classList.toggle('hidden'));</span></p>
-<p class="p1"><span class="s1">        });</span></p>
-<p class="p1"><span class="s1">        </span></p>
-<p class="p1"><span class="s1">        // Smooth scroll and active nav link highlighting</span></p>
-<p class="p1"><span class="s1">        const navLinks = document.querySelectorAll('header nav a[href^="#"]');</span></p>
-<p class="p1"><span class="s1">        navLinks.forEach(link =&gt; {</span></p>
-<p class="p1"><span class="s1">            link.addEventListener('click', (e) =&gt; {</span></p>
-<p class="p1"><span class="s1">                if (!mobileMenuEl.classList.contains('hidden')) {</span></p>
-<p class="p1"><span class="s1">                    mobileMenuBtn.click(); // Close mobile menu if open</span></p>
-<p class="p1"><span class="s1">                }</span></p>
-<p class="p1"><span class="s1">                navLinks.forEach(l =&gt; l.classList.remove('active'));</span></p>
-<p class="p1"><span class="s1">                e.currentTarget.classList.add('active');</span></p>
-<p class="p1"><span class="s1">            });</span></p>
-<p class="p1"><span class="s1">        });</span></p>
-<p class="p1"><span class="s1">        </span></p>
-<p class="p1"><span class="s1">        // Segment Tabs</span></p>
-<p class="p1"><span class="s1">        const segmentTabs = document.querySelectorAll('.segment-tab-button');</span></p>
-<p class="p1"><span class="s1">        const segmentContents = document.querySelectorAll('.segment-content');</span></p>
-<p class="p1"><span class="s1">        segmentTabs.forEach(tab =&gt; {</span></p>
-<p class="p1"><span class="s1">            tab.addEventListener('click', () =&gt; {</span></p>
-<p class="p1"><span class="s1">                segmentTabs.forEach(t =&gt; t.classList.remove('active'));</span></p>
-<p class="p1"><span class="s1">                tab.classList.add('active');</span></p>
-<p class="p1"><span class="s1">                const targetId = tab.dataset.target + 'Content';</span></p>
-<p class="p1"><span class="s1">                segmentContents.forEach(content =&gt; {</span></p>
-<p class="p1"><span class="s1">                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');</span></p>
-<p class="p1"><span class="s1">                });</span></p>
-<p class="p1"><span class="s1">            });</span></p>
-<p class="p1"><span class="s1">        });</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        // Chart.js Global Config</span></p>
-<p class="p1"><span class="s1">        Chart.defaults.font.family = 'Inter, sans-serif';</span></p>
-<p class="p1"><span class="s1">        Chart.defaults.color = '#4B5563';</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        const CHART_COLORS = {</span></p>
-<p class="p1"><span class="s1">            blue: '#60A5FA',</span></p>
-<p class="p1"><span class="s1">            teal: '#2DD4BF',</span></p>
-<p class="p1"><span class="s1">            red: '#F87171',</span></p>
-<p class="p1"><span class="s1">            stone: '#E7E5E4',</span></p>
-<p class="p1"><span class="s1">            gray: '#4B5563',</span></p>
-<p class="p1"><span class="s1">            darkBlue: '#3B82F6',</span></p>
-<p class="p1"><span class="s1">            darkTeal: '#14B8A6'</span></p>
-<p class="p1"><span class="s1">        };</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        // Revenue Breakdown Chart (Doughnut) - FY2024 Data</span></p>
-<p class="p1"><span class="s1">        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');</span></p>
-<p class="p1"><span class="s1">        new Chart(revenueBreakdownCtx, {</span></p>
-<p class="p1"><span class="s1">            type: 'doughnut',</span></p>
-<p class="p1"><span class="s1">            data: {</span></p>
-<p class="p1"><span class="s1">                labels: ['Family of Apps', 'Reality Labs'],</span></p>
-<p class="p1"><span class="s1">                datasets: [{</span></p>
-<p class="p1"><span class="s1">                    data: [162.36, 2.15], // FY24 Revenue in $B</span></p>
-<p class="p1"><span class="s1">                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.red],</span></p>
-<p class="p1"><span class="s1">                    hoverOffset: 4,</span></p>
-<p class="p1"><span class="s1">                    borderColor: '#FFFFFF',</span></p>
-<p class="p1"><span class="s1">                    borderWidth: 2</span></p>
-<p class="p1"><span class="s1">                }]</span></p>
-<p class="p1"><span class="s1">            },</span></p>
-<p class="p1"><span class="s1">            options: {</span></p>
-<p class="p1"><span class="s1">                responsive: true, maintainAspectRatio: false,</span></p>
-<p class="p1"><span class="s1">                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue Contribution (FY2024, $B)' } },</span></p>
-<p class="p1"><span class="s1">                cutout: '60%'</span></p>
-<p class="p1"><span class="s1">            }</span></p>
-<p class="p1"><span class="s1">        });</span></p>
-<p class="p1"><span class="s1">        </span></p>
-<p class="p1"><span class="s1">        // Reality Labs Performance Chart (Bar)</span></p>
-<p class="p1"><span class="s1">        const rlPerformanceCtx = document.getElementById('rlPerformanceChart').getContext('2d');</span></p>
-<p class="p1"><span class="s1">        new Chart(rlPerformanceCtx, {</span></p>
-<p class="p1"><span class="s1">            type: 'bar',</span></p>
-<p class="p1"><span class="s1">            data: {</span></p>
-<p class="p1"><span class="s1">                labels: ['2022', '2023', '2024'],</span></p>
-<p class="p1"><span class="s1">                datasets: [</span></p>
-<p class="p1"><span class="s1">                {</span></p>
-<p class="p1"><span class="s1">                    label: 'Revenue ($B)',</span></p>
-<p class="p1"><span class="s1">                    data: [2.16, 1.90, 2.15],</span></p>
-<p class="p1"><span class="s1">                    backgroundColor: CHART_COLORS.teal,</span></p>
-<p class="p1"><span class="s1">                },</span></p>
-<p class="p1"><span class="s1">                {</span></p>
-<p class="p1"><span class="s1">                    label: 'Operating Loss ($B)',</span></p>
-<p class="p1"><span class="s1">                    data: [-13.72, -16.12, -18.47],</span></p>
-<p class="p1"><span class="s1">                    backgroundColor: CHART_COLORS.red,</span></p>
-<p class="p1"><span class="s1">                }</span></p>
-<p class="p1"><span class="s1">            ]</span></p>
-<p class="p1"><span class="s1">            },</span></p>
-<p class="p1"><span class="s1">            options: {</span></p>
-<p class="p1"><span class="s1">                responsive: true, maintainAspectRatio: false,</span></p>
-<p class="p1"><span class="s1">                scales: { </span></p>
-<p class="p1"><span class="s1">                    x: { stacked: false },</span></p>
-<p class="p1"><span class="s1">                    y: { </span></p>
-<p class="p1"><span class="s1">                        beginAtZero: false, </span></p>
-<p class="p1"><span class="s1">                        title: { display: true, text: 'USD (Billions)' },</span></p>
-<p class="p1"><span class="s1">                        ticks: {</span></p>
-<p class="p1"><span class="s1">                            callback: function(value) { return '$' + value + 'B'; }</span></p>
-<p class="p1"><span class="s1">                        }</span></p>
-<p class="p1"><span class="s1">                    } </span></p>
-<p class="p1"><span class="s1">                },</span></p>
-<p class="p1"><span class="s1">                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Reality Labs: Revenue vs. Operating Loss' } }</span></p>
-<p class="p1"><span class="s1">            }</span></p>
-<p class="p1"><span class="s1">        });</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        // --- FINANCIAL CHARTS LOGIC ---</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        // Yearly Data Store</span></p>
-<p class="p1"><span class="s1">        const yearlyDataStore = {</span></p>
-<p class="p1"><span class="s1">            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],</span></p>
-<p class="p1"><span class="s1">            totalRevenue: { data: [86.0, 117.9, 116.6, 134.9, 164.5], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },</span></p>
-<p class="p1"><span class="s1">            operatingIncome: { data: [29.1, 46.7, 28.9, 46.8, 69.4], label: 'Operating Income ($B)', color: CHART_COLORS.teal },</span></p>
-<p class="p1"><span class="s1">            netIncome: { data: [21.9, 39.4, 23.2, 39.1, 62.4], label: 'Net Income ($B)', color: CHART_COLORS.darkTeal },</span></p>
-<p class="p1"><span class="s1">            operatingMargin: { data: [33.8, 39.6, 24.8, 34.7, 42.2], label: 'Operating Margin (%)', color: CHART_COLORS.darkBlue }</span></p>
-<p class="p1"><span class="s1">        };</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        // Quarterly Data Store</span></p>
-<p class="p1"><span class="s1">        const quarterlyDataStore = {</span></p>
-<p class="p1"><span class="s1">            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],</span></p>
-<p class="p1"><span class="s1">            totalRevenue: { data: [32.0, 34.1, 40.1, 36.5, 39.1, 40.6, 48.4, 42.3], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },</span></p>
-<p class="p1"><span class="s1">            operatingIncome: { data: [9.4, 13.7, 16.4, 13.8, 15.6, 16.2, 23.4, 17.6], label: 'Operating Income ($B)', color: CHART_COLORS.teal },</span></p>
-<p class="p1"><span class="s1">            netIncome: { data: [7.8, 11.6, 14.0, 12.4, 13.5, 14.3, 20.8, 16.6], label: 'Net Income ($B)', color: CHART_COLORS.darkTeal }</span></p>
-<p class="p1"><span class="s1">        };</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        let yearlyChart = null;</span></p>
-<p class="p1"><span class="s1">        let quarterlyChart = null;</span></p>
-<p class="p1"><span class="s1">        const yearlySelect = document.getElementById('yearlyMetricSelect');</span></p>
-<p class="p1"><span class="s1">        const quarterlySelect = document.getElementById('quarterlyMetricSelect');</span></p>
-<p class="p1"><span class="s1">        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');</span></p>
-<p class="p1"><span class="s1">        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        function createChart(canvas, existingChart, dataStore, metricKey) {</span></p>
-<p class="p1"><span class="s1">            if (existingChart) {</span></p>
-<p class="p1"><span class="s1">                existingChart.destroy();</span></p>
-<p class="p1"><span class="s1">            }</span></p>
-<p class="p1"><span class="s1">            const metricDetails = dataStore[metricKey];</span></p>
-<p class="p1"><span class="s1">            const isMargin = metricKey === 'operatingMargin';</span></p>
-<p class="p1"><span class="s1">            return new Chart(canvas, {</span></p>
-<p class="p1"><span class="s1">                type: isMargin ? 'line' : 'bar',</span></p>
-<p class="p1"><span class="s1">                data: {</span></p>
-<p class="p1"><span class="s1">                    labels: dataStore.labels,</span></p>
-<p class="p1"><span class="s1">                    datasets: [{</span></p>
-<p class="p1"><span class="s1">                        label: metricDetails.label,</span></p>
-<p class="p1"><span class="s1">                        data: metricDetails.data,</span></p>
-<p class="p1"><span class="s1">                        backgroundColor: metricDetails.color + 'BF', // with opacity</span></p>
-<p class="p1"><span class="s1">                        borderColor: metricDetails.color,</span></p>
-<p class="p1"><span class="s1">                        borderWidth: 1,</span></p>
-<p class="p1"><span class="s1">                        fill: isMargin ? false : true,</span></p>
-<p class="p1"><span class="s1">                        tension: 0.1</span></p>
-<p class="p1"><span class="s1">                    }]</span></p>
-<p class="p1"><span class="s1">                },</span></p>
-<p class="p1"><span class="s1">                options: {</span></p>
-<p class="p1"><span class="s1">                    responsive: true,</span></p>
-<p class="p1"><span class="s1">                    maintainAspectRatio: false,</span></p>
-<p class="p1"><span class="s1">                    scales: { </span></p>
-<p class="p1"><span class="s1">                        y: { </span></p>
-<p class="p1"><span class="s1">                            beginAtZero: false, </span></p>
-<p class="p1"><span class="s1">                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} </span></p>
-<p class="p1"><span class="s1">                        } </span></p>
-<p class="p1"><span class="s1">                    },</span></p>
-<p class="p1"><span class="s1">                    plugins: { legend: { display: false } }</span></p>
-<p class="p1"><span class="s1">                }</span></p>
-<p class="p1"><span class="s1">            });</span></p>
-<p class="p1"><span class="s1">        }</span></p>
-<p class="p1"><span class="s1">        </span></p>
-<p class="p1"><span class="s1">        yearlySelect.addEventListener('change', (event) =&gt; {</span></p>
-<p class="p1"><span class="s1">            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);</span></p>
-<p class="p1"><span class="s1">        });</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        quarterlySelect.addEventListener('change', (event) =&gt; {</span></p>
-<p class="p1"><span class="s1">            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);</span></p>
-<p class="p1"><span class="s1">        });</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        // Initial chart renders</span></p>
-<p class="p1"><span class="s1">        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');</span></p>
-<p class="p1"><span class="s1">        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">    &lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #60A5FA;">Meta (META) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Meta: The Global Digital Town Square</h2>
+            <p class="content-text mb-6">Meta Platforms is the world's largest social media company, connecting billions of people through its Family of Apps: Facebook, Instagram, WhatsApp, and Messenger. Its business model is overwhelmingly powered by digital advertising, leveraging its massive user base and sophisticated AI-driven targeting. While its core business remains a cash-generating machine, Meta is embarking on two transformative, capital-intensive pivots: a full-stack integration of Artificial Intelligence to boost engagement and ad performance, and a long-term, high-risk bet on building the metaverse via its Reality Labs segment.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Meta's strategy revolves around three core tenets:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Grow the Core Network:</strong> Maximizing user engagement across the Family of Apps, primarily through short-form video (Reels) and messaging.</li>
+                        <li><strong class="font-semibold text-gray-700">AI-Powered Advertising:</strong> Integrating advanced AI to enhance content discovery, improve ad targeting (mitigating signal loss from privacy changes), and increase return on ad spend for marketers.</li>
+                        <li><strong class="font-semibold text-gray-700">Invent the Future (Metaverse):</strong> Investing heavily in R&D and hardware (Quest headsets) to build the next generation of social computing platforms in augmented and virtual reality.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Family Daily Active People (Q1 2025)</p>
+                    <p class="kpi-value text-blue-600">3.43 Billion</p>
+                    <p class="content-text text-sm mt-2">This staggering reach is the foundation of Meta's network effect and its dominance in the digital advertising market.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">A Tale of Two Segments</h2>
+            <p class="content-text mb-6">Meta operates and reports as two distinct segments. The <span class="font-semibold">Family of Apps (FoA)</span> is the highly profitable core business. <span class="font-semibold">Reality Labs (RL)</span> is the future-facing, cash-burning venture tasked with building the metaverse. The financial disparity between them is stark and central to understanding Meta's strategy.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="foa">Family of Apps (FoA)</button>
+                    <button class="segment-tab-button" data-target="rl">Reality Labs (RL)</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="foaContent" class="segment-content">
+                    <h3 class="subsection-title">Family of Apps: The Ad Juggernaut</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This segment includes Facebook, Instagram, Messenger, and WhatsApp and generates nearly all of company revenue and all of its profit. For fiscal year 2024, FoA generated <span class="highlight">$162.4 billion</span> in revenue, almost entirely from advertising. Its operating margin is robust, funding the entire company's R&D and growth initiatives.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Facebook:</strong> The original social network, a hub for community and connection.</li>
+                                <li><strong>Instagram:</strong> A visual-first platform, leading the charge in short-form video with Reels.</li>
+                                <li><strong>WhatsApp & Messenger:</strong> Dominant messaging apps, with growing business-to-consumer interaction features.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="rlContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Reality Labs: The Metaverse Bet</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Reality Labs is Meta's ambitious, long-term R&D initiative to build the metaverse. This segment generates minimal revenue from sales of Quest VR headsets. It is a significant cost center, posting an operating loss of over <span class="highlight">$18 billion</span> in 2024. Success is not guaranteed and requires sustained, massive investment.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Hardware:</strong> Meta Quest line of virtual reality headsets (Quest 3).</li>
+                                <li><strong>Software & Content:</strong> The Horizon Worlds social platform and a growing ecosystem of VR games and apps.</li>
+                                <li><strong>Research & Development:</strong> Pushing the boundaries of AR/VR technology, including neural interfaces and photorealistic avatars.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="rlPerformanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">After a challenging 2022, Meta's "Year of Efficiency" in 2023 led to a dramatic rebound in profitability and cash flow. The company is now leaner and more focused, driving strong top-line growth while continuing its massive investments in AI and Reality Labs. Explore key financial trends using the dropdowns below.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                            <option value="operatingMargin">Operating Margin (%)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase the rebound in 2023-2024 and strong growth into 2025, driven by a recovery in the digital ad market and internal efficiency measures.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Unrivaled Network</h2>
+            <p class="content-text mb-6">Meta's competitive moat is one of the most powerful in the digital economy. It is built on a foundational network effect of immense scale, making it incredibly difficult for rivals to replicate the value it offers to users and advertisers.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Network Effects:</strong> Meta's strongest moat. With over 3.4 billion daily active people, the value of the platform increases with each new user. Friends, family, and businesses are already there, creating high switching costs.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Intangible Assets (Data):</strong> Years of user-generated data on preferences, connections, and behavior provide a massive, proprietary dataset that powers its content recommendation and ad-targeting AI engines.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Scale & AI Infrastructure:</strong> The sheer scale of its operations allows for massive investment in data centers and custom AI chips, creating a cost and technology advantage in building and deploying advanced AI models like Llama.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-teal-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Attention & Engagement:</strong> TikTok is the most significant threat, capturing a large share of short-form video engagement. YouTube (Google) also competes heavily for video screen time.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-teal-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Digital Advertising:</strong> Competes for ad budgets with Google (Search, YouTube) and Amazon (e-commerce ads), which have different but powerful user intent data.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-teal-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Future Platforms (AR/VR/AI):</strong> Apple is a major potential competitor in the AR/VR space with its Vision Pro. Microsoft and Google are also formidable rivals in foundational AI model development.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Meta stands at a crossroads. Its core business is thriving, but its future depends on navigating significant regulatory threats and successfully executing on its enormously expensive pivot to AI and the metaverse.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-green-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>AI-Driven Ad Revival:</strong> Continued improvements in AI can further enhance ad targeting and ROI, driving revenue growth.</li>
+                        <li><strong>Monetization of Reels & Messaging:</strong> Significant untapped potential to increase ad load and new formats in Reels and business messaging on WhatsApp.</li>
+                        <li><strong>Metaverse Leadership:</strong> If the metaverse vision materializes, Meta's early and aggressive investment could give it a dominant, platform-owner position similar to Apple's iOS.</li>
+                        <li><strong>Open Source AI (Llama):</strong> Llama 3 and future models could build a powerful developer ecosystem around Meta's AI, creating a strategic counter to Google and OpenAI.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-red-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Regulatory Headwinds:</strong> Global antitrust lawsuits and data privacy regulations (like GDPR and potential US federal laws) could force structural changes or limit data usage, harming the core ad business.</li>
+                        <li><strong>Reality Labs Execution Risk:</strong> The metaverse is a massive cash drain with an uncertain timeline and outcome. A failure to achieve mainstream adoption would result in enormous shareholder value destruction.</li>
+                        <li><strong>Intense Competition:</strong> The relentless battle for user attention against TikTok and others requires constant innovation and could pressure ad pricing.</li>
+                        <li><strong>Geopolitical & Macroeconomic Risk:</strong> Reliance on a global advertising market makes it vulnerable to economic downturns. Tensions, particularly around China, could impact ad demand.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Meta Platforms, Inc. public filings and credible financial news sources as of May 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#60A5FA',
+            teal: '#2DD4BF',
+            red: '#F87171',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkBlue: '#3B82F6',
+            darkTeal: '#14B8A6'
+        };
+
+        // Revenue Breakdown Chart (Doughnut) - FY2024 Data
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Family of Apps', 'Reality Labs'],
+                datasets: [{
+                    data: [162.36, 2.15], // FY24 Revenue in $B
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.red],
+                    hoverOffset: 4,
+                    borderColor: '#FFFFFF',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue Contribution (FY2024, $B)' } },
+                cutout: '60%'
+            }
+        });
+        
+        // Reality Labs Performance Chart (Bar)
+        const rlPerformanceCtx = document.getElementById('rlPerformanceChart').getContext('2d');
+        new Chart(rlPerformanceCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2022', '2023', '2024'],
+                datasets: [
+                {
+                    label: 'Revenue ($B)',
+                    data: [2.16, 1.90, 2.15],
+                    backgroundColor: CHART_COLORS.teal,
+                },
+                {
+                    label: 'Operating Loss ($B)',
+                    data: [-13.72, -16.12, -18.47],
+                    backgroundColor: CHART_COLORS.red,
+                }
+            ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { 
+                    x: { stacked: false },
+                    y: { 
+                        beginAtZero: false, 
+                        title: { display: true, text: 'USD (Billions)' },
+                        ticks: {
+                            callback: function(value) { return '$' + value + 'B'; }
+                        }
+                    } 
+                },
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Reality Labs: Revenue vs. Operating Loss' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [86.0, 117.9, 116.6, 134.9, 164.5], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingIncome: { data: [29.1, 46.7, 28.9, 46.8, 69.4], label: 'Operating Income ($B)', color: CHART_COLORS.teal },
+            netIncome: { data: [21.9, 39.4, 23.2, 39.1, 62.4], label: 'Net Income ($B)', color: CHART_COLORS.darkTeal },
+            operatingMargin: { data: [33.8, 39.6, 24.8, 34.7, 42.2], label: 'Operating Margin (%)', color: CHART_COLORS.darkBlue }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [32.0, 34.1, 40.1, 36.5, 39.1, 40.6, 48.4, 42.3], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingIncome: { data: [9.4, 13.7, 16.4, 13.8, 15.6, 16.2, 23.4, 17.6], label: 'Operating Income ($B)', color: CHART_COLORS.teal },
+            netIncome: { data: [7.8, 11.6, 14.0, 12.4, 13.5, 14.3, 20.8, 16.6], label: 'Net Income ($B)', color: CHART_COLORS.darkTeal }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isMargin = metricKey === 'operatingMargin';
+            return new Chart(canvas, {
+                type: isMargin ? 'line' : 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF', // with opacity
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        fill: isMargin ? false : true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
 </body>
 </html>
