@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Inc. (AAPL) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Apple (AAPL) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Apple: The Ultimate Consumer Tech Ecosystem</h2>
+            <p class="content-text mb-6">Apple Inc. designs, manufactures, and markets some of the world's most recognizable consumer electronics, software, and online services. From the iconic iPhone to its burgeoning high-margin Services division, Apple has built a deeply integrated ecosystem that fosters immense brand loyalty and generates staggering cash flows. The company's strategy hinges on vertical integration, controlling everything from chip design to the retail experience, creating products that are differentiated by their design, ease-of-use, and seamless interoperability. This interactive analysis explores Apple's business model, financial strength, and strategic position.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Apple's success is built on a few key pillars:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Hardware, Software, and Services Integration:</strong> Creating a seamless, intuitive user experience across all devices.</li>
+                        <li><strong class="font-semibold text-gray-700">Product Differentiation & Innovation:</strong> A relentless focus on best-in-class design, performance (via custom silicon), and quality.</li>
+                        <li><strong class="font-semibold text-gray-700">The Power of the Brand:</strong> Cultivating one of the world's most valuable brands, synonymous with quality and innovation.</li>
+                        <li><strong class="font-semibold text-gray-700">Expanding the Ecosystem:</strong> Growing the high-margin Services business, leveraging a massive active installed base of devices.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Active Installed Base (Jan 2025)</p>
+                    <p class="kpi-value text-violet-600">2.35 Billion+</p>
+                    <p class="content-text text-sm mt-2">This massive, loyal user base is the foundation for Apple's high-margin Services growth.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Apple Makes Money: Products & Services</h2>
+            <p class="content-text mb-6">Apple's revenue is primarily split into two synergistic categories: Products, which drive the ecosystem, and Services, which monetize the installed base with high-margin, recurring revenue streams. While iPhone remains the flagship, the Services segment is the key long-term profit growth engine. Explore each segment by clicking the tabs below.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="products">Products</button>
+                    <button class="segment-tab-button" data-target="services">Services</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="productsContent" class="segment-content">
+                    <h3 class="subsection-title">Products Segment</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The core of Apple's business, encompassing its iconic hardware lineup. While overall growth has matured, these devices are the essential gateway into Apple's lucrative ecosystem. For fiscal year 2024, the Products segment generated over <span class="highlight">$294 billion</span> in revenue.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>iPhone:</strong> The flagship product, accounting for over 51% of total company revenue.</li>
+                                <li><strong>Mac:</strong> Line of personal computers (MacBook, iMac, Mac Pro) powered by Apple's custom M-series silicon.</li>
+                                <li><strong>iPad:</strong> Category-defining tablets for work, creativity, and entertainment.</li>
+                                <li><strong>Wearables, Home & Accessories:</strong> A high-growth category including Apple Watch, AirPods, and HomePod.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="productsRevenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="servicesContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Services Segment</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Apple's primary growth and profitability engine. This segment includes a diverse portfolio of digital services that leverage the massive installed base of devices. In Q2 2025, Services revenue grew <span class="highlight">11.6% YoY</span> to $26.6 billion, with a remarkable gross margin of <span class="highlight">75.7%</span>.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>App Store:</strong> A key driver where Apple takes a 15-30% commission on sales.</li>
+                                <li><strong>Advertising:</strong> Search Ads in the App Store and ads in Apple News and Stocks.</li>
+                                <li><strong>Cloud Services:</strong> iCloud storage subscriptions.</li>
+                                <li><strong>Digital Content:</strong> Apple Music, Apple TV+, Apple Arcade, and Apple Fitness+.</li>
+                                 <li><strong>Payment Services:</strong> Apple Pay fees and the Apple Card.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="servicesGrossMarginChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Apple is a financial powerhouse, characterized by strong revenue, massive profitability, and exceptional cash flow generation. The company actively returns capital to shareholders through large-scale dividend and buyback programs. Explore key financial trends using the dropdowns below to visualize both long-term annual performance and recent quarterly results.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                            <option value="operatingCashFlow">Operating Cash Flow ($B)</option>
+                            <option value="roic">Return on Invested Capital (%)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                            <option value="servicesRevenue">Services Revenue ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">Apple's financial discipline is evident in its consistently high margins and ROIC. The quarterly view highlights strong seasonality, with Q1 (holiday season) being the most significant revenue period.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Walled Garden</h2>
+            <p class="content-text mb-6">Apple's competitive advantage, or "moat," is one of the strongest in the corporate world. It's not just one factor but a combination of interlocking strengths that create high barriers to entry and significant switching costs for customers, often referred to as the "walled garden."</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Brand Power:</strong> An iconic brand built on decades of marketing, design excellence, and a reputation for quality. It commands premium pricing and fierce loyalty.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Switching Costs (Ecosystem):</strong> The seamless integration of iOS, macOS, watchOS with services like iMessage, iCloud, and AirDrop makes leaving the ecosystem difficult and inconvenient for users invested in multiple devices.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary Technology:</strong> In-house design of A-series and M-series chips provides a significant performance-per-watt advantage over competitors who rely on off-the-shelf components.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Network Effects:</strong> The App Store is a powerful two-sided network. A massive user base attracts developers, and a rich library of apps makes the platform more valuable for users.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Smartphones & OS:</strong> Samsung (hardware) and Google's Android (software) are the primary global competitors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Personal Computers:</strong> A fragmented market with players like Dell, HP, Lenovo, all primarily using Microsoft Windows.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Digital Services:</strong> Spotify in music, Netflix and Disney+ in video streaming, and Google in cloud and advertising.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Future Technologies (AI/Spatial):</strong> Facing new competition from Google, Meta, and Microsoft in emerging fields like AI and mixed reality.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Apple's future is a balance between leveraging its dominant market position and navigating a complex landscape of global risks. Continued growth hinges on the Services narrative, innovation in new categories, and managing significant external pressures.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Continued Services Growth:</strong> Monetizing the 2.35B+ active devices with higher-margin services remains the biggest opportunity.</li>
+                        <li><strong>New Product Categories:</strong> Potential for Vision Pro and future devices in health or automotive to create new revenue streams.</li>
+                        <li><strong>AI Integration ("Apple Intelligence"):</strong> Deeply integrating AI into its OS could enhance the user experience and further solidify the ecosystem.</li>
+                        <li><strong>Enterprise Market Penetration:</strong> Growing adoption of Mac and iPad in corporate environments.</li>
+                        <li><strong>Immense Shareholder Returns:</strong> Unmatched ability to return capital via buybacks and dividends.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Regulatory Scrutiny:</strong> Global antitrust pressure on App Store fees and ecosystem control could threaten the highly profitable Services model.</li>
+                        <li><strong>Geopolitical Risk:</strong> Heavy reliance on China for manufacturing and significant revenue makes it vulnerable to trade tensions and supply chain disruptions.</li>
+                        <li><strong>iPhone Dependency:</strong> Despite diversification, the company's fortunes are still heavily tied to the mature smartphone market.</li>
+                        <li><strong>Pace of Innovation:</strong> The constant need to deliver compelling new features and products to justify premium pricing.</li>
+                        <li><strong>Intensifying Competition in AI:</strong> Tech giants like Google and Microsoft are moving aggressively in AI, a space where Apple has been perceived as more cautious.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Apple Inc. public filings and credible financial news sources as of May 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // Products Revenue Breakdown Chart (Pie) - FY2024 Data
+        const productsRevenueCtx = document.getElementById('productsRevenueBreakdownChart').getContext('2d');
+        new Chart(productsRevenueCtx, {
+            type: 'pie',
+            data: {
+                labels: ['iPhone', 'Mac', 'iPad', 'Wearables, Home & Acc.'],
+                datasets: [{
+                    data: [201.2, 30.0, 26.7, 37.0], // FY24 Data in $B
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.orange, CHART_COLORS.teal],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Products Revenue Breakdown (FY2024, $B)' } }
+            }
+        });
+        
+        // Services Gross Margin Chart (Bar)
+        const servicesMarginCtx = document.getElementById('servicesGrossMarginChart').getContext('2d');
+        new Chart(servicesMarginCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Products Segment', 'Services Segment'],
+                datasets: [{
+                    label: 'Gross Margin (%) - Q2 FY25',
+                    data: [35.9, 75.7],
+                    backgroundColor: [CHART_COLORS.sky, CHART_COLORS.darkViolet],
+                    borderColor: [CHART_COLORS.darkSky, CHART_COLORS.violet],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: { x: { beginAtZero: true, max: 100, title: { display: true, text: 'Gross Margin %' } } },
+                plugins: { legend: { display: false }, title: { display: true, text: 'Services vs. Products Profitability' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [274.5, 365.8, 394.3, 383.3, 391.0], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            operatingIncome: { data: [66.3, 109.0, 119.4, 114.3, 123.2], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+            netIncome: { data: [57.4, 94.7, 99.8, 97.0, 93.7], label: 'Net Income ($B)', color: CHART_COLORS.teal },
+            operatingCashFlow: { data: [80.7, 104.0, 122.2, 110.5, 118.3], label: 'Operating Cash Flow ($B)', color: CHART_COLORS.orange },
+            roic: { data: [49.6, 57.2, 55.0, 59.0, 61.6], label: 'Return on Invested Capital (%)', color: CHART_COLORS.darkViolet }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25'],
+            totalRevenue: { data: [81.8, 89.5, 117.2, 90.8, 85.8, 94.9, 124.3, 95.4], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            operatingIncome: { data: [23.0, 27.0, 36.0, 27.9, 25.4, 29.6, 42.8, 29.6], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+            netIncome: { data: [19.9, 23.0, 30.0, 23.6, 21.8, 23.5, 36.3, 24.8], label: 'Net Income ($B)', color: CHART_COLORS.teal },
+            servicesRevenue: { data: [21.2, 22.3, 23.1, 23.9, 24.2, 25.0, 26.3, 26.6], label: 'Services Revenue ($B)', color: CHART_COLORS.darkViolet }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF', // with opacity
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                         type: (metricKey === 'roic') ? 'line' : 'bar',
+                         fill: (metricKey === 'roic') ? false : true,
+                         tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+
