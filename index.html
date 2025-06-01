@@ -87,7 +87,7 @@
                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="CRWD"><h3 class="text-2xl font-semibold text-gray-700 mb-2">CrowdStrike (CRWD)</h3><p class="text-gray-700 mb-4 flex-grow">Overview of CrowdStrike's cybersecurity solutions.</p><a href="/CRWD/" class="mt-auto inline-block bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="PANW"><h3 class="text-2xl font-semibold text-blue-800 mb-2">Palo Alto Networks (PANW)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Palo Alto Networks' enterprise security platforms.</p><a href="/PANW/" class="mt-auto inline-block bg-blue-800 hover:bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="CRM"><h3 class="text-2xl font-semibold text-indigo-700 mb-2">Salesforce (CRM)</h3><p class="text-gray-700 mb-4 flex-grow">A look into Salesforce's customer relationship management solutions.</p><a href="/CRM/" class="mt-auto inline-block bg-indigo-700 hover:bg-indigo-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="SPOT"><h3 class="text-2xl font-semibold text-green-700 mb-2">Spotify (SPOT)</h3><p class="text-gray-700 mb-4 flex-grow">Analysis of Spotify's music streaming service and podcast platform.</p><a href="/SPOT/" class="mt-auto inline-block bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="SPOT"><h3 class="text-2xl font-semibold text-green-700 mb-2">Spotify (SPOT)</h3><p class="text-gray-700 mb-4 flex-grow">An analysis of Spotify's music streaming service and podcast platform.</p><a href="/SPOT/" class="mt-auto inline-block bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="TEM"><h3 class="text-2xl font-semibold text-yellow-700 mb-2">Tempus AI (TEM)</h3><p class="text-gray-700 mb-4 flex-grow">A look into Tempus AI's precision medicine and AI data analysis.</p><a href="/TEM/" class="mt-auto inline-block bg-yellow-700 hover:bg-yellow-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="GEV"><h3 class="text-2xl font-semibold text-orange-700 mb-2">GE Vernova (GEV)</h3><p class="text-gray-700 mb-4 flex-grow">Explore GE Vernova's power generation and energy transition tech.</p><a href="/GEV/" class="mt-auto inline-block bg-orange-700 hover:bg-orange-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="VRT"><h3 class="text-2xl font-semibold text-red-700 mb-2">Vertiv (VRT)</h3><p class="text-gray-700 mb-4 flex-grow">A deep dive into Vertiv's critical digital infrastructure solutions.</p><a href="/VRT/" class="mt-auto inline-block bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
@@ -107,20 +107,12 @@
    <script>
        document.getElementById('year').textContent = new Date().getFullYear();
 
+       // Define Mega 7 tickers to be excluded from the main dropdown
+       const mega7Tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA'];
 
-       const qqqInsightsStocks = [
-           { ticker: 'AAPL', name: 'Apple Inc.' }, { ticker: 'NVDA', name: 'NVIDIA Corp' },
-           { ticker: 'MSFT', name: 'Microsoft Corp' }, { ticker: 'AMZN', name: 'Amazon.com Inc' },
-           { ticker: 'GOOGL', name: 'Alphabet Inc. Class A' }, { ticker: 'TSLA', name: 'Tesla Inc.' },
-           { ticker: 'META', name: 'Meta Platforms Inc. Class A' }, { ticker: 'COST', name: 'Costco Wholesale Corp' },
-           { ticker: 'MSTR', name: 'MicroStrategy Incorporated' }, { ticker: 'AXON', name: 'Axon Enterprise, Inc.' },
-           { ticker: 'ADBE', name: 'Adobe Inc.' }, { ticker: 'INTC', name: 'Intel Corp.' },
-           { ticker: 'CMCSA', name: 'Comcast Corp.' }, { ticker: 'PEP', name: 'PepsiCo Inc.' },
-           { ticker: 'SBUX', name: 'Starbucks Corp.' }, { ticker: 'CSCO', name: 'Cisco Systems Inc.' },
-           { ticker: 'QCOM', name: 'Qualcomm Inc.' }, { ticker: 'AMD', name: 'Advanced Micro Devices Inc.' },
-           { ticker: 'CMG', name: 'Chipotle Mexican Grill Inc.' }, { ticker: 'WDAY', name: 'Workday Inc.' },
-           { ticker: 'MAR', name: 'Marriott International Inc. Class A' }, { ticker: 'LRCX', name: 'Lam Research Corp.' }
-       ];
+       // qqqInsightsStocks array is now empty as all relevant stocks are in dedicatedSpaCardsInfo
+       // and non-analyzed stocks are to be excluded from the dropdown.
+       const qqqInsightsStocks = [];
 
 
        const dedicatedSpaCardsInfo = {
@@ -152,29 +144,24 @@
        };
 
 
-       const allCompaniesForDropdown = {};
+       let allCompaniesForDropdown = {};
 
 
        for (const ticker in dedicatedSpaCardsInfo) {
-           allCompaniesForDropdown[ticker] = {
-               company: dedicatedSpaCardsInfo[ticker].company,
-               ticker: ticker,
-               hasDedicatedSpa: true,
-               spaPath: dedicatedSpaCardsInfo[ticker].spaPath
-           };
+           // Only add if it's not an individual Mega 7 stock, but allow the "MEGA7" entry itself.
+           if (ticker === "MEGA7" || !mega7Tickers.includes(ticker)) {
+               allCompaniesForDropdown[ticker] = {
+                   company: dedicatedSpaCardsInfo[ticker].company,
+                   ticker: ticker,
+                   hasDedicatedSpa: true,
+                   spaPath: dedicatedSpaCardsInfo[ticker].spaPath
+               };
+           }
        }
 
 
-       qqqInsightsStocks.forEach(stock => {
-           if (!allCompaniesForDropdown[stock.ticker]) {
-               allCompaniesForDropdown[stock.ticker] = {
-                   company: stock.name,
-                   ticker: stock.ticker,
-                   hasDedicatedSpa: false,
-                   spaPath: "/QQQ/"
-               };
-           }
-       });
+       // No need to iterate over qqqInsightsStocks if it's empty and its purpose was to add non-SPA stocks.
+       // The previous loop already handles all dedicated SPAs.
 
 
        const sortedCompaniesForDropdown = Object.values(allCompaniesForDropdown).sort((a, b) => a.company.localeCompare(b.company));
