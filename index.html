@@ -1,231 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>My Interactive Analyses</title>
-   <script src="https://cdn.tailwindcss.com"></script>
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-   <style>
-       body { font-family: 'Inter', sans-serif; }
-       /* CSS for highlighting the SPA card */
-       .highlight-border {
-           border: 3px solid #3b82f6; /* Tailwind blue-500 */
-           box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-           transform: scale(1.02);
-           transition: all 0.3s ease-in-out;
-       }
-   </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Interactive Analyses</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+      body { font-family: 'Inter', sans-serif; }
+      /* CSS for highlighting the SPA card */
+      .highlight-border {
+          border: 3px solid #3b82f6; /* Tailwind blue-500 */
+          box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+          transform: scale(1.02);
+          transition: all 0.3s ease-in-out;
+      }
+      /* Styles for the Treemap Chart */
+      #chart-container h3 {
+          text-align: center;
+          color: #6c757d;
+          font-weight: 500;
+      }
+  </style>
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col items-center py-10 px-4">
-   <div class="container mx-auto max-w-6xl">
+  <div class="container mx-auto max-w-6xl">
 
 
-       <header class="text-center mb-12 w-full">
-           <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Duke's Interactive Data Analysis SPAs</h1>
-           <p class="text-lg text-gray-600 mt-2">A collection of interactive single-page applications exploring various topics.</p>
-       </header>
 
 
-       <div class="bg-white p-6 rounded-xl shadow-lg mb-12 w-full max-w-2xl mx-auto">
-           <h2 class="text-2xl font-semibold text-gray-700 mb-4">Find an Analysis</h2>
-           <div class="mb-4">
-               <label for="company-select" class="block text-gray-700 text-sm font-bold mb-2">Choose a topic or company:</label>
-               <select id="company-select" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-                   <option value="">-- Select an Analysis --</option>
-               </select>
-           </div>
-           <button id="view-analysis-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-all w-full disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-               View Analysis
-           </button>
-       </div>
+      <header class="text-center mb-12 w-full">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Duke's Interactive Data Analysis SPAs</h1>
+          <p class="text-lg text-gray-600 mt-2">A collection of interactive single-page applications exploring various topics.</p>
+      </header>
 
 
-       <div id="analysis-not-available-message" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-lg shadow-md mb-8 w-full max-w-2xl mx-auto" role="alert">
-           <p><span class="font-bold">Coming Soon:</span> The interactive analysis for <span id="selected-company-name" class="font-semibold"></span> is not yet available.</p>
-       </div>
 
 
-       <section class="mb-12">
-           <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">Featured Analyses</h2>
-           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="MEGA7">
-                   <h3 class="text-2xl font-semibold text-cyan-600 mb-2">Mega 7 Stocks Analysis</h3>
-                   <p class="text-gray-700 mb-4 flex-grow">An analysis of the seven largest US tech stocks: Apple, Microsoft, Alphabet, Amazon, Nvidia, Meta, and Tesla.</p>
-                   <a href="/MEGA7/" class="mt-auto inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">
-                       View Mega 7 Analysis &rarr;
-                   </a>
-               </div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="QQQ">
-                   <h3 class="text-2xl font-semibold text-purple-700 mb-2">Invesco QQQ Trust (QQQ) Insights</h3>
-                   <p class="text-gray-700 mb-4 flex-grow">A comprehensive analysis of the Nasdaq-100 index, its top holdings, sector breakdown, and performance.</p>
-                   <a href="/QQQ/" class="mt-auto inline-block bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">
-                       View QQQ Analysis &rarr;
-                   </a>
-               </div>
-           </div>
-       </section>
+      <div class="bg-white p-6 rounded-xl shadow-lg mb-12 w-full max-w-2xl mx-auto">
+          <h2 class="text-2xl font-semibold text-gray-700 mb-4">Find an Analysis</h2>
+          <div class="mb-4">
+              <label for="company-select" class="block text-gray-700 text-sm font-bold mb-2">Choose a topic or company:</label>
+              <select id="company-select" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="">-- Select an Analysis --</option>
+              </select>
+          </div>
+          <button id="view-analysis-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-all w-full disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+              View Analysis
+          </button>
+      </div>
 
 
-       <section>
-           <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">Individual Stock Analysis</h2>
-           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="PLTR"><h3 class="text-2xl font-semibold text-blue-500 mb-2">Palantir (PLTR)</h3><p class="text-gray-700 mb-4 flex-grow">Dive into Palantir's business model, platforms, and financials.</p><a href="/PLTR/" class="mt-auto inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="MRVL"><h3 class="text-2xl font-semibold text-green-500 mb-2">Marvell (MRVL)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Marvell's data infrastructure solutions.</p><a href="/MRVL/" class="mt-auto inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="AVGO"><h3 class="text-2xl font-semibold text-red-500 mb-2">Broadcom (AVGO)</h3><p class="text-gray-700 mb-4 flex-grow">A look at Broadcom's diversified semiconductor business.</p><a href="/AVGO/" class="mt-auto inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="ARM"><h3 class="text-2xl font-semibold text-orange-500 mb-2">Arm Holdings (ARM)</h3><p class="text-gray-700 mb-4 flex-grow">An exploration of Arm's semiconductor IP and architecture.</p><a href="/ARM/" class="mt-auto inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="TDG"><h3 class="text-2xl font-semibold text-teal-500 mb-2">TransDigm (TDG)</h3><p class="text-gray-700 mb-4 flex-grow">A deep dive into TransDigm's aerospace components business.</p><a href="/TDG/" class="mt-auto inline-block bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="TSM"><h3 class="text-2xl font-semibold text-indigo-500 mb-2">TSMC (TSM)</h3><p class="text-gray-700 mb-4 flex-grow">Analysis of TSMC's foundry model and industry leadership.</p><a href="/TSM/" class="mt-auto inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="ANET"><h3 class="text-2xl font-semibold text-purple-500 mb-2">Arista Networks (ANET)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Arista Networks' cloud networking solutions.</p><a href="/ANET/" class="mt-auto inline-block bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="APP"><h3 class="text-2xl font-semibold text-pink-500 mb-2">AppLovin (APP)</h3><p class="text-gray-700 mb-4 flex-grow">A deep dive into AppLovin's mobile app technology.</p><a href="/APP/" class="mt-auto inline-block bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="INTU"><h3 class="text-2xl font-semibold text-cyan-600 mb-2">Intuit (INTU)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Intuit's financial software products like TurboTax.</p><a href="/INTU/" class="mt-auto inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="EQT"><h3 class="text-2xl font-semibold text-lime-600 mb-2">EQT Corp. (EQT)</h3><p class="text-gray-700 mb-4 flex-grow">A look into EQT's natural gas production and financials.</p><a href="/EQT/" class="mt-auto inline-block bg-lime-600 hover:bg-lime-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="MDB"><h3 class="text-2xl font-semibold text-fuchsia-600 mb-2">MongoDB (MDB)</h3><p class="text-gray-700 mb-4 flex-grow">An exploration of MongoDB's NoSQL database platform.</p><a href="/MDB/" class="mt-auto inline-block bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="NEE"><h3 class="text-2xl font-semibold text-emerald-600 mb-2">NextEra Energy (NEE)</h3><p class="text-gray-700 mb-4 flex-grow">Analysis of NextEra's utility and renewable energy businesses.</p><a href="/NEE/" class="mt-auto inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="SNOW"><h3 class="text-2xl font-semibold text-sky-600 mb-2">Snowflake (SNOW)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Snowflake's cloud data warehousing platform.</p><a href="/SNOW/" class="mt-auto inline-block bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="TEAM"><h3 class="text-2xl font-semibold text-rose-600 mb-2">Atlassian (TEAM)</h3><p class="text-gray-700 mb-4 flex-grow">A dive into Atlassian's team collaboration tools.</p><a href="/TEAM/" class="mt-auto inline-block bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="CRWD"><h3 class="text-2xl font-semibold text-gray-700 mb-2">CrowdStrike (CRWD)</h3><p class="text-gray-700 mb-4 flex-grow">Overview of CrowdStrike's cybersecurity solutions.</p><a href="/CRWD/" class="mt-auto inline-block bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="PANW"><h3 class="text-2xl font-semibold text-blue-800 mb-2">Palo Alto Networks (PANW)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Palo Alto Networks' enterprise security platforms.</p><a href="/PANW/" class="mt-auto inline-block bg-blue-800 hover:bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="CRM"><h3 class="text-2xl font-semibold text-indigo-700 mb-2">Salesforce (CRM)</h3><p class="text-gray-700 mb-4 flex-grow">A look into Salesforce's customer relationship management solutions.</p><a href="/CRM/" class="mt-auto inline-block bg-indigo-700 hover:bg-indigo-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="SPOT"><h3 class="text-2xl font-semibold text-green-700 mb-2">Spotify (SPOT)</h3><p class="text-gray-700 mb-4 flex-grow">An analysis of Spotify's music streaming service and podcast platform.</p><a href="/SPOT/" class="mt-auto inline-block bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="TEM"><h3 class="text-2xl font-semibold text-yellow-700 mb-2">Tempus AI (TEM)</h3><p class="text-gray-700 mb-4 flex-grow">A look into Tempus AI's precision medicine and AI data analysis.</p><a href="/TEM/" class="mt-auto inline-block bg-yellow-700 hover:bg-yellow-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="GEV"><h3 class="text-2xl font-semibold text-orange-700 mb-2">GE Vernova (GEV)</h3><p class="text-gray-700 mb-4 flex-grow">Explore GE Vernova's power generation and energy transition tech.</p><a href="/GEV/" class="mt-auto inline-block bg-orange-700 hover:bg-orange-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="VRT"><h3 class="text-2xl font-semibold text-red-700 mb-2">Vertiv (VRT)</h3><p class="text-gray-700 mb-4 flex-grow">A deep dive into Vertiv's critical digital infrastructure solutions.</p><a href="/VRT/" class="mt-auto inline-block bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="NFLX"><h3 class="text-2xl font-semibold text-red-600 mb-2">Netflix (NFLX)</h3><p class="text-gray-700 mb-4 flex-grow">An analysis of Netflix's streaming service and content strategy.</p><a href="/NFLX/" class="mt-auto inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="SRE"><h3 class="text-2xl font-semibold text-blue-900 mb-2">Sempra Energy (SRE)</h3><p class="text-gray-700 mb-4 flex-grow">A look at Sempra Energy's utility infrastructure and energy services.</p><a href="/SRE/" class="mt-auto inline-block bg-blue-900 hover:bg-blue-950 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
-               <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col"><h3 class="text-2xl font-semibold text-purple-600 mb-2">General Topics</h3><p class="text-gray-700 mb-4 flex-grow">Exploring various interesting data analysis topics beyond specific companies.</p><a href="/general-topics/" class="mt-auto inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View General Topics &rarr;</a></div>
-           </div>
-       </section>
 
 
-       <footer class="text-center mt-16 py-6 border-t border-gray-300 w-full">
-           <p class="text-gray-600">&copy; <span id="year"></span> Duke. All rights reserved.</p>
-       </footer>
-   </div>
+      <div id="analysis-not-available-message" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-lg shadow-md mb-8 w-full max-w-2xl mx-auto" role="alert">
+          <p><span class="font-bold">Coming Soon:</span> The interactive analysis for <span id="selected-company-name" class="font-semibold"></span> is not yet available.</p>
+      </div>
 
 
-   <script>
-       document.getElementById('year').textContent = new Date().getFullYear();
-
-       // Define Mega 7 tickers to be excluded from the main dropdown
-       const mega7Tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA'];
-
-       // qqqInsightsStocks array is now empty as all relevant stocks are in dedicatedSpaCardsInfo
-       // and non-analyzed stocks are to be excluded from the dropdown.
-       const qqqInsightsStocks = [];
 
 
-       const dedicatedSpaCardsInfo = {
-           "MEGA7": { company: "Mega 7 Stocks Analysis", spaPath: "/MEGA7/" }, // Path to directory
-           "QQQ": { company: "Invesco QQQ Trust", spaPath: "/QQQ/" },
-           "PLTR": { company: "Palantir Technologies", spaPath: "/PLTR/" },
-           "MRVL": { company: "Marvell Technology", spaPath: "/MRVL/" },
-           "AVGO": { company: "Broadcom Inc.", spaPath: "/AVGO/" },
-           "ARM": { company: "Arm Holdings", spaPath: "/ARM/" },
-           "TDG": { company: "TransDigm Group", spaPath: "/TDG/" },
-           "TSM": { company: "TSMC", spaPath: "/TSM/" },
-           "ANET": { company: "Arista Networks", spaPath: "/ANET/" },
-           "APP": { company: "AppLovin", spaPath: "/APP/" },
-           "INTU": { company: "Intuit Inc.", spaPath: "/INTU/" },
-           "EQT": { company: "EQT Corp.", spaPath: "/EQT/" },
-           "MDB": { company: "MongoDB", spaPath: "/MDB/" },
-           "NEE": { company: "NextEra Energy", spaPath: "/NEE/" },
-           "SNOW": { company: "Snowflake", spaPath: "/SNOW/" },
-           "TEAM": { company: "Atlassian Corp. Plc", spaPath: "/TEAM/" },
-           "CRWD": { company: "CrowdStrike", spaPath: "/CRWD/" },
-           "PANW": { company: "Palo Alto Networks", spaPath: "/PANW/" },
-           "CRM": { company: "Salesforce", spaPath: "/CRM/" },
-           "SPOT": { company: "Spotify", spaPath: "/SPOT/" },
-           "TEM": { company: "Tempus AI Inc.", spaPath: "/TEM/" },
-           "GEV": { company: "GE Vernova", spaPath: "/GEV/" },
-           "VRT": { company: "Vertiv Holdings Co", spaPath: "/VRT/" },
-           "NFLX": { company: "Netflix", spaPath: "/NFLX/" },
-           "SRE": { company: "Sempra Energy", spaPath: "/SRE/" }
-       };
+      <section class="mb-12">
+          <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">Featured Analyses</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="MEGA7">
+                  <h3 class="text-2xl font-semibold text-cyan-600 mb-2">Mega 7 Stocks Analysis</h3>
+                  <p class="text-gray-700 mb-4 flex-grow">An analysis of the seven largest US tech stocks: Apple, Microsoft, Alphabet, Amazon, Nvidia, Meta, and Tesla.</p>
+                  <a href="/MEGA7/" class="mt-auto inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">
+                      View Mega 7 Analysis &rarr;
+                  </a>
+              </div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="QQQ">
+                  <h3 class="text-2xl font-semibold text-purple-700 mb-2">Invesco QQQ Trust (QQQ) Insights</h3>
+                  <p class="text-gray-700 mb-4 flex-grow">A comprehensive analysis of the Nasdaq-100 index, its top holdings, sector breakdown, and performance.</p>
+                  <a href="/QQQ/" class="mt-auto inline-block bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">
+                      View QQQ Analysis &rarr;
+                  </a>
+              </div>
+          </div>
+      </section>
 
 
-       let allCompaniesForDropdown = {};
 
 
-       for (const ticker in dedicatedSpaCardsInfo) {
-           // Only add if it's not an individual Mega 7 stock, but allow the "MEGA7" entry itself.
-           if (ticker === "MEGA7" || !mega7Tickers.includes(ticker)) {
-               allCompaniesForDropdown[ticker] = {
-                   company: dedicatedSpaCardsInfo[ticker].company,
-                   ticker: ticker,
-                   hasDedicatedSpa: true,
-                   spaPath: dedicatedSpaCardsInfo[ticker].spaPath
-               };
-           }
-       }
+      <section class="mb-12">
+          <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">Live Market Overview</h2>
+          <div id="chart-container" class="bg-white p-6 rounded-xl shadow-lg">
+              <div id="chart" style="min-height: 750px;">
+                  </div>
+          </div>
+      </section>
+      <section>
+          <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">Individual Stock Analysis</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="PLTR"><h3 class="text-2xl font-semibold text-blue-500 mb-2">Palantir (PLTR)</h3><p class="text-gray-700 mb-4 flex-grow">Dive into Palantir's business model, platforms, and financials.</p><a href="/PLTR/" class="mt-auto inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="MRVL"><h3 class="text-2xl font-semibold text-green-500 mb-2">Marvell (MRVL)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Marvell's data infrastructure solutions.</p><a href="/MRVL/" class="mt-auto inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="AVGO"><h3 class="text-2xl font-semibold text-red-500 mb-2">Broadcom (AVGO)</h3><p class="text-gray-700 mb-4 flex-grow">A look at Broadcom's diversified semiconductor business.</p><a href="/AVGO/" class="mt-auto inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="ARM"><h3 class="text-2xl font-semibold text-orange-500 mb-2">Arm Holdings (ARM)</h3><p class="text-gray-700 mb-4 flex-grow">An exploration of Arm's semiconductor IP and architecture.</p><a href="/ARM/" class="mt-auto inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="TDG"><h3 class="text-2xl font-semibold text-teal-500 mb-2">TransDigm (TDG)</h3><p class="text-gray-700 mb-4 flex-grow">A deep dive into TransDigm's aerospace components business.</p><a href="/TDG/" class="mt-auto inline-block bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="TSM"><h3 class="text-2xl font-semibold text-indigo-500 mb-2">TSMC (TSM)</h3><p class="text-gray-700 mb-4 flex-grow">Analysis of TSMC's foundry model and industry leadership.</p><a href="/TSM/" class="mt-auto inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="ANET"><h3 class="text-2xl font-semibold text-purple-500 mb-2">Arista Networks (ANET)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Arista Networks' cloud networking solutions.</p><a href="/ANET/" class="mt-auto inline-block bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="APP"><h3 class="text-2xl font-semibold text-pink-500 mb-2">AppLovin (APP)</h3><p class="text-gray-700 mb-4 flex-grow">A deep dive into AppLovin's mobile app technology.</p><a href="/APP/" class="mt-auto inline-block bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="INTU"><h3 class="text-2xl font-semibold text-cyan-600 mb-2">Intuit (INTU)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Intuit's financial software products like TurboTax.</p><a href="/INTU/" class="mt-auto inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="EQT"><h3 class="text-2xl font-semibold text-lime-600 mb-2">EQT Corp. (EQT)</h3><p class="text-gray-700 mb-4 flex-grow">A look into EQT's natural gas production and financials.</p><a href="/EQT/" class="mt-auto inline-block bg-lime-600 hover:bg-lime-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="MDB"><h3 class="text-2xl font-semibold text-fuchsia-600 mb-2">MongoDB (MDB)</h3><p class="text-gray-700 mb-4 flex-grow">An exploration of MongoDB's NoSQL database platform.</p><a href="/MDB/" class="mt-auto inline-block bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="NEE"><h3 class="text-2xl font-semibold text-emerald-600 mb-2">NextEra Energy (NEE)</h3><p class="text-gray-700 mb-4 flex-grow">Analysis of NextEra's utility and renewable energy businesses.</p><a href="/NEE/" class="mt-auto inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="SNOW"><h3 class="text-2xl font-semibold text-sky-600 mb-2">Snowflake (SNOW)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Snowflake's cloud data warehousing platform.</p><a href="/SNOW/" class="mt-auto inline-block bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="TEAM"><h3 class="text-2xl font-semibold text-rose-600 mb-2">Atlassian (TEAM)</h3><p class="text-gray-700 mb-4 flex-grow">A dive into Atlassian's team collaboration tools.</p><a href="/TEAM/" class="mt-auto inline-block bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="CRWD"><h3 class="text-2xl font-semibold text-gray-700 mb-2">CrowdStrike (CRWD)</h3><p class="text-gray-700 mb-4 flex-grow">Overview of CrowdStrike's cybersecurity solutions.</p><a href="/CRWD/" class="mt-auto inline-block bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="PANW"><h3 class="text-2xl font-semibold text-blue-800 mb-2">Palo Alto Networks (PANW)</h3><p class="text-gray-700 mb-4 flex-grow">Explore Palo Alto Networks' enterprise security platforms.</p><a href="/PANW/" class="mt-auto inline-block bg-blue-800 hover:bg-blue-900 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="CRM"><h3 class="text-2xl font-semibold text-indigo-700 mb-2">Salesforce (CRM)</h3><p class="text-gray-700 mb-4 flex-grow">A look into Salesforce's customer relationship management solutions.</p><a href="/CRM/" class="mt-auto inline-block bg-indigo-700 hover:bg-indigo-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="SPOT"><h3 class="text-2xl font-semibold text-green-700 mb-2">Spotify (SPOT)</h3><p class="text-gray-700 mb-4 flex-grow">An analysis of Spotify's music streaming service and podcast platform.</p><a href="/SPOT/" class="mt-auto inline-block bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="TEM"><h3 class="text-2xl font-semibold text-yellow-700 mb-2">Tempus AI (TEM)</h3><p class="text-gray-700 mb-4 flex-grow">A look into Tempus AI's precision medicine and AI data analysis.</p><a href="/TEM/" class="mt-auto inline-block bg-yellow-700 hover:bg-yellow-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="GEV"><h3 class="text-2xl font-semibold text-orange-700 mb-2">GE Vernova (GEV)</h3><p class="text-gray-700 mb-4 flex-grow">Explore GE Vernova's power generation and energy transition tech.</p><a href="/GEV/" class="mt-auto inline-block bg-orange-700 hover:bg-orange-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="VRT"><h3 class="text-2xl font-semibold text-red-700 mb-2">Vertiv (VRT)</h3><p class="text-gray-700 mb-4 flex-grow">A deep dive into Vertiv's critical digital infrastructure solutions.</p><a href="/VRT/" class="mt-auto inline-block bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="NFLX"><h3 class="text-2xl font-semibold text-red-600 mb-2">Netflix (NFLX)</h3><p class="text-gray-700 mb-4 flex-grow">An analysis of Netflix's streaming service and content strategy.</p><a href="/NFLX/" class="mt-auto inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col" data-ticker="SRE"><h3 class="text-2xl font-semibold text-blue-900 mb-2">Sempra Energy (SRE)</h3><p class="text-gray-700 mb-4 flex-grow">A look at Sempra Energy's utility infrastructure and energy services.</p><a href="/SRE/" class="mt-auto inline-block bg-blue-900 hover:bg-blue-950 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View Analysis &rarr;</a></div>
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col"><h3 class="text-2xl font-semibold text-purple-600 mb-2">General Topics</h3><p class="text-gray-700 mb-4 flex-grow">Exploring various interesting data analysis topics beyond specific companies.</p><a href="/general-topics/" class="mt-auto inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-center">View General Topics &rarr;</a></div>
+          </div>
+      </section>
 
 
-       // No need to iterate over qqqInsightsStocks if it's empty and its purpose was to add non-SPA stocks.
-       // The previous loop already handles all dedicated SPAs.
 
 
-       const sortedCompaniesForDropdown = Object.values(allCompaniesForDropdown).sort((a, b) => a.company.localeCompare(b.company));
+      <footer class="text-center mt-16 py-6 border-t border-gray-300 w-full">
+          <p class="text-gray-600">&copy; <span id="year"></span> Duke. All rights reserved.</p>
+      </footer>
+  </div>
 
 
-       function populateCompanyDropdown() {
-           const companySelect = document.getElementById('company-select');
-           companySelect.innerHTML = '<option value="">-- Select an Analysis --</option>'; // Clear existing
-           sortedCompaniesForDropdown.forEach(company => {
-               const option = document.createElement('option');
-               option.value = company.ticker;
-               option.textContent = `${company.company} (${company.ticker})`;
-               companySelect.appendChild(option);
-           });
-       }
 
 
-       function removeAllHighlights() {
-           document.querySelectorAll('[data-ticker]').forEach(card => {
-               card.classList.remove('highlight-border');
-           });
-       }
+  <script>
+      // Existing script for dropdowns and footer year
+      document.getElementById('year').textContent = new Date().getFullYear();
+      const mega7Tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA'];
+      const qqqInsightsStocks = [];
+      const dedicatedSpaCardsInfo = {
+          "MEGA7": { company: "Mega 7 Stocks Analysis", spaPath: "/MEGA7/" },
+          "QQQ": { company: "Invesco QQQ Trust", spaPath: "/QQQ/" }, "PLTR": { company: "Palantir Technologies", spaPath: "/PLTR/" },
+          "MRVL": { company: "Marvell Technology", spaPath: "/MRVL/" }, "AVGO": { company: "Broadcom Inc.", spaPath: "/AVGO/" },
+          "ARM": { company: "Arm Holdings", spaPath: "/ARM/" }, "TDG": { company: "TransDigm Group", spaPath: "/TDG/" },
+          "TSM": { company: "TSMC", spaPath: "/TSM/" }, "ANET": { company: "Arista Networks", spaPath: "/ANET/" },
+          "APP": { company: "AppLovin", spaPath: "/APP/" }, "INTU": { company: "Intuit Inc.", spaPath: "/INTU/" },
+          "EQT": { company: "EQT Corp.", spaPath: "/EQT/" }, "MDB": { company: "MongoDB", spaPath: "/MDB/" },
+          "NEE": { company: "NextEra Energy", spaPath: "/NEE/" }, "SNOW": { company: "Snowflake", spaPath: "/SNOW/" },
+          "TEAM": { company: "Atlassian Corp. Plc", spaPath: "/TEAM/" }, "CRWD": { company: "CrowdStrike", spaPath: "/CRWD/" },
+          "PANW": { company: "Palo Alto Networks", spaPath: "/PANW/" }, "CRM": { company: "Salesforce", spaPath: "/CRM/" },
+          "SPOT": { company: "Spotify", spaPath: "/SPOT/" }, "TEM": { company: "Tempus AI Inc.", spaPath: "/TEM/" },
+          "GEV": { company: "GE Vernova", spaPath: "/GEV/" }, "VRT": { company: "Vertiv Holdings Co", spaPath: "/VRT/" },
+          "NFLX": { company: "Netflix", spaPath: "/NFLX/" }, "SRE": { company: "Sempra Energy", spaPath: "/SRE/" }
+      };
+      let allCompaniesForDropdown = {};
+      for (const ticker in dedicatedSpaCardsInfo) {
+          if (ticker === "MEGA7" || !mega7Tickers.includes(ticker)) {
+              allCompaniesForDropdown[ticker] = {
+                  company: dedicatedSpaCardsInfo[ticker].company,
+                  ticker: ticker, hasDedicatedSpa: true, spaPath: dedicatedSpaCardsInfo[ticker].spaPath
+              };
+          }
+      }
+      const sortedCompaniesForDropdown = Object.values(allCompaniesForDropdown).sort((a, b) => a.company.localeCompare(b.company));
+      function populateCompanyDropdown() {
+          const companySelect = document.getElementById('company-select');
+          companySelect.innerHTML = '<option value="">-- Select an Analysis --</option>';
+          sortedCompaniesForDropdown.forEach(company => {
+              const option = document.createElement('option');
+              option.value = company.ticker;
+              option.textContent = `${company.company} (${company.ticker})`;
+              companySelect.appendChild(option);
+          });
+      }
+      function removeAllHighlights() {
+          document.querySelectorAll('[data-ticker]').forEach(card => card.classList.remove('highlight-border'));
+      }
+      document.getElementById('company-select').addEventListener('change', function() {
+          const selectedTicker = this.value;
+          const viewButton = document.getElementById('view-analysis-button');
+          const messageDiv = document.getElementById('analysis-not-available-message');
+          const selectedCompanyNameSpan = document.getElementById('selected-company-name');
+          removeAllHighlights();
+          messageDiv.classList.add('hidden');
+          if (selectedTicker) {
+              const selectedCompany = sortedCompaniesForDropdown.find(c => c.ticker === selectedTicker);
+              if (selectedCompany && selectedCompany.hasDedicatedSpa) {
+                  const spaCard = document.querySelector(`[data-ticker="${selectedTicker}"]`);
+                  if (spaCard) {
+                      spaCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      spaCard.classList.add('highlight-border');
+                      setTimeout(() => spaCard.classList.remove('highlight-border'), 2500);
+                  }
+                  viewButton.disabled = false;
+                  viewButton.onclick = () => { window.location.href = selectedCompany.spaPath; };
+              } else {
+                  selectedCompanyNameSpan.textContent = selectedCompany ? selectedCompany.company : "this company";
+                  messageDiv.classList.remove('hidden');
+                  messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  viewButton.disabled = true;
+                  viewButton.onclick = null;
+              }
+          } else {
+              viewButton.disabled = true;
+              viewButton.onclick = null;
+          }
+      });
+      document.addEventListener('DOMContentLoaded', populateCompanyDropdown);
+  </script>
 
 
-       document.getElementById('company-select').addEventListener('change', function() {
-           const selectedTicker = this.value;
-           const viewButton = document.getElementById('view-analysis-button');
-           const messageDiv = document.getElementById('analysis-not-available-message');
-           const selectedCompanyNameSpan = document.getElementById('selected-company-name');
 
 
-           removeAllHighlights();
-           messageDiv.classList.add('hidden');
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 
-           if (selectedTicker) {
-               const selectedCompany = sortedCompaniesForDropdown.find(c => c.ticker === selectedTicker);
-               if (selectedCompany && selectedCompany.hasDedicatedSpa) {
-                   const spaCard = document.querySelector(`[data-ticker="${selectedTicker}"]`);
-                   if (spaCard) {
-                       spaCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                       spaCard.classList.add('highlight-border');
-                       setTimeout(() => spaCard.classList.remove('highlight-border'), 2500);
-                   }
-                   viewButton.disabled = false;
-                   viewButton.onclick = () => {
-                       console.log("Navigating to:", selectedCompany.spaPath); // Debugging line
-                       window.location.href = selectedCompany.spaPath;
-                   };
-               } else {
-                   selectedCompanyNameSpan.textContent = selectedCompany ? selectedCompany.company : "this company";
-                   messageDiv.classList.remove('hidden');
-                   messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                   viewButton.disabled = true;
-                   viewButton.onclick = null;
-               }
-           } else {
-               viewButton.disabled = true;
-               viewButton.onclick = null;
-           }
-       });
 
 
-       document.addEventListener('DOMContentLoaded', populateCompanyDropdown);
-   </script>
-</body>
+  <script>
+      const treemapLogic = async function() {
+          const chartElement = document.querySelector("#chart");
+          if (!chartElement) { return; }
+          const apiKey = "883749f42ce1bfb624af26c9c7bff97d";
+
+
+
+
+          try {
+              chartElement.innerHTML = "<h3>Loading Market Data...</h3>";
+              
+              const url = `https://financialmodelingprep.com/api/v3/stock-screener?marketCapMoreThan=10000000000&volumeMoreThan=100000&limit=500&apikey=${apiKey}`;
+              const response = await fetch(url);
+              const rawData = await response.json();
+
+
+
+
+              if (!response.ok) { throw new Error(`API Error: ${rawData['Error Message'] || 'Check API key or plan limits.'}`); }
+              if (!Array.isArray(rawData) || rawData.length === 0) { throw new Error("API returned no stock data. You may have reached your daily request limit."); }
+              
+              const series = processTreemapData(rawData);
+
+
+
+
+              if (series.length === 0) { throw new Error("No valid sectors could be processed from the API data."); }
+
+
+
+
+              const options = {
+                  series: series,
+                  chart: { type: 'treemap', height: 750, toolbar: { show: true } },
+                  title: { text: '' },
+                  plotOptions: { treemap: { distributed: true, enableShades: true, shadeIntensity: 0.6, } },
+                  tooltip: {
+                      custom: function({ seriesIndex, dataPointIndex, w }) {
+                          const stock = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                          if (!stock || !stock.customData) return '';
+                          const data = stock.customData;
+                          const companyName = data.companyName;
+                          const price = data.price.toFixed(2);
+                          return `
+                              <div style="padding: 12px; font-size: 14px; background: #fff; color: #000; border: 1px solid #ccc; border-radius: 4px;">
+                                  <div style="font-weight: bold; font-size: 16px; margin-bottom: 5px;">${companyName} (${stock.x})</div>
+                                  <div><strong>Price:</strong> $${price}</div>
+                              </div>
+                          `;
+                      }
+                  },
+                  legend: { show: false }
+              };
+
+
+
+
+              chartElement.innerHTML = '';
+              const chart = new ApexCharts(chartElement, options);
+              chart.render();
+
+
+
+
+          } catch (error) {
+              console.error("Chart Error:", error);
+              chartElement.innerHTML = `<h3 style='color: #dc3545; text-align: center;'>Could not load chart.</h3><p style="text-align: center; color: #6c757d;"><b>Reason:</b> ${error.message}</p>`;
+          }
+      };
+
+
+
+
+      function processTreemapData(data) {
+          const sectors = {};
+          data.forEach(stock => {
+              if (stock && stock.sector && stock.marketCap && stock.companyName && typeof stock.price !== 'undefined') {
+                  if (!sectors[stock.sector]) { sectors[stock.sector] = []; }
+                  sectors[stock.sector].push({
+                      x: stock.symbol,
+                      y: stock.marketCap,
+                      customData: { companyName: stock.companyName, price: stock.price }
+                  });
+              }
+          });
+
+
+
+
+          return Object.keys(sectors).map(sector => ({
+              name: sector,
+              data: sectors[sector]
+          }));
+      }
+
+
+
+
+      document.addEventListener('DOMContentLoaded', treemapLogic);
+  </script>
+  </body>
 </html>
+
