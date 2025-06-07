@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Walt Disney Company (DIS) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #1E3A8A; /* blue-900 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #1E3A8A; /* blue-900 */
+            color: #FFFFFF;
+            border-color: #1D4ED8; /* blue-700 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #1E3A8A; /* blue-900 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #1E3A8A;">Walt Disney Co. (DIS) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Disney: The Unrivaled Kingdom of Content</h2>
+            <p class="content-text mb-6">The Walt Disney Company is a diversified global entertainment titan built upon a century of storytelling. Its business model is a masterclass in synergy, creating and monetizing a vast portfolio of iconic intellectual property (IP) across every conceivable platform. Following a recent reorganization, Disney's operations are structured into three core segments: **Entertainment**, which includes its famed film studios, streaming services, and linear networks; **Sports**, centered around the powerful ESPN brand; and **Experiences**, which comprises its world-renowned theme parks, cruise lines, and consumer products. This analysis explores how these pieces fit together to form one of the world's most powerful and enduring business models.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Under CEO Bob Iger, Disney is focused on three strategic pillars:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Achieve Streaming Profitability:</strong> Transforming its direct-to-consumer (DTC) streaming business from a growth-at-all-costs model to one of sustainable profitability and growth.</li>
+                        <li><strong class="font-semibold text-gray-700">Build ESPN into a Digital Leader:</strong> Navigating the decline of linear television by turning ESPN into the preeminent digital platform for sports fans, exploring strategic partnerships and direct-to-consumer offerings.</li>
+                        <li><strong class="font-semibold text-gray-700">Turbocharge Experiences Growth:</strong> Reinvigorating the creative engine behind its Parks, Experiences, and Products division, investing heavily to expand capacity and enhance the guest experience.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Total Streaming Subscribers</p>
+                    <p class="kpi-value text-blue-600">~181 Million</p>
+                    <p class="content-text text-sm mt-2">Represents the combined subscribers of Disney+ and Hulu as of Q2 2025, forming the core of the Entertainment segment's future.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Disney Makes Money: The Three Pillars</h2>
+            <p class="content-text mb-6">Disney's revenue is generated across three distinct but interconnected segments. The unparalleled intellectual property created in the Entertainment segment fuels consumer desire for the Sports and Experiences segments, creating a powerful, self-reinforcing flywheel. For fiscal year 2024, Entertainment accounted for 45% of revenues, Experiences for 37%, and Sports for 19%.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="entertainment">Entertainment</button>
+                    <button class="segment-tab-button" data-target="experiences">Experiences</button>
+                    <button class="segment-tab-button" data-target="sports">Sports</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="entertainmentContent" class="segment-content">
+                    <h3 class="subsection-title">Entertainment</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The creative heart of Disney. This segment includes the legendary Walt Disney Pictures, Pixar, Marvel Studios, and Lucasfilm, which create films and series. It also houses the direct-to-consumer streaming services <span class="highlight">Disney+</span> and <span class="highlight">Hulu</span>, and the traditional linear television networks like ABC, Disney Channel, and FX. Revenue comes from theatrical ticket sales, streaming subscriptions, advertising, and content licensing.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="experiencesContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Experiences</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is Disney's most profitable segment and where the magic comes to life. It includes the iconic Walt Disney World and Disneyland resorts, international parks, the Disney Cruise Line, and a vast consumer products division. Revenue is generated from theme park admissions, hotel stays, food and beverage sales, merchandise, and cruise fares. This segment is a key driver of operating income growth.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Q2 2025 Experiences Operating Income</p>
+                            <p class="kpi-value text-blue-600">$2.5 Billion</p>
+                            <p class="content-text text-sm mt-2">An increase of $0.2 billion versus the prior-year quarter, driven by strong performance at its domestic parks and consumer products division.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="sportsContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Sports</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Dominated by the ESPN brand, this segment is a powerhouse in live sports programming. It includes the ESPN television network, the <span class="highlight">ESPN+</span> streaming service, and other related sports properties. Revenue is primarily generated from affiliate fees paid by cable and satellite providers, as well as advertising. This segment faces the challenge of navigating the transition from linear TV to a direct-to-consumer streaming future.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Strategic Challenge</p>
+                            <p class="kpi-value text-blue-600 text-base">Linear Decline vs. DTC Future</p>
+                            <p class="content-text text-sm mt-2">Managing the declining profitability of traditional cable while building a profitable direct-to-consumer streaming future for ESPN is a key strategic focus.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Disney's financials tell a story of transition. While the Experiences segment has been a consistent and growing source of profit, the Entertainment and Sports segments are navigating the costly shift from highly profitable linear television to the direct-to-consumer streaming model. Achieving profitability in streaming is the company's foremost financial priority. Explore key financial trends below, including the critical Segment Operating Income which shows where the company truly makes money.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Revenue (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Operating Income</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="operatingIncome" selected>Segment Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The annual revenue chart shows the strong recovery from the pandemic. The quarterly segment chart highlights the immense profitability of the Experiences division, which has subsidized the investment in the direct-to-consumer streaming businesses.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Magic Kingdom's Walls</h2>
+            <p class="content-text mb-6">Disney's competitive moat is arguably one of the widest and deepest in the world. It is built upon a foundation of beloved, multi-generational intellectual property that is nearly impossible to replicate. This IP is the engine for a synergistic business model that creates immense brand loyalty and significant barriers to entry.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Unmatched Intellectual Property (IP):</strong> From Mickey Mouse and Cinderella to Star Wars, Marvel superheroes, and Pixar characters, Disney owns a treasure trove of the world's most iconic stories and characters. This IP is a durable, long-lasting asset that fuels all other parts of the business.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Synergistic "Flywheel" Model:</strong> Disney excels at monetizing a single piece of IP across multiple businesses. A successful movie (Entertainment) becomes a new theme park attraction (Experiences), a line of toys (Experiences), and a series on Disney+ (Entertainment), creating a powerful, self-reinforcing cycle.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Strong Brand Recognition & Trust:</strong> The Disney brand is synonymous with quality, family-friendly entertainment. This powerful brand loyalty, cultivated over a century, creates an emotional connection with consumers that translates into pricing power and repeat business.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Streaming Services:</strong> In the direct-to-consumer space, Disney competes fiercely with giants like Netflix and Amazon Prime Video for subscribers and content.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Film Studios:</strong> Competes with other major film studios like Warner Bros., Universal Pictures, and Sony for box office success.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Theme Park Operators:</strong> While Disney is in a class of its own, it competes for consumer discretionary spending with other park operators like Universal Studios (Comcast) and Six Flags.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Disney's future is a story of transformation. The company must successfully navigate the shift from the highly profitable but declining world of linear television to the competitive, capital-intensive world of streaming. Its ability to leverage its powerful IP and brand to win in this new era will determine its long-term success.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Streaming Profitability:</strong> A clear path to making the direct-to-consumer segment profitable, which could significantly rerate the stock as it shifts from a cash drain to a profit center.</li>
+                        <li><strong>Experiences Growth:</strong> Planned investments in parks and cruises can continue to drive strong, high-margin growth in this highly successful segment.</li>
+                        <li><strong>IP Flywheel Continues:</strong> A strong slate of upcoming films from Marvel, Star Wars, and its animation studios will provide fresh content to fuel the entire Disney ecosystem.</li>
+                        <li><strong>Unlocking ESPN's Value:</strong> Successfully transitioning ESPN to a digital, direct-to-consumer platform could unlock significant value from the world's leading sports brand.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Decline of Linear TV:</strong> The accelerated cord-cutting trend continues to erode the profitability of its traditional television networks, which have historically been a major cash cow.</li>
+                        <li><strong>Streaming Wars:</strong> The "streaming wars" remain intensely competitive, requiring massive, ongoing content investment to attract and retain subscribers against deep-pocketed rivals like Netflix and Amazon.</li>
+                        <li><strong>Economic Sensitivity:</strong> The Experiences segment is highly sensitive to economic downturns, as consumers cut back on discretionary spending like vacations during recessions.</li>
+                        <li><strong>Box Office Volatility:</strong> The performance of the Entertainment segment is still heavily reliant on the unpredictable success of its blockbuster film slate.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from The Walt Disney Company public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#1E3A8A', // Disney Blue
+            gold: '#FBBF24', // A warm gold/yellow
+            sky: '#38BDF8', // A lighter blue
+            red: '#EF4444'  // A contrasting color
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Entertainment', 'Experiences', 'Sports'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [45, 37, 19], // Approximate revenue % for FY24
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.gold, CHART_COLORS.red],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [65.39, 67.42, 82.72, 88.90, 91.36], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25'],
+            operatingIncome: {
+                label: 'Segment Operating Income ($B)',
+                datasets: [
+                    {
+                        label: 'Experiences',
+                        data: [2.43, 2.21, 2.11, 2.29, 2.52, 2.45, 2.28, 2.50],
+                        backgroundColor: CHART_COLORS.gold
+                    },
+                    {
+                        label: 'Entertainment',
+                        data: [0.35, 0.43, 0.39, 0.78, 0.99, 1.07, 1.15, 1.26],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                     {
+                        label: 'Sports',
+                        data: [0.94, 0.98, 0.86, 0.93, 0.89, 0.95, 0.76, 0.69],
+                        backgroundColor: CHART_COLORS.red
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createYearlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Operating Income ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Operating Income by Segment ($B)' } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'operatingIncome');
+
+    </script>
+</body>
+</html>
+

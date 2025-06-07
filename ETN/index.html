@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eaton Corporation (ETN) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #059669; /* emerald-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #10B981; /* emerald-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #059669; /* emerald-600 */
+            color: #FFFFFF;
+            border-color: #047857; /* emerald-700 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #059669; /* emerald-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #059669;">Eaton (ETN) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Eaton: Powering a Sustainable & Electrified Future</h2>
+            <p class="content-text mb-6">Eaton Corporation is a global intelligent power management company focused on the world's most critical electrical and industrial challenges. With a history spanning over a century, Eaton has transformed into a leader in products and solutions that enable a more sustainable world. The company's core strategy is to capitalize on the powerful secular growth trends of <span class="highlight">electrification</span>, <span class="highlight">energy transition</span>, and <span class="highlight">digitalization</span>. From modernizing the electrical grid to enabling the growth of electric vehicles and improving efficiency in aerospace, Eaton's diverse portfolio is positioned at the center of global re-industrialization and infrastructure investment.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Eaton's long-term value creation is built upon these strategic pillars:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Accelerating Organic Growth:</strong> Investing in innovation and R&D to lead in high-growth markets fueled by electrification and sustainability.</li>
+                        <li><strong class="font-semibold text-gray-700">Expanding Margins:</strong> Driving operational excellence and productivity through the standardized Eaton Business System.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Capital Allocation:</strong> Making strategic portfolio moves, including acquisitions, while consistently returning capital to shareholders.</li>
+                        <li><strong class="font-semibold text-gray-700">Digital Transformation:</strong> Leveraging software and data through its Brightlayer platform to create new, monetizable business models and customer insights.</li>
+                    </ul>
+                </div>
+                 <div class="grid grid-cols-2 gap-4">
+                    <div class="kpi-card bg-emerald-50 border-emerald-200">
+                        <p class="kpi-label">2024 Sales</p>
+                        <p class="kpi-value text-emerald-600">$24.9B</p>
+                    </div>
+                     <div class="kpi-card bg-emerald-50 border-emerald-200">
+                        <p class="kpi-label">2024 Operating Cash Flow</p>
+                        <p class="kpi-value text-emerald-600">$4.3B</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Eaton Makes Money: A Diversified Powerhouse</h2>
+            <p class="content-text mb-6">Eaton's strength lies in its diversification across critical, high-value industrial sectors. Its two primary sectors, Electrical and Industrial, are further broken down into segments that provide essential components and systems for a global customer base. The Electrical sector is the largest revenue and profit driver, benefiting directly from the electrification megatrend.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="subsection-title">Segment Performance (FY 2024 Revenue)</h3>
+                    <p class="content-text mb-2">Eaton's revenue is led by its massive <span class="highlight">Electrical Americas</span> segment, complemented by a strong global presence. The <span class="highlight">Aerospace</span> segment provides high-margin, mission-critical components, while the <span class="highlight">Vehicle</span> and <span class="highlight">eMobility</span> segments serve the evolving transportation industry.</p>
+                     <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                        <li><strong>Electrical Americas:</strong> Power distribution, quality, and control solutions for the Americas.</li>
+                        <li><strong>Electrical Global:</strong> Similar offerings tailored for Europe, Middle East, Africa, and Asia-Pacific.</li>
+                        <li><strong>Aerospace:</strong> Fuel, hydraulic, and pneumatic systems for commercial and military aircraft.</li>
+                        <li><strong>Vehicle & eMobility:</strong> Drivetrain systems for traditional vehicles and power electronics for EVs.</li>
+                    </ul>
+                </div>
+                <div class="chart-container h-72 md:h-80">
+                    <canvas id="segmentRevenueBreakdownChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Eaton has delivered robust financial results, characterized by steady revenue growth, expanding margins, and strong cash flow generation. The company's financial discipline allows for significant investment in R&D and strategic acquisitions while consistently returning capital to shareholders. Explore key financial trends using the dropdowns below to visualize both long-term annual performance and recent quarterly results.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2022-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                            <option value="operatingCashFlow">Operating Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 5 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts clearly show a positive trajectory in Eaton's core metrics, reflecting strong execution and favorable end-market demand driven by electrification and infrastructure investment.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Power of Scale & Technology</h2>
+            <p class="content-text mb-6">Eaton has built a formidable competitive moat based on its immense scale, deep engineering expertise, and entrenched customer relationships. This moat protects its market position and profitability against a diverse set of global competitors.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-emerald-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Switching Costs & Installed Base:</strong> Eaton's products are highly engineered and specified into long-life assets like aircraft, data centers, and industrial machinery. This creates high switching costs for customers and a lucrative, recurring aftermarket revenue stream.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-emerald-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Economies of Scale:</strong> As a massive global manufacturer, Eaton benefits from significant cost advantages in sourcing raw materials and optimizing its production footprint, allowing it to compete effectively on price and invest heavily in R&D.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-emerald-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Distribution Network:</strong> Eaton's unparalleled global distribution network for its electrical products provides a significant barrier to entry and a powerful channel to market that is difficult to replicate.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-emerald-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Intangible Assets (Brand & Technology):</strong> The Eaton brand is synonymous with quality and reliability. Its portfolio of patents and proprietary technology in power management provides a strong competitive edge.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Electrical:</strong> Siemens, Schneider Electric, ABB, Legrand, Rockwell Automation, Emerson Electric.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Aerospace:</strong> Parker Hannifin, Safran, GE Aviation, Honeywell.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Vehicle & eMobility:</strong> Cummins, BorgWarner, Vitesco Technologies, Dana Inc.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Eaton's future is intrinsically linked to the major global trends of electrification and sustainability. The company's strategic alignment with these forces presents significant opportunities, balanced by the inherent risks of a global industrial enterprise.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Electrification of Everything:</strong> Continued growth in data centers, grid modernization, renewable energy projects, and electric vehicles will directly drive demand for Eaton's core products.</li>
+                        <li><strong>Government Infrastructure Spending:</strong> Global investments in infrastructure, particularly those focused on clean energy and grid resilience, provide a powerful tailwind.</li>
+                        <li><strong>Margin Expansion:</strong> A continued focus on productivity, cost control, and a richer mix of high-margin products can lead to further increases in profitability.</li>
+                        <li><strong>Digitalization (Brightlayer):</strong> Monetizing software and data services offers a new layer of high-margin, recurring revenue growth.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Global Economic Cycles:</strong> A significant economic downturn would reduce demand in key cyclical end markets like commercial construction and vehicle production.</li>
+                        <li><strong>Supply Chain & Inflation:</strong> Vulnerability to raw material price inflation (copper, steel) and global supply chain disruptions could impact margins and production.</li>
+                        <li><strong>Competitive & Technological Disruption:</strong> The pace of innovation, especially in the eMobility and digital services space, requires constant investment to maintain a competitive edge.</li>
+                        <li><strong>Geopolitical Tensions:</strong> As a company with a vast global footprint, trade disputes, tariffs, and regional instability can pose significant risks to operations and sales.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Eaton Corporation plc public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click();
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            emerald: '#10B981',
+            sky: '#38BDF8',
+            orange: '#F97316',
+            amber: '#F59E0B',
+            gray: '#6B7280',
+            darkEmerald: '#059669',
+        };
+
+        // Segment Revenue Breakdown Chart (Pie) - FY2024 Data
+        const segmentRevenueCtx = document.getElementById('segmentRevenueBreakdownChart').getContext('2d');
+        new Chart(segmentRevenueCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Electrical Americas', 'Electrical Global', 'Aerospace', 'Vehicle', 'eMobility'],
+                datasets: [{
+                    data: [11.44, 6.25, 3.8, 2.7, 0.69], // FY24 Data in $B (approx)
+                    backgroundColor: [CHART_COLORS.darkEmerald, CHART_COLORS.emerald, CHART_COLORS.sky, CHART_COLORS.amber, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Segment Revenue Breakdown (FY2024, $B)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [20.75, 23.20, 24.88], label: 'Total Revenue ($B)', color: CHART_COLORS.darkEmerald },
+            operatingIncome: { data: [3.00, 3.89, 4.63], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+            netIncome: { data: [3.22, 3.22, 3.79], label: 'Net Income ($B)', color: CHART_COLORS.emerald },
+            operatingCashFlow: { data: [3.0, 3.6, 4.3], label: 'Operating Cash Flow ($B)', color: CHART_COLORS.orange },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+             labels: ['Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [5.94, 6.35, 6.34, 6.24, 6.38], label: 'Total Revenue ($B)', color: CHART_COLORS.darkEmerald },
+            operatingIncome: { data: [1.00, 1.19, 1.21, 1.22, 1.18], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+            netIncome: { data: [0.82, 0.9, 1.01, 0.97, 0.96], label: 'Net Income ($B)', color: CHART_COLORS.emerald },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                         type: 'bar',
+                         fill: true,
+                         tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

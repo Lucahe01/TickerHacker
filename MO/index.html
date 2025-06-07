@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altria Group, Inc. (MO) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #1D4ED8; /* blue-700 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #EF4444; /* red-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #1D4ED8; /* blue-700 */
+            color: #FFFFFF;
+            border-color: #1E40AF; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #1D4ED8; /* blue-700 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #1D4ED8;">Altria Group (MO) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Altria: The U.S. Tobacco Titan's Transition</h2>
+            <p class="content-text mb-6">Altria Group is one of the world's largest producers and marketers of tobacco, cigarettes, and related products, with a business focused exclusively on the United States. Its portfolio is built on the foundation of **Marlboro**, the most popular cigarette brand in the U.S. for over 45 years. Acknowledging the long-term secular decline in smoking, Altria's vision is to "responsibly lead the transition of adult smokers to a smoke-free future." This strategy involves maximizing the profitability of its core smokeable business to fund investments in smoke-free alternatives, primarily in the oral tobacco category. This analysis explores Altria's business segments, its financial model, and its strategic navigation of a challenging industry.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Altria's strategy is a balancing act:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Maximize Profitability of Combustibles:</strong> Leverage the immense pricing power of the Marlboro brand to offset volume declines and generate substantial cash flow.</li>
+                        <li><strong class="font-semibold text-gray-700">Lead in Smoke-Free Alternatives:</strong> Compete and win in the growing smoke-free category, with a primary focus on its *on!* brand of oral nicotine pouches.</li>
+                        <li><strong class="font-semibold text-gray-700">Enhance Shareholder Returns:</strong> The central pillar of the investment case is to return a majority of cash flow to shareholders through a high, reliable dividend and share repurchases.</li>
+                        <li><strong class="font-semibold text-gray-700">Navigate the U.S. Regulatory Environment:</strong> Proactively engage with the FDA and other regulators to advocate for harm reduction and shape the future regulatory framework for tobacco and nicotine products.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Marlboro U.S. Market Share</p>
+                    <p class="kpi-value text-blue-800">~42%</p>
+                    <p class="content-text text-sm mt-2">Represents Marlboro's dominant and unparalleled share of the U.S. cigarette market, the source of Altria's immense pricing power.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Altria Makes Money: Smokeable vs. Oral</h2>
+            <p class="content-text mb-6">Altria's business is organized into two primary segments. The **Smokeable Products** segment is the historical core, a massive cash generator despite being in secular decline. The **Oral Tobacco Products** segment is the designated growth engine, containing both traditional smokeless tobacco and modern oral nicotine pouches.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="smokeable">Smokeable Products</button>
+                    <button class="segment-tab-button" data-target="oral">Oral Tobacco Products</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="smokeableContent" class="segment-content">
+                    <h3 class="subsection-title">Smokeable Products</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the financial engine of the company, representing over 85% of its operating income. This segment consists primarily of combustible cigarettes manufactured and sold in the U.S. The crown jewel is <span class="highlight">Marlboro</span>, which has a market share larger than its next seven competitors combined. While shipment volumes decline each year due to lower smoking rates, Altria is able to consistently raise prices to offset these declines and grow profit.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="oralContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Oral Tobacco Products</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment is Altria's primary focus for a "smoke-free" future. It includes traditional moist smokeless tobacco (MST) products, where Altria is the market leader with its <span class="highlight">Copenhagen</span> and <span class="highlight">Skoal</span> brands. More importantly, it includes modern oral nicotine pouches sold under the **on!** brand. The oral nicotine pouch category is the fastest-growing nicotine category in the U.S., and success with *on!* is critical to Altria's long-term strategy.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Growth Product</p>
+                            <p class="kpi-value text-blue-800 text-2xl">on!</p>
+                            <p class="content-text text-sm mt-2">Altria's brand of nicotine pouches is its primary vehicle for competing in the fastest-growing segment of the U.S. nicotine market.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Altria's financial profile is a case study in managing a declining core business for maximum cash flow. Despite falling cigarette volumes, the company's revenue remains remarkably stable due to its ability to consistently raise prices. This pricing power results in very high and stable operating margins. The company uses the massive free cash flow generated to pay one of the highest and most reliable dividend yields in the stock market. Financials are primarily tracked by "Adjusted Operating Companies Income" (OCI).</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Revenue Net of Excise ($B)</option>
+                            <option value="adjOci">Adjusted OCI ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Revenue ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="segmentRevenue" selected>Revenue by Segment</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show the remarkable stability of Altria's revenue and operating income, a direct result of its pricing power offsetting volume declines in the smokeable segment.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Marlboro Fortress</h2>
+            <p class="content-text mb-6">Altria possesses an exceptionally wide and durable competitive moat in its core U.S. market. This advantage is built on the unparalleled brand power of Marlboro, a massive distribution network, and deep expertise in navigating a highly regulated industry.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Dominant Brand Power:</strong> The Marlboro brand holds over 40% of the U.S. cigarette market, a share larger than its next several competitors combined. This dominance provides immense pricing power, allowing Altria to raise prices consistently to offset volume declines.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Extensive Distribution Network:</strong> Altria has a powerful and efficient distribution system with deep, long-standing relationships with wholesalers and retailers across the entire United States, ensuring its products have premier placement.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Regulatory Expertise:</strong> Operating for decades under a stringent and complex regulatory framework has given Altria unparalleled expertise in legal, regulatory, and government affairs, which is a significant barrier to entry for potential new players.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">British American Tobacco (BAT):</strong> The primary competitor in the U.S., owner of the Newport (menthol) and Camel cigarette brands, as well as the Vuse e-cigarette brand.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Swedish Match (owned by Philip Morris Int'l):</strong> The most direct and formidable competitor in the oral nicotine pouch category with its dominant ZYN brand.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Other Tobacco Companies:</strong> Competes with smaller players like Imperial Brands and a host of e-vapor and modern oral nicotine companies.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Altria is a play on its ability to manage the slow decline of its incredibly profitable cigarette business while successfully capturing a meaningful share of the growing smoke-free market. The primary appeal for investors is its exceptionally high and reliable dividend yield, which is funded by the massive cash flows from Marlboro.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Incredible Pricing Power:</strong> The ability to consistently raise prices on Marlboro provides a powerful offset to volume declines and protects profitability.</li>
+                        <li><strong>High & Growing Dividend:</strong> A cornerstone of the investment case. Altria is committed to its dividend and has a long history of annual increases, offering one of the highest yields in the S&P 500.</li>
+                        <li><strong>Growth in Oral Nicotine:</strong> A significant opportunity to grow its *on!* brand and capture share in the rapidly expanding oral nicotine pouch category.</li>
+                        <li><strong>Defensive Business Model:</strong> The demand for tobacco products is highly inelastic, making Altria's business very resilient to economic downturns.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>U.S. Regulatory Risk:</strong> This is the single greatest risk. The FDA has the authority to enact severely damaging regulations, such as banning menthol cigarettes (a major category for Altria) or mandating reduced nicotine levels in cigarettes.</li>
+                        <li><strong>Secular Decline of Smoking:</strong> The U.S. cigarette market volume declines by 4-5% annually. This is a powerful, irreversible headwind that the company must constantly fight against.</li>
+                        <li><strong>Litigation Risk:</strong> As a tobacco company, Altria faces the perpetual risk of litigation and large financial judgments.</li>
+                        <li><strong>Competition in Smoke-Free:</strong> Altria is currently a distant second to ZYN in the nicotine pouch category, and failing to gain significant share in smoke-free alternatives is a major long-term risk.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Altria Group, Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#1D4ED8',
+            red: '#DC2626',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Smokeable Products', 'Oral Tobacco'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [89, 11], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.red, CHART_COLORS.blue],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [20.8, 21.1, 20.7, 20.5, 20.2], label: 'Revenue Net of Excise ($B)', color: CHART_COLORS.blue },
+            adjOci: { data: [11.7, 12.4, 12.3, 12.5, 12.6], label: 'Adjusted OCI ($B)', color: CHART_COLORS.red },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'Smokeable',
+                        data: [5.2, 5.3, 4.8, 4.9, 5.1, 5.2, 4.7, 4.8],
+                        backgroundColor: CHART_COLORS.red
+                    },
+                    {
+                        label: 'Oral Tobacco',
+                        data: [0.65, 0.66, 0.64, 0.68, 0.70, 0.71, 0.68, 0.72],
+                        backgroundColor: CHART_COLORS.blue
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createYearlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Revenue by Segment ($B)' } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue');
+
+    </script>
+</body>
+</html>
+

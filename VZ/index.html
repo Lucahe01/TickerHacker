@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verizon Communications (VZ) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #DC2626; /* red-600 - Verizon Red */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #1F2937; /* gray-800 - Verizon Black */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #DC2626; /* red-600 */
+            color: #FFFFFF;
+            border-color: #B91C1C; /* red-700 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #DC2626; /* red-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #DC2626;">Verizon (VZ) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Verizon: America's Network Leader</h2>
+            <p class="content-text mb-6">Verizon Communications Inc. is a titan of the U.S. telecommunications industry, providing essential wireless and wireline services to tens of millions of consumers and businesses. The company's identity and market position are built on the foundation of operating what is widely regarded as the nation's most reliable and highest-quality wireless network. Verizon's business is divided into two major segments: a massive Consumer division and a comprehensive Business division. Facing a mature and intensely competitive market, Verizon's strategy is focused on leveraging its network superiority to attract and retain high-value customers, expanding its 5G and fiber broadband services, and driving significant cost efficiencies across the organization. This analysis explores Verizon's powerful business model, its financial profile, and its strategic position in the 5G era.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Verizon's strategy is built on a few key pillars:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Network as a Service (NaaS):</strong> Position its best-in-class 5G and fiber networks as the premier platform for consumers and businesses, driving growth in mobility and broadband.</li>
+                        <li><strong class="font-semibold text-gray-700">Grow the Core:</strong> Focus on four key areas: winning in 5G, growing the home broadband market through Fios and 5G Home, expanding value-added services, and growing its B2B private network business.</li>
+                        <li><strong class="font-semibold text-gray-700">Cost Efficiency:</strong> Executing on a multi-year, multi-billion dollar cost-reduction program to improve profitability and fund network investments.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Capital Allocation:</strong> Maintaining a strong balance sheet and returning significant value to shareholders through a reliable and substantial dividend.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-red-50 border-red-200">
+                    <p class="kpi-label">Total Wireless Subscribers</p>
+                    <p class="kpi-value text-red-600">144.3 Million</p>
+                    <p class="content-text text-sm mt-2">Represents the total number of retail connections on its network, the foundation of its recurring revenue base.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Verizon Makes Money: Consumer & Business</h2>
+            <p class="content-text mb-6">Verizon's revenue is generated by two major segments. The **Consumer** segment is the larger of the two, providing wireless and wireline services to the general public. The **Business** segment offers a similar suite of services, plus advanced solutions, to companies and government entities. Both segments are powered by Verizon's single, high-quality network infrastructure.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="consumer">Verizon Consumer</button>
+                    <button class="segment-tab-button" data-target="business">Verizon Business</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="consumerContent" class="segment-content">
+                    <h3 class="subsection-title">Verizon Consumer</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The Consumer segment is the primary driver of Verizon's revenue and profitability, representing nearly 75% of total revenue. It provides wireless services under the Verizon brand and wireline services including Fios fiber optic internet and video. The key to this segment is attracting and retaining high-value <span class="highlight">postpaid</span> phone customers, who generate stable, recurring monthly revenue.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Wireless:</strong> Postpaid and prepaid mobile phone plans, device sales, and fixed wireless access (FWA) home internet (5G Home).</li>
+                                <li><strong>Wireline:</strong> Fios fiber optic broadband internet, video, and traditional voice services.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="businessContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Verizon Business</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Business segment provides a comprehensive suite of communication services to companies of all sizes, from small businesses to the world's largest multinational corporations and public sector agencies. In addition to core wireless and wireline connectivity, this segment offers advanced solutions like private 5G networks, IoT (Internet of Things) connectivity, and security services.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Mobility:</strong> Wireless plans and connectivity for business devices.</li>
+                                <li><strong>Broadband & Strategic Services:</strong> High-speed data services, including Fios and 5G fixed wireless, as well as networking, security, and cloud connectivity solutions.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-red-50 border-red-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Q1 2025 Broadband Net Additions</p>
+                            <p class="kpi-value text-red-600">389,000</p>
+                            <p class="content-text text-sm mt-2">A key growth metric, driven by strong demand for Fios and 5G Home internet products across both segments.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Verizon's financial profile is characteristic of a mature, capital-intensive industry leader: stable revenues, substantial cash flows, but facing pressures on growth and profitability due to competition and high investment needs. The company's ability to generate massive cash flow is critical for funding its network build-out, servicing its large debt load, and paying its significant dividend. Explore key financial trends below.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="opCashFlow">Cash from Operations ($B)</option>
+                            <option value="capitalExpenditures">Capital Expenditures ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">Financial trends show relatively flat revenue growth, indicative of a mature market. High capital expenditures are a consistent feature as Verizon invests heavily in its 5G and fiber networks to maintain its competitive edge.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Network Fortress</h2>
+            <p class="content-text mb-6">Verizon's competitive moat is wide, built upon the immense cost and complexity of its national wireless and wireline networks. This moat is further fortified by its premium brand reputation and a massive, entrenched customer base, creating significant barriers to entry and a durable market position.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High-Quality Network & Scale:</strong> Operating a top-tier national wireless network requires tens of billions in annual capital investment and access to licensed spectrum. This massive scale and capital intensity create an enormous barrier to entry that effectively limits the market to a few large players.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Brand Reputation for Reliability:</strong> For years, Verizon has successfully cultivated a brand image centered on being the most reliable network. This allows it to attract and retain high-value customers who are willing to pay a premium for performance and are less likely to switch carriers.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Switching Costs:</strong> While lower than in the past, switching costs still exist for customers. The hassle of changing carriers, porting numbers, and potential loss of bundled discounts can deter customers from leaving, leading to a sticky subscriber base.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-gray-700 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">AT&T:</strong> A direct and powerful competitor operating a similar high-quality wireless and fiber network, serving both consumers and businesses.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-gray-700 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">T-Mobile:</strong> A highly aggressive competitor that has emerged as a major force following its merger with Sprint, often competing on price and 5G network coverage breadth.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-gray-700 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Cable Companies:</strong> Cable providers like Comcast (Xfinity Mobile) and Charter (Spectrum Mobile) have become significant competitors by leveraging their broadband networks to offer mobile services as Mobile Virtual Network Operators (MVNOs).</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Verizon's future is a battle for growth in a mature industry. The investment case hinges on its ability to leverage its premium network to win in 5G and broadband, while managing its substantial debt load and fending off intense competition. For investors, the appeal often lies in its defensive characteristics and high dividend yield.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>5G and Broadband Growth:</strong> Significant opportunity to grow its customer base and revenue through its Fixed Wireless Access (FWA) home and business internet offerings.</li>
+                        <li><strong>Premium Brand Positioning:</strong> Its reputation for network quality allows it to command premium pricing and attract the most profitable customer segments.</li>
+                        <li><strong>High Dividend Yield:</strong> Verizon offers a substantial dividend yield, providing a significant source of total return for investors, supported by strong free cash flow.</li>
+                        <li><strong>Cost Discipline:</strong> Successful execution of its cost-saving programs could lead to improved margins and profitability.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Intense Competition:</strong> The U.S. wireless market is a fierce three-player battle for a limited pool of customers, leading to constant promotional activity and pressure on pricing.</li>
+                        <li><strong>High Capital Intensity:</strong> Maintaining network leadership requires enormous, continuous capital expenditures ($17-18 billion annually) to build out 5G and fiber infrastructure.</li>
+                        <li><strong>Large Debt Burden:</strong> Verizon carries a very large debt load, which reduces financial flexibility and increases sensitivity to rising interest rates.</li>
+                        <li><strong>Mature Market:</strong> The U.S. wireless market is largely saturated, meaning growth must come from taking share from competitors or increasing revenue per customer, both of which are challenging.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Verizon Communications Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            red: '#DC2626',
+            black: '#1F2937',
+            sky: '#38BDF8',
+            amber: '#F59E0B',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Consumer', 'Business'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [74, 26], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.red, CHART_COLORS.black],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [128.3, 133.6, 136.8, 134.0, 134.8], label: 'Total Revenue ($B)', color: CHART_COLORS.red },
+            operatingIncome: { data: [28.8, 31.4, 29.8, 28.7, 29.5], label: 'Operating Income ($B)', color: CHART_COLORS.black },
+            opCashFlow: { data: [41.8, 39.5, 35.7, 34.1, 35.2], label: 'Cash from Operations ($B)', color: CHART_COLORS.sky },
+            capitalExpenditures: { data: [17.9, 18.2, 23.1, 18.8, 17.5], label: 'Capital Expenditures ($B)', color: CHART_COLORS.gray }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            netRevenue: { data: [32.6, 33.3, 35.1, 33.0, 32.8, 33.5, 35.5, 33.3], label: 'Total Revenue ($B)', color: CHART_COLORS.red },
+            operatingIncome: { data: [7.2, 7.5, 6.4, 7.3, 7.3, 7.6, 6.6, 7.4], label: 'Operating Income ($B)', color: CHART_COLORS.black }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'netRevenue');
+
+    </script>
+</body>
+</html>
+

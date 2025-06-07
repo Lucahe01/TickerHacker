@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FedEx Corporation (FDX) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #4D148C; /* FedEx Purple */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #FF6600; /* FedEx Orange */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #4D148C; /* FedEx Purple */
+            color: #FFFFFF;
+            border-color: #3B0D6D; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #4D148C; /* FedEx Purple */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #4D148C;">FedEx Corp. (FDX) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-800" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">FedEx: A Global Logistics Titan in Transformation</h2>
+            <p class="content-text mb-6">FedEx Corporation is a global leader in transportation, e-commerce, and business services, built on a pioneering air-ground express network. For decades, FedEx operated as a portfolio of distinct companies—Express, Ground, Freight—each with its own network. Today, the company is in the midst of its most significant transformation ever. Through its "DRIVE" and "One FedEx" initiatives, it is collapsing its separate networks into a single, integrated air-ground system. The goal is to dramatically improve efficiency, lower costs, and enhance margins. This analysis explores FedEx's powerful business segments, its financial performance, and the massive opportunities and risks presented by its historic transformation.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: "One FedEx" Transformation</h3>
+                    <p class="content-text mb-4">FedEx's strategy is centered on integration and efficiency:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Network 2.0 (One FedEx):</strong> The primary focus is integrating the historically separate Express and Ground networks to reduce redundant routes, optimize sorting facilities, and lower the overall cost to serve each package.</li>
+                        <li><strong class="font-semibold text-gray-700">DRIVE Program:</strong> A comprehensive cost-reduction initiative aimed at generating over $4 billion in permanent cost savings by fiscal 2025 through structural changes.</li>
+                        <li><strong class="font-semibold text-gray-700">Improve Profitability & Returns:</strong> Shift the focus from top-line growth to sustainable margin improvement and higher returns on invested capital.</li>
+                        <li><strong class="font-semibold text-gray-700">Shareholder Returns:</strong> A commitment to returning cash to shareholders through a growing dividend and a significant share repurchase program.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-purple-50 border-purple-200">
+                    <p class="kpi-label">"DRIVE" Program Target</p>
+                    <p class="kpi-value text-purple-800">$4 Billion+</p>
+                    <p class="content-text text-sm mt-2">Represents permanent cost savings expected by the end of fiscal 2025, crucial for funding the transformation and improving margins.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How FedEx Makes Money: The Operating Segments</h2>
+            <p class="content-text mb-6">FedEx's operations are divided into three primary transportation segments, each a leader in its respective market. Historically operated as independent networks, the "One FedEx" strategy is now integrating them. Understanding these distinct segments is key to understanding the complexity and potential of this transformation.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="express">FedEx Express</button>
+                    <button class="segment-tab-button" data-target="ground">FedEx Ground</button>
+                    <button class="segment-tab-button" data-target="freight">FedEx Freight</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="expressContent" class="segment-content">
+                    <h3 class="subsection-title">FedEx Express</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The world's largest express transportation company, offering time-definite delivery to more than 220 countries. This segment operates a massive fleet of aircraft and is the backbone of FedEx's global reach. It specializes in high-priority shipments, including documents, packages, and airfreight. Its profitability is sensitive to global trade volumes and fuel costs, and its high-margin document business is in secular decline.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="groundContent" class="segment-content hidden">
+                    <h3 class="subsection-title">FedEx Ground</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">A leader in North American small-package ground delivery, primarily serving the e-commerce market for business-to-business (B2B) and business-to-consumer (B2C) shipments. This segment has historically operated with a lower-cost model using independent contractors. The integration of Ground's density with Express's reach is the core of the "One FedEx" strategy, aiming to create a more efficient, unified network.</p>
+                        </div>
+                        <div class="kpi-card bg-purple-50 border-purple-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Network Integration</p>
+                            <p class="kpi-value text-purple-800 text-base">The Core of the Thesis</p>
+                            <p class="content-text text-sm mt-2">Successfully combining the separate Express and Ground networks is the single most important variable for FedEx's future profitability.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="freightContent" class="segment-content hidden">
+                    <h3 class="subsection-title">FedEx Freight</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">A leading North American provider of less-than-truckload (LTL) freight services. LTL involves consolidating smaller freight shipments from multiple customers onto a single truck for transit. This segment is highly profitable and is a market leader in service quality and on-time performance. It is less integrated into the "One FedEx" plan but remains a significant contributor to overall profit.</p>
+                        </div>
+                        <div class="kpi-card bg-purple-50 border-purple-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Freight Operating Margin (FY2024)</p>
+                            <p class="kpi-value text-purple-800">16.1%</p>
+                            <p class="content-text text-sm mt-2">A highly profitable segment that provides strong cash flow, supporting the broader corporate transformation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">FedEx's financials reflect a period of significant change. After a surge in volume and revenue during the pandemic, the company is now navigating a softer demand environment while undertaking its massive cost-cutting and network integration initiatives. The primary goal is to drive significant, sustainable improvement in operating margins and returns on investment. Explore key financial trends below.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2025E)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-purple-800 focus:border-purple-800">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-purple-800 focus:border-purple-800">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show revenues normalizing from their 2022 peak. The key focus for investors is the trend in operating income and margins as the DRIVE and One FedEx initiatives take hold.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Global Network</h2>
+            <p class="content-text mb-6">FedEx's competitive moat is wide, built on a global transportation network that is incredibly complex and expensive to replicate. Its brand, scale, and technological infrastructure create durable advantages and significant barriers to entry for potential competitors.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-purple-800 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Vast Physical Network:</strong> FedEx's global system of aircraft, vehicles, automated hubs, and retail locations represents a massive physical asset base that is a primary barrier to entry for any company wanting to compete at a global scale.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-800 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Economies of Scale:</strong> The immense volume of packages and freight that FedEx handles daily allows it to achieve significant cost advantages in areas like aircraft utilization, fuel purchasing, and overhead absorption.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-800 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Brand Reputation:</strong> The FedEx brand is globally recognized and stands for speed and reliability. For many businesses, particularly those with time-sensitive or high-value shipments, this trust is a critical purchasing factor.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">UPS:</strong> The most direct and powerful competitor, operating a similar global integrated network. The competition with UPS is intense across all service levels, particularly in the U.S. domestic market.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Amazon Logistics:</strong> A major disruptive force. Amazon has transitioned from being FedEx's largest customer to one of its most significant competitors by building its own end-to-end logistics network.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">National & Regional Carriers:</strong> Competes with national postal services like the USPS for last-mile delivery and a host of regional LTL and parcel carriers (e.g., Old Dominion, XPO) in the freight and ground markets.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for FedEx hinges almost entirely on its ability to successfully execute the most significant operational and cultural transformation in its history. If successful, the company could emerge as a much more efficient and profitable enterprise. However, the path is fraught with significant execution risk.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Successful "One FedEx" Integration:</strong> The potential to unlock billions in cost synergies and create a more efficient, competitive network is the single largest opportunity for value creation.</li>
+                        <li><strong>Margin Expansion:</strong> The combination of the DRIVE cost-saving program and network synergies could lead to a significant and sustainable improvement in operating margins.</li>
+                        <li><strong>Cyclical Recovery:</strong> As a highly cyclical business, FedEx would be a major beneficiary of an improvement in global economic conditions and a rebound in freight demand.</li>
+                        <li><strong>Strong Shareholder Returns:</strong> The company is actively returning capital to shareholders through significant buybacks and a competitive, growing dividend.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Execution Risk:</strong> The "One FedEx" network integration is an incredibly complex undertaking. The risk of operational disruptions, culture clashes, and failing to achieve the targeted cost savings is very high.</li>
+                        <li><strong>Economic Sensitivity:</strong> The business is highly leveraged to global economic cycles. A recession would lead to lower volumes and significant pressure on revenue and profits.</li>
+                        <li><strong>Intense Competition:</strong> The logistics industry is fiercely competitive. Pressure from UPS's highly efficient network and Amazon's continued encroachment remains a major challenge.</li>
+                        <li><strong>Secular Headwinds:</strong> The long-term decline of the high-margin document delivery business continues to be a drag on the profitable Express segment.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from FedEx Corporation public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            purple: '#4D148C',
+            orange: '#FF6600',
+            sky: '#38BDF8',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Express', 'Ground', 'Freight'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [47, 43, 10], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.purple, CHART_COLORS.orange, CHART_COLORS.sky],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25E'],
+            netRevenue: { data: [84.0, 93.5, 90.2, 87.7, 88.6], label: 'Total Revenue ($B)', color: CHART_COLORS.purple },
+            operatingIncome: { data: [5.9, 8.2, 6.3, 5.4, 6.9], label: 'Operating Income ($B)', color: CHART_COLORS.orange },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25'],
+            netRevenue: { data: [21.9, 21.7, 22.2, 21.7, 22.1, 22.0, 22.5, 22.0], label: 'Total Revenue ($B)', color: CHART_COLORS.purple },
+            operatingIncome: { data: [1.8, 1.2, 1.2, 1.2, 2.5, 1.4, 1.5, 1.6], label: 'Operating Income ($B)', color: CHART_COLORS.orange }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'netRevenue');
+
+    </script>
+</body>
+</html>
+

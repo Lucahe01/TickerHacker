@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Nordisk (NVO) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #4ADE80; /* NVDA Green */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #22C55E; /* NVDA Darker Green */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight { /* Kept orange for general highlights, as NVDA page did */
+            color: #F97316; 
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #4ADE80; /* NVDA Green */
+            color: #FFFFFF;
+            border-color: #22C55E; /* NVDA Darker Green */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #4ADE80; /* NVDA Green */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F0FDF4; /* NVDA Green-50 */
+            border: 1px solid #A7F3D0; /* NVDA Green-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #15803D; /* NVDA Green-700 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #22C55E;">Novo Nordisk (NVO) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Therapeutic Areas</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Moat & Risks</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Therapeutic Areas</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Moat & Risks</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Novo Nordisk: At the Epicenter of the GLP-1 Revolution</h2>
+            <p class="content-text mb-6">Novo Nordisk is a Danish global healthcare company with over a century of innovation in diabetes care. Today, the company has transformed into the dominant force in the GLP-1 receptor agonist market, a class of drugs that has revolutionized the treatment of both type 2 diabetes and obesity. The immense success of its semaglutide franchise—marketed as Ozempic for diabetes and Wegovy for weight management—has fueled a period of explosive growth, making Novo Nordisk one of the most valuable companies in the world. This analysis explores its highly focused business model, powerful financial performance, and the strategic race to dominate the future of metabolic medicine.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Novo Nordisk's strategy is centered on leadership in its core therapeutic areas:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Dominate the GLP-1 Market:</strong> Focusing R&D on developing and expanding the use of its GLP-1 drugs for diabetes, obesity, and related cardiometabolic conditions.</li>
+                        <li><strong class="font-semibold text-gray-700">Prove Broader Health Outcomes:</strong> Conducting large-scale clinical trials (like the SELECT study) to demonstrate that its medicines reduce cardiovascular events, thereby securing broader reimbursement and establishing them as essential therapies.</li>
+                        <li><strong class="font-semibold text-gray-700">Aggressive Manufacturing Expansion:</strong> Investing billions to acquire and build new manufacturing facilities to overcome supply constraints and meet the unprecedented global demand for Ozempic and Wegovy.</li>
+                        <li><strong class="font-semibold text-gray-700">Innovation in New Formulations:</strong> Developing next-generation treatments, including oral versions and combination therapies (like CagriSema), to extend its leadership and fend off competitors.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Wegovy Sales Growth (Q1 2025, YoY)</p>
+                    <p class="kpi-value">+107%</p>
+                    <p class="content-text text-sm mt-2">The staggering growth of the company's anti-obesity medicine highlights the immense, untapped demand in the chronic weight management market.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">Therapeutic Areas of Focus</h2>
+            <p class="content-text mb-6">Novo Nordisk's operations are divided into two main segments: Diabetes and Obesity Care, which is the company's primary growth engine and represents over 90% of revenue, and Rare Disease, which provides stable, albeit smaller, revenue streams. The company's fortunes are overwhelmingly tied to the success of the first segment.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-2 md:space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="diabetes">Diabetes & Obesity Care</button>
+                    <button class="segment-tab-button" data-target="rare">Rare Disease</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="diabetesContent" class="segment-content">
+                    <h3 class="subsection-title">Diabetes & Obesity Care (93% of Q1 2025 Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                        <div>
+                            <p class="content-text mb-2">This segment is the powerhouse of Novo Nordisk, with sales up <span class="highlight">25%</span> in Q1 2025. It is driven by the phenomenal success of its GLP-1 franchise.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Ozempic (semaglutide):</strong> The flagship product for type 2 diabetes. Its strong efficacy and cardiovascular benefits have made it a market leader, with sales up 35% in Q1.</li>
+                                <li><strong>Wegovy (semaglutide):</strong> The same molecule as Ozempic, but approved for chronic weight management. It faces massive demand that currently outstrips supply.</li>
+                                <li><strong>Rybelsus:</strong> An oral version of semaglutide, providing a convenient alternative to injectables for type 2 diabetes patients.</li>
+                                <li><strong>Insulins:</strong> The company's legacy portfolio of insulin products.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentRevenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="rareContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Rare Disease (7% of Q1 2025 Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                         <div>
+                            <p class="content-text mb-2">This segment provides important therapies for patients with serious chronic diseases outside of diabetes. While a much smaller part of the company, it offers diversification. Sales in this segment declined by 3% in Q1 2025.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Areas:</strong> The portfolio includes treatments for rare blood disorders such as haemophilia and rare endocrine disorders like growth hormone deficiency.</li>
+                            </ul>
+                        </div>
+                        <div class="content-text p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-700">A Stable Foundation</h4>
+                            <p>While the Rare Disease segment is not a growth driver, it provides a stable and profitable revenue base. The specialized nature of these markets often involves less competition compared to primary care areas, providing a durable, albeit smaller, business for the company.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive: Riding the GLP-1 Wave</h2>
+            <p class="content-text mb-6">Novo Nordisk's financial performance has been extraordinary, showcasing a dramatic acceleration in growth powered by the GLP-1 franchise. The charts below illustrate this incredible trajectory, highlighting the overall revenue surge and the outsized contribution from Ozempic and Wegovy, which now represent the vast majority of the company's growth.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                            <option value="totalRevenue" selected>Total Revenue (DKK B)</option>
+                            <option value="operatingProfit">Operating Profit (DKK B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Key Product Sales (Q1 2025)</h3>
+                     <p class="content-text text-sm mb-4">This chart shows the immense and growing scale of the two flagship products, Ozempic and Wegovy, which are driving the company's success.</p>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">The GLP-1 Battleground & Strategic Moats</h2>
+            <p class="content-text mb-6">Novo Nordisk's primary competitive advantage is its leadership position and intellectual property in the GLP-1 drug class. However, this has placed it in a head-to-head battle with its largest rival and exposed it to intense global scrutiny over pricing and supply.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Intellectual Property:</strong> A robust patent portfolio protecting semaglutide (Ozempic/Wegovy) and other molecules provides years of market exclusivity, which is the lifeblood of a research-based pharmaceutical company.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">First-Mover Advantage & Brand:</strong> Being one of the first and most effective entrants in the modern obesity treatment market has created powerful brand recognition for Ozempic and Wegovy among both doctors and patients.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Manufacturing Expertise:</strong> While currently a bottleneck, the company's deep experience in manufacturing complex injectable biologic drugs at scale is a significant long-term competitive advantage and barrier to entry.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Risks & Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Head-to-Head Competition:</strong> The primary competitor is Eli Lilly, whose drugs Mounjaro and Zepbound have shown superior weight loss in clinical trials, leading to an intense battle for market share.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Supply Chain & Manufacturing Constraints:</strong> The inability to produce enough Ozempic and Wegovy to meet global demand is the company's biggest immediate challenge, forcing it to limit new patient starts in some cases.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Global Pricing Pressure:</strong> The high list prices of Wegovy and Ozempic have drawn criticism and pressure from governments and insurers worldwide, which could cap the drugs' long-term revenue potential.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Pipeline Competition:</strong> A host of other large and small pharmaceutical companies are developing their own obesity and diabetes drugs, which could erode Novo Nordisk's market share in the future.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Novo Nordisk is at a historic juncture, leading a paradigm shift in the treatment of chronic diseases. Its future success will depend on its ability to win the market share battle in the GLP-1 space, successfully scale its manufacturing operations, and continue to innovate to stay ahead of a growing field of competitors.</p>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>The Global Obesity Market:</strong> The potential market for effective anti-obesity medications is enormous, estimated to be one of the largest therapeutic areas in medicine.</li>
+                        <li><strong>Cardiovascular Risk Reduction:</strong> Proving that Wegovy is a cardiovascular drug, not just a weight-loss drug, fundamentally expands its value proposition and potential for reimbursement.</li>
+                        <li><strong>Next-Generation Pipeline:</strong> Development of new combination drugs (like CagriSema) and oral formulations could help protect the franchise from future competition.</li>
+                        <li><strong>Expansion into New Diseases:</strong> Research into the use of GLP-1 drugs for other conditions like MASH (a liver disease) and Alzheimer's could open up entirely new markets.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Losing Market Share to Lilly:</strong> The primary risk is that Eli Lilly's tirzepatide, with its superior clinical trial data, captures the majority of new patients in both diabetes and obesity.</li>
+                        <li><strong>Failure to Scale Production:</strong> If manufacturing investments fail to keep pace with demand, the company will miss out on a historic revenue opportunity.</li>
+                        <li><strong>Price Controls:</strong> Government intervention to control the prices of these widely used drugs could significantly reduce their long-term profitability.</li>
+                        <li><strong>Long-Term Safety Concerns:</strong> As millions of patients use these drugs for long durations, the emergence of any unexpected long-term side effects could have a major negative impact.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Novo Nordisk A/S public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) { mobileMenuBtn.click(); }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+        
+        // --- CHARTS ---
+        // NVDA-style green theme
+        const CHART_COLORS_NVO = {
+            green: '#4ADE80', // Main green
+            darkGreen: '#22C55E', // Darker green
+            lightGreen: '#86EFAC', // Lighter green
+            teal: '#5EEAD4', // Teal from NVDA example
+            orange: '#FDBA74', // Orange from NVDA example
+            gray: '#6B7280'
+        };
+
+        // Segment Revenue Pie Chart
+        const segmentRevenueCtx = document.getElementById('segmentRevenueChart').getContext('2d');
+        new Chart(segmentRevenueCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Diabetes & Obesity Care', 'Rare Disease'],
+                datasets: [{
+                    data: [60.8, 4.5], // Q1 2025 Data in DKK Billions
+                    backgroundColor: [CHART_COLORS_NVO.green, CHART_COLORS_NVO.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue Contribution by Segment (Q1 2025)' } }
+            }
+        });
+
+        // Yearly Data Store (NVO)
+        const yearlyDataStoreNVO = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [177.0, 232.3, 295.1], label: 'Total Revenue (DKK B)', color: CHART_COLORS_NVO.green },
+            operatingProfit: { data: [74.8, 102.6, 140.5], label: 'Operating Profit (DKK B)', color: CHART_COLORS_NVO.darkGreen } // Illustrative based on growth
+        };
+
+        let yearlyChartNVO = null;
+        const yearlySelectNVO = document.getElementById('yearlyMetricSelect');
+        const yearlyCanvasNVO = document.getElementById('yearlyFinancialChart').getContext('2d');
+
+        function createYearlyChartNVO(metricKey) {
+            if (yearlyChartNVO) {
+                yearlyChartNVO.destroy();
+            }
+            const metricDetails = yearlyDataStoreNVO[metricKey];
+            yearlyChartNVO = new Chart(yearlyCanvasNVO, {
+                type: 'bar',
+                data: {
+                    labels: yearlyDataStoreNVO.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF', // with opacity
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelectNVO.addEventListener('change', (event) => {
+            createYearlyChartNVO(event.target.value);
+        });
+        createYearlyChartNVO('totalRevenue'); // Initial render
+
+        // Quarterly Key Product Sales Chart
+        const quarterlyCanvasNVO = document.getElementById('quarterlyFinancialChart').getContext('2d');
+        new Chart(quarterlyCanvasNVO, {
+            type: 'bar',
+            data: {
+                labels: ['Ozempic', 'Wegovy'],
+                datasets: [{
+                    label: 'Sales (DKK B)',
+                    data: [27.8, 9.4], // Q1 2025 Sales Data
+                    backgroundColor: [CHART_COLORS_NVO.darkGreen, CHART_COLORS_NVO.lightGreen],
+                }]
+            },
+             options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, title: { display: true, text: 'DKK (Billions)' } }
+                 }
+            }
+        });
+
+    </script>
+</body>
+</html>
+

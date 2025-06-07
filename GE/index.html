@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GE Aerospace (GE) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #2563EB; /* blue-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #2563EB; /* blue-600 */
+            color: #FFFFFF;
+            border-color: #1D4ED8; /* blue-700 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #2563EB; /* blue-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #2563EB;">GE Aerospace (GE) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">GE Aerospace: A New, Focused Aviation Leader</h2>
+            <p class="content-text mb-6">Following the historic spin-offs of its healthcare (GE HealthCare) and energy (GE Vernova) divisions, the new General Electric is GE Aerospace—a pure-play global leader in aviation propulsion, services, and systems. The company's business model is centered on its massive installed base of commercial and military jet engines. The initial sale of an engine is just the beginning of a multi-decade relationship, with a significant portion of profits generated from a long tail of high-margin aftermarket services, including spare parts and repairs. This analysis explores the powerful "razor-and-blade" business model, financial profile, and strategic outlook for the newly focused GE Aerospace.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy ("FLIGHT DECK")</h3>
+                    <p class="content-text mb-4">GE Aerospace has a clear capital allocation framework:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Reinvest for Growth:</strong> Aggressively invest in research & development for next-generation technologies like the CFM RISE program and hybrid-electric propulsion.</li>
+                        <li><strong class="font-semibold text-gray-700">Shareholder Returns:</strong> Committed to returning approximately 70-75% of available funds to shareholders through a growing dividend and share repurchases.</li>
+                        <li><strong class="font-semibold text-gray-700">Strengthen the Balance Sheet:</strong> Maintain a strong, investment-grade balance sheet to provide financial flexibility and resilience.</li>
+                         <li><strong class="font-semibold text-gray-700">Strategic M&A:</strong> Opportunistically pursue value-creating acquisitions that complement its existing portfolio.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Total Engine Installed Base</p>
+                    <p class="kpi-value text-blue-600">~74,000</p>
+                    <p class="content-text text-sm mt-2">Includes over 44,000 commercial engines and 30,000 military engines, forming the foundation of its high-margin services business.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How GE Aerospace Makes Money: Commercial & Defense</h2>
+            <p class="content-text mb-6">GE Aerospace's operations are divided into two synergistic segments. The **Commercial Engines & Services** segment, the primary revenue and profit driver, powers the global airline industry. The **Defense & Propulsion** segment provides critical technology for military applications, offering diversification and stable, government-backed revenue streams.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="commercial">Commercial Engines & Services</button>
+                    <button class="segment-tab-button" data-target="defense">Defense & Propulsion</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="commercialContent" class="segment-content">
+                    <h3 class="subsection-title">Commercial Engines & Services</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This segment is the powerhouse of GE Aerospace, representing about 80% of total revenue. It designs, produces, and sells jet engines for major airframers like Boeing and Airbus. However, the real profit engine is the <span class="highlight">services</span> business. After selling an engine, GE provides spare parts, maintenance, and repair services for its 44,000+ engine fleet over a 20-30 year lifespan, creating a highly profitable, recurring revenue stream.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> GEnx (for Boeing 787/747), GE9X (Boeing 777X), and the CFM LEAP engine (for Airbus A320neo/Boeing 737 MAX) through its 50/50 joint venture with Safran.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="defenseContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Defense & Propulsion</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Defense & Propulsion segment develops and manufactures engines and systems for a wide variety of military aircraft and naval vessels. This business provides stable, long-term revenue backed by government contracts. It benefits from global defense spending trends and the need for advanced military technology.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Applications:</strong> Fighter jets (e.g., F-15, F-16), bombers (B-1, B-2), helicopters (CH-53K), and U.S. Navy ships.</li>
+                                <li><strong>Growth Drivers:</strong> Ongoing development of next-generation engines like the XA100 for adaptive cycle military jets.</li>
+                                <li><strong>Installed Base:</strong> A massive fleet of over 30,000 military engines provides a stable services revenue stream, similar to the commercial business.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Total Backlog</p>
+                            <p class="kpi-value text-blue-600">$340+ Billion</p>
+                            <p class="content-text text-sm mt-2">A massive backlog of engine and service orders provides excellent visibility into future revenue streams.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">As a newly focused company, GE Aerospace's financials reflect its strong position in the recovering aviation market. The business is characterized by strong revenue growth, expanding profit margins, and robust free cash flow generation. The pro-forma data below presents GE Aerospace's performance as if it were a standalone company in prior years, providing a clear view of its trajectory.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (Pro-Forma)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="revenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingProfit">Operating Profit ($B)</option>
+                            <option value="freeCashFlow">Free Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="revenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingProfit">Operating Profit ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show strong growth in revenue and profitability, driven by the robust recovery in commercial air travel and high demand for aftermarket services.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Fortified Duopoly</h2>
+            <p class="content-text mb-6">GE Aerospace possesses an exceptionally wide and durable competitive moat. The commercial jet engine market is a duopoly shared with Raytheon's Pratt & Whitney, and the barriers to entry are immense. This structure, combined with GE's massive installed base, creates a powerful and highly profitable business model.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Installed Base & Switching Costs (Razor/Blade Model):</strong> With ~74,000 engines in service, GE has a captive market for its high-margin aftermarket services. Once an airline selects a GE engine for an aircraft, it is locked into that platform for decades, making switching costs prohibitively high.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Barriers to Entry:</strong> The jet engine industry requires staggering amounts of capital for R&D, decades of technological expertise, and rigorous regulatory certification. The risk of failure is immense, which deters new entrants and solidifies the existing duopoly.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technological Leadership:</strong> GE invests billions in R&D, creating a deep portfolio of patents and proprietary technologies that are critical for engine performance, fuel efficiency, and safety.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Raytheon Technologies (Pratt & Whitney):</strong> The primary competitor in the duopoly for large commercial jet engines.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Rolls-Royce:</strong> A key competitor, particularly in the market for wide-body aircraft engines.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Safran S.A.:</strong> A major player and GE's 50/50 partner in the highly successful CFM International joint venture, which produces the LEAP and CFM56 engines. They are both partner and competitor.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">As a leaner, more focused company, GE Aerospace is poised to capitalize on the long-term secular growth in global aviation. Its future success will depend on navigating persistent supply chain challenges, managing its relationship with key customers, and continuing to innovate for a more sustainable future of flight.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Secular Growth in Air Travel:</strong> The long-term global demand for air travel, particularly in emerging markets, provides a powerful tailwind for both new engine sales and services.</li>
+                        <li><strong>High-Margin Aftermarket Growth:</strong> As the fleet of new-generation engines like the LEAP matures, it will enter its most profitable period for shop visits and services, driving margin expansion.</li>
+                        <li><strong>Focused Pure-Play:</strong> As a standalone aerospace company, management can now focus exclusively on its core competencies, driving operational efficiency and innovation in flight.</li>
+                        <li><strong>Next-Generation Technology:</strong> Leadership in developing next-gen sustainable aviation technologies (like CFM RISE) positions GE to win the next cycle of aircraft orders.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Supply Chain Constraints:</strong> Persistent shortages of raw materials and skilled labor across the aerospace industry can limit production rates and delay deliveries.</li>
+                        <li><strong>Customer Concentration:</strong> Heavy reliance on Boeing and Airbus means that any production issues, program delays, or order cancellations from these two customers can have a significant negative impact.</li>
+                        <li><strong>Geopolitical & Macroeconomic Risks:</strong> Global conflicts, trade tensions, and economic recessions can disrupt air travel demand and impact government defense spending priorities.</li>
+                        <li><strong>Execution on New Technologies:</strong> The transition to more sustainable aviation technologies will require immense investment and carries significant technical and execution risk.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from GE Aerospace public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#2563EB',
+            sky: '#38BDF8',
+            amber: '#F59E0B',
+            gray: '#4B5563',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Commercial Engines & Services', 'Defense & Propulsion'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [80, 20], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Pro-Forma for GE Aerospace)
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            revenue: { data: [22.04, 26.07, 30.33, 33.41], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingProfit: { data: [1.36, 3.48, 5.60, 6.78], label: 'Operating Profit ($B)', color: CHART_COLORS.sky },
+            freeCashFlow: { data: [2.51, 4.88, 5.17, 5.86], label: 'Free Cash Flow ($B)', color: CHART_COLORS.amber }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            revenue: { data: [7.49, 7.87, 8.52, 8.13, 8.35, 8.61, 8.92, 8.41], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingProfit: { data: [1.38, 1.59, 1.63, 1.51, 1.68, 1.79, 1.87, 1.64], label: 'Operating Profit ($B)', color: CHART_COLORS.sky }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'revenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'revenue');
+
+    </script>
+</body>
+</html>
+

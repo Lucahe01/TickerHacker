@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linde plc (LIN) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #005595; /* Linde Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #00A1DE; /* Lighter Linde Blue */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #005595; /* Linde Blue */
+            color: #FFFFFF;
+            border-color: #004475; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #005595; /* Linde Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #005595;">Linde plc (LIN) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Linde: The Indispensable Industrial Gas Giant</h2>
+            <p class="content-text mb-6">Linde plc is the world's largest industrial gas and engineering company. Its business is deceptively simple yet incredibly powerful: it produces and sells atmospheric gases (like oxygen, nitrogen, and argon) and process gases (like hydrogen and helium) that are essential inputs for a vast array of industries, including chemicals, manufacturing, healthcare, and electronics. Linde's business model is a fortress of stability, built on a foundation of <span class="highlight">long-term, take-or-pay contracts</span> and an unparalleled network of production facilities and pipelines. This analysis explores Linde's highly durable business model, its consistent financial performance, and its strategic position as an enabler of both today's industrial economy and tomorrow's clean energy transition.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Linde's strategy is focused on operational excellence and disciplined growth:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Maximize Network Density:</strong> Continuously optimize its production and distribution network to be the most efficient, lowest-cost supplier in its key industrial regions. This is its primary competitive advantage.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Capital Allocation:</strong> Only invest in high-quality projects that meet stringent return thresholds, ensuring that growth is always profitable.</li>
+                        <li><strong class="font-semibold text-gray-700">Grow Resilient End Markets:</strong> Increase exposure to stable and growing end markets like healthcare, electronics, and food & beverage, which are less sensitive to economic cycles.</li>
+                        <li><strong class="font-semibold text-gray-700">Lead the Clean Energy Transition:</strong> Leverage its global leadership in hydrogen production and technology to capitalize on the massive long-term growth opportunity in the hydrogen economy.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Business Model Foundation</p>
+                    <p class="kpi-value text-blue-800">Durable & Stable</p>
+                    <p class="content-text text-sm mt-2">Over 75% of sales are from recurring or defensive end markets, leading to highly predictable and resilient financial results through economic cycles.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Linde Makes Money: Supply Models & Geography</h2>
+            <p class="content-text mb-6">Linde's business model is based on three primary supply methods, each with a different economic profile. The most stable and highest-moat business is **On-Site**, where Linde builds a production plant directly at a customer's facility. **Merchant** involves delivering liquid gas via truck, while **Packaged** gas is sold in cylinders. Operationally, the company reports its results across three geographic segments: Americas, EMEA, and APAC.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="onsite">On-Site & Pipeline</button>
+                    <button class="segment-tab-button" data-target="merchant">Merchant & Packaged</button>
+                    <button class="segment-tab-button" data-target="geo">By Geography</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="onsiteContent" class="segment-content">
+                    <h3 class="subsection-title">On-Site & Pipeline (The Fortress)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the highest-quality part of Linde's business. For very large customers (like refineries or steel mills), Linde builds a gas production plant directly on the customer's site. These are governed by <span class="highlight">15-20 year take-or-pay contracts</span>, meaning the customer must pay for a minimum amount of gas whether they use it or not. This creates an annuity-like stream of highly predictable cash flow and makes it virtually impossible for the customer to switch suppliers.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Contract Type</p>
+                            <p class="kpi-value text-blue-800 text-base">Long-Term Take-or-Pay</p>
+                            <p class="content-text text-sm mt-2">This contract structure is the foundation of Linde's stable, predictable, and high-margin business model.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="merchantContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Merchant & Packaged Gas</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The **Merchant** business involves delivering liquefied industrial gases in cryogenic tanker trucks to a wide range of mid-sized customers. The **Packaged** gas business sells gases in individual cylinders and small tanks through a network of distributors and retail stores, serving smaller customers like welders and hospitals. While more exposed to economic cycles than the on-site business, this is where Linde's network density provides a powerful cost advantage.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Moat</p>
+                            <p class="kpi-value text-blue-800 text-2xl">Network Density</p>
+                            <p class="content-text text-sm mt-2">Having the most production plants and the shortest delivery routes in a region makes Linde the lowest-cost provider, a powerful competitive advantage.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div id="geoContent" class="segment-content hidden">
+                    <h3 class="subsection-title">By Geography</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Linde reports its results across three major geographic regions, each with a balanced mix of end markets and supply models.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-2">
+                               <li><strong>Americas:</strong> The largest segment, with strong positions in the U.S. Gulf Coast industrial corridor.</li>
+                               <li><strong>EMEA (Europe, Middle East & Africa):</strong> A mature and stable region with significant exposure to healthcare.</li>
+                               <li><strong>APAC (Asia-Pacific):</strong> The primary growth region, driven by electronics and manufacturing growth in China and other parts of Asia.</li>
+                           </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Linde's financial performance is a model of stability and consistency. Unlike many industrial companies, its results are not highly cyclical due to the resilient nature of its end markets and the security of its long-term contracts. The company is a cash-flow machine, consistently growing its earnings, margins, and free cash flow, which it then uses to reward shareholders with a growing dividend and substantial share buybacks.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingProfit">Operating Profit ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Revenue ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="segmentRevenue" selected>Revenue by Segment</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show the steady, non-cyclical growth in both revenue and operating profit, demonstrating the resilience of Linde's business model across all its geographic segments.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Industrial Gas Fortress</h2>
+            <p class="content-text mb-6">Linde possesses one of the widest and most durable competitive moats in the industrial world. This advantage is built on the fundamental economics of the industrial gas industry, which favors scale and density, leading to a rational global oligopoly.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Network Density & Cost Advantage:</strong> Industrial gas is a local business; it is expensive to transport. Linde's unmatched density of production assets in key industrial regions means it has the shortest delivery routes, making it the structurally lowest-cost provider. This is a powerful and sustainable advantage.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Switching Costs:</strong> The on-site business model locks customers into 15-20 year take-or-pay contracts. The cost and operational disruption of ripping out a dedicated on-site plant make switching suppliers practically impossible, creating an annuity-like revenue stream.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Rational Oligopoly:</strong> The global industrial gas market is dominated by a few large, rational players (Linde, Air Liquide, Air Products). This leads to disciplined pricing and investment, preventing the kind of value-destroying price wars seen in other industries.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Air Liquide:</strong> A major French-based global competitor with a similar business model and strong positions in Europe and the Americas.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Air Products & Chemicals (APD):</strong> A major U.S.-based competitor, particularly strong in the on-site business and in hydrogen.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Regional Players:</strong> Faces competition from smaller, regional gas companies in specific local markets.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Linde is a bet on a high-quality, wide-moat, compounder that benefits from global industrial growth and the clean energy transition. The rewards come from its highly predictable business model and disciplined capital allocation, while the risks are primarily tied to a severe, global industrial recession.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Durable, Non-Cyclical Growth:</strong> The business model is designed to deliver stable, mid-to-high single-digit earnings growth regardless of the economic environment.</li>
+                        <li><strong>Clean Energy Transition (Hydrogen):</strong> A massive, multi-decade opportunity to be a primary enabler of the hydrogen economy, leveraging its existing leadership in hydrogen production and distribution.</li>
+                        <li><strong>Strong, Predictable Free Cash Flow:</strong> The company is a cash-flow machine, allowing for consistent and significant capital returns to shareholders via a growing dividend and share buybacks.</li>
+                        <li><strong>Growth in Resilient End Markets:</strong> Continued expansion into defensive markets like healthcare and electronics further enhances the stability of its earnings.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Sensitivity to Global Industrial Production:</strong> While resilient, a deep and prolonged global recession would eventually impact volumes and slow growth.</li>
+                        <li><strong>Execution on Large Projects:</strong> The company's growth is partly dependent on successfully executing large, multi-billion dollar on-site and clean energy projects.</li>
+                        <li><strong>Rational Competition:</strong> The moat relies on the continued rational behavior of its few major competitors. Any shift towards aggressive price competition would harm the entire industry's profitability.</li>
+                        <li><strong>High Valuation:</strong> As a high-quality, stable growth company, Linde's stock often trades at a premium valuation, which could limit future returns if growth were to slow.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Linde plc public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#005595',
+            sky: '#00A1DE',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Americas', 'EMEA', 'APAC'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [42, 31, 27], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Geography (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [30.8, 33.4, 32.9, 34.1], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingProfit: { data: [5.2, 5.4, 7.9, 8.8], label: 'Operating Profit ($B)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'Americas',
+                        data: [3.5, 3.6, 3.5, 3.6, 3.7, 3.7, 3.6, 3.8],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                    {
+                        label: 'EMEA',
+                        data: [2.6, 2.5, 2.6, 2.7, 2.6, 2.7, 2.7, 2.8],
+                        backgroundColor: CHART_COLORS.sky
+                    },
+                     {
+                        label: 'APAC',
+                        data: [2.2, 2.3, 2.3, 2.4, 2.4, 2.5, 2.5, 2.6],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createYearlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Revenue by Geography ($B)' } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue');
+
+    </script>
+</body>
+</html>
+

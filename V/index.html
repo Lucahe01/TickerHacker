@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visa Inc. (V) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #1A1F71; /* Visa Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #F7B600; /* Visa Gold */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #1A1F71; /* Visa Blue for highlights */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #1A1F71; /* Visa Blue */
+            color: #FFFFFF;
+            border-color: #141852;
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #1A1F71; /* Visa Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F0F5FF; /* Visa Light Blue tint */
+            border: 1px solid #D6E4FF; /* Visa Light Blue tint */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1A1F71; /* Visa Blue */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #1A1F71;">Visa Inc. (V) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#model" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Moat & Risks</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-700" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#model" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Moat & Risks</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Visa: Enabling Global Digital Commerce</h2>
+            <p class="content-text mb-6">Visa Inc. is a world leader in digital payments, facilitating transactions between consumers, merchants, financial institutions, and government entities across more than 200 countries and territories. Unlike banks, Visa does not issue cards, extend credit, or set rates and fees for account holders. Instead, it operates a highly reliable, scalable, and secure open payments network (VisaNet) that processes billions of transactions annually. Its business model is built on enabling commerce, making money through fees charged for the use of its network and value-added services. This analysis delves into Visa's powerful network effects, its diverse revenue streams, financial performance, and strategic initiatives to drive future growth in an evolving payments landscape.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h3 class="subsection-title !mt-0" style="color: #F7B600;">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Visa's strategy focuses on expanding its network and driving the adoption of digital payments:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Grow Core Business:</strong> Increasing penetration of digital payments in consumer and commercial spending through partnerships with financial institutions, merchants, and fintechs.</li>
+                        <li><strong class="font-semibold text-gray-700">Expand into New Flows:</strong> Capturing new payment volumes beyond traditional consumer-to-business transactions, such as business-to-business (B2B), person-to-person (P2P), and government-to-consumer (G2C) payments.</li>
+                        <li><strong class="font-semibold text-gray-700">Drive Value-Added Services:</strong> Offering a suite of services beyond basic transaction processing, including risk and identity solutions, analytics, and consulting to deepen client relationships and generate incremental revenue.</li>
+                        <li><strong class="font-semibold text-gray-700">Embed Visa in Emerging Technologies:</strong> Ensuring Visa's network is integrated into new payment technologies and commerce experiences, including digital wallets, IoT payments, and potentially central bank digital currencies (CBDCs).</li>
+                    </ul>
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Payments Volume (Q2 FY25)</p>
+                    <p class="kpi-value">$3.95 Trillion</p>
+                    <p class="content-text text-sm mt-2">An <span class="highlight">8% increase</span> year-over-year, reflecting the continued global shift towards digital payments and the scale of Visa's network.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="model" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Visa Makes Money: The Four-Party Model</h2>
+            <p class="content-text mb-6">Visa operates what's known as a "four-party" payments model. This involves the cardholder, the cardholder's bank (issuer), the merchant, and the merchant's bank (acquirer). Visa sits in the middle, providing the network infrastructure (VisaNet) that enables these parties to transact securely and efficiently. Visa does not earn revenue from credit card interest or merchant discount rates; instead, its revenue comes from fees based on payment volume, transaction processing, and value-added services.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-2 md:space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="service">Service Revenues</button>
+                    <button class="segment-tab-button" data-target="processing">Data Processing</button>
+                    <button class="segment-tab-button" data-target="international">International</button>
+                    <button class="segment-tab-button" data-target="other">Value-Added Services</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="serviceContent" class="segment-content">
+                    <h3 class="subsection-title" style="color: #F7B600;">Service Revenues</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                        <div>
+                            <p class="content-text mb-2">These are revenues earned for services provided in support of client usage of Visa payment products. They are primarily generated from payments volume on Visa-branded cards for products and services that Visa offers. Service revenues are generally recognized in the same period the related payments volume is generated.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li>Based on nominal payments volume.</li>
+                                <li>Includes fees for card issuance, account maintenance, and other services supporting card usage.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueStreamChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="processingContent" class="segment-content hidden">
+                    <h3 class="subsection-title" style="color: #F7B600;">Data Processing Revenues</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                         <div>
+                            <p class="content-text mb-2">Generated from authorization, clearing, settlement, network access, and other maintenance and support services that facilitate transaction processing. These revenues are based on the number of transactions processed.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li>Driven by the number of processed transactions through VisaNet.</li>
+                                <li>Includes fees for each step of the transaction lifecycle.</li>
+                            </ul>
+                        </div>
+                        <div class="content-text p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-700">VisaNet: The Backbone</h4>
+                            <p>VisaNet is one of the world's largest electronic payments networks, capable of handling tens of thousands of transaction messages per second. Its reliability, security, and global reach are critical to Visa's data processing revenues.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div id="internationalContent" class="segment-content hidden">
+                    <h3 class="subsection-title" style="color: #F7B600;">International Transaction Revenues</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                         <div>
+                            <p class="content-text mb-2">Earned for cross-border transaction processing and currency conversion activities. These revenues are primarily generated from cross-border payments volume, which includes transactions where the card issuer country is different from the merchant country. Cross-border volume excluding intra-Europe grew <span class="highlight">15%</span> in Q2 FY25.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li>Highly profitable due to additional fees for currency conversion and cross-border risk.</li>
+                                <li>Sensitive to global travel and e-commerce trends.</li>
+                            </ul>
+                        </div>
+                        <div class="content-text p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-700">Global Commerce Driver</h4>
+                            <p>International transactions are a key growth area, fueled by the rise of global e-commerce and the recovery of international travel. Visa's extensive global acceptance network is a major advantage here.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div id="otherContent" class="segment-content hidden">
+                    <h3 class="subsection-title" style="color: #F7B600;">Value-Added Services & Other Revenues</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                         <div>
+                            <p class="content-text mb-2">This category includes a growing suite of products and services that Visa offers to clients beyond core payment processing. These services leverage Visa's data, technology, and expertise.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Risk and Identity Solutions:</strong> Tools for fraud prevention, cybersecurity, and authentication (e.g., Visa Advanced Authorization, Cybersource).</li>
+                                <li><strong>Advisory Services:</strong> Consulting and data analytics to help clients optimize their payment businesses.</li>
+                                <li><strong>Issuer Solutions:</strong> Loyalty programs and other services for card issuers.</li>
+                                 <li><strong>New Payment Flows:</strong> Services supporting B2B payments (Visa B2B Connect), P2P, and G2C disbursements.</li>
+                            </ul>
+                        </div>
+                         <div class="content-text p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-700">Beyond the Transaction</h4>
+                            <p>Value-Added Services are a key strategic priority for Visa, as they deepen client relationships, generate high-margin revenue, and help differentiate Visa from competitors by providing a more holistic payments solution.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive: Consistent Growth & High Margins</h2>
+            <p class="content-text mb-6">Visa's financial model is characterized by consistent revenue growth, driven by the ongoing global shift from cash to digital payments, and exceptionally high operating margins due to its scalable network and fee-based revenue model. The charts below highlight Visa's strong financial performance and key operational metrics.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div>
+                    <h3 class="subsection-title" style="color: #F7B600;">Company Fiscal Year Trends</h3>
+                     <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-700 focus:border-blue-700">
+                            <option value="netRevenues" selected>Net Revenues ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title" style="color: #F7B600;">Quarterly Net Revenue YoY Growth (%)</h3>
+                     <p class="content-text text-sm mb-4">This chart displays the year-over-year growth trend for Visa's quarterly net revenues, demonstrating consistent expansion.</p>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">The Network Moat & Competitive Landscape</h2>
+            <p class="content-text mb-6">Visa's most significant competitive advantage is its powerful two-sided network effect: the more consumers use Visa cards, the more merchants accept them, and vice-versa. This creates a formidable moat. However, the rapidly evolving payments landscape presents both opportunities and challenges from various competitors and emerging technologies.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0" style="color: #F7B600;">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Two-Sided Network Effect:</strong> The ubiquitous acceptance by merchants and widespread issuance by banks create a powerful, self-reinforcing cycle that is extremely difficult for new entrants to replicate.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Global Brand & Acceptance:</strong> The Visa brand is one of the most recognized and trusted financial services brands globally, ensuring widespread acceptance and consumer preference.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Scale, Security & Reliability:</strong> VisaNet's ability to process massive volumes of transactions securely and reliably at scale is a critical operational moat.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Relationships with Financial Institutions:</strong> Deeply entrenched partnerships with thousands of financial institutions worldwide provide a stable foundation for card issuance and network participation.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0" style="color: #F7B600;">Primary Risks & Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Payment Networks:</strong> Direct competition from Mastercard, American Express, Discover, and regional networks (e.g., UnionPay in China).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Emerging Payment Technologies:</strong> Growth of "Buy Now, Pay Later" (BNPL) services, account-to-account real-time payment systems, and digital wallets could bypass traditional card networks.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Regulatory Scrutiny:</strong> Ongoing global regulatory pressure concerning interchange fees, network exclusivity, and data practices could impact Visa's revenue and business model.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Cybersecurity & Data Privacy:</strong> The constant threat of cyberattacks and evolving data privacy regulations require significant ongoing investment and pose operational risks.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Visa is well-positioned to benefit from the continued global shift towards digital payments. Its future success will depend on its ability to innovate, adapt to new technologies, expand into new payment flows, and navigate an increasingly complex regulatory and competitive environment.</p>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0" style="color: #F7B600;">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Global Secular Shift to Digital:</strong> Vast runway for growth as cash and checks continue to be displaced by digital payments, especially in emerging markets.</li>
+                        <li><strong>Expansion in New Flows:</strong> Significant opportunity in B2B payments, P2P, and G2C disbursements, which are much larger markets than traditional consumer retail payments.</li>
+                        <li><strong>Growth of Value-Added Services:</strong> High-margin services like risk management, data analytics, and loyalty solutions offer significant revenue upside.</li>
+                        <li><strong>Cross-Border Payment Growth:</strong> Continued recovery and growth in international travel and e-commerce will drive highly profitable cross-border transaction volumes.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0" style="color: #F7B600;">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Disintermediation by New Technologies:</strong> Real-time payment systems and new fintech solutions could potentially bypass Visa's network, particularly for domestic transactions.</li>
+                        <li><strong>Regulatory Intervention:</strong> Increased government regulation on interchange fees or network rules could negatively impact Visa's profitability and business flexibility.</li>
+                        <li><strong>Intensifying Competition:</strong> Competition from established players and nimble fintech startups requires continuous innovation and investment.</li>
+                        <li><strong>Geopolitical Instability:</strong> As a global company, Visa is exposed to geopolitical risks that could impact cross-border volumes and international operations.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Visa Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) { mobileMenuBtn.click(); }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        
+        let revenueStreamChartInstance = null;
+        function initializeRevenueStreamChart() {
+            const revenueStreamCtx = document.getElementById('revenueStreamChart').getContext('2d');
+            if (revenueStreamChartInstance) revenueStreamChartInstance.destroy();
+            // Illustrative data for revenue streams - actual breakdown can be complex and not always publicly detailed in this exact way per quarter
+            revenueStreamChartInstance = new Chart(revenueStreamCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Service', 'Data Processing', 'International', 'Other'],
+                    datasets: [{
+                        data: [3.8, 3.6, 2.0, 0.4], // Example Q2 FY25 breakdown in $B, sums to approx $9.8B total
+                        backgroundColor: ['#1A1F71', '#F7B600', '#00AEEF', '#6B7280'], // Visa Blue, Gold, Light Blue, Gray
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Illustrative Revenue Streams (Q2 FY25)' } }
+                }
+            });
+        }
+        
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+                 if (targetId === 'serviceContent' && document.getElementById('revenueStreamChart')) {
+                    initializeRevenueStreamChart();
+                }
+            });
+        });
+        
+        // Initial render for the active tab's chart
+         if (document.getElementById('revenueStreamChart')) {
+            initializeRevenueStreamChart();
+        }
+
+        // --- FINANCIAL CHARTS LOGIC ---
+        const CHART_COLORS_VISA = { 
+            blue: '#1A1F71', 
+            gold: '#F7B600', 
+            lightBlue: '#00AEEF', 
+            gray: '#6B7280' 
+        };
+
+        // Yearly Data Store (Visa)
+        const yearlyDataStoreVisa = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            netRevenues: { data: [29.3, 32.7, 35.8], label: 'Net Revenues ($B)', color: CHART_COLORS_VISA.blue }, 
+            netIncome: { data: [15.0, 17.3, 18.9], label: 'Net Income ($B)', color: CHART_COLORS_VISA.gold } 
+        };
+
+        let yearlyChartVisa = null;
+        const yearlySelectVisa = document.getElementById('yearlyMetricSelect');
+        const yearlyCanvasVisa = document.getElementById('yearlyFinancialChart').getContext('2d');
+
+        function createYearlyChartVisa(metricKey) {
+            if (yearlyChartVisa) {
+                yearlyChartVisa.destroy();
+            }
+            const metricDetails = yearlyDataStoreVisa[metricKey];
+            yearlyChartVisa = new Chart(yearlyCanvasVisa, {
+                type: 'bar',
+                data: {
+                    labels: yearlyDataStoreVisa.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF', 
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelectVisa.addEventListener('change', (event) => {
+            createYearlyChartVisa(event.target.value);
+        });
+        createYearlyChartVisa('netRevenues'); // Initial render
+
+        // Quarterly Net Revenue YoY Growth Chart
+        const quarterlyCanvasVisa = document.getElementById('quarterlyFinancialChart').getContext('2d');
+        const quarterlyGrowthDataStoreVisa = {
+            labels: ['Q1 FY24', 'Q2 FY24', 'Q3 FY24', 'Q4 FY24', 'Q1 FY25', 'Q2 FY25'],
+            netRevenueYoYGrowth: { data: [11, 10, 12, 9, 10, 9], label: 'Net Revenue YoY Growth (%)', color: CHART_COLORS_VISA.gold}
+        };
+
+        new Chart(quarterlyCanvasVisa, {
+            type: 'bar',
+            data: {
+                labels: quarterlyGrowthDataStoreVisa.labels,
+                datasets: [{
+                    label: quarterlyGrowthDataStoreVisa.netRevenueYoYGrowth.label,
+                    data: quarterlyGrowthDataStoreVisa.netRevenueYoYGrowth.data, 
+                    backgroundColor: quarterlyGrowthDataStoreVisa.netRevenueYoYGrowth.color + 'BF',
+                    borderColor: quarterlyGrowthDataStoreVisa.netRevenueYoYGrowth.color,
+                    borderWidth: 1
+                }]
+            },
+             options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false }, title: { display: false } }, 
+                scales: { 
+                    y: { 
+                        beginAtZero: true, // Changed this to true
+                        title: { display: true, text: 'YoY Growth (%)' } 
+                    }
+                 }
+            }
+        });
+
+    </script>
+</body>
+</html>
+

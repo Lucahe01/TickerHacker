@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM Corporation (IBM) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #1D4ED8; /* blue-700 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #1D4ED8; /* blue-700 */
+            color: #FFFFFF;
+            border-color: #1E40AF; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #1D4ED8; /* blue-700 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #1D4ED8;">IBM Corp. (IBM) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">IBM: A New Focus on Hybrid Cloud & AI</h2>
+            <p class="content-text mb-6">International Business Machines (IBM) is a global technology giant in the midst of a significant transformation. After spinning off its managed infrastructure services business (Kyndryl), IBM has sharpened its focus on the high-growth, high-margin markets of hybrid cloud and artificial intelligence (AI). The company's strategy is not to compete head-to-head with public cloud "hyperscalers" like Amazon and Microsoft, but rather to provide the essential software, consulting, and hardware that enable large enterprises to manage their applications and data across multiple clouds and on-premise environments. This strategy is anchored by its landmark acquisition of <span class="highlight">Red Hat</span> and its enterprise-grade AI platform, <span class="highlight">watsonx</span>. This analysis explores IBM's three core business segments and its strategic positioning in the new era of enterprise IT.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">IBM's go-forward strategy is built on a synergistic model:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Win the Hybrid Cloud Platform Battle:</strong> Establish Red Hat OpenShift as the industry standard for building, deploying, and managing applications across any cloud environment (public or private).</li>
+                        <li><strong class="font-semibold text-gray-700">Deliver Enterprise AI at Scale:</strong> Enable businesses to build, train, and deploy their own AI models securely with their own data using the watsonx platform.</li>
+                        <li><strong class="font-semibold text-gray-700">Leverage Consulting & Hardware Synergy:</strong> Use its deep consulting expertise to drive adoption of its software platforms, which in turn often run on its high-performance infrastructure like IBM Z mainframes.</li>
+                        <li><strong class="font-semibold text-gray-700">Generate Strong Free Cash Flow:</strong> Maintain disciplined capital allocation to fund innovation, strategic acquisitions, and a reliable, growing dividend for shareholders.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Hybrid Cloud Revenue (TTM)</p>
+                    <p class="kpi-value text-blue-800">$27.8 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents over 40% of total revenue, highlighting the scale and success of IBM's strategic focus on hybrid cloud solutions.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How IBM Makes Money: The Three Segments</h2>
+            <p class="content-text mb-6">The "new" IBM's business is organized into three synergistic segments: Software, Consulting, and Infrastructure. The Software segment is the primary profit engine, anchored by Red Hat. The Consulting arm acts as a major channel to pull through software and hybrid cloud adoption. The Infrastructure segment provides the mission-critical hardware that many of the world's largest enterprises run on.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="software">Software</button>
+                    <button class="segment-tab-button" data-target="consulting">Consulting</button>
+                    <button class="segment-tab-button" data-target="infrastructure">Infrastructure</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="softwareContent" class="segment-content">
+                    <h3 class="subsection-title">Software</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The largest and most profitable segment. It includes the Hybrid Platform & Solutions business, anchored by <span class="highlight">Red Hat</span>, which provides the foundational software for hybrid cloud environments. This segment also includes transaction processing software (critical for banking), and a broad portfolio of solutions for data & AI, automation, and security. The majority of this segment's revenue is recurring.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="consultingContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Consulting</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">IBM Consulting provides deep industry expertise and professional services to help clients with business transformation and technology implementation. This segment acts as a crucial "tip of the spear" for IBM's strategy, often leading digital transformation projects where they advise clients on and implement IBM's own software and hybrid cloud technologies. Key areas include business transformation, technology consulting, and application operations.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Consulting Bookings (TTM)</p>
+                            <p class="kpi-value text-blue-800">$21.1 Billion</p>
+                            <p class="content-text text-sm mt-2">A strong indicator of future revenue, showcasing demand for IBM's expertise in digital and business transformation projects.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="infrastructureContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Infrastructure</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment includes IBM's iconic hardware platforms. The flagship product is the <span class="highlight">IBM Z</span> mainframe, the backbone of transaction processing for many of the world's largest banks, insurance companies, and retailers. This segment also includes Distributed Infrastructure (Power servers) and Infrastructure Support. While a smaller part of the "new" IBM, it provides a stable, profitable base with an extremely sticky customer base.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Platform of Choice For</p>
+                            <p class="kpi-value text-blue-800 text-base">2/3 of Fortune 100</p>
+                            <p class="content-text text-sm mt-2">The IBM Z mainframe remains the mission-critical platform for the world's most important enterprise workloads.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">IBM's financial profile is that of a mature tech giant focused on steady growth, margin expansion, and strong cash generation to support its dividend and strategic investments. The charts below reflect the performance of the "new" IBM following the Kyndryl spin-off at the end of 2021. The quarterly segment view highlights the relative contributions of each part of the business, with Software being the largest and most consistent revenue driver.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (Post-Spin)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="freeCashFlow">Free Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Revenue ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="segmentRevenue" selected>Revenue by Segment</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The yearly chart shows steady revenue and strong free cash flow generation post-spin-off. The quarterly chart highlights the consistent contribution from Software and the cyclical nature of Infrastructure sales.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Enterprise Incumbent</h2>
+            <p class="content-text mb-6">IBM's competitive moat is wide, built on deep-rooted relationships with the world's largest and most complex organizations. Its products and services are mission-critical for many customers, creating high switching costs and a durable, albeit slow-growing, business model.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Switching Costs & Entrenched Relationships:</strong> IBM's technology, particularly its mainframes and transaction processing software, is deeply embedded in the core operations of major banks, insurers, and retailers. The risk, cost, and complexity of replacing these systems are immense, making customers very sticky.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Differentiated Hybrid Cloud Strategy:</strong> By focusing on providing the software and tools (via Red Hat) to manage multi-cloud environments, IBM avoids direct, head-to-head competition with the dominant public cloud providers, carving out a valuable niche as a neutral enabler.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Integrated Portfolio & Expertise:</strong> IBM's ability to offer a comprehensive solution of hardware, software, and consulting services provides a significant advantage when tackling large, complex digital transformation projects for enterprise clients.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Cloud Hyperscalers:</strong> While also partners, Amazon (AWS), Microsoft (Azure), and Google (GCP) are the primary competitors for enterprise IT workloads and offer their own comprehensive software and AI platforms.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">IT Consulting & Services Firms:</strong> Competes with giants like Accenture and Capgemini in the consulting space for large digital transformation projects.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Specialized Software Companies:</strong> Faces competition from a vast ecosystem of more specialized software vendors in areas like database management (Oracle), security, and automation.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for IBM centers on its successful transformation into a hybrid cloud and AI-focused company. The challenge is to generate consistent growth in a fiercely competitive technology landscape while leveraging its incumbent strengths. For investors, it offers a combination of defensive characteristics and a high, reliable dividend yield.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Hybrid Cloud Adoption:</strong> As large enterprises continue to adopt multi-cloud strategies, demand for IBM's and Red Hat's management and automation software should grow.</li>
+                        <li><strong>Enterprise AI Growth:</strong> The watsonx platform is well-positioned to capture demand from large companies that want to build and deploy AI models using their own proprietary data in a secure environment.</li>
+                        <li><strong>Strong Free Cash Flow & Dividend:</strong> IBM is a cash-generating machine, which supports its very attractive and growing dividend, a key component of total shareholder return.</li>
+                        <li><strong>Synergistic Model:</strong> The ability for its massive consulting arm to pull through high-margin software sales is a key long-term growth driver.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Intense Competition:</strong> The pace of innovation from cloud hyperscalers and more nimble software companies is relentless. IBM must continually prove its value proposition to avoid losing workloads.</li>
+                        <li><strong>Execution on Growth:</strong> While the strategy is sound, IBM has a long history of struggling to achieve consistent, mid-single-digit revenue growth. Executing the new strategy is a major challenge.</li>
+                        <li><strong>Legacy Perception:</strong> Overcoming its reputation as a legacy IT provider and being seen as an innovative leader in AI and cloud is an ongoing marketing and cultural battle.</li>
+                        <li><strong>Macroeconomic Sensitivity:</strong> Large-scale consulting projects and major software deals can be deferred during economic downturns, impacting revenue growth.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from IBM Corporation public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#1D4ED8',
+            sky: '#38BDF8',
+            amber: '#F59E0B',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Software', 'Consulting', 'Infrastructure'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [44, 32, 24], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [57.4, 60.5, 61.9, 63.3], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            freeCashFlow: { data: [7.5, 9.3, 11.2, 11.8], label: 'Free Cash Flow ($B)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'Software',
+                        data: [6.3, 6.3, 7.8, 5.9, 6.5, 6.4, 8.0, 6.2],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                    {
+                        label: 'Consulting',
+                        data: [4.9, 5.0, 5.0, 5.2, 5.1, 5.2, 5.1, 5.3],
+                        backgroundColor: CHART_COLORS.sky
+                    },
+                     {
+                        label: 'Infrastructure',
+                        data: [3.4, 3.2, 4.6, 3.1, 3.3, 3.1, 4.7, 3.2],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createYearlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Revenue by Segment ($B)' } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue');
+
+    </script>
+</body>
+</html>
+

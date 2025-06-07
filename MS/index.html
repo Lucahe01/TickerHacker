@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morgan Stanley (MS) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #1D4ED8; /* blue-700 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #1D4ED8; /* blue-700 */
+            color: #FFFFFF;
+            border-color: #1E40AF; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #1D4ED8; /* blue-700 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #1D4ED8;">Morgan Stanley (MS) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Morgan Stanley: The Wealth Management Powerhouse</h2>
+            <p class="content-text mb-6">Morgan Stanley is a premier global financial services firm with a dominant position in wealth management, a world-class institutional securities business, and a growing asset management arm. Over the last decade, the firm has executed a brilliant strategic transformation, deliberately shifting its business mix away from the inherent volatility of investment banking and trading towards the more stable, fee-based revenues of managing money for individuals and institutions. This pivot was supercharged by the landmark acquisitions of <span class="highlight">E*TRADE</span> and <span class="highlight">Eaton Vance</span>, which dramatically scaled its Wealth and Investment Management businesses. Today, Morgan Stanley represents a powerful, integrated model designed to deliver more durable earnings and strong capital returns. This analysis explores the firm's three core segments and its strategic positioning.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Morgan Stanley's strategy is focused on leveraging its integrated model:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Dominate Wealth Management:</strong> Continue to scale its industry-leading Wealth Management platform, attracting client assets across all channels from the workplace (E*TRADE) to ultra-high-net-worth individuals.</li>
+                        <li><strong class="font-semibold text-gray-700">Drive Synergies:</strong> Create a "flywheel" effect where the different segments reinforce each other. The investment bank serves corporations whose employees are then served by the workplace wealth channel.</li>
+                        <li><strong class="font-semibold text-gray-700">Maintain a World-Class Institutional Business:</strong> Keep a premier, capital-light investment banking and trading business that provides unique insights and capabilities to support the entire firm.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Capital Management:</strong> Utilize the stable cash flows from Wealth Management to fund strong, consistent capital returns to shareholders via dividends and buybacks.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Wealth Management Client Assets</p>
+                    <p class="kpi-value text-blue-800">$7.3 Trillion</p>
+                    <p class="content-text text-sm mt-2">Represents the massive scale of the firm's Wealth Management business, the primary engine of stable, fee-based revenue.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Morgan Stanley Makes Money: The Three Engines</h2>
+            <p class="content-text mb-6">Morgan Stanley's business operates through three distinct, yet highly synergistic, segments. The **Wealth Management** business has become the firm's largest and most stable engine. The **Institutional Securities** group is the traditional, high-powered investment bank. And the **Investment Management** arm provides asset management solutions to a global client base.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="wm">Wealth Management</button>
+                    <button class="segment-tab-button" data-target="isg">Institutional Securities</button>
+                    <button class="segment-tab-button" data-target="im">Investment Management</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="wmContent" class="segment-content">
+                    <h3 class="subsection-title">Wealth Management</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The cornerstone of the modern Morgan Stanley. This segment is an industry leader, providing a comprehensive range of financial services to a diverse client base, from employees managing their stock plans via E*TRADE to the world's wealthiest individuals and families. It generates stable, recurring revenue from fees based on client assets, as well as net interest income from client deposits and loans.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="isgContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Institutional Securities (ISG)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is the classic Wall Street investment bank. The ISG segment advises corporations on mergers and acquisitions (M&A), raises capital through stock and bond offerings (underwriting), and operates a world-class sales and trading division for equities and fixed income products. While highly profitable, its results are inherently volatile and dependent on the health of global capital markets.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Activities</p>
+                            <p class="kpi-value text-blue-800 text-base">M&A Advisory, Equity & Debt Underwriting, Sales & Trading</p>
+                            <p class="content-text text-sm mt-2">Provides essential capital markets services to corporations, governments, and financial institutions.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="imContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Investment Management</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment, significantly scaled by the <span class="highlight">Eaton Vance</span> acquisition, offers a broad range of asset management products and services. It manages investment portfolios for institutional clients (like pension funds and sovereign wealth funds) and individual retail investors. Revenue is primarily generated from management fees based on the value of assets under management (AUM). This provides another source of stable, fee-based earnings.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Assets Under Management (AUM)</p>
+                            <p class="kpi-value text-blue-800">$1.6 Trillion</p>
+                            <p class="content-text text-sm mt-2">The scale of the asset management business, providing diversified investment solutions to a global client base.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Morgan Stanley's financial results showcase the success of its strategic transformation. While the Institutional Securities business ebbs and flows with market activity, the massive Wealth Management segment provides a strong and growing foundation of stable revenue and pre-tax profit. This stability allows the firm to generate consistent earnings and cash flow, which it uses to invest in its business and deliver strong capital returns to its shareholders. The quarterly segment view clearly illustrates the changing business mix.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="preTaxIncome">Pre-Tax Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Revenue ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="segmentRevenue" selected>Revenue by Segment</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The yearly chart shows resilient top-line revenue. The quarterly segment chart highlights the powerful contribution of the Wealth Management segment (in blue), which now consistently generates more revenue than the traditional investment bank.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Integrated Financial Supermarket</h2>
+            <p class="content-text mb-6">Morgan Stanley's competitive moat is wide and powerful, built on its premier global brand, its immense scale in wealth management, and the powerful synergies that exist between its three core businesses. This creates a durable franchise that is difficult for competitors to replicate.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Premier Global Brand:</strong> The Morgan Stanley name is one of the most respected brands in finance, conveying trust, expertise, and a premium service offering. This helps attract and retain high-net-worth clients, top financial advisors, and elite investment banking talent.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Massive Scale in Wealth Management:</strong> With over $7 trillion in client assets, Morgan Stanley operates one of the largest wealth management platforms in the world. This scale creates significant operational efficiencies and a vast base for gathering low-cost deposits and generating fee revenue.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Synergistic Business Model:</strong> The ability to serve clients across their entire financial life—from a workplace stock plan, to self-directed trading, to full-service financial advice, to complex institutional services—creates a powerful "flywheel" where each business segment feeds the others.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Goldman Sachs:</strong> The most direct competitor, particularly in the Institutional Securities (investment banking and trading) and asset management spaces.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Universal Banks:</strong> Competes broadly with large, diversified banks like JPMorgan Chase, Bank of America, and UBS, which have significant wealth management and investment banking operations.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Other Wealth & Asset Managers:</strong> Competes with specialized firms like Charles Schwab in the brokerage and wealth management space, and with giant asset managers like BlackRock and Vanguard.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Morgan Stanley centers on its continued success as a more stable, wealth management-oriented firm. The rewards come from the continued growth of its fee-based businesses and strong capital returns, while the risks are tied to the inherent volatility of financial markets and the competitive landscape.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Durable, Fee-Based Revenues:</strong> The massive Wealth and Investment Management businesses provide a stable and growing base of fee revenue, making earnings far more predictable than in the past.</li>
+                        <li><strong>Strong Capital Returns:</strong> The firm's stable earnings and strong capital position allow it to return significant cash to shareholders through a competitive dividend and large share repurchase programs.</li>
+                        <li><strong>Scale Advantages:</strong> Continued opportunities to leverage its immense scale to gather more client assets, drive operating efficiencies, and invest in technology.</li>
+                        <li><strong>Market Recovery Upside:</strong> While now a smaller part of the business, a rebound in capital markets activity would provide a significant cyclical boost to the Institutional Securities segment's profitability.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Market Sensitivity:</strong> Despite the strategic shift, a significant portion of revenue is still tied to financial market levels (via asset-based fees) and trading activity. A severe market downturn would negatively impact results.</li>
+                        <li><strong>Regulatory Environment:</strong> As a Globally Systemically Important Bank (G-SIB), Morgan Stanley faces stringent regulation and high capital requirements, which can constrain growth and returns.</li>
+                        <li><strong>Intense Competition:</strong> The financial services industry is fiercely competitive. The firm faces constant pressure from other global banks, wealth managers, and disruptive fintech companies.</li>
+                        <li><strong>Macroeconomic & Geopolitical Risks:</strong> Profitability is sensitive to changes in interest rates, economic growth, and geopolitical events that impact investor confidence and capital markets activity.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Morgan Stanley public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#1D4ED8',
+            sky: '#3B82F6',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Wealth Management', 'Institutional Securities', 'Investment Management'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [48, 41, 11], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [48.2, 59.8, 53.7, 54.1, 58.9], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            preTaxIncome: { data: [13.6, 19.3, 11.0, 10.4, 13.1], label: 'Pre-Tax Income ($B)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'Wealth Management',
+                        data: [6.6, 6.4, 6.6, 6.9, 7.1, 6.8, 6.9, 7.2],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                    {
+                        label: 'Institutional Securities',
+                        data: [5.0, 5.7, 4.8, 6.1, 5.9, 5.5, 5.2, 6.3],
+                        backgroundColor: CHART_COLORS.sky
+                    },
+                     {
+                        label: 'Investment Management',
+                        data: [1.3, 1.3, 1.5, 1.4, 1.5, 1.4, 1.6, 1.5],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createYearlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Revenue by Segment ($B)' } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue');
+
+    </script>
+</body>
+</html>
+

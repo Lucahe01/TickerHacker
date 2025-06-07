@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Materials (AMAT) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #1E40AF; /* blue-800 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #1E40AF; /* blue-800 */
+            color: #FFFFFF;
+            border-color: #1D4ED8; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #1E40AF; /* blue-800 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #1E40AF;">Applied Materials (AMAT) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Applied Materials: Engineering the Future of Electronics</h2>
+            <p class="content-text mb-6">Applied Materials (AMAT) is a foundational company of the semiconductor industry. It is a global leader in providing the manufacturing equipment, services, and software used to produce virtually every new chip and advanced display in the world. As the complexity of chips increases to power trends like AI, IoT, and 5G, the need for Applied's highly sophisticated materials engineering technology grows. The company's business model is built on providing the "picks and shovels" of the digital age, benefiting from the long-term growth of the semiconductor industry while navigating its inherent cyclicality. This analysis explores Applied's key business segments, its financial performance, and its critical role in enabling the future of technology.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Applied's strategy is focused on enabling its customers' technology roadmaps:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Deliver Materials Engineering Leadership:</strong> Provide the broadest and most advanced portfolio of equipment for modifying materials at the atomic level, which is essential for next-generation chips.</li>
+                        <li><strong class="font-semibold text-gray-700">Enable Key Technology Inflections:</strong> Focus R&D on providing the critical equipment needed for major industry shifts, such as Gate-All-Around (GAA) transistors, advanced packaging, and new AI chip architectures.</li>
+                        <li><strong class="font-semibold text-gray-700">Grow the Services Business (AGS):</strong> Increase the recurring revenue stream from servicing its massive installed base of over 50,000 tools, providing a stable buffer against equipment sales cyclicality.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Capital Allocation:</strong> Generate strong free cash flow to fund R&D and return capital to shareholders through consistent dividends and share buybacks.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Market Served</p>
+                    <p class="kpi-value text-blue-800">Wafer Fab Equipment</p>
+                    <p class="content-text text-sm mt-2">Applied Materials is a leader in the Wafer Fab Equipment (WFE) market, the total market for the machinery used to fabricate semiconductor wafers.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Applied Materials Makes Money: Segments</h2>
+            <p class="content-text mb-6">Applied's business is organized into three segments. **Semiconductor Systems** is the largest, selling the "picks and shovels" to chipmakers. **Applied Global Services** provides a large, stable, and high-margin recurring revenue stream by servicing that equipment. The **Display** segment provides similar equipment for the display manufacturing industry.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="systems">Semiconductor Systems</button>
+                    <button class="segment-tab-button" data-target="services">Applied Global Services (AGS)</button>
+                    <button class="segment-tab-button" data-target="display">Display</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="systemsContent" class="segment-content">
+                    <h3 class="subsection-title">Semiconductor Systems (SSG)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the core of the business, representing nearly 70% of revenue. The SSG segment develops, manufactures, and sells the highly complex equipment used to build semiconductor chips. This includes machines for nearly every step of the fabrication process, such as deposition (adding material layers), etch (removing material), and ion implantation (modifying material properties). The performance of this segment is tied to the capital expenditure cycles of its major customers like TSMC, Samsung, and Intel.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="servicesContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Applied Global Services (AGS)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">AGS provides a large and growing stream of high-margin, recurring revenue. This segment supports the massive installed base of Applied's equipment in customer fabs around the world. Services include spare parts, maintenance, upgrades, and optimization of manufacturing processes. As the installed base grows, the potential revenue for AGS increases, providing a valuable cushion against the cyclicality of the equipment market.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">AGS Revenue (FY2024)</p>
+                            <p class="kpi-value text-blue-800">$6.1 Billion</p>
+                            <p class="content-text text-sm mt-2">Represents a stable and highly profitable recurring revenue stream, making up nearly a quarter of the company's total sales.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="displayContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Display and Adjacent Markets</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment provides equipment to manufacture liquid crystal displays (LCDs), organic light-emitting diodes (OLEDs), and other display technologies for TVs, computers, smartphones, and other devices. While smaller than the semiconductor business, it leverages much of the same core materials engineering expertise. The performance of this segment is highly cyclical and dependent on capital spending by major display manufacturers.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Primary Technology</p>
+                            <p class="kpi-value text-blue-800 text-2xl">OLED</p>
+                            <p class="content-text text-sm mt-2">Provides critical equipment for manufacturing the advanced OLED displays used in the latest generation of smartphones and TVs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Applied Materials' financial performance is directly tied to the capital spending cycles of the semiconductor industry. Following a period of massive growth fueled by digitalization and supply chain build-outs, the industry is currently in a cyclical downturn, which is reflected in AMAT's moderating revenues. The quarterly segment view highlights the relative stability of the high-margin AGS services business compared to the more volatile equipment sales of the Semiconductor Systems and Display segments.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Revenue ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="segmentRevenue" selected>Revenue by Segment</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The yearly chart shows the strong growth from 2020 to 2023. The quarterly chart highlights the resilience of the AGS services business (in gray) during the current cyclical slowdown in equipment sales.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Indispensable Enabler</h2>
+            <p class="content-text mb-6">Applied Materials has a wide and defensible competitive moat built on deep technological expertise, immense R&D scale, and deeply integrated relationships with its customers. As a foundational supplier to the semiconductor industry, its products are critical and difficult to replace.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Broadest Product Portfolio:</strong> Applied offers the most comprehensive suite of manufacturing equipment in the industry. This allows it to co-optimize different steps in the chipmaking process, offering integrated solutions that smaller, specialized competitors cannot.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Switching Costs & R&D Scale:</strong> Semiconductor manufacturing recipes are highly complex and are developed and qualified on specific tools. The cost and risk of switching a qualified process to a new vendor are enormous. Furthermore, AMAT's massive R&D budget is a huge barrier to entry.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Deep, Collaborative Customer Relationships:</strong> Applied works hand-in-hand with all of the world's top chipmakers (foundries, memory, and IDMs) for years to develop the technology needed for their next-generation chips. These deep relationships are a powerful competitive advantage.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Lam Research (LRCX):</strong> A primary competitor, particularly strong in etch and deposition equipment.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">KLA Corporation (KLAC):</strong> The dominant leader in process control and inspection equipment, an area where it competes with Applied.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Tokyo Electron (TEL):</strong> A major Japanese competitor with a broad portfolio that competes across many of Applied's product lines.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">ASML:</strong> While not a direct competitor in most areas, ASML's dominance in lithography makes it a critical partner and the overall leader in the semiconductor equipment space.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Applied Materials is a bet on the long-term, secular growth of the semiconductor industry and the increasing complexity of chips. The company is poised to be a key beneficiary of the AI era, but it must navigate the industry's inherent cyclicality and significant geopolitical risks.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>AI & High-Performance Computing:</strong> The build-out of AI infrastructure requires ever more complex and advanced chips, which in turn require more of Applied's sophisticated materials engineering steps.</li>
+                        <li><strong>Growing Services Business:</strong> The large and growing installed base of tools provides a stable, high-margin, recurring revenue stream that helps cushion against the volatility of equipment sales.</li>
+                        <li><strong>Industry Leadership:</strong> As a "best-of-breed" industry leader, Applied is well-positioned to capture a large share of the wafer fab equipment market as it recovers and grows.</li>
+                        <li><strong>Strong Capital Returns:</strong> The company's strong free cash flow generation allows for consistent and growing returns to shareholders via dividends and buybacks.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Semiconductor Industry Cyclicality:</strong> The single biggest risk. The equipment industry is subject to sharp boom-and-bust cycles driven by customer capital spending. The current downturn could persist longer than expected.</li>
+                        <li><strong>Geopolitical Risk & Trade Restrictions:</strong> As a global company with major customers and supply chains in Asia, Applied is highly exposed to geopolitical tensions, particularly U.S.-China trade restrictions which can impact sales.</li>
+                        <li><strong>Intense Competition:</strong> Faces strong, well-funded competition from other leading equipment manufacturers, requiring constant R&D investment to maintain its technology lead.</li>
+                        <li><strong>Customer Concentration:</strong> A significant portion of its revenue comes from a small number of very large customers (e.g., TSMC, Samsung, Intel). A reduction in spending from any one of them can have a major impact.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Applied Materials, Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#1E40AF',
+            sky: '#3B82F6',
+            gray: '#6B7280'
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Semiconductor Systems', 'Applied Global Services', 'Display'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [69, 23, 8], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [17.20, 23.06, 25.79, 26.52, 25.51], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingIncome: { data: [4.71, 7.07, 7.97, 7.74, 7.01], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'Semiconductor Systems',
+                        data: [4.98, 4.68, 4.87, 4.27, 4.38, 4.51, 4.45, 4.21],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                    {
+                        label: 'Applied Global Services',
+                        data: [1.46, 1.42, 1.48, 1.50, 1.53, 1.51, 1.55, 1.58],
+                        backgroundColor: CHART_COLORS.sky
+                    },
+                     {
+                        label: 'Display',
+                        data: [0.28, 0.23, 0.38, 0.25, 0.24, 0.31, 0.33, 0.29],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createYearlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Revenue by Segment ($B)' } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue');
+
+    </script>
+</body>
+</html>
+

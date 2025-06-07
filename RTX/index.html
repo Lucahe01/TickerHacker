@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTX Corporation (RTX) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #00A3E0; /* RTX Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #00739E; /* Darker RTX Blue */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #EF4444; /* red-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #00A3E0; /* RTX Blue */
+            color: #FFFFFF;
+            border-color: #00739E; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #00A3E0; /* RTX Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #00A3E0;">RTX Corporation (RTX) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">RTX: An A&D Giant Navigating Engine Headwinds</h2>
+            <p class="content-text mb-6">RTX Corporation is one of the world's largest aerospace and defense (A&D) companies, formed through the merger of Raytheon and United Technologies. The company operates through three premier, market-leading franchises: Collins Aerospace, Pratt & Whitney, and Raytheon. While the company possesses a powerful and diverse portfolio, its story is currently dominated by a major operational and financial challenge: a <span class="highlight">multi-billion dollar recall and fleet management plan</span> for its Pratt & Whitney Geared Turbofan (GTF) engines due to a powder metal defect. The company's strategy is focused on navigating these engine headwinds while capitalizing on strong demand in its commercial aerospace aftermarket and defense businesses. This analysis explores RTX's three key segments and the balance of risks and strengths defining its path forward.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">RTX's strategy is focused on execution and leveraging its market-leading positions:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Execute on the GTF Fleet Management Plan:</strong> The top priority is supporting customers by successfully executing the inspection and replacement of affected jet engines, while managing the significant financial impact.</li>
+                        <li><strong class="font-semibold text-gray-700">Capitalize on Commercial Aftermarket Strength:</strong> Leverage the strong recovery in global air travel to drive growth in the high-margin services business at Collins Aerospace and Pratt & Whitney.</li>
+                        <li><strong class="font-semibold text-gray-700">Deliver on Defense Commitments:</strong> Capitalize on heightened global defense spending by delivering on its massive backlog of missile defense, radar, and other advanced systems at the Raytheon segment.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Capital Allocation:</strong> Maintain a strong balance sheet while returning significant capital to shareholders, primarily through a strong and growing dividend.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-cyan-50 border-cyan-200">
+                    <p class="kpi-label">Total Company Backlog</p>
+                    <p class="kpi-value text-cyan-800">$202 Billion</p>
+                    <p class="content-text text-sm mt-2">A massive, multi-year pipeline of future revenue, with $127 billion in defense and $75 billion in commercial aerospace, providing long-term visibility.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How RTX Makes Money: Three Premier Franchises</h2>
+            <p class="content-text mb-6">RTX operates through three powerful and well-respected business segments. **Collins Aerospace** and **Pratt & Whitney** are titans of the commercial and military aerospace supply chain, while **Raytheon** is a top-tier global defense contractor. The stability and strength of Collins and Raytheon are currently providing a crucial buffer against the significant challenges at Pratt & Whitney.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="collins">Collins Aerospace</button>
+                    <button class="segment-tab-button" data-target="pratt">Pratt & Whitney</button>
+                    <button class="segment-tab-button" data-target="raytheon">Raytheon</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="collinsContent" class="segment-content">
+                    <h3 class="subsection-title">Collins Aerospace</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">Collins is a leading global provider of a vast array of technologically advanced products for the aerospace and defense industry. This segment supplies everything from avionics, landing gear, and wheels & brakes to flight controls and cabin interiors. It benefits greatly from the strong commercial aerospace aftermarket, as its products are on nearly every major aircraft platform, generating a long tail of high-margin service and repair revenue.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="prattContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Pratt & Whitney</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Pratt & Whitney is one of the world's leading designers and manufacturers of aircraft engines. Its portfolio includes engines for commercial aircraft, business jets, and military fighters. This segment is currently facing a <span class="highlight">major challenge</span> with its Geared Turbofan (GTF) engine, which powers the Airbus A320neo family. A powder metal defect has forced a massive recall, leading to billions of dollars in charges and grounding hundreds of aircraft globally, severely impacting the segment's profitability.</p>
+                        </div>
+                        <div class="kpi-card bg-cyan-50 border-cyan-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Challenge</p>
+                            <p class="kpi-value text-cyan-800 text-base">GTF Engine Recall</p>
+                            <p class="content-text text-sm mt-2">Managing the inspection and replacement of parts on over 1,000 engines is the single largest operational and financial headwind for RTX.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="raytheonContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Raytheon</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Raytheon segment is a premier global defense contractor, specializing in command and control systems, air and missile defense, and advanced radar and sensor technology. It is a leader in areas of high global demand, such as <span class="highlight">Patriot air defense systems</span>, AMRAAM and Tomahawk missiles, and advanced radars. This segment benefits from increased geopolitical instability and rising defense budgets among the U.S. and its allies, providing a stable, government-funded revenue stream.</p>
+                        </div>
+                        <div class="kpi-card bg-cyan-50 border-cyan-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Products</p>
+                            <p class="kpi-value text-cyan-800 text-base">Missiles, Air Defense, Radars, & Sensors</p>
+                            <p class="content-text text-sm mt-2">A portfolio of critical defense technologies that are in high demand due to the current geopolitical environment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">RTX's financial performance is a story of contrasts. The company generates strong overall revenue, but its profitability has been significantly impacted by charges and operational issues at Pratt & Whitney and, to a lesser extent, on certain fixed-price defense contracts at Raytheon. The Collins Aerospace segment and the commercial aftermarket businesses across the board have been sources of strength, providing a crucial financial cushion. The charts below illustrate the divergent performance of the three segments.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingProfit">Operating Profit ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Revenue ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500">
+                            <option value="segmentRevenue" selected>Revenue by Segment</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The yearly chart shows the significant drop in operating profit in 2023 due to the multi-billion dollar charge related to the GTF engine recall. The quarterly chart highlights the consistent revenue generation across all three major segments.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The A&D Behemoth</h2>
+            <p class="content-text mb-6">RTX possesses an exceptionally wide and durable competitive moat. This advantage is rooted in its massive installed base of equipment, its portfolio of mission-critical and often sole-source technologies, and the enormous barriers to entry that characterize the aerospace and defense industries.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-cyan-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Massive Installed Base & Aftermarket:</strong> With products on nearly every commercial and military aircraft, RTX has a massive installed base. This creates a powerful, high-margin, recurring revenue stream from decades of providing spare parts and services—a classic "razor-and-blade" model.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-cyan-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technological Superiority & High Barriers to Entry:</strong> The technology required for jet engines, advanced radars, and missile systems is incredibly complex and protected by a wall of patents. The immense R&D and capital investment required make it virtually impossible for new players to compete.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-cyan-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700"> entrenched Customer Relationships:</strong> RTX is a critical, long-term partner to airlines, airframers like Boeing and Airbus, and the U.S. Department of Defense. These deep, integrated relationships create high switching costs and a durable competitive advantage.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-cyan-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">In Aerospace:</strong> Competes with other major aerospace suppliers like GE Aerospace and Safran (especially in engines), and Honeywell and Parker Hannifin in various aircraft systems.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-cyan-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">In Defense:</strong> Competes with other top-tier defense primes like Lockheed Martin, Northrop Grumman, and BAE Systems for major government contracts.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for RTX is a story of balance. The significant financial and operational headwinds from the Pratt & Whitney GTF engine recall present a major risk. However, this is counterbalanced by the powerful secular tailwinds of a strong commercial aerospace aftermarket and heightened global defense spending, which benefit the Collins and Raytheon segments.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Strong Commercial Aftermarket:</strong> A robust recovery in global air travel is driving high demand for the highly profitable maintenance and spare parts services at Collins and Pratt & Whitney.</li>
+                        <li><strong>Elevated Defense Spending:</strong> Increased geopolitical tensions are fueling strong demand and a massive backlog for Raytheon's missile and air defense systems.</li>
+                        <li><strong>Eventual Resolution of GTF Issue:</strong> Once the company moves past the peak financial impact of the engine recall, it could see a significant recovery in profitability and cash flow.</li>
+                        <li><strong>Reliable Capital Returns:</strong> The strength of the overall portfolio supports a strong and growing dividend, providing a solid return for investors.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Pratt & Whitney GTF Engine Crisis:</strong> This is the single largest risk. The ultimate cost, timeline, and reputational impact of the engine recall could be worse than currently anticipated.</li>
+                        <li><strong>Execution on Defense Contracts:</strong> The Raytheon segment has struggled with profitability on certain large, fixed-price development programs, which could continue to be a drag on earnings.</li>
+                        <li><strong>Supply Chain & Labor Constraints:</strong> The entire A&D industry continues to face challenges in sourcing materials and finding skilled labor, which can impact production schedules and costs.</li>
+                        <li><strong>Dependence on Government Budgets:</strong> The Raytheon business is dependent on the political process of defense budget appropriations, which can be unpredictable.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from RTX Corporation public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            cyan: '#00A3E0',
+            blue: '#00739E',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Collins Aerospace', 'Pratt & Whitney', 'Raytheon'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [38, 35, 27], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.cyan, CHART_COLORS.blue, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [64.4, 67.1, 68.9, 71.3], label: 'Total Revenue ($B)', color: CHART_COLORS.cyan },
+            operatingProfit: { data: [5.1, 4.8, 2.0, 5.8], label: 'Operating Profit ($B)', color: CHART_COLORS.blue },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'Collins Aerospace',
+                        data: [6.9, 6.9, 7.1, 7.0, 7.2, 7.1, 7.3, 7.1],
+                        backgroundColor: CHART_COLORS.cyan
+                    },
+                    {
+                        label: 'Pratt & Whitney',
+                        data: [6.4, 4.2, 6.4, 6.3, 6.5, 6.3, 6.6, 6.5],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                     {
+                        label: 'Raytheon',
+                        data: [4.1, 6.9, 6.9, 6.7, 6.8, 6.9, 7.0, 6.9],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createYearlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Revenue by Segment ($B)' } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue');
+
+    </script>
+</body>
+</html>
+

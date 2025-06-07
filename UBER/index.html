@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber Technologies, Inc. (UBER) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #2563EB; /* blue-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #2563EB; /* blue-600 */
+            color: #FFFFFF;
+            border-color: #1D4ED8; /* blue-700 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #2563EB; /* blue-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #2563EB;">Uber (UBER) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Uber: The Global Platform for Movement</h2>
+            <p class="content-text mb-6">Uber Technologies, Inc. operates a global technology platform that connects consumers with independent providers of transportation, delivery, and logistics services. From its origins in ride-hailing, Uber has evolved into a "super-app" for movement, encompassing food and grocery delivery with Uber Eats and a growing freight brokerage business. The company's strategy is centered on building a single, integrated platform to increase user frequency, loyalty, and lifetime value, while driving a clear path towards sustainable profitability and free cash flow generation. This analysis explores Uber's multifaceted business model, its financial trajectory, and its strategic positioning in the evolving landscape of on-demand services.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Uber's path forward is defined by several core strategic tenets:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Platform Synergy (The "Super-App"):</strong> Leveraging the user base of its Mobility segment to cross-promote and grow its Delivery business at a lower acquisition cost.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Growth & Profitability:</strong> A sharp focus on achieving GAAP profitability and generating substantial free cash flow, marking a shift from its prior "growth-at-all-costs" mindset.</li>
+                        <li><strong class="font-semibold text-gray-700">Global Market Leadership:</strong> Maintaining and expanding its leading position in ride-sharing and key delivery markets worldwide.</li>
+                        <li><strong class="font-semibold text-gray-700">Technological Differentiation:</strong> Continuous investment in its platform's algorithms for pricing, routing, and matching to improve efficiency and user experience.</li>
+                    </ul>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="kpi-card bg-blue-50 border-blue-200">
+                        <p class="kpi-label">Gross Bookings (Q1 '25)</p>
+                        <p class="kpi-value text-blue-600">$42.8B</p>
+                    </div>
+                     <div class="kpi-card bg-blue-50 border-blue-200">
+                        <p class="kpi-label">Active Consumers (Q1 '25)</p>
+                        <p class="kpi-value text-blue-600">170M</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Uber Makes Money: Mobility, Delivery, & Freight</h2>
+            <p class="content-text mb-6">Uber's operations are divided into three distinct but increasingly interconnected segments. The Mobility and Delivery segments form the core consumer-facing platform, while Freight tackles the logistics industry. The "take rate" — the portion of gross bookings Uber keeps as revenue — is the key monetization mechanism for its marketplaces. Explore the performance of each segment below.</p>
+
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="subsection-title">Segment Performance (FY 2024 Revenue)</h3>
+                    <p class="content-text mb-2">Uber's revenue is diversified across its three segments. <span class="highlight">Mobility</span> remains the largest and most profitable segment, providing the foundation for the entire platform. The <span class="highlight">Delivery</span> segment has achieved massive scale and is now a significant contributor to profitability. <span class="highlight">Freight</span> is the smallest segment and operates in a cyclical market but shows progress in improving efficiency.</p>
+                     <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                        <li><strong>Mobility:</strong> Core ride-hailing business. Generates revenue from commissions on rides.</li>
+                        <li><strong>Delivery:</strong> Uber Eats, including restaurant food, groceries, and other retail items. Revenue from consumer fees and merchant commissions.</li>
+                        <li><strong>Freight:</strong> Digital brokerage connecting shippers with carriers, aiming to digitize the logistics supply chain.</li>
+                    </ul>
+                </div>
+                <div class="chart-container h-72 md:h-80">
+                    <canvas id="segmentRevenueBreakdownChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Uber has demonstrated a remarkable financial turnaround, achieving consistent GAAP profitability and robust cash flow. This transformation highlights the operating leverage inherent in its platform model. The company's massive scale now translates directly into bottom-line results. Explore key financial trends using the dropdowns below to visualize both long-term annual performance and recent quarterly results.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2022-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="grossBookings">Gross Bookings ($B)</option>
+                            <option value="adjEBITDA">Adjusted EBITDA ($B)</option>
+                            <option value="operatingCashFlow">Operating Cash Flow ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="grossBookings">Gross Bookings ($B)</option>
+                            <option value="adjEBITDA">Adjusted EBITDA ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts illustrate a clear trend of accelerating profitability. Adjusted EBITDA and Operating Cash Flow have inflected positively and are growing rapidly, underscoring the company's successful pivot to profitable growth.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Power of the Network</h2>
+            <p class="content-text mb-6">Uber's primary competitive advantage is built on powerful, interlocking network effects. As the largest global player, its scale creates a flywheel that is difficult for smaller competitors to replicate. This "liquidity" — the ability to quickly and reliably find a ride or get a delivery — is the core of its value proposition.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Two-Sided Network Effects:</strong> This is the strongest moat. More users attract more drivers/couriers, which in turn leads to shorter wait times, lower prices, and better service, which attracts even more users. This creates a virtuous cycle.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Global Brand Recognition:</strong> "Uber" is synonymous with ride-hailing globally, providing a significant advantage in brand recall and customer trust over local or regional competitors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary Data & Technology:</strong> Years of trip and delivery data allow Uber to optimize pricing, routing, and demand forecasting with an efficiency that is hard for competitors to match.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Platform Scale & Cross-Promotion:</strong> The ability to acquire delivery users from its existing ride-hailing base at a very low cost is a powerful, unique advantage over pure-play delivery competitors.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Mobility:</strong> Lyft is the primary competitor in the United States, alongside regional players and traditional taxi services globally.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Delivery:</strong> DoorDash is the market leader in U.S. food delivery. Other competitors include Grubhub, and numerous international players.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Freight:</strong> Competes with traditional freight brokers like C.H. Robinson and a growing number of digital freight startups.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Public Transit:</strong> In the long run, Uber also competes with and aims to complement public transportation systems.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Uber's future presents a compelling balance of risk and reward. The company has successfully established a profitable, large-scale platform, but must continue to navigate a complex and often contentious regulatory and competitive environment.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Continued Profitability Growth:</strong> Significant runway to expand margins and grow free cash flow as the platform continues to scale efficiently.</li>
+                        <li><strong>New Verticals & Advertising:</strong> Growth in newer areas like grocery/retail delivery and a high-margin advertising business can add significant revenue streams.</li>
+                        <li><strong>Membership Program Growth:</strong> The Uber One membership program can drive higher user frequency and loyalty across both Mobility and Delivery.</li>
+                        <li><strong>Freight Market Turnaround:</strong> A cyclical recovery in the freight market would significantly benefit the Freight segment's financial performance.</li>
+                        <li><strong>Autonomous Technology:</strong> Long-term potential to drastically reduce the cost of a trip through partnerships and eventual deployment of autonomous vehicles.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Regulatory Headwinds:</strong> The global, ongoing legal challenge to the independent contractor model is the single largest risk to Uber's cost structure.</li>
+                        <li><strong>Intense Competition:</strong> Aggressive and well-funded competitors (especially in Delivery) can lead to price wars, subsidy spending, and pressure on take rates.</li>
+                        <li><strong>Labor Relations:</strong> Dependence on a large fleet of drivers and couriers makes Uber vulnerable to labor dissatisfaction, strikes, and pressure for higher wages/better conditions.</li>
+                        <li><strong>Macroeconomic Sensitivity:</strong> Demand for rides and food delivery is cyclical and can be negatively impacted by a slowdown in consumer spending.</li>
+                        <li><strong>Public & Political Scrutiny:</strong> As a large, market-defining company, Uber faces continuous public and political scrutiny over its business practices, labor model, and impact on cities.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Uber Technologies, Inc. public filings and credible financial news sources as of May 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click();
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#3B82F6',
+            sky: '#0EA5E9',
+            orange: '#F97316',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkBlue: '#2563EB',
+            teal: '#14B8A6',
+            lightGray: '#9CA3AF'
+        };
+
+        // Segment Revenue Breakdown Chart (Pie) - FY2024 Data
+        const segmentRevenueCtx = document.getElementById('segmentRevenueBreakdownChart').getContext('2d');
+        new Chart(segmentRevenueCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Mobility', 'Delivery', 'Freight'],
+                datasets: [{
+                    data: [25.1, 15.0, 3.9], // FY24 Data in $B (approx)
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.lightGray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Segment Revenue Contribution (FY2024, $B)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [31.88, 37.28, 43.98], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            grossBookings: { data: [115.4, 137.87, 162.77], label: 'Gross Bookings ($B)', color: CHART_COLORS.sky },
+            adjEBITDA: { data: [1.71, 4.05, 6.7], label: 'Adjusted EBITDA ($B)', color: CHART_COLORS.teal },
+            operatingCashFlow: { data: [0.63, 3.49, 5.4], label: 'Operating Cash Flow ($B)', color: CHART_COLORS.orange },
+            netIncome: { data: [-9.14, 1.89, 6.88], label: 'Net Income ($B)', color: CHART_COLORS.darkBlue }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [9.23, 9.29, 9.94, 10.13, 10.8, 11.1, 11.96, 11.53], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            grossBookings: { data: [33.6, 35.3, 37.58, 37.65, 40.5, 42.1, 44.2, 42.82], label: 'Gross Bookings ($B)', color: CHART_COLORS.sky },
+            adjEBITDA: { data: [0.92, 1.09, 1.28, 1.38, 1.55, 1.72, 1.84, 1.87], label: 'Adjusted EBITDA ($B)', color: CHART_COLORS.teal }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        type: (metricKey === 'adjEBITDA' || metricKey === 'netIncome') ? 'line' : 'bar',
+                        fill: (metricKey === 'adjEBITDA' || metricKey === 'netIncome') ? false : true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

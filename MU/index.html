@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micron Technology (MU) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #059669; /* emerald-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #34D399; /* emerald-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #059669; /* emerald-600 */
+            color: #FFFFFF;
+            border-color: #047857; /* emerald-700 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #059669; /* emerald-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #059669;">Micron Technology (MU) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Micron: Powering the AI and Data Economy</h2>
+            <p class="content-text mb-6">Micron Technology is a world leader in innovative memory and storage solutions that are foundational to the global economy. As one of only three major producers of DRAM, Micron operates in a highly cyclical but structurally vital part of the semiconductor industry. Its two primary products, DRAM (fast, volatile memory) and NAND (stable, long-term storage), are essential components in virtually every modern computing device, from data centers and PCs to smartphones and vehicles. Today, Micron is at the epicenter of the artificial intelligence revolution, as its leading-edge High-Bandwidth Memory (HBM) is a critical, high-demand component for AI accelerators. This analysis explores Micron's business, its navigation of the memory cycle, and its pivotal role in the AI era.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Micron's strategy is focused on technology leadership and market discipline:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Technology & Manufacturing Leadership:</strong> Be at the forefront of developing and manufacturing the most advanced DRAM and NAND process nodes to deliver best-in-class performance and cost-efficiency.</li>
+                        <li><strong class="font-semibold text-gray-700">Focus on High-Value Solutions:</strong> Shift the product portfolio towards more profitable, specialized memory and storage for high-growth markets like AI data centers, 5G, and automotive.</li>
+                        <li><strong class="font-semibold text-gray-700">Capitalize on the AI Inflection Point:</strong> Leverage its industry-leading High-Bandwidth Memory (HBM3E) to become a key supplier for AI accelerator cards.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Supply Management:</strong> Actively manage production levels and capital expenditures to better match supply with demand, aiming to reduce the extreme volatility of the memory cycle.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-emerald-50 border-emerald-200">
+                    <p class="kpi-label">High-Bandwidth Memory (HBM)</p>
+                    <p class="kpi-value text-emerald-600">Sold Out for 2025</p>
+                    <p class="content-text text-sm mt-2">Micron's most advanced product is experiencing massive demand from the AI industry, with its entire planned production for 2025 already allocated to customers.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Micron Makes Money: Products & Business Units</h2>
+            <p class="content-text mb-6">Micron's revenue is generated by two main product lines, DRAM and NAND, which are sold into four distinct business units. DRAM, used for active data processing, is the larger and more profitable product line. NAND is used for data storage. The Data Center Business Unit has become the company's most important growth driver, especially with the surge in AI-related demand.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="products">By Product</button>
+                    <button class="segment-tab-button" data-target="units">By Business Unit</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="productsContent" class="segment-content">
+                    <h3 class="subsection-title">By Product: DRAM vs. NAND</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The fundamental drivers of the business. **DRAM** (Dynamic Random-Access Memory) is a high-speed, volatile memory that acts as the "short-term memory" for processors. It is essential for servers, PCs, and smartphones. <span class="highlight">High-Bandwidth Memory (HBM)</span> is a specialized, high-performance type of DRAM stacked in a 3D package, crucial for AI GPUs. **NAND** is non-volatile flash memory used for long-term data storage in SSDs, phones, and USB drives.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="productBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="unitsContent" class="segment-content hidden">
+                    <h3 class="subsection-title">By Business Unit</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Micron's end markets are organized into four units:</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-2">
+                                <li><strong>Data Center:</strong> The key growth engine, supplying memory and storage for cloud, enterprise, and now, AI servers.</li>
+                                <li><strong>PC & Graphics:</strong> A large but cyclical business providing DRAM and SSDs for personal computers and components for graphics cards.</li>
+                                <li><strong>Mobile:</strong> Provides low-power DRAM and NAND for the global smartphone market.</li>
+                                <li><strong>Auto & Industrial:</strong> A growing segment providing highly reliable memory for cars, factory automation, and other embedded systems.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="buBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive: The Memory Cycle</h2>
+            <p class="content-text mb-6">The financials of a memory company are defined by "the cycle." Periods of tight supply and high demand lead to rising prices (ASPs), high margins, and massive profits. Conversely, periods of oversupply and weak demand lead to falling prices, collapsing margins, and significant losses. The charts below vividly illustrate this boom-and-bust dynamic, showing the 2022 peak, the severe 2023 downturn, and the beginning of a powerful AI-driven recovery in 2024-2025.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (The Cycle)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="grossMargin">Gross Margin (%)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (The Recovery)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="grossMargin">Gross Margin (%)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The yearly chart shows the classic memory cycle. The quarterly chart clearly illustrates the bottoming process in mid-2023 and the sharp recovery in revenue and margins underway, fueled by improving prices and AI demand.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The DRAM Oligopoly</h2>
+            <p class="content-text mb-6">Micron's competitive moat is derived from the unique structure of the memory industry itself. The DRAM market is a rational oligopoly, while the NAND market is more competitive. The immense capital and technological requirements to compete at the leading edge create nearly insurmountable barriers to entry.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-emerald-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Barriers to Entry:</strong> Manufacturing memory is incredibly capital-intensive. A single new fabrication plant (fab) can cost over $15 billion and takes years to build. This, combined with the deep, proprietary technical expertise required, prevents new competitors from entering the market.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-emerald-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Rational Oligopoly (DRAM):</strong> The DRAM market is effectively controlled by three players: Samsung, SK Hynix, and Micron. This structure leads to more rational supply behavior, as no single player benefits from flooding the market and crashing prices for everyone.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-emerald-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technological Leadership:</strong> Micron possesses a deep portfolio of patents and trade secrets related to memory design and manufacturing processes. Staying on the leading edge of process technology (e.g., shrinking the size of memory cells) is a key competitive differentiator and a moat in itself.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-emerald-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Samsung Electronics:</strong> The largest memory manufacturer in the world. A massive and formidable competitor in both DRAM and NAND with immense capital resources.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-emerald-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">SK Hynix:</strong> The second-largest memory manufacturer and a fierce competitor, particularly in the high-performance DRAM and HBM space.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-emerald-400 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Other NAND Players:</strong> The NAND market is more fragmented than DRAM, with additional competitors like Kioxia and Western Digital.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Micron's future is a tale of two powerful forces: the historical, volatile memory cycle and the new, massive secular demand driver of artificial intelligence. The investment thesis hinges on the belief that the AI boom will create a more sustained and profitable demand environment than seen in previous cycles.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>The AI Supercycle:</strong> The explosive growth of AI requires vast amounts of high-performance memory, particularly HBM. This is a multi-year secular tailwind that could lead to unprecedented demand and profitability.</li>
+                        <li><strong>Strong Pricing Power:</strong> As the memory market recovers and demand (especially for HBM) outstrips supply, Micron is experiencing significant improvements in pricing (ASPs), driving margin expansion.</li>
+                        <li><strong>Oligopolistic Industry Structure:</strong> The rational behavior of the three main DRAM players should lead to more disciplined supply growth, potentially smoothing the "bust" phase of future cycles.</li>
+                        <li><strong>Diversified End Markets:</strong> Growing exposure to long-lifecycle markets like automotive and industrial provides a more stable revenue base to offset some of the volatility from the PC and mobile markets.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Extreme Industry Cyclicality:</strong> The single biggest risk. The memory market is historically prone to severe boom-and-bust cycles. A future downturn could lead to sharp declines in revenue and significant losses.</li>
+                        <li><strong>Intense Competition:</strong> Faces fierce, well-funded competition from Samsung and SK Hynix. Falling behind on the technology roadmap for the next generation of memory would be disastrous.</li>
+                        <li><strong>High Capital Intensity:</strong> Maintaining technology leadership requires constant, massive capital expenditures on new fabs and equipment, which can strain free cash flow during downturns.</li>
+                        <li><strong>Geopolitical & Supply Chain Risk:</strong> Heavy concentration of manufacturing and supply chains in Asia creates vulnerability to geopolitical tensions and potential disruptions.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Micron Technology, Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            green: '#059669',
+            sky: '#38BDF8',
+            amber: '#F59E0B',
+            purple: '#8B5CF6',
+        };
+
+        // Product Breakdown Chart
+        const productBreakdownCtx = document.getElementById('productBreakdownChart').getContext('2d');
+        new Chart(productBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['DRAM', 'NAND'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [73, 25], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.green, CHART_COLORS.sky],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue by Product (%)' } }
+            }
+        });
+
+        // BU Breakdown Chart
+        const buBreakdownCtx = document.getElementById('buBreakdownChart').getContext('2d');
+        new Chart(buBreakdownCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Data Center', 'PC & Graphics', 'Mobile', 'Auto & Industrial'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [38, 24, 22, 16], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.green, CHART_COLORS.sky, CHART_COLORS.amber, CHART_COLORS.purple],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue by Business Unit (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [21.4, 27.7, 30.8, 15.5, 19.3], label: 'Total Revenue ($B)', color: CHART_COLORS.green },
+            grossMargin: { data: [31.3, 40.4, 45.9, 9.8, 15.1], label: 'Gross Margin (%)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            netRevenue: { data: [3.7, 3.8, 4.0, 4.7, 5.8, 6.6, 7.3, 8.1], label: 'Total Revenue ($B)', color: CHART_COLORS.green },
+            grossMargin: { data: [-31.4, -16.0, -9.1, 0.5, 20.0, 28.0, 35.1, 40.3], label: 'Gross Margin (%)', color: CHART_COLORS.sky }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isMargin = metricKey.toLowerCase().includes('margin');
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isMargin ? 'line' : 'bar',
+                        fill: !isMargin,
+                        yAxisID: isMargin ? 'y1' : 'y'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: false, 
+                            title: { display: true, text: isMargin ? '' : 'Revenue ($B)' } 
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: isMargin,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Margin (%)' }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'netRevenue');
+
+    </script>
+</body>
+</html>
+

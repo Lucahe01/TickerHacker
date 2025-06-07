@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Micro Devices (AMD) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #16A34A; /* green-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #4ADE80; /* green-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #16A34A; /* green-600 */
+            color: #FFFFFF;
+            border-color: #15803D; /* green-700 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #16A34A; /* green-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #16A34A;">AMD, Inc. (AMD) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">AMD: Powering the High-Performance Computing Era</h2>
+            <p class="content-text mb-6">Advanced Micro Devices (AMD) is a global semiconductor powerhouse that designs the critical processors powering everything from supercomputers and AI data centers to gaming consoles and personal computers. After years of trailing its chief rival, Intel, AMD has surged to the forefront of high-performance computing through product leadership and a nimble manufacturing strategy. The company's business is now diversified across four key segments: Data Center, Client, Gaming, and Embedded. With its recent acquisition of Xilinx, AMD has bolstered its portfolio with adaptive computing technologies, positioning itself as a key enabler of the artificial intelligence revolution. This analysis explores AMD's powerful product segments, its financial trajectory, and its strategic battle for leadership in the AI era.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">AMD's strategy is focused on technology leadership and market expansion:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Deliver High-Performance & Adaptive Computing:</strong> Combine its leading portfolio of CPUs, GPUs, FPGAs, and software to solve the world's most complex problems.</li>
+                        <li><strong class="font-semibold text-gray-700">Capture the AI Opportunity:</strong> Aggressively target the massive AI accelerator market with its Instinct GPU family, aiming to become the primary alternative to NVIDIA in the data center.</li>
+                        <li><strong class="font-semibold text-gray-700">Execute a "Fabless" Manufacturing Model:</strong> Partner with leading-edge foundries like TSMC to leverage the most advanced manufacturing processes without the immense cost of owning and operating fabs.</li>
+                        <li><strong class="font-semibold text-gray-700">Deepen Customer Partnerships:</strong> Collaborate closely with a broad range of customers, from cloud hyperscalers and PC makers to automotive and industrial clients.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-green-50 border-green-200">
+                    <p class="kpi-label">2025 AI Accelerator Revenue Forecast</p>
+                    <p class="kpi-value text-green-600">$4.5 Billion+</p>
+                    <p class="content-text text-sm mt-2">Driven by strong demand for its MI300 series of data center GPUs, highlighting its rapid progress in the critical AI market.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How AMD Makes Money: The Four Engines</h2>
+            <p class="content-text mb-6">AMD's business is organized into four distinct segments, each targeting a major sector of the technology industry. While the Data Center segment is now the primary growth engine, the Client, Gaming, and Embedded segments provide diversification and significant revenue streams. The chart below shows the revenue contribution of each segment for fiscal year 2024.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="datacenter">Data Center</button>
+                    <button class="segment-tab-button" data-target="client">Client</button>
+                    <button class="segment-tab-button" data-target="gaming">Gaming</button>
+                    <button class="segment-tab-button" data-target="embedded">Embedded</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="datacenterContent" class="segment-content">
+                    <h3 class="subsection-title">Data Center Segment</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is AMD's most important and fastest-growing segment. It includes the EPYC family of server CPUs, which have taken significant market share from Intel, and the Instinct family of data center GPUs, designed for AI and high-performance computing (HPC). Customers are primarily large cloud providers (like Microsoft, Google, and AWS) and enterprise companies.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="clientContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Client Segment</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Client segment consists of CPUs and chipsets for desktop and notebook personal computers, sold under the iconic <span class="highlight">Ryzen</span> brand. This business is highly cyclical and dependent on the health of the global PC market. AMD has made significant market share gains against Intel in this segment over the past several years thanks to the performance of its Ryzen processors.</p>
+                        </div>
+                        <div class="kpi-card bg-green-50 border-green-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Primary Competitor</p>
+                            <p class="kpi-value text-green-600 text-2xl">Intel</p>
+                            <p class="content-text text-sm mt-2">The Client segment is a head-to-head battle with Intel for market share in the massive PC market.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="gamingContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Gaming Segment</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Gaming segment has two parts: discrete GPUs and semi-custom SoCs. The discrete GPUs, sold under the <span class="highlight">Radeon</span> brand, compete with NVIDIA's GeForce cards in the PC gaming market. The semi-custom business is the more significant revenue driver, where AMD designs and sells custom chips that power major game consoles like the Sony PlayStation 5 and Microsoft Xbox Series X/S. This provides a stable, long-term revenue stream tied to console lifecycles.</p>
+                        </div>
+                        <div class="kpi-card bg-green-50 border-green-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Customers</p>
+                            <p class="kpi-value text-green-600 text-2xl">Sony & Microsoft</p>
+                            <p class="content-text text-sm mt-2">Long-term partnerships to power the PlayStation and Xbox consoles provide a sticky and predictable revenue base.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="embeddedContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Embedded Segment</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Dramatically expanded by the acquisition of Xilinx, the Embedded segment provides a broad portfolio of processors and adaptive computing products. These chips are used in a wide variety of industries beyond PCs and data centers, including automotive, telecommunications, industrial, and healthcare. This segment provides significant diversification and exposure to long-lifecycle products with stable demand.</p>
+                        </div>
+                        <div class="kpi-card bg-green-50 border-green-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Technology</p>
+                            <p class="kpi-value text-green-600 text-base">Adaptive SoCs & FPGAs</p>
+                            <p class="content-text text-sm mt-2">Acquired from Xilinx, this technology allows chips to be reprogrammed after manufacturing, ideal for rapidly evolving markets like 5G and autonomous driving.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">AMD's financial performance showcases its transformation into a diversified, high-growth semiconductor leader. While its Client and Gaming segments are subject to market cyclicality, the explosive growth of its high-margin Data Center business is reshaping the company's financial profile. The quarterly segment revenue chart below clearly illustrates this shift, with Data Center becoming an increasingly dominant part of the story.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Revenue ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                            <option value="segmentRevenue" selected>Revenue by Segment</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The yearly chart shows the incredible growth from 2020-2022. The quarterly chart highlights the recent decline in Client/Gaming revenue and the offsetting, explosive growth from the Data Center segment.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The High-Performance Challenger</h2>
+            <p class="content-text mb-6">AMD's competitive moat is built on its deep portfolio of high-performance intellectual property (IP) and its agile, fabless manufacturing strategy. While it faces intense competition from larger rivals, its technological execution and strong partnerships have allowed it to build a formidable market position.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary x86 CPU & GPU IP:</strong> AMD is one of only two companies in the world (with Intel) that has the license to the x86 instruction set, the foundation of the PC and server markets. This, combined with its leading-edge graphics IP, creates a powerful and protected product portfolio.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Fabless Manufacturing Model:</strong> By outsourcing its manufacturing to foundries like TSMC, AMD gains access to the world's most advanced process technology without the massive capital expense and risk of owning its own factories. This allows it to focus its resources on chip design.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Broad, Diversified Portfolio:</strong> The ability to offer a comprehensive suite of computing solutions—CPUs, GPUs, FPGAs, and adaptive SoCs—allows AMD to serve a wider range of customer needs and create integrated solutions that standalone competitors cannot easily match.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-green-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Intel:</strong> The primary competitor in the PC (Client) and server (Data Center) CPU markets. A formidable rival with immense scale and resources.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">NVIDIA:</strong> The dominant leader in the discrete GPU market for both gaming and, most importantly, AI data center accelerators. NVIDIA's CUDA software ecosystem is a major competitive barrier.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-green-400 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Cloud Providers' Custom Chips:</strong> Large cloud companies like Amazon (Graviton) and Google (TPU) are increasingly designing their own custom chips, which could reduce their reliance on third-party providers like AMD.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">AMD's future is inextricably linked to the growth of artificial intelligence and the broader demand for high-performance computing. The investment thesis hinges on its ability to successfully execute its product roadmap and capture a meaningful share of the massive AI accelerator market, while navigating the cyclical nature of its other businesses.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>The AI Data Center Boom:</strong> The exponential growth in demand for AI training and inference represents the single largest opportunity for AMD's Instinct GPUs and EPYC CPUs.</li>
+                        <li><strong>Continued Server Market Share Gains:</strong> Opportunity to continue taking market share from Intel in the profitable server CPU market with its performance-leading EPYC processors.</li>
+                        <li><strong>Portfolio Synergy:</strong> The ability to cross-sell and integrate its diverse portfolio of CPUs, GPUs, and adaptive computing products to create unique solutions for customers.</li>
+                        <li><strong>PC Market Recovery:</strong> A potential cyclical recovery in the personal computer market would provide a significant tailwind for the Client segment.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Fierce Competition:</strong> Faces intense, well-funded competition from dominant market leaders Intel (in CPUs) and NVIDIA (in AI GPUs). NVIDIA's entrenched CUDA software platform is a particularly high barrier.</li>
+                        <li><strong>Semiconductor Cyclicality:</strong> The Client and Gaming segments are highly cyclical and prone to periods of soft demand and inventory corrections, which can impact overall financial results.</li>
+                        <li><strong>Manufacturing & Supply Chain Risk:</strong> Heavy reliance on a single primary foundry partner (TSMC) creates concentration risk and exposure to potential supply chain disruptions or geopolitical tensions.</li>
+                        <li><strong>High Valuation & Execution Pressure:</strong> AMD's stock often trades at a high valuation that prices in significant future growth, meaning the company is under constant pressure to execute flawlessly on its product roadmap and AI strategy.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Advanced Micro Devices, Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            green: '#16A34A',
+            orange: '#F97316',
+            sky: '#38BDF8',
+            purple: '#8B5CF6',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Data Center', 'Client', 'Gaming', 'Embedded'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [38, 25, 20, 17], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.green, CHART_COLORS.sky, CHART_COLORS.purple, CHART_COLORS.orange],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [9.76, 16.43, 23.60, 22.68, 24.13], label: 'Total Revenue ($B)', color: CHART_COLORS.green },
+            operatingIncome: { data: [1.37, 3.65, 3.44, 2.19, 2.88], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'Data Center',
+                        data: [1.3, 1.6, 2.3, 2.4, 2.8, 3.2, 3.5, 3.1],
+                        backgroundColor: CHART_COLORS.green
+                    },
+                    {
+                        label: 'Client',
+                        data: [1.0, 1.5, 1.5, 1.4, 1.3, 1.6, 1.7, 1.5],
+                        backgroundColor: CHART_COLORS.sky
+                    },
+                     {
+                        label: 'Gaming',
+                        data: [1.6, 1.5, 1.1, 0.9, 0.9, 1.0, 1.2, 1.0],
+                        backgroundColor: CHART_COLORS.purple
+                    },
+                     {
+                        label: 'Embedded',
+                        data: [1.5, 1.2, 1.2, 1.1, 1.0, 1.1, 1.2, 1.1],
+                        backgroundColor: CHART_COLORS.orange
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createYearlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Revenue by Segment ($B)' } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        // This listener is kept for structural consistency but has only one option.
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue');
+
+    </script>
+</body>
+</html>
+

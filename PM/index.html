@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philip Morris International (PM) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #0088CE; /* PMI Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* Lighter Blue */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #0088CE; /* PMI Blue */
+            color: #FFFFFF;
+            border-color: #0073AF; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #0088CE; /* PMI Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #0088CE;">Philip Morris Int'l (PM) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Philip Morris: The "Smoke-Free" Transformation</h2>
+            <p class="content-text mb-6">Philip Morris International (PMI) is a leading global tobacco company on a mission to transform its business. While it has long been the international steward of <span class="highlight">Marlboro</span>, the world's #1 cigarette brand, the company is now staking its future on "delivering a smoke-free future." This involves a massive strategic pivot away from traditional combustible cigarettes and toward a portfolio of scientifically substantiated, reduced-risk products (RRPs). This transformation is led by its dominant **IQOS** heated tobacco platform and was recently supercharged by the acquisition of **Swedish Match**, making it a leader in the fast-growing oral nicotine pouch category with the **ZYN** brand. This analysis explores PMI's radical business model shift, its financial performance, and its strategic position in the evolving nicotine industry.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">PMI's strategy is singularly focused on its transformation:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Lead the Smoke-Free Transition:</strong> Aggressively convert adult smokers who would otherwise continue smoking to its portfolio of scientifically-backed, smoke-free alternatives.</li>
+                        <li><strong class="font-semibold text-gray-700">Dominate with IQOS:</strong> Continue the global rollout of its flagship IQOS heated tobacco system as the primary engine of the smoke-free transition.</li>
+                        <li><strong class="font-semibold text-gray-700">Build a Multi-Category Portfolio:</strong> Become a leader across all major smoke-free categories, including heated tobacco, oral nicotine (ZYN), and e-vapor, to offer alternatives for all adult user preferences.</li>
+                        <li><strong class="font-semibold text-gray-700">Maximize the Combustible Business:</strong> Responsibly manage its legacy cigarette business to maximize profitability and cash flow, which in turn funds the smoke-free transformation and shareholder returns.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Smoke-Free Net Revenues (FY2024)</p>
+                    <p class="kpi-value text-blue-800">39.4%</p>
+                    <p class="content-text text-sm mt-2">Represents the portion of total net revenues from smoke-free products, the single most important metric tracking the success of the company's transformation.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How PMI Makes Money: Combustibles vs. Smoke-Free</h2>
+            <p class="content-text mb-6">Philip Morris's business is best understood as a tale of two opposing product categories. The legacy **Combustible** cigarette business, while in secular decline, is still a massive generator of cash. This cash is being used to fund the rapid growth of the **Smoke-Free Products** category, which is the undisputed future of the company. The charts below illustrate this dramatic business model shift in action.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="smokefree">Smoke-Free Products</button>
+                    <button class="segment-tab-button" data-target="combustible">Combustible Cigarettes</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="smokefreeContent" class="segment-content">
+                    <h3 class="subsection-title">Smoke-Free Products (The Future)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the entire growth story for PMI. This segment is dominated by <span class="highlight">IQOS</span>, an electronic device that heats specially designed tobacco units (called HEETS or TEREA) without burning them. Following the acquisition of Swedish Match, this segment now also includes <span class="highlight">ZYN</span>, the leading brand of oral nicotine pouches in the U.S. This multi-category approach is designed to capture all facets of the market for alternatives to smoking.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="combustibleContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Combustible Cigarettes (The Legacy)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment includes the international rights to some of the world's most iconic cigarette brands. The flagship is <span class="highlight">Marlboro</span>, which remains the #1 cigarette brand globally (outside of China and the U.S.). While shipment volumes are in a long-term structural decline of 1-2% per year, this business is managed for cash flow. Its immense profitability and pricing power are used to fund the company's smoke-free ambitions and its generous dividend.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">#1 Global Cigarette Brand</p>
+                            <p class="kpi-value text-blue-800 text-2xl">Marlboro</p>
+                            <p class="content-text text-sm mt-2">The unparalleled brand equity of Marlboro provides significant pricing power and cash flow for the legacy combustible business.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Philip Morris's financial results clearly illustrate its strategic transformation. While total revenue shows steady growth, the underlying drivers have shifted dramatically. The quarterly chart below shows how the high-growth smoke-free business is rapidly offsetting the slow decline of the legacy combustible business, leading to a higher-quality and faster-growing revenue base. The company's business model generates immense free cash flow, which supports one of the highest dividend yields in the large-cap consumer staples sector.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Revenue ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="segmentRevenue" selected>Revenue by Segment</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The quarterly chart powerfully illustrates the business transformation, with the smoke-free category (in blue) becoming a progressively larger part of the total revenue mix.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: Brands & Distribution</h2>
+            <p class="content-text mb-6">Philip Morris International possesses an exceptionally wide and durable competitive moat. This advantage is built on a foundation of iconic global brands, an unparalleled distribution network, and a leading position in the next-generation heated tobacco category.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Iconic Global Brands:</strong> PMI owns the international rights to Marlboro, the most valuable tobacco brand in the world. This provides immense pricing power. In new categories, it has quickly established IQOS as the dominant global leader in heated tobacco and owns ZYN, the #1 oral nicotine pouch in the U.S.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Unmatched Global Distribution Network:</strong> Decades of selling cigarettes have built a complex and deeply entrenched distribution network that reaches millions of retail points of sale in over 180 markets. This network is a massive barrier to entry for any new competitor.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">First-Mover Advantage & Scale in RRPs:</strong> By investing billions of dollars over more than a decade, PMI has a significant first-mover advantage and massive scale in the heated tobacco category with IQOS, creating a powerful moat in the fastest-growing smoke-free segment.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Major Tobacco Companies:</strong> Competes with other large international tobacco companies like British American Tobacco (BAT) and Japan Tobacco, which are also investing heavily in their own smoke-free alternatives (e.g., BAT's "Vuse" e-cigarettes and "glo" heated tobacco).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Regional & Local Players:</strong> Faces competition from a host of smaller companies, particularly in the fragmented e-vapor (vape) market.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Philip Morris is a direct bet on its ability to successfully navigate its "smoke-free" transformation. The rewards come from leading a massive, profitable new category of consumer products, while the risks are centered on the significant regulatory uncertainty surrounding these new products.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Massive Growth in Smoke-Free Products:</strong> The global market for smoke-free alternatives is large and growing rapidly. As the clear leader, PMI is best positioned to capture a disproportionate share of this growth.</li>
+                        <li><strong>Higher Margin & Pricing Power:</strong> Smoke-free products, particularly heated tobacco, generally command higher margins than traditional cigarettes, which could lead to overall margin expansion as the business mix shifts.</li>
+                        <li><strong>Strong Cash Flow & Dividend Yield:</strong> The highly profitable nature of the business generates immense free cash flow, which supports a very attractive and reliable dividend for income-focused investors.</li>
+                        <li><strong>Potential for Improved ESG Perception:</strong> A successful transition to a majority smoke-free company could, over time, improve its perception among investors with ESG mandates.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Regulatory Risk:</strong> This is the single biggest risk. Governments around the world could impose adverse regulations, such as flavor bans, marketing restrictions, or steep excise taxes on smoke-free products, which would severely impact their growth and profitability.</li>
+                        <li><strong>Decline of Combustibles:</strong> The legacy business is in irreversible decline. The company *must* succeed in its transformation to have a viable long-term future.</li>
+                        <li><strong>Intense Competition:</strong> All major tobacco companies are now investing heavily in smoke-free alternatives, which will increase competitive intensity and could pressure prices and market share.</li>
+                        <li><strong>Public Health & ESG Scrutiny:</strong> As a seller of addictive nicotine products, the company will always face intense scrutiny from public health organizations and will be excluded from many investment funds on ESG grounds.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Philip Morris International public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#0088CE',
+            gray: '#6B7280',
+            sky: '#3B82F6',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Smoke-Free Products', 'Combustible Cigarettes'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [39, 61], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Category (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [28.7, 31.4, 31.7, 35.2, 37.5], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingIncome: { data: [11.7, 13.0, 12.0, 11.6, 12.2], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'Smoke-Free Products',
+                        data: [3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.1, 4.3],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                    {
+                        label: 'Combustibles',
+                        data: [5.6, 5.6, 5.2, 5.4, 5.5, 5.5, 5.1, 5.3],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createYearlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Revenue by Segment ($B)' } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue');
+
+    </script>
+</body>
+</html>
+

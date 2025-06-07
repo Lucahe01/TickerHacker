@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceNow Inc. (NOW) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #38BDF8; /* sky-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #3B82F6; /* blue-500 */
+            color: #FFFFFF;
+            border-color: #2563EB; /* blue-600 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #3B82F6; /* blue-500 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #3B82F6;">ServiceNow (NOW) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">ServiceNow: The Platform for Digital Transformation</h2>
+            <p class="content-text mb-6">ServiceNow, Inc. has evolved from an IT Service Management (ITSM) tool into a comprehensive enterprise cloud platform that automates and optimizes workflows across an entire organization. Its core offering, the Now Platform, provides a single data model and architecture to break down departmental silos, enhancing productivity for employees and improving experiences for customers. The company's business model is centered on a land-and-expand strategy, driven by a powerful, subscription-based revenue stream that boasts impressive renewal rates.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">ServiceNow's strategy is built on several key pillars to drive growth and platform adoption:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Unified Platform Play:</strong> Offering a single, intelligent platform (the Now Platform) to manage and automate workflows across the entire enterprise, from IT to HR to Customer Service.</li>
+                        <li><strong class="font-semibold text-gray-700">Land and Expand:</strong> Securing new customers with a flagship product (often ITSM) and then expanding the relationship by cross-selling additional workflow solutions.</li>
+                        <li><strong class="font-semibold text-gray-700">Verticalization:</strong> Developing industry-specific solutions for sectors like financial services, healthcare, and telecommunications to address unique market needs.</li>
+                        <li><strong class="font-semibold text-gray-700">AI-Powered Intelligence:</strong> Embedding AI capabilities, branded as "Now Assist," across all workflows to provide predictive analytics, automate tasks, and enhance user productivity.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Customers with >$1M ACV (Q4 2024)</p>
+                    <p class="kpi-value text-blue-600">2,109</p>
+                    <p class="content-text text-sm mt-2">This metric highlights the successful "land-and-expand" strategy, showing a 12% YoY increase in large customer contracts.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How ServiceNow Makes Money: The Now Platform</h2>
+            <p class="content-text mb-6">ServiceNow's revenue is overwhelmingly generated through a subscription-based model, which provides recurring, predictable income and fosters long-term customer relationships. Over 97% of total revenue comes from subscriptions to their workflow automation products. The remaining portion is from professional services that assist with implementation and optimization. The business is organized around four key workflow categories that run on the single Now Platform.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="workflows">Workflows</button>
+                    <button class="segment-tab-button" data-target="revenue">Revenue Model</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="workflowsContent" class="segment-content">
+                    <h3 class="subsection-title">Workflow Segments</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">ServiceNow's applications are categorized into suites of workflows designed for different business functions. These workflows are deeply interconnected, allowing for seamless cross-departmental automation.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Technology Workflows:</strong> The company's foundation, including IT Service Management (ITSM), IT Operations Management (ITOM), and Strategic Portfolio Management. This remains the largest segment.</li>
+                                <li><strong>Employee Workflows:</strong> Focused on improving the employee experience with solutions for HR Service Delivery, Workplace Services, and Legal Service Delivery.</li>
+                                <li><strong>Customer Workflows:</strong> Designed to enhance the customer journey through Customer Service Management (CSM) and Field Service Management.</li>
+                                <li><strong>Creator Workflows:</strong> Enables customers to build their own low-code/no-code applications on the Now Platform to meet specific business needs.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="workflowRevenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="revenueContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Subscription Dominance</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The subscription model is the financial engine of ServiceNow. Customers typically sign multi-year contracts, providing excellent revenue visibility. In Fiscal Year 2024, subscription revenues reached <span class="highlight">$10.64 billion</span>, a 23% YoY increase.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Predictable Revenue:</strong> Multi-year contracts lead to a high percentage of recurring revenue.</li>
+                                <li><strong>High Gross Margins:</strong> Subscription services carry very high gross margins (around 85% Non-GAAP), which fuels profitability.</li>
+                                <li><strong>Exceptional Renewal Rate:</strong> ServiceNow consistently boasts a renewal rate of ~99%, indicating a very sticky platform and high customer satisfaction.</li>
+                                 <li><strong>Professional Services:</strong> A smaller, lower-margin segment focused on helping customers implement and get value from the platform, which often leads to further subscription expansion.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueMixChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">ServiceNow exhibits the powerful financial characteristics of a best-in-class SaaS company: rapid revenue growth, expanding margins, and strong cash flow generation. A key metric for investors is Remaining Performance Obligations (RPO), which represents future revenue that is contracted but not yet recognized, providing high visibility into future growth. Explore key financial trends using the dropdowns below.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                            <option value="operatingCashFlow">Operating Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="subscriptionRevenue">Subscription Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="crpo">Current RPO ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The consistent upward trend in both annual and quarterly metrics demonstrates strong execution and durable demand for ServiceNow's platform, even in a challenging macroeconomic environment.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Workflow Integration Engine</h2>
+            <p class="content-text mb-6">ServiceNow's competitive moat is exceptionally strong and is built upon the deep integration of its platform into the core operational fabric of its customers. This creates significant barriers to entry for competitors and high switching costs for customers who have configured their business processes on the Now Platform.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Switching Costs:</strong> Once a company has built numerous workflows and integrated its data into the Now Platform, the cost, complexity, and operational risk of migrating to a competitor are immense.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Single Platform Architecture:</strong> The unified data model is a key differentiator. It eliminates data silos and allows for seamless automation between departments, an advantage over competitors who often rely on acquired, disjointed products.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Network Effects:</strong> As more applications are built on the Now Platform by ServiceNow, its partners, and its customers, the value of the platform increases for all users, attracting more developers and creating a virtuous cycle.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Brand Leadership in ITSM:</strong> ServiceNow is the undisputed leader in IT Service Management. This position of strength serves as a powerful beachhead to expand into other areas of the enterprise.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Legacy Systems & Point Solutions:</strong> In-house systems and specialized software from vendors like BMC, Atlassian (Jira), and Freshworks compete with specific workflows.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Enterprise Software Giants:</strong> Companies like Salesforce, Oracle, and SAP are increasingly competing in areas like customer service and employee experience, though they lack ServiceNow's single-platform architecture.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Low-Code/No-Code Platforms:</strong> Competitors like Microsoft (Power Platform) offer tools for citizen developers, but ServiceNow's advantage lies in its deep integration with its own pre-built workflow applications.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">ServiceNow is well-positioned to be a primary beneficiary of the ongoing digital transformation trend. However, its premium valuation reflects high expectations, and it must navigate several risks to continue its impressive growth trajectory.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Generative AI Leadership:</strong> The "Now Assist" GenAI offering is a major growth catalyst, with potential to increase Annual Contract Value (ACV) as customers adopt AI-powered features across the platform.</li>
+                        <li><strong>Large Untapped Market:</strong> Despite its size, ServiceNow has penetrated only a fraction of its total addressable market. There is a long runway for growth by acquiring new customers and expanding within the existing base.</li>
+                        <li><strong>Platform Consolidation:</strong> In a tough macro environment, companies look to consolidate IT spending on fewer, more strategic platforms. ServiceNow is a prime candidate to benefit from this trend.</li>
+                        <li><strong>Expanding Partner Ecosystem:</strong> A growing network of implementation partners and third-party developers on the ServiceNow Store accelerates innovation and customer adoption.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>High Valuation & Expectations:</strong> The stock trades at a premium multiple (high P/S and P/E ratios), making it vulnerable to pullbacks if growth decelerates even slightly.</li>
+                        <li><strong>Macroeconomic Sensitivity:</strong> While resilient, a severe economic downturn could lengthen sales cycles and cause customers to delay large digital transformation projects.</li>
+                        <li><strong>Complexity of Implementation:</strong> Realizing the full value of ServiceNow can be a complex and lengthy process, requiring significant change management and expertise, posing a risk to customer satisfaction if not managed well.</li>
+                        <li><strong>Intensifying Competition:</strong> While its moat is strong, large, well-funded competitors like Microsoft and Salesforce are continuously looking to encroach on its turf, particularly in AI and low-code development.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from ServiceNow, Inc. public SEC filings and press releases as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#3B82F6',
+            sky: '#38BDF8',
+            orange: '#F97316',
+            teal: '#14B8A6',
+            gray: '#4B5563',
+            darkBlue: '#2563EB',
+            lightBlue: '#BFDBFE'
+        };
+
+        // Workflow Revenue Breakdown Chart (Doughnut) - FY2023 Data
+        const workflowRevenueCtx = document.getElementById('workflowRevenueBreakdownChart').getContext('2d');
+        new Chart(workflowRevenueCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Technology Workflows', 'Customer & Employee Workflows', 'Creator Workflows'],
+                datasets: [{
+                    data: [55, 29, 16], // FY23 ACV Mix
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.teal],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Workflow Mix (% of ACV, FY2023)' } },
+                cutout: '60%'
+            }
+        });
+        
+        // Revenue Mix Chart (Bar) - FY2024 Data
+        const revenueMixCtx = document.getElementById('revenueMixChart').getContext('2d');
+        new Chart(revenueMixCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Subscription Revenue', 'Professional Services'],
+                datasets: [{
+                    label: 'Revenue in $B (FY2024)',
+                    data: [10.64, 0.34],
+                    backgroundColor: [CHART_COLORS.darkBlue, CHART_COLORS.lightBlue],
+                    borderColor: [CHART_COLORS.blue, CHART_COLORS.sky],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: { x: { beginAtZero: true, title: { display: true, text: 'Revenue in Billions USD' } } },
+                plugins: { legend: { display: false }, title: { display: true, text: 'Revenue Sources (FY2024)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (in Billions USD)
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [4.52, 5.90, 7.25, 8.97, 10.98], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingIncome: { data: [0.20, 0.26, 0.36, 0.76, 1.36], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+            netIncome: { data: [0.12, 0.23, 0.33, 1.73, 1.43], label: 'Net Income ($B)', color: CHART_COLORS.teal },
+            operatingCashFlow: { data: [1.38, 2.19, 2.72, 3.40, 4.27], label: 'Operating Cash Flow ($B)', color: CHART_COLORS.orange },
+        };
+
+        // Quarterly Data Store (in Billions USD)
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [2.15, 2.29, 2.44, 2.60, 2.63, 2.80, 2.96, 3.09], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            subscriptionRevenue: { data: [2.08, 2.22, 2.37, 2.52, 2.54, 2.72, 2.87, 3.01], label: 'Subscription Revenue ($B)', color: CHART_COLORS.darkBlue},
+            operatingIncome: { data: [0.12, 0.23, 0.27, 0.33, 0.24, 0.42, 0.37, 0.45], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+            crpo: { data: [7.20, 7.40, 8.60, 8.45, 8.78, 9.36, 10.27, 10.31], label: 'Current RPO ($B)', color: CHART_COLORS.teal },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLine = metricKey === 'crpo';
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF', // with opacity
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        type: isLine ? 'line' : 'bar',
+                        fill: !isLine,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

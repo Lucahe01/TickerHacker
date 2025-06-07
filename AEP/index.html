@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>American Electric Power (AEP) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #0075C9; /* AEP Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* Lighter Blue */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #0075C9; /* AEP Blue */
+            color: #FFFFFF;
+            border-color: #005A9E; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #0075C9; /* AEP Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #0075C9;">American Electric Power (AEP) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">AEP: A Regulated Utility Powering America's Heartland</h2>
+            <p class="content-text mb-6">American Electric Power (AEP) is one of the largest electric utilities in the United States, delivering power to nearly 5.6 million customers across 11 states. The company's business model is built on the stable and predictable foundation of regulated utility operations. AEP is currently undergoing a significant strategic transformation, selling its competitive, unregulated power generation assets to become a <span class="highlight">pure-play regulated utility</span> focused on its core business of generating, transmitting, and distributing electricity. This "de-risking" strategy is designed to deliver more consistent earnings growth and support a reliable, growing dividend for its shareholders. This analysis explores AEP's key business segments, its financial profile, and its strategy for growth in a clean energy future.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">AEP's strategy is focused on its regulated businesses:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">De-risk and Simplify:</strong> Actively selling unregulated generation assets to become a fully regulated, "wires and generation" company, which leads to more predictable financial outcomes.</li>
+                        <li><strong class="font-semibold text-gray-700">Invest in a Modern, Clean Grid:</strong> Executing a massive, multi-billion dollar capital investment plan to modernize its transmission and distribution grid and add over 25 gigawatts of renewable energy by 2035.</li>
+                        <li><strong class="font-semibold text-gray-700">Drive Operating Efficiency:</strong> A continuous focus on cost discipline and operational improvements to benefit customers and shareholders.</li>
+                        <li><strong class="font-semibold text-gray-700">Deliver Strong Shareholder Returns:</strong> The predictable earnings growth from its regulated investments is designed to support a strong balance sheet and a competitive, growing dividend.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Capital Investment Plan (2025-2029)</p>
+                    <p class="kpi-value text-blue-800">$44 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents the massive planned investment in AEP's regulated operations, focused on grid modernization and renewable generation.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How AEP Makes Money: Regulated Operations</h2>
+            <p class="content-text mb-6">AEP's business is organized into several regulated segments, each earning a return on its investments based on rates approved by state and federal commissions. **Vertically Integrated Utilities** own the full stack of generation, transmission, and distribution. **Transmission and Distribution Utilities** primarily own the "wires." The **AEP Transmission Holdco** is a key growth engine, focusing exclusively on building and owning high-voltage transmission lines.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="vertical">Vertically Integrated Utilities</button>
+                    <button class="segment-tab-button" data-target="wires">Transmission & Distribution</button>
+                    <button class="segment-tab-button" data-target="transco">AEP Transmission Holdco</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="verticalContent" class="segment-content">
+                    <h3 class="subsection-title">Vertically Integrated Utilities</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the largest segment, operating as a traditional utility in states like Ohio, West Virginia, and Virginia. AEP owns the power plants (generation), the high-voltage lines (transmission), and the local wires (distribution) that deliver electricity directly to homes and businesses. It earns a return on the "rate base," which is the value of all these invested assets. This segment is at the forefront of the clean energy transition, retiring coal plants and investing in new renewable generation.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="wiresContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Transmission & Distribution Utilities</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment primarily owns and operates the "wires" of the system—the transmission and distribution networks—in states with deregulated electricity markets, most notably Texas. In these markets, AEP does not own the power plants but is responsible for the reliable delivery of electricity to end customers. Its revenue comes from regulator-approved rates for maintaining and upgrading this critical infrastructure.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Primary Market</p>
+                            <p class="kpi-value text-blue-800 text-2xl">Texas</p>
+                            <p class="content-text text-sm mt-2">AEP Texas is a major part of this segment, serving a large and growing customer base in the state.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="transcoContent" class="segment-content hidden">
+                    <h3 class="subsection-title">AEP Transmission Holdco</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is AEP's fastest-growing and highest-return segment. AEP Transmission Holdco (Transco) develops, constructs, and operates high-voltage transmission lines to improve the reliability of the regional power grid. These projects are regulated by the Federal Energy Regulatory Commission (FERC), which has historically provided attractive returns on investment. This segment is critical for connecting new renewable energy sources to population centers.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Primary Regulator</p>
+                            <p class="kpi-value text-blue-800 text-2xl">FERC</p>
+                            <p class="content-text text-sm mt-2">The Federal Energy Regulatory Commission provides oversight and sets the rates for AEP's high-voltage transmission investments.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">As a regulated utility, AEP's financial performance is characterized by stability and predictability. Revenue and earnings are primarily driven by the outcomes of rate cases with regulators and the execution of its capital investment plan. The company guides investors to focus on **Operating Earnings**, a non-GAAP metric that excludes special items and better reflects the underlying performance of its regulated businesses. The financial charts below illustrate the steady nature of AEP's financial results.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingEarnings">Operating Earnings ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Revenue ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="segmentRevenue" selected>Revenue by Segment</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase the stable and predictable revenue and earnings streams that are characteristic of a large, regulated utility business.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Regulated Monopoly</h2>
+            <p class="content-text mb-6">American Electric Power has one of the widest and most durable competitive moats available: it operates as a regulated monopoly. This structural advantage, combined with the immense scale of its physical infrastructure, creates nearly insurmountable barriers to entry and ensures a stable operating environment.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Monopoly Service Territories:</strong> In its designated service areas, AEP faces no direct competition for its transmission and distribution services. Customers cannot choose a different company to deliver their electricity. This provides a captive customer base and highly predictable demand.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Massive, Indispensable Infrastructure:</strong> AEP owns and operates a vast network of power plants, thousands of miles of high-voltage transmission lines, and local distribution systems. This physical infrastructure is essential for modern life and would be impossible to replicate due to immense cost and regulatory hurdles.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Constructive Regulatory Relationships:</strong> The company's business model is a partnership with its regulators. By making prudent investments to ensure reliable service, AEP is allowed to earn a fair, predictable return on its capital, creating a symbiotic relationship.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">No Direct Competition:</strong> For its core regulated delivery business, AEP has no direct competitors within its service territories.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Regulated Utilities:</strong> Its peers in the utility sector include companies like Duke Energy, Southern Company, and NextEra Energy. They do not compete for customers but do compete for investment capital.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Alternative Energy Sources:</strong> Faces indirect competition from distributed generation sources like rooftop solar, though these are still dependent on AEP's grid for reliability and backup power.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for AEP is a play on steady, predictable growth and a reliable dividend, driven by its massive, regulated capital investment plan. The rewards come from the successful execution of this plan and constructive regulatory outcomes, while the risks are centered on the regulatory process and operational challenges.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Predictable Earnings Growth:</strong> A clear line of sight to 6-7% annual earnings growth, driven by the company's $44 billion, five-year capital plan to invest in its regulated rate base.</li>
+                        <li><strong>Clean Energy Transition:</strong> A massive, multi-decade opportunity to invest in and earn returns on new renewable energy projects and the transmission infrastructure needed to support them.</li>
+                        <li><strong>Attractive Dividend:</strong> A secure and growing dividend is a cornerstone of the company's value proposition, offering an attractive income stream for investors.</li>
+                        <li><strong>Defensive Characteristics:</strong> The demand for electricity is non-discretionary, making AEP's business highly resilient during economic downturns.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Regulatory Risk:</strong> The single biggest risk. Unfavorable decisions from state or federal regulators on rate cases or project approvals can directly impact profitability and growth.</li>
+                        <li><strong>Execution Risk:</strong> Executing a capital plan as large as AEP's carries inherent risks of project delays and cost overruns, which could negatively impact returns.</li>
+                        <li><strong>Interest Rate Sensitivity:</strong> As a capital-intensive business that carries significant debt, higher interest rates increase financing costs and can make utility dividends less attractive relative to bonds.</li>
+                        <li><strong>Extreme Weather:</strong> Major weather events like storms, heatwaves, or cold snaps can cause significant damage to infrastructure and lead to high operating costs.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from American Electric Power public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#0075C9',
+            sky: '#3B82F6',
+            gray: '#6B7280',
+            teal: '#14B8A6'
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Vertically Integrated', 'T&D Utilities', 'Transmission Holdco', 'Generation & Marketing'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [61, 23, 11, 5], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.teal, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [14.9, 16.8, 19.6, 18.9, 19.3], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingEarnings: { data: [2.3, 2.5, 2.6, 2.8, 2.9], label: 'Operating Earnings ($B)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'Vertically Integrated',
+                        data: [2.8, 3.4, 2.9, 3.0, 2.9, 3.5, 3.0, 3.1],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                    {
+                        label: 'T&D Utilities',
+                        data: [1.1, 1.2, 1.0, 1.1, 1.2, 1.3, 1.1, 1.2],
+                        backgroundColor: CHART_COLORS.sky
+                    },
+                     {
+                        label: 'Transmission Holdco',
+                        data: [0.5, 0.5, 0.6, 0.6, 0.6, 0.6, 0.7, 0.7],
+                        backgroundColor: CHART_COLORS.teal
+                    },
+                    {
+                        label: 'Generation & Marketing',
+                        data: [0.3, 0.3, 0.2, 0.2, 0.2, 0.2, 0.1, 0.1],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createYearlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Revenue by Segment ($B)' } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createYearlyChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue');
+
+    </script>
+</body>
+</html>
+

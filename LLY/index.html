@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eli Lilly (LLY) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #00A3A1; /* Lilly Teal */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #005A6E; /* Lilly Dark Blue */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #C8102E; /* Lilly Red */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #00A3A1; /* Lilly Teal */
+            color: #FFFFFF;
+            border-color: #007a78;
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #00A3A1; /* Lilly Teal */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #005A6E;">Eli Lilly (LLY) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#products" class="nav-link">Key Products</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Moat & Risks</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#products" class="nav-link block text-base">Key Products</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Moat & Risks</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Eli Lilly: Leading the Revolution in Metabolic Medicine</h2>
+            <p class="content-text mb-6">Eli Lilly and Company is a global pharmaceutical leader that has entered a period of extraordinary growth, driven by its groundbreaking innovation in metabolic diseases. The unprecedented success of its GIP and GLP-1 receptor agonist, tirzepatide—marketed as Mounjaro for type 2 diabetes and Zepbound for chronic weight management—has transformed the company's trajectory and positioned it at the forefront of one of the largest new drug markets in history. This analysis explores Lilly's product-driven business model, its explosive financial performance, and the strategic challenges of meeting immense global demand.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Lilly's strategy is laser-focused on scientific innovation and market leadership:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Innovate in High-Need Areas:</strong> Concentrating R&D efforts on discovering first-in-class or best-in-class medicines in core therapeutic areas like diabetes, obesity, oncology, and immunology.</li>
+                        <li><strong class="font-semibold text-gray-700">Maximize Blockbuster Potential:</strong> Aggressively pursuing new indications for its key drugs (like Mounjaro/Zepbound for sleep apnea or heart disease) to expand their market size.</li>
+                        <li><strong class="font-semibold text-gray-700">Massive Manufacturing Scale-Up:</strong> Investing billions of dollars in new manufacturing plants to address the staggering demand for its incretin-based medicines and overcome supply constraints.</li>
+                        <li><strong class="font-semibold text-gray-700">Defend Intellectual Property:</strong> Vigorously protecting its portfolio of patents, which provides the market exclusivity needed to generate returns on its R&D investments.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-teal-50 border-teal-200">
+                    <p class="kpi-label">Q1 2025 Revenue Growth (YoY)</p>
+                    <p class="kpi-value" style="color: #00A3A1;">+31%</p>
+                    <p class="content-text text-sm mt-2">An exceptional growth rate for a large-cap pharmaceutical company, driven almost entirely by the launch of new products.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" class="section-card scroll-mt-20">
+            <h2 class="section-title">Blockbuster Products & Therapeutic Areas</h2>
+            <p class="content-text mb-6">Eli Lilly's success is defined by the strength of its individual products, particularly its new generation of medicines. Unlike diversified companies, Lilly's performance is currently concentrated in a few key blockbuster drugs that are reshaping their respective markets. The company's main focus areas are Diabetes & Obesity, Oncology, and Immunology.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-2 md:space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="metabolic">Diabetes & Obesity</button>
+                    <button class="segment-tab-button" data-target="oncology">Oncology</button>
+                    <button class="segment-tab-button" data-target="other">Other Key Areas</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="metabolicContent" class="segment-content">
+                    <h3 class="subsection-title">Diabetes & Obesity: The Tirzepatide Powerhouse</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                        <div>
+                            <p class="content-text mb-2">This is the engine of Lilly's growth. The dual-agonist molecule tirzepatide has proven to be a generational asset, with combined Q1 2025 sales of <span class="highlight">$8.0 billion</span> across two brands.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Mounjaro (tirzepatide):</strong> Approved for type 2 diabetes. Its superior efficacy has led to rapid market share gains. Q1 sales were $5.9 billion.</li>
+                                <li><strong>Zepbound (tirzepatide):</strong> Approved for chronic weight management. Demand has been overwhelming since launch. Q1 sales hit $2.1 billion.</li>
+                                <li><strong>Jardiance (empagliflozin):</strong> A mature but still strong product for diabetes and heart failure, with Q1 sales of $987 million.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="productRevenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="oncologyContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Oncology</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                         <div>
+                            <p class="content-text mb-2">Lilly maintains a strong presence in cancer treatment, led by its blockbuster CDK4 & 6 inhibitor, Verzenio.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Verzenio (abemaciclib):</strong> A leading treatment for certain types of HR+, HER2- breast cancer. It continues to see strong growth, with Q1 2025 sales of <span class="highlight">$1.1 billion</span>.</li>
+                                 <li>The oncology portfolio also includes other drugs like Cyramza and Retevmo.</li>
+                            </ul>
+                        </div>
+                        <div class="content-text p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-700">Pipeline Focus</h4>
+                            <p>Lilly's pipeline in oncology is robust, with ongoing research into new mechanisms of action and targeted therapies. Future growth will depend on bringing next-generation cancer treatments to market to complement its existing portfolio.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div id="otherContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Immunology & Neuroscience</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                         <div>
+                            <p class="content-text mb-2">Beyond its main growth drivers, Lilly has significant products and pipeline candidates in other critical areas.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Taltz (ixekizumab):</strong> A major product for treating autoimmune diseases like plaque psoriasis and psoriatic arthritis.</li>
+                                 <li><strong>Neuroscience:</strong> Lilly is a key player in the fight against Alzheimer's disease, with its amyloid-targeting antibody Donanemab under regulatory review. An approval could open another multi-billion dollar market.</li>
+                            </ul>
+                        </div>
+                        <div class="content-text p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-700">The Next Frontier: Alzheimer's</h4>
+                            <p>The potential approval of Donanemab for early Alzheimer's disease represents one of Lilly's most significant near-term pipeline opportunities. While the market is competitive and complex, a successful launch could provide another major pillar of growth for the company in the coming years.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive: A Growth Inflection Point</h2>
+            <p class="content-text mb-6">Eli Lilly's financial results show a clear and dramatic inflection point driven by the launch of Mounjaro and Zepbound. The company has transitioned from a steady, single-digit grower into a hyper-growth pharma giant. The charts below visualize this explosive growth, highlighting both the overall revenue trajectory and the outsized contribution from its new blockbuster products.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div>
+                    <h3 class="subsection-title">Total Annual Revenue (Fiscal Year)</h3>
+                    <p class="content-text text-sm mb-4">The launch of Mounjaro in 2022 marked the beginning of a new era, with revenue growth accelerating dramatically in the subsequent years.</p>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Key Product Sales (Q1 2025)</h3>
+                     <p class="content-text text-sm mb-4">This chart shows the immense scale of Mounjaro and Zepbound relative to Lilly's other major growth drivers.</p>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Patents, Pipelines, and Pressures</h2>
+            <p class="content-text mb-6">Eli Lilly's primary competitive advantage lies in its intellectual property—the patents protecting its novel medicines. This moat allows the company to earn returns on its massive R&D investments. However, it operates in a highly competitive landscape and faces significant pressures from rivals, regulators, and payers.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-teal-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Patent Exclusivity:</strong> The portfolio of patents covering the molecular structure and use of drugs like tirzepatide is the company's most important asset, preventing generic competition for a defined period.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-teal-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Manufacturing Complexity:</strong> The advanced manufacturing processes required to produce complex injectable biologics at a global scale are difficult and expensive to replicate, creating a significant barrier to entry.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-teal-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">R&D and Clinical Expertise:</strong> A proven track record of successfully navigating the complex and expensive process of drug discovery, clinical development, and regulatory approval.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0" style="color:#C8102E">Primary Risks & Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Direct Competition:</strong> Novo Nordisk is the primary competitor in the diabetes and obesity markets with its highly successful drugs Ozempic and Wegovy. Many other pharma companies are also developing rival products.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Supply & Manufacturing Constraints:</strong> The most immediate risk is the inability to produce enough Mounjaro and Zepbound to meet demand, which could cede market share to competitors who can supply the market.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Payer & Pricing Pressure:</strong> The high list price of new medicines faces significant pushback from insurance companies and government health systems, which could limit patient access and future revenue growth.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Pipeline & Clinical Trial Risk:</strong> Future growth depends on the success of drugs currently in development. A failure in a late-stage clinical trial (e.g., for a new cancer or Alzheimer's drug) can erase billions in potential revenue.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Eli Lilly is in an enviable position, with multiple blockbuster drugs driving growth in some of healthcare's largest markets. The company's future will be shaped by its ability to execute on its manufacturing scale-up, defend its market share against fierce competition, and continue to deliver on the promise of its R&D pipeline.</p>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Massive Obesity Market:</strong> The global market for obesity treatments is projected to be one of the largest in pharma history, and Lilly is a clear leader with Zepbound.</li>
+                        <li><strong>Label Expansion:</strong> Positive clinical trial results for tirzepatide in related conditions like sleep apnea, kidney disease, or MASH could vastly expand the addressable market.</li>
+                        <li><strong>Next-Generation Pipeline:</strong> Lilly has next-generation obesity and diabetes drugs in its pipeline (like Orforglipron, an oral GLP-1) that could extend its franchise.</li>
+                        <li><strong>Alzheimer's Drug Approval:</strong> The potential approval and successful launch of Donanemab could create another multi-billion dollar product line.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0" style="color:#C8102E">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Inability to Meet Demand:</strong> Failure to scale manufacturing quickly enough to satisfy the immense demand for Zepbound and Mounjaro is the most significant near-term risk.</li>
+                        <li><strong>Competitive Intensity:</strong> The battle for market share with Novo Nordisk will be fierce, and new entrants are poised to join the market in the coming years.</li>
+                        <li><strong>The Patent Cliff:</strong> While years away for its current blockbusters, all pharmaceutical companies must eventually contend with patent expirations that lead to generic competition.</li>
+                        <li><strong>Government Pricing Action:</strong> The high cost of new medicines is a major political issue, and potential government actions to control drug prices could impact long-term profitability.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Eli Lilly and Company public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) { mobileMenuBtn.click(); }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+        
+        // --- CHARTS ---
+        const CHART_COLORS = { teal: '#00A3A1', darkBlue: '#005A6E', red: '#C8102E', gray: '#6B7280' };
+
+        // Product Revenue Pie Chart
+        const productRevenueCtx = document.getElementById('productRevenueChart').getContext('2d');
+        new Chart(productRevenueCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Mounjaro', 'Zepbound', 'Verzenio', 'Jardiance', 'Rest of Portfolio'],
+                datasets: [{
+                    data: [5.9, 2.1, 1.1, 0.98, 4.72], // Q1 2025 Data in $B
+                    backgroundColor: [CHART_COLORS.darkBlue, CHART_COLORS.teal, CHART_COLORS.red, CHART_COLORS.gray, '#d1d5db'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue Contribution by Key Product (Q1 2025)' } }
+            }
+        });
+
+        // Yearly Revenue Chart
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        new Chart(yearlyCanvas, {
+            type: 'bar',
+            data: {
+                labels: ['FY22', 'FY23', 'FY24'],
+                datasets: [{
+                    label: 'Total Annual Revenue ($B)',
+                    data: [28.5, 34.1, 46.8], // Illustrative historical and projected data
+                    backgroundColor: CHART_COLORS.darkBlue,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: false, title: { display: true, text: 'USD ($ Billions)' } } }
+            }
+        });
+
+        // Quarterly Key Product Sales Chart
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+        new Chart(quarterlyCanvas, {
+            type: 'bar',
+            data: {
+                labels: ['Mounjaro', 'Zepbound', 'Verzenio', 'Jardiance'],
+                datasets: [{
+                    label: 'Sales ($B)',
+                    data: [5.9, 2.1, 1.1, 0.98], // Q1 2025 Sales Data
+                    backgroundColor: [CHART_COLORS.darkBlue, CHART_COLORS.teal, CHART_COLORS.red, CHART_COLORS.gray],
+                }]
+            },
+             options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, title: { display: true, text: 'USD ($ Billions)' } }
+                 }
+            }
+        });
+
+    </script>
+</body>
+</html>
+

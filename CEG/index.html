@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constellation Energy (CEG) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #2563EB; /* blue-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #38BDF8; /* sky-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #2563EB; /* blue-600 */
+            color: #FFFFFF;
+            border-color: #1D4ED8; /* blue-700 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #2563EB; /* blue-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #2563EB;">Constellation Energy (CEG) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Constellation: America's Clean Energy Leader</h2>
+            <p class="content-text mb-6">Constellation Energy is the United States' largest producer of carbon-free energy, powering over 20 million homes and businesses. With the nation's biggest fleet of nuclear power plants, complemented by hydro, wind, and solar assets, Constellation is at the forefront of the clean energy transition. The company's business model is built on generating reliable, 24/7 clean electricity at scale and providing a comprehensive suite of energy products and services to a customer base that includes three-fourths of the Fortune 100. This analysis delves into Constellation's powerful business model, financial strength, and strategic positioning for the future.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Constellation's strategy is centered on leveraging its unique asset base to lead the clean energy transition:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Nuclear Leadership:</strong> Maximize the output and extend the life of its industry-leading nuclear fleet to provide reliable, carbon-free baseload power.</li>
+                        <li><strong class="font-semibold text-gray-700">Powering the Digital Economy:</strong> Secure long-term contracts with high-growth sectors like data centers and technology companies (e.g., Meta, Microsoft) that require constant, clean power.</li>
+                        <li><strong class="font-semibold text-gray-700">Commercial & Retail Excellence:</strong> Act as a trusted energy partner for businesses and consumers, offering customized solutions from clean energy supply to risk management.</li>
+                        <li><strong class="font-semibold text-gray-700">Investing in the Future:</strong> Explore and invest in emerging clean technologies like hydrogen production, enabled by its nuclear fleet.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Total Generation Capacity</p>
+                    <p class="kpi-value text-blue-600">32,400+ MW</p>
+                    <p class="content-text text-sm mt-2">The largest carbon-free generation fleet in the U.S., producing nearly 90% of its annual output without emissions.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Constellation Makes Money: Generation & Commercial</h2>
+            <p class="content-text mb-6">Constellation's business is structured around two synergistic segments. The Generation segment produces power, with its nuclear fleet as the centerpiece. The Commercial segment delivers this energy and related services to customers. The immense scale of its clean generation provides a powerful competitive advantage for its customer-facing business.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="generation">Generation</button>
+                    <button class="segment-tab-button" data-target="commercial">Commercial</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="generationContent" class="segment-content">
+                    <h3 class="subsection-title">Generation Segment</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the heart of Constellation's operations, focusing on the production of electricity. The fleet is dominated by nuclear power, which provides a unique source of 24/7/365 carbon-free energy, a key differentiator in an increasingly decarbonized world. This segment benefits from production tax credits and long-term contracts that provide stable revenue.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Nuclear:</strong> The largest fleet in the U.S. (~22 GW), known for its industry-leading reliability (94%+ capacity factor).</li>
+                                <li><strong>Natural Gas & Oil:</strong> Provides dispatchable power to ensure grid stability during periods of peak demand.</li>
+                                <li><strong>Renewables:</strong> A portfolio of hydro, wind, and solar assets that complement the nuclear baseload power.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="generationMixChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="commercialContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Commercial Segment</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Commercial business is Constellation's customer-facing arm, serving approximately <span class="highlight">2 million</span> residential, public sector, and business customers. It leverages the company's generation fleet to offer a wide array of energy products and solutions, creating a powerful integrated business model.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Retail Electricity & Gas Supply:</strong> Sells power and natural gas directly to end-users under various contract structures.</li>
+                                <li><strong>Wholesale & Risk Management:</strong> Manages energy sales to utilities and municipalities, while hedging against commodity price volatility.</li>
+                                <li><strong>Clean Energy Solutions:</strong> Provides customers with products like 24/7 carbon-free energy matching, helping them achieve their own sustainability goals.</li>
+                                <li><strong>Energy Efficiency Services:</strong> Offers consulting and services to help customers optimize their energy usage and reduce costs.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Customers Served</p>
+                            <p class="kpi-value text-sky-600">~75% of Fortune 100</p>
+                            <p class="content-text text-sm mt-2">A premier client base that values reliability and clean energy, providing a stable, high-quality revenue stream.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Constellation's financial performance reflects its strong operational execution and strategic focus. While revenue can fluctuate with energy prices, the company is increasingly focused on stable, long-term earnings growth, driven by its nuclear assets and rising demand for clean power. Adjusted EBITDA is a key metric that showcases underlying operational profitability. Explore key financial trends using the dropdowns below.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="adjustedEbitda">Adjusted EBITDA ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="adjustedEbitda">Adjusted EBITDA ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial trends highlight a significant ramp-up in profitability (Adjusted EBITDA and Operating Income) since the company's separation, reflecting strong operational performance and favorable market conditions for clean energy.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Nuclear Fortress</h2>
+            <p class="content-text mb-6">Constellation's competitive advantage, or "moat," is one of the most distinct in the energy sector. It is founded on an asset base that is nearly impossible to replicate, providing a durable edge in the transition to a low-carbon economy.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Irreplaceable Nuclear Fleet:</strong> As the #1 U.S. nuclear operator, CEG owns a fleet that provides massive-scale, 24/7, carbon-free baseload power. Due to immense regulatory hurdles, cost, and social factors, building a competing fleet of this scale is not feasible for rivals.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Cost & Operational Advantage:</strong> Decades of experience and economies of scale in operating its nuclear plants result in industry-leading efficiency and reliability (94%+ capacity factor), a key cost advantage.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Clean Energy Leadership:</strong> Its status as the largest clean energy producer gives it a "first-caller" advantage for large corporations seeking to decarbonize their operations, locking in long-term, high-quality customers.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">➔</span>
+                             <span class="content-text"><strong class="text-gray-700">Integrated Business Model:</strong> The ability to both generate clean power at scale and deliver customized solutions through its commercial arm creates a synergistic model that is difficult for non-integrated competitors to match.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Independent Power Producers (IPPs):</strong> Companies like Vistra Corp. and Talen Energy compete in power generation, though none have a comparable nuclear footprint.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Regulated Utilities:</strong> Companies like Duke Energy and Southern Company own nuclear assets, but typically operate in regulated markets with different business models.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Renewable-Focused Developers:</strong> Companies like NextEra Energy are major competitors in the wind, solar, and storage space, but cannot provide the 24/7 baseload power that nuclear offers.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Constellation's future is uniquely tied to the increasing global demand for reliable, clean energy. The company is powerfully positioned to capitalize on major secular trends, but it must also navigate the inherent risks of its industry.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>The AI & Data Center Power Surge:</strong> The exponential growth of AI is creating unprecedented demand for 24/7, carbon-free power—a demand that Constellation's nuclear fleet is perfectly suited to meet.</li>
+                        <li><strong>The "Nuclear Renaissance":</strong> Growing political and public support for nuclear energy, driven by climate and grid reliability concerns, could lead to favorable policies and asset life extensions.</li>
+                        <li><strong>Clean Hydrogen Production:</strong> A massive long-term opportunity to leverage its nuclear plants to produce clean hydrogen for hard-to-decarbonize industries.</li>
+                        <li><strong>Strong Capital Returns:</strong> Expectation of robust and growing free cash flow generation, enabling significant dividend growth and share buybacks.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Regulatory & Political Risk:</strong> Changes in energy policy, especially regarding nuclear production tax credits (PTCs) or environmental regulations, could impact profitability.</li>
+                        <li><strong>Operational Execution:</strong> The energy generation business carries inherent operational risks, including unplanned plant outages which can be costly.</li>
+                        <li><strong>Debt Load & Interest Rates:</strong> The company carries a meaningful debt burden. Higher interest rates could increase the cost of capital for future projects and refinancing.</li>
+                        <li><strong>Commodity Price Volatility:</strong> While the company actively hedges, portions of its earnings are still exposed to fluctuations in wholesale power and natural gas prices.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Constellation Energy public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#2563EB',
+            sky: '#38BDF8',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkBlue: '#1D4ED8',
+            teal: '#14B8A6',
+            amber: '#F59E0B'
+        };
+
+        // Generation Mix Chart (Doughnut)
+        const generationMixCtx = document.getElementById('generationMixChart').getContext('2d');
+        new Chart(generationMixCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Nuclear', 'Natural Gas & Oil', 'Renewables (Hydro, Wind, Solar)'],
+                datasets: [{
+                    data: [65, 27, 8], // 2024 Owned Capacity Mix (%)
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.gray, CHART_COLORS.teal],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Owned Generation Capacity Mix (%)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [17.60, 19.65, 24.44, 24.92, 23.57], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            adjustedEbitda: { data: [3.89, 4.19, 2.92, 4.12, 7.05], label: 'Adjusted EBITDA ($B)', color: CHART_COLORS.darkBlue },
+            operatingIncome: { data: [0.26, -0.35, 0.50, 1.61, 4.35], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+            netIncome: { data: [0.59, -0.21, -0.16, 1.62, 3.75], label: 'Net Income ($B)', color: CHART_COLORS.teal },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [5.45, 6.11, 5.80, 6.16, 5.48, 6.55, 5.38, 6.79], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            adjustedEbitda: { data: [1.28, 1.60, 0.61, 1.51, 1.79, 2.13, 1.62, 1.09], label: 'Adjusted EBITDA ($B)', color: CHART_COLORS.darkBlue },
+            operatingIncome: { data: [0.67, 0.98, -0.07, 0.81, 1.10, 1.47, 0.97, 0.45], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF', // with opacity
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+
