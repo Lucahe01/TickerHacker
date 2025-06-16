@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oklo Inc. (OKLO) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #16A34A; /* green-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #4ADE80; /* green-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #16A34A; /* green-600 */
+            color: #FFFFFF;
+            border-color: #15803D; /* green-700 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #16A34A; /* green-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #16A34A;">Oklo Inc. (OKLO) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials & KPIs</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials & KPIs</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Oklo: Powering the AI Revolution with Advanced Fission</h2>
+            <p class="content-text mb-6">Oklo Inc. is a pioneering advanced fission technology company aiming to provide clean, reliable, and affordable energy at scale. The company's core technology is the **Aurora powerhouse**, a compact fast reactor designed to be factory-built and rapidly deployed. Unlike traditional nuclear companies, Oklo's business model is to <span class="highlight">build, own, and operate</span> its fleet of reactors, selling power directly to customers through long-term contracts. Backed by prominent tech investors like Sam Altman, Oklo is positioning itself as a key energy provider for the immense power demands of artificial intelligence data centers, as well as for defense installations and remote communities. This analysis explores Oklo's unique business model, its regulatory progress, and its high-risk, high-reward strategy to lead a new nuclear renaissance.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Oklo's strategy is focused on being first and fast:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Achieve First Commercial Deployment:</strong> The primary goal is to successfully navigate the U.S. Nuclear Regulatory Commission (NRC) licensing process and be the first advanced fission company to deploy a commercial reactor.</li>
+                        <li><strong class="font-semibold text-gray-700">Build, Own, Operate:</strong> Sell power, not reactors. By owning and operating its powerhouses, Oklo aims to capture the full value chain and offer predictable, long-term power purchase agreements (PPAs) to customers.</li>
+                        <li><strong class="font-semibold text-gray-700">Target the AI Data Center Market:</strong> Position its reliable, carbon-free baseload power as the ideal solution for the massive and growing electricity needs of the AI industry.</li>
+                        <li><strong class="font-semibold text-gray-700">Develop a Secure Fuel Cycle:</strong> Leverage its fast reactor technology to recycle used nuclear fuel, creating a more sustainable and domestically-sourced fuel supply.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-green-50 border-green-200">
+                    <p class="kpi-label">Customer Interest Pipeline</p>
+                    <p class="kpi-value text-green-600">14+ GW</p>
+                    <p class="content-text text-sm mt-2">Represents the substantial inbound interest and preliminary agreements from potential customers, primarily in the data center sector.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Oklo Makes Money: Power Purchase Agreements</h2>
+            <p class="content-text mb-6">As a pre-revenue company, Oklo does not yet have operating segments. Its entire business model is predicated on the future success of its two interconnected focus areas: developing its **Aurora powerhouse** technology and securing long-term **Power Purchase Agreements (PPAs)** with customers. The company is vertically integrated, aiming to control every aspect from fuel recycling to power delivery.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="tech">The Technology: Aurora Reactor</button>
+                    <button class="segment-tab-button" data-target="ppa">The Business: Power Sales</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="techContent" class="segment-content">
+                    <h3 class="subsection-title">The Technology: Aurora Powerhouse</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The Aurora powerhouse is a compact, fast-neutron reactor. Key features include:</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-2">
+                                <li><strong>Small Modular Design:</strong> Designed to produce 15-50 MWe of power, making it suitable for specific sites like data centers or military bases.</li>
+                                <li><strong>Fast Reactor Technology:</strong> Uses fast neutrons, which allows it to run on recycled nuclear fuel from existing reactors, addressing the nuclear waste issue.</li>
+                                <li><strong>Inherent Safety:</strong> Features passive safety systems and liquid metal cooling, which proponents argue make it safer than traditional light-water reactors.</li>
+                                <li><strong>Long Life Fuel:</strong> Designed to operate for up to 10 years or more without needing to be refueled.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-green-50 border-green-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">First Planned Deployment</p>
+                            <p class="kpi-value text-green-600 text-2xl">Idaho National Lab</p>
+                            <p class="content-text text-sm mt-2">Oklo has secured a site use permit from the Department of Energy to build its first commercial reactor in Idaho, a critical first step.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="ppaContent" class="segment-content hidden">
+                    <h3 class="subsection-title">The Business: Power Purchase Agreements (PPAs)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Oklo's primary business model is not to sell its reactors, but to sell the electricity they produce. The company will build, own, and operate the Aurora powerhouses on behalf of customers, who will sign long-term PPAs (typically 20 years or more) to buy the power at a predetermined price. This model provides customers with predictable, long-term energy costs and provides Oklo with a recurring, annuity-like revenue stream once the plants are operational.</p>
+                        </div>
+                        <div class="kpi-card bg-green-50 border-green-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Target Market</p>
+                            <p class="kpi-value text-green-600 text-2xl">AI Data Centers</p>
+                            <p class="content-text text-sm mt-2">The massive, 24/7 power demand of AI data centers is the primary market opportunity that Oklo is targeting with its reliable baseload power.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financials & Key Performance Indicators</h2>
+            <p class="content-text mb-6">As a pre-revenue, development-stage company, Oklo's financials are about its balance sheet and cash runway, not its income statement. The company recently went public via a SPAC merger with AltC Acquisition Corp., raising significant capital to fund its path to commercialization. The most important key performance indicators (KPIs) are not financial, but regulatory and operational milestones. The charts below show the company's cash position post-SPAC and its progress through the critical NRC licensing pathway.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Financial Position (Post-SPAC)</h3>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Key Regulatory Milestones</h3>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial chart highlights the cash raised to fund operations. The milestone chart shows the critical path forward: success depends entirely on navigating the NRC licensing process to get to construction and operation.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Race to Be First</h2>
+            <p class="content-text mb-6">As a development-stage company, Oklo's competitive moat is still under construction. Its primary advantage comes from its head start in the regulatory process for its specific reactor design and its unique business model tailored for the modern data center market.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Regulatory Head Start:</strong> Oklo was the first company to submit a custom Combined License Application (COLA) for an advanced reactor and is deep in the pre-application engagement process with the NRC. This experience and progress create a time-based barrier to competitors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary Technology & IP:</strong> Oklo's specific design for a compact fast reactor, along with its plans for fuel recycling, are protected by patents and deep technical expertise, creating an intellectual property moat.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Key Partnerships & Backing:</strong> Strong partnerships with the Department of Energy (for site and fuel) and the backing of influential tech investors provide significant credibility and strategic advantages.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-green-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Advanced Reactor Companies:</strong> Faces stiff competition from other well-funded small modular reactor (SMR) and microreactor developers, most notably TerraPower (backed by Bill Gates) and NuScale Power.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Alternative Clean Energy Sources:</strong> For data center power, Oklo competes with traditional renewable sources like solar and wind (when paired with battery storage) and potentially natural gas with carbon capture.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: A High-Stakes Bet on the Future of Energy</h2>
+            <p class="content-text mb-6">The investment thesis for Oklo is a venture-capital style bet on a company with the potential to be a transformative leader in a massive new market. The rewards could be astronomical if the company successfully commercializes its technology. However, the risks are equally immense, as the company must navigate significant technical, regulatory, and financial hurdles to achieve its vision.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Massive Market for Data Center Power:</strong> The single greatest opportunity. The exponential growth of AI is creating a structural shortage of clean, reliable baseload power, which Oklo's microreactors are perfectly designed to address.</li>
+                        <li><strong>First-Mover Advantage:</strong> If Oklo can be the first to successfully license and deploy its advanced reactor, it could capture a significant share of the early market and establish a powerful precedent.</li>
+                        <li><strong>Transformative Technology:</strong> The potential to solve the nuclear waste problem by using recycled fuel would be a game-changing innovation for the entire energy industry.</li>
+                        <li><strong>Strong Backing & Policy Tailwinds:</strong> The support of influential tech leaders and favorable bipartisan government policy for advanced nuclear create a powerful tailwind.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Regulatory Approval Risk:</strong> This is the paramount, binary risk. Failure to obtain a license from the NRC would be a catastrophic setback for the company. The timeline for approval is long and uncertain.</li>
+                        <li><strong>Execution & Technological Risk:</strong> There is significant risk in moving from design to the successful, on-time, and on-budget construction and operation of a first-of-a-kind nuclear reactor.</li>
+                        <li><strong>Capital Needs & Dilution:</strong> Building nuclear reactors is incredibly capital intensive. As a pre-revenue company, Oklo will almost certainly need to raise significant additional capital in the future, which could lead to substantial dilution for current shareholders.</li>
+                        <li><strong>Extreme Stock Volatility:</strong> As a pre-revenue, story-driven stock, the share price is subject to extreme volatility based on news flow, sentiment, and progress (or lack thereof) on its key milestones.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Oklo Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            green: '#16A34A',
+            sky: '#38BDF8',
+        };
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store - Financial Position
+        const yearlyDataStore = {
+            labels: ['Cash Position (Q1 2025)', 'SPAC Gross Proceeds', 'Est. Annual Cash Burn'],
+            financialPosition: { 
+                data: [260.7, 306, -72.5], 
+                label: 'Financial Position ($M)', 
+                color: [CHART_COLORS.green, CHART_COLORS.sky, '#EF4444']
+            },
+        };
+
+        // Quarterly Data Store - Regulatory Path
+        const quarterlyDataStore = {
+            labels: ['Site Permit (DOE)', 'Fuel Award (DOE)', 'COLA Submitted (NRC)', 'NRC Acceptance', 'Commercial Operation'],
+            regulatoryPath: { 
+                data: [1, 1, 1, 1, 0], // 1 for complete, 0.5 for in-progress, 0 for not started
+                label: 'Regulatory Progress',
+                color: CHART_COLORS.green
+            },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlyCanvas = document.getElementById('yearlyFinancialChartContainer').querySelector('canvas');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChartContainer').querySelector('canvas');
+
+        function createFinancialChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: Array.isArray(metricDetails.color) ? metricDetails.color.map(c => c + 'BF') : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: { 
+                        x: { 
+                            beginAtZero: true, 
+                            title: { 
+                                display: true, 
+                                text: 'Millions USD'
+                            } 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createMilestoneChart(canvas, existingChart, dataStore, metricKey) {
+             if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const backgroundColors = metricDetails.data.map(value => value === 1 ? CHART_COLORS.green + 'BF' : (value === 0.5 ? CHART_COLORS.sky + 'BF' : '#E5E7EB'));
+            const borderColors = metricDetails.data.map(value => value === 1 ? CHART_COLORS.green : (value === 0.5 ? CHART_COLORS.sky : '#D1D5DB'));
+
+            return new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data.map(() => 1), // all bars full height
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                     tooltips: {
+                        enabled: false
+                    },
+                    scales: {
+                        x: {
+                            display: false,
+                             max: 1
+                        },
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+        }
+        
+        // Initial chart renders
+        yearlyChart = createFinancialChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'financialPosition');
+        quarterlyChart = createMilestoneChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'regulatoryPath');
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intuitive Surgical (ISRG) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #0077C8; /* Intuitive Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #00A9E0; /* Lighter Intuitive Blue */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #0077C8; /* Intuitive Blue */
+            color: #FFFFFF;
+            border-color: #005A9C; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #0077C8; /* Intuitive Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #0077C8;">Intuitive Surgical (ISRG) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials & KPIs</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials & KPIs</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Intuitive Surgical: The Robotic Surgery Pioneer</h2>
+            <p class="content-text mb-6">Intuitive Surgical is the undisputed global leader in minimally invasive robotic-assisted surgery. The company's business model is built on a brilliant <span class="highlight">"razor-and-blade"</span> strategy, centered around its flagship **da Vinci surgical system**. By placing these sophisticated robotic platforms ("the razor") in hospitals worldwide, Intuitive creates a massive installed base that generates a long and highly profitable stream of recurring revenue from the sale of proprietary instruments, accessories, and services ("the blades") needed for each procedure. This analysis explores Intuitive's powerful business model, its key growth drivers, and its formidable competitive moat in the rapidly evolving field of medical technology.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Intuitive's strategy is focused on expanding the adoption of robotic surgery:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Drive Procedure Growth:</strong> The primary goal is to increase the number of procedures performed on its systems. This is achieved by expanding into new surgical specialties and increasing penetration in existing ones.</li>
+                        <li><strong class="font-semibold text-gray-700">Continuous Innovation:</strong> Relentlessly invest in R&D to improve its platforms, such as with the new **da Vinci 5**, and launch new systems for different medical needs, like the **Ion** platform for lung biopsy.</li>
+                        <li><strong class="font-semibold text-gray-700">Expand Globally:</strong> Grow the installed base of systems and drive procedure adoption in less penetrated international markets.</li>
+                        <li><strong class="font-semibold text-gray-700">Build a Digital Ecosystem:</strong> Offer a suite of digital tools and analytics, like the **MyIntuitive** app, to help hospitals optimize their robotics programs and improve outcomes.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Worldwide da Vinci Procedures (2024)</p>
+                    <p class="kpi-value text-blue-800">~2.7 Million</p>
+                    <p class="content-text text-sm mt-2">A 17% year-over-year increase, demonstrating the strong and growing demand for robotic-assisted surgery and driving recurring revenue growth.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Intuitive Makes Money: The Razor & Blade Model</h2>
+            <p class="content-text mb-6">Intuitive's business is organized around its product ecosystem. While the sale or lease of **Systems** is the initial step, the majority of revenue and profit comes from the recurring sale of **Instruments & Accessories (I&A)** and **Services**. The I&A revenue is directly tied to procedure volumes, making it a high-quality, recurring stream. The Service revenue comes from contracts to maintain the large and growing installed base of da Vinci systems.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="ia">Instruments & Accessories</button>
+                    <button class="segment-tab-button" data-target="systems">Systems</button>
+                    <button class="segment-tab-button" data-target="services">Services</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="iaContent" class="segment-content">
+                    <h3 class="subsection-title">Instruments & Accessories (The "Blades")</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the most important part of Intuitive's business, representing over 60% of total revenue. For every surgical procedure performed with a da Vinci system, a set of proprietary, single- or limited-use instruments and accessories must be used. This creates a predictable, high-margin, <span class="highlight">recurring revenue stream</span> that grows in lockstep with procedure volumes. The more systems are placed and the more they are used, the more this revenue grows.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="systemsContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Systems (The "Razor")</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment includes the sale or lease of the da Vinci and Ion surgical systems. Hospitals make a large upfront capital investment (typically $1.5M - $2.5M) to acquire a system. While a crucial first step, system sales are cyclical and represent a smaller portion of total revenue compared to the recurring streams. The new **da Vinci 5** platform is expected to drive a new upgrade cycle.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Total Installed Base (Q1 2025)</p>
+                            <p class="kpi-value text-blue-800">10,189</p>
+                            <p class="content-text text-sm mt-2">The massive and growing global installed base of da Vinci systems is the foundation of the high-margin recurring revenue model.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="servicesContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Services</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Services segment provides another stable, recurring revenue stream. Once a hospital purchases a da Vinci system, it typically enters into a long-term service contract with Intuitive. These contracts, which cover maintenance, repairs, and support for the complex robotic systems, generate predictable, high-margin revenue that grows as the installed base expands.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Recurring Revenue (FY2024)</p>
+                            <p class="kpi-value text-blue-800">84%</p>
+                            <p class="content-text text-sm mt-2">The combined revenue from Instruments & Accessories and Services accounts for the vast majority of total sales, providing exceptional financial stability.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Intuitive Surgical's financial profile is a model of high-quality growth and profitability. The company consistently delivers strong double-digit revenue growth, driven by the steady expansion of procedure volumes. The business model is exceptionally profitable, with very high gross and operating margins, leading to robust free cash flow generation. The most important key performance indicator (KPI) for investors is the **year-over-year growth in worldwide da Vinci procedures**, as this is the ultimate driver of the high-margin recurring revenue streams.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Worldwide da Vinci Procedure Growth (YoY %)</h3>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase consistent and strong growth. The procedure growth chart highlights the incredible momentum and adoption of robotic surgery, which is the key driver of the company's financial success.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Surgical Fortress</h2>
+            <p class="content-text mb-6">Intuitive Surgical possesses one of the widest and most durable competitive moats in the entire healthcare sector. This advantage is built on decades of innovation, extremely high switching costs for its customers, and a powerful ecosystem that is nearly impossible for competitors to replicate.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Massive Installed Base & High Switching Costs:</strong> With over 10,000 systems installed globally, hospitals have made significant capital investments. More importantly, thousands of surgeons have invested years of their careers training to become proficient on the da Vinci platform. The cost, time, and risk involved in switching to a competing system are immense.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Data & Learning Ecosystem:</strong> Having performed nearly 17 million procedures, Intuitive has an unparalleled trove of surgical data. This data is used to improve its systems, develop new instruments, and create training programs. This creates a powerful flywheel: more procedures lead to more data, which leads to better products, which drives more procedures.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technological Leadership & IP:</strong> Intuitive has a massive portfolio of patents protecting its core robotic surgery technology. Its continuous and significant investment in R&D keeps it at the forefront of innovation, making it difficult for competitors to catch up.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Large MedTech Companies:</strong> The most significant long-term competitive threats come from giant medical device companies like Medtronic (with its Hugo system) and Johnson & Johnson (with its Ottava system), which have the resources and hospital relationships to compete.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Specialized Robotics Companies:</strong> A number of smaller, specialized companies are developing robotic systems for specific surgical areas, such as Stryker in orthopedics.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Intuitive Surgical is a bet on a best-in-class, wide-moat market leader that is benefiting from the long-term, secular shift toward minimally invasive, robotic-assisted surgery. The rewards come from its dominant market position and durable growth, while the risks are centered on increasing competition and the potential for a slowdown in hospital capital spending.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Large, Underpenetrated Market:</strong> Robotic surgery is still only used in a small fraction of total annual surgeries worldwide. This provides a massive, multi-decade runway for continued procedure growth.</li>
+                        <li><strong>New Technology Cycles:</strong> The launch of new platforms like the da Vinci 5 and Ion creates new growth drivers, encouraging existing customers to upgrade and enabling expansion into new clinical areas like lung biopsy.</li>
+                        <li><strong>International Expansion:</strong> Significant opportunity to increase the installed base of systems and drive procedure adoption in large, underpenetrated markets in Europe and Asia.</li>
+                        <li><strong>Exceptional Financial Profile:</strong> The company's combination of high growth, high margins, and strong recurring revenue makes for a uniquely powerful and attractive financial model.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Increasing Competition:</strong> The biggest long-term risk. Large, well-funded competitors like Medtronic and J&J are entering the market, which could eventually lead to increased pricing pressure and slower market share gains.</li>
+                        <li><strong>Macroeconomic & Hospital Capital Spending:</strong> Hospital budgets can be cyclical. A significant economic downturn could cause hospitals to delay large capital purchases of new robotic systems.</li>
+                        <li><strong>Geopolitical & Regulatory Risks:</strong> As a global company, Intuitive is exposed to geopolitical risks. Additionally, changes in healthcare regulations or reimbursement policies could impact the adoption of robotic surgery.</li>
+                        <li><strong>Premium Valuation:</strong> As a dominant, high-quality growth company, Intuitive's stock consistently trades at a high valuation, which assumes continued strong growth and flawless execution.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Intuitive Surgical, Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#0077C8',
+            sky: '#00A9E0',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Instruments & Accessories', 'Systems', 'Services'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [61, 23, 16], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue Mix by Source (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [4.36, 5.71, 6.22, 7.12, 8.35], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            netIncome: { data: [1.09, 1.74, 1.34, 1.84, 2.34], label: 'Net Income ($B)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            procedures: { data: [22, 20, 21, 22, 19, 18, 18, 17], label: 'Procedure Growth (YoY %)', color: CHART_COLORS.blue },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyFinancialChart').getContext('2d'); // Directly get context
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            let yAxisTitle = metricDetails.label;
+            const labelParts = metricDetails.label.split('(');
+            if (labelParts.length > 1) {
+                yAxisTitle = labelParts[1].replace(')','');
+            }
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1,
+                        type: (metricKey === 'procedures') ? 'line' : 'bar',
+                        fill: (metricKey === 'procedures') ? false : true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { 
+                                display: true, 
+                                text: yAxisTitle
+                            } 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createChart(quarterlySelect, quarterlyChart, quarterlyDataStore, 'procedures');
+
+    </script>
+</body>
+</html>
+

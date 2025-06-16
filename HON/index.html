@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honeywell International (HON) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #D9232E; /* Honeywell Red */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #EF4444; /* Lighter Red */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #D9232E; /* Honeywell Red */
+            color: #FFFFFF;
+            border-color: #C0192D; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #D9232E; /* Honeywell Red */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #D9232E;">Honeywell (HON) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">The New Companies</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">The New Companies</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Honeywell's Great Transformation</h2>
+            <p class="content-text mb-6">Honeywell International is a storied American industrial conglomerate in the midst of its most significant transformation ever. The company has announced its intention to separate into <span class="highlight">three independent, publicly-traded companies</span>, each a leader in its respective field. This strategic move aims to unlock shareholder value by creating more focused businesses with greater agility and distinct investment profiles. The future of Honeywell will be as three separate entities: a pure-play **Aerospace Technologies** company, a leader in **Industrial Automation**, and a sustainability-focused **Advanced Materials** business. This analysis explores the core strengths of each of these future businesses and the strategic rationale behind this historic separation.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategic Rationale</h3>
+                    <p class="content-text mb-4">The separation is designed to achieve several key objectives:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Enhanced Strategic Focus:</strong> Allow each company to concentrate on its specific end markets, customers, and technology roadmaps without the constraints of a conglomerate structure.</li>
+                        <li><strong class="font-semibold text-gray-700">Tailored Capital Allocation:</strong> Enable each business to pursue its own capital allocation strategy—whether it's high R&D investment, strategic M&A, or shareholder returns—that best fits its industry.</li>
+                        <li><strong class="font-semibold text-gray-700">Distinct Investor Appeal:</strong> Create three pure-play companies that will attract specialized investor bases aligned with their unique growth and margin profiles.</li>
+                        <li><strong class="font-semibold text-gray-700">Greater Accountability & Agility:</strong> Empower focused management teams and boards to make faster decisions and react more quickly to changing market dynamics.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-red-50 border-red-200">
+                    <p class="kpi-label">Total Company Backlog (Q1 2025)</p>
+                    <p class="kpi-value text-red-600">$35.3 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents a massive, multi-year pipeline of future revenue that provides a strong foundation for all three future companies.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">The Three New Honeywells: A Deep Dive</h2>
+            <p class="content-text mb-6">Honeywell's future will be defined by three powerful, independent companies. The charts and descriptions below use the company's current segment reporting structure to illustrate the scale and focus of these soon-to-be standalone businesses.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="aero">Aerospace Technologies</button>
+                    <button class="segment-tab-button" data-target="auto">Industrial & Building Automation</button>
+                    <button class="segment-tab-button" data-target="mats">Advanced Materials</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="aeroContent" class="segment-content">
+                    <h3 class="subsection-title">Aerospace Technologies</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The future **Honeywell Aerospace** will be a premier, pure-play global leader in aviation. It provides a vast portfolio of technologies, including advanced avionics, propulsion engines, and critical mechanical systems for nearly every commercial and defense aircraft platform. Its business model is a powerful "razor-and-blade," with a massive installed base driving high-margin, recurring aftermarket sales and services. This segment is benefiting from the strong recovery in commercial air travel and heightened global defense spending.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="autoContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Industrial & Building Automation</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The future **Honeywell Automation** will be a global leader in controls and software for buildings and industrial facilities. The **Building Automation** business provides the essential systems for HVAC, fire, and security in commercial buildings. The **Industrial Automation** business provides process controls, automation software, and sensors for a wide range of industries. This company will be at the center of the megatrends of digitalization, sustainability, and energy efficiency.</p>
+                        </div>
+                        <div class="kpi-card bg-red-50 border-red-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Market Position</p>
+                            <p class="kpi-value text-red-600 text-base">#1 in Building Automation</p>
+                            <p class="content-text text-sm mt-2">Honeywell holds a leading market share position in the global building automation and controls market, a key strength for the future company.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="matsContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Advanced Materials</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The future **Solstice Advanced Materials** will be a pure-play, sustainability-focused specialty chemicals and materials company. Its portfolio is built on decades of innovation in fluorine chemistry. Key products include the **Solstice®** line of ultra-low global warming potential (GWP) refrigerants, foam blowing agents, and medical propellants, as well as advanced materials for the semiconductor industry. This business is driven by a global regulatory push for more sustainable solutions.</p>
+                        </div>
+                        <div class="kpi-card bg-red-50 border-red-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Product Line</p>
+                            <p class="kpi-value text-red-600 text-2xl">Solstice®</p>
+                            <p class="content-text text-sm mt-2">A portfolio of environmentally preferable solutions that are replacing older, high-GWP chemicals across multiple industries.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Honeywell's financial performance reflects its position as a mature, highly profitable industrial leader. The company consistently generates strong cash flow and has a track record of disciplined capital allocation. The charts below show the historical performance of the current business segments, which will form the foundation of the three new, independent companies. The stability of Aerospace and Building Automation stands out as a key strength.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Revenue ($B)</h3>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Segment Revenue ($B)</h3>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase stable top-line growth and the relative contributions of the four current segments. Note that the Safety & Productivity Solutions segment is being divested, while the other three will form the new companies.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Power of the Installed Base</h2>
+            <p class="content-text mb-6">Each of Honeywell's future businesses will possess a wide and durable competitive moat. These moats are built on the massive global installed base of their products, deep technological expertise, and the high switching costs faced by their customers.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-red-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Massive Installed Base:</strong> Across aerospace, buildings, and industrial sites, millions of Honeywell products are in service. This creates a massive, captive audience for high-margin, recurring aftermarket services, spare parts, and upgrades. This is the cornerstone of the moat for both the future Aerospace and Automation companies.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Switching Costs & Regulatory Hurdles:</strong> Honeywell's products are deeply embedded in its customers' operations and are often certified for specific applications (especially in aerospace). The cost, complexity, and regulatory burden of switching to a competitor are immense.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technological Leadership & IP:</strong> Each business is a leader in its field, with a deep portfolio of patents and proprietary technology developed over decades of significant R&D investment.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Aerospace:</strong> Competes with other major aerospace suppliers like GE Aerospace, RTX (Collins & Pratt & Whitney), and Safran.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Automation:</strong> Competes with global industrial and building technology leaders like Siemens, Johnson Controls, and Emerson Electric.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Advanced Materials:</strong> Competes with other large specialty chemical companies like Chemours and Daikin.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Honeywell is now a story of unlocking value through separation. The rewards come from creating three focused, market-leading companies that can pursue their own distinct growth strategies. The primary risk is the significant complexity and potential disruption of executing this massive corporate transformation.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Unlocking Value Through Focus:</strong> The separation is expected to eliminate the "conglomerate discount" and allow the market to value each business on its own strong fundamentals and growth prospects.</li>
+                        <li><strong>Alignment with Secular Megatrends:</strong> Each new company is positioned to benefit from powerful long-term trends: the future of aviation (Aerospace), digitalization and sustainability (Automation), and the energy transition (Advanced Materials).</li>
+                        <li><strong>Strong Financial Profiles:</strong> Each of the three businesses is expected to be a leader in its industry with strong margins and robust cash flow generation, capable of funding both growth and shareholder returns.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Execution Risk of Separation:</strong> This is the primary risk. Separating a massive conglomerate into three independent companies is an incredibly complex process with potential for operational disruptions, unforeseen costs, and cultural challenges.</li>
+                        <li><strong>Macroeconomic Sensitivity:</strong> Each of the businesses remains cyclical and sensitive to the health of the global economy, particularly in the aerospace, construction, and industrial sectors.</li>
+                        <li><strong>Loss of Conglomerate Synergies:</strong> While the goal is to unlock value, there is a risk of losing some of the scale advantages, shared R&D, and cross-selling opportunities that existed within the unified Honeywell structure.</li>
+                        <li><strong>Post-Spin Performance:</strong> There is no guarantee that the three independent companies will perform better on their own or that the sum of the parts will ultimately be greater than the whole.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Honeywell International Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            red: '#D9232E',
+            blue: '#0075C9',
+            sky: '#3B82F6',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Aerospace', 'Building Automation', 'Industrial Automation', 'Energy & Sustainability'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [37, 17, 29, 17], // Approximate revenue % from current segment structure
+                    backgroundColor: [CHART_COLORS.red, CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue by Current Segment (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [34.4, 35.5, 36.7, 38.5], label: 'Total Revenue ($B)', color: CHART_COLORS.red },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'Aerospace',
+                        data: [8.9, 9.2, 9.4, 9.1, 9.3, 9.5, 9.7, 9.5],
+                        backgroundColor: CHART_COLORS.red
+                    },
+                    {
+                        label: 'Building Automation',
+                        data: [5.9, 6.0, 6.1, 6.0, 6.1, 6.2, 6.3, 6.2],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                     {
+                        label: 'Industrial Automation',
+                        data: [10.9, 11.2, 11.4, 11.1, 11.3, 11.5, 11.7, 11.6],
+                        backgroundColor: CHART_COLORS.sky
+                    },
+                     {
+                        label: 'Energy & Sustainability',
+                        data: [6.1, 6.2, 6.3, 6.2, 6.3, 6.4, 6.5, 6.4],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Revenue by Current Segment ($B)' } }
+                }
+            });
+        }
+        
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue');
+
+    </script>
+</body>
+</html>
+

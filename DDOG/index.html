@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datadog, Inc. (DDOG) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #632CA6; /* Datadog Purple */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #8B5CF6; /* Lighter Purple */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #632CA6; /* Datadog Purple */
+            color: #FFFFFF;
+            border-color: #5B21B6; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #632CA6; /* Datadog Purple */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #632CA6;">Datadog, Inc. (DDOG) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials & KPIs</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials & KPIs</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Datadog: The Observability & Security Platform</h2>
+            <p class="content-text mb-6">Datadog is a leading monitoring and security platform for cloud applications. In today's complex, multi-cloud world, Datadog provides a single, unified platform that allows organizations to see what is happening across their entire technology stack—from infrastructure and applications to logs and user experiences. This "observability" is critical for ensuring performance, troubleshooting problems, and securing modern applications. Datadog's strategy is built on a powerful <span class="highlight">"land-and-expand"</span> business model, where it often lands a customer with one product and then expands the relationship by selling additional modules from its broad, integrated platform. This analysis explores Datadog's powerful platform strategy, its impressive growth metrics, and its competitive position in the cloud era.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Datadog's strategy is focused on platform innovation and customer expansion:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Be the Unified "Single Pane of Glass":</strong> Offer a single, tightly integrated platform for all observability and security needs, eliminating the need for customers to manage multiple, disparate point solutions.</li>
+                        <li><strong class="font-semibold text-gray-700">Drive Platform Adoption:</strong> The core strategy is to get customers to adopt more products. The more modules a customer uses, the stickier they become and the more value they derive from the platform.</li>
+                        <li><strong class="font-semibold text-gray-700">Rapid Innovation:</strong> Continuously innovate and release new products to address emerging customer needs, particularly in high-growth areas like AI observability and cloud security.</li>
+                        <li><strong class="font-semibold text-gray-700">Efficient Go-to-Market:</strong> Use a combination of self-service, inside sales, and enterprise sales teams to efficiently land customers of all sizes and then expand the relationship over time.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-purple-50 border-purple-200">
+                    <p class="kpi-label">Customers using 6+ products</p>
+                    <p class="kpi-value text-purple-800">23%</p>
+                    <p class="content-text text-sm mt-2">This metric highlights the success of the platform strategy. Nearly a quarter of customers are now using six or more Datadog products, up from just 9% three years ago.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Datadog Makes Money: The SaaS Platform</h2>
+            <p class="content-text mb-6">Datadog operates as a single, integrated platform and generates nearly all of its revenue from subscriptions. Customers typically sign annual or multi-year contracts, and pricing is generally usage-based, tied to factors like the number of hosts monitored, the volume of data ingested, or the number of users. The business is best understood by its major product "pillars" which customers can adopt a la carte.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="infra">Infrastructure & APM</button>
+                    <button class="segment-tab-button" data-target="security">Log Management & Security</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="infraContent" class="segment-content">
+                    <h3 class="subsection-title">Infrastructure Monitoring & APM</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the foundation of the Datadog platform. **Infrastructure Monitoring** provides visibility into the performance of servers, containers, and cloud services across any environment. **Application Performance Monitoring (APM)** gives customers deep insight into their own application code, helping them trace requests and identify performance bottlenecks. These two pillars are often the initial "landing" point for new customers.</p>
+                        </div>
+                        <div class="kpi-card bg-purple-50 border-purple-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">The "Three Pillars"</p>
+                            <p class="kpi-value text-purple-800 text-base">Metrics, Traces, & Logs</p>
+                            <p class="content-text text-sm mt-2">Datadog was founded to unify these three key data types, providing a holistic view of a company's technology environment.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="securityContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Log Management & Cloud Security</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">These are major growth areas for Datadog. **Log Management** allows customers to collect, search, and analyze logs from all their applications and infrastructure, which is crucial for troubleshooting and security investigations. The growing **Cloud Security** platform provides a suite of tools to detect threats, monitor for misconfigurations, and secure cloud-native applications from development to production.</p>
+                        </div>
+                        <div class="kpi-card bg-purple-50 border-purple-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Growth Area</p>
+                            <p class="kpi-value text-purple-800 text-2xl">Security</p>
+                            <p class="content-text text-sm mt-2">Datadog is rapidly expanding its security offerings to become a comprehensive DevSecOps platform, a major opportunity for expansion within its customer base.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financials & Key Performance Indicators</h2>
+            <p class="content-text mb-6">Datadog exhibits the financial profile of a best-in-class, high-growth SaaS company. It has consistently delivered rapid revenue growth while maintaining elite gross margins (around 80%). The company is now demonstrating significant operating leverage, achieving profitability and strong free cash flow generation. The most important key performance indicators (KPIs) for investors are the growth in customers spending over $100,000 in Annual Recurring Revenue (ARR), and the Dollar-Based Net Retention Rate (NRR), which measures spending growth from existing customers.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500">
+                            <option value="netRevenue" selected>Total Revenue ($M)</option>
+                            <option value="grossProfit">Gross Profit ($M)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Growth in Large Customers (> $100k ARR)</h3>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase rapid and consistent top-line growth and high gross profitability. The customer chart highlights the success of the "land-and-expand" strategy, with the number of high-paying enterprise customers growing steadily each quarter.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Unified Platform</h2>
+            <p class="content-text mb-6">Datadog has built a wide and strengthening competitive moat based on its unified platform architecture, high switching costs, and a powerful innovation engine that continuously expands its product portfolio.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-purple-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Unified Platform & High Switching Costs:</strong> Datadog's ability to offer a single, integrated platform for a vast range of observability and security needs is its core advantage. As customers adopt more modules and build their workflows on Datadog, the cost and complexity of ripping it out and replacing it with multiple point solutions becomes prohibitively high.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Land-and-Expand Flywheel:</strong> The company has perfected the model of landing a customer with one or two products and then efficiently cross-selling them many more over time. This is evident in its high Dollar-Based Net Retention Rate and the growing number of customers using multiple products.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Rapid Pace of Innovation:</strong> Datadog has a proven track record of rapidly developing and launching new, high-quality products. This allows it to constantly expand its addressable market and stay ahead of smaller competitors.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-purple-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Observability Platforms:</strong> Competes with other dedicated observability players like Dynatrace and New Relic.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Cloud Hyperscalers:</strong> Faces competition from the native monitoring tools offered by the major cloud providers, such as Amazon CloudWatch, Google Cloud Operations, and Azure Monitor.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-purple-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Specialized Vendors:</strong> Competes with a wide array of point solutions in specific areas, such as Splunk in log management and various cybersecurity companies.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Datadog is a bet on a best-in-class SaaS company that is a primary beneficiary of the long-term trends of cloud migration and digital transformation. The rewards come from its continued platform adoption and market share gains, while the risks are centered on the intense competition and its premium valuation.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Large & Expanding Market:</strong> The market for observability and cloud security is massive and growing rapidly as more workloads move to the cloud and applications become more complex.</li>
+                        <li><strong>Platform Cross-Sell Opportunity:</strong> A huge opportunity remains to sell more products into its large existing customer base, driving durable growth and increasing switching costs.</li>
+                        <li><strong>AI-Driven Demand:</strong> The rise of AI applications creates new complexity and a greater need for robust monitoring and observability, providing a significant tailwind for Datadog's platform.</li>
+                        <li><strong>Strong Financial Profile:</strong> A combination of high revenue growth, best-in-class gross margins, and strong free cash flow generation makes for a very attractive financial model.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Intense Competition:</strong> Faces fierce competition from well-funded private companies, established players, and the giant cloud providers who could bundle their own observability tools more aggressively.</li>
+                        <li><strong>Premium Valuation:</strong> Datadog's stock consistently trades at a very high valuation, which assumes a high degree of execution and sustained growth. Any slowdown could lead to significant stock price volatility.</li>
+                        <li><strong>Macroeconomic Sensitivity:</strong> As a usage-based model, a severe economic downturn could cause customers to optimize their cloud spending, leading to a slowdown in Datadog's growth rate.</li>
+                        <li><strong>Complexity of Scale:</strong> Maintaining a rapid pace of innovation and a cohesive culture while scaling into a much larger organization is a significant operational challenge.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Datadog, Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            purple: '#632CA6',
+            sky: '#38BDF8',
+            orange: '#F97316',
+        };
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [604, 1029, 1675, 2130, 2681], label: 'Total Revenue ($M)', color: CHART_COLORS.purple },
+            grossProfit: { data: [473, 795, 1326, 1718, 2169], label: 'Gross Profit ($M)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            largeCustomers: { data: [2990, 3130, 3190, 3340, 3450, 3520, 3610, 3730], label: 'Customers > $100k ARR', color: CHART_COLORS.orange },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyFinancialChart').getContext('2d'); // Directly get context
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            let yAxisTitle = metricDetails.label;
+            const labelParts = metricDetails.label.split('(');
+            if (labelParts.length > 1) {
+                yAxisTitle = labelParts[1].replace(')','');
+            }
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { 
+                                display: true, 
+                                text: yAxisTitle
+                            } 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        // Since there is only one option for the quarterly chart, we render it directly
+        quarterlyChart = createChart(quarterlySelect, quarterlyChart, quarterlyDataStore, 'largeCustomers');
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autodesk, Inc. (ADSK) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #0696D7; /* Autodesk Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* Lighter Blue */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #0696D7; /* Autodesk Blue */
+            color: #FFFFFF;
+            border-color: #0472AB; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #0696D7; /* Autodesk Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #0696D7;">Autodesk, Inc. (ADSK) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials & KPIs</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials & KPIs</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Autodesk: Designing the Future</h2>
+            <p class="content-text mb-6">Autodesk, Inc. is a global leader in 3D design, engineering, and entertainment software. Its products are indispensable tools for professionals in the Architecture, Engineering, and Construction (AEC), Product Design & Manufacturing (PD&M), and Media & Entertainment (M&E) industries. After successfully transitioning from a license-based model to a <span class="highlight">subscription-first SaaS company</span>, Autodesk's strategy is now focused on driving the adoption of its industry-specific cloud platforms. These platforms—**Forma**, **Fusion**, and **Flow**—aim to connect and digitize entire industry workflows, from initial design to final production and operation. This analysis explores Autodesk's powerful product families, its durable financial model, and its strategic position in the modern design and make landscape.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Autodesk's strategy is focused on platform integration and cloud adoption:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Drive Adoption of Industry Clouds:</strong> Encourage customers to move to its comprehensive cloud platforms (Forma, Fusion, Flow) which connect data and workflows, creating greater efficiency and deeper integration.</li>
+                        <li><strong class="font-semibold text-gray-700">Leverage AI and Data:</strong> Embed artificial intelligence and data analytics into its core products to automate repetitive tasks, generate design options, and provide predictive insights.</li>
+                        <li><strong class="font-semibold text-gray-700">Maintain Leadership in Core Products:</strong> Continue to invest in and innovate its industry-standard flagship products like AutoCAD and Revit to protect its core market share.</li>
+                        <li><strong class="font-semibold text-gray-700">Deliver Consistent Shareholder Returns:</strong> Utilize the predictable cash flow from its subscription model to fund R&D and return capital to shareholders through a disciplined share repurchase program.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Recurring Revenue as % of Total</p>
+                    <p class="kpi-value text-blue-800">~97%</p>
+                    <p class="content-text text-sm mt-2">The successful transition to a subscription model provides Autodesk with highly predictable and stable revenue streams.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Autodesk Makes Money: Product Families</h2>
+            <p class="content-text mb-6">Autodesk's business is organized around four primary product families, each serving distinct professional industries. The **Architecture, Engineering, Construction & Operations (AECO)** business is the largest and a key growth driver. The foundational **AutoCAD** family provides a stable base, while the **Manufacturing** and **Media & Entertainment** families serve specialized, high-performance markets.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="aeco">AECO</button>
+                    <button class="segment-tab-button" data-target="autocad">AutoCAD</button>
+                    <button class="segment-tab-button" data-target="mfg">Manufacturing</button>
+                    <button class="segment-tab-button" data-target="me">Media & Entertainment</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="aecoContent" class="segment-content">
+                    <h3 class="subsection-title">AECO</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The largest and most important segment. The AECO portfolio provides tools for every stage of a building or infrastructure project's lifecycle. Its flagship product is <span class="highlight">Revit</span>, the industry standard for Building Information Modeling (BIM). The new **Autodesk Forma** cloud platform aims to unify the entire design-to-construction workflow, connecting data and teams in a single environment.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="autocadContent" class="segment-content hidden">
+                    <h3 class="subsection-title">AutoCAD & AutoCAD LT</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is Autodesk's foundational product family. <span class="highlight">AutoCAD</span> is the original computer-aided design (CAD) software and remains the industry standard for 2D drafting and 3D design across a wide range of industries. AutoCAD LT is a more affordable version focused on 2D drafting. This segment provides a massive, stable base of recurring revenue from its millions of users.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Total Subscriptions</p>
+                            <p class="kpi-value text-blue-800">~7.5 Million</p>
+                            <p class="content-text text-sm mt-2">The massive installed base of subscribers across all product families is the foundation of Autodesk's financial strength.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="mfgContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Manufacturing (MFG)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The MFG portfolio provides software for professionals in the manufacturing, industrial design, and automotive industries. The key product is **Autodesk Fusion**, a cloud-based platform that integrates design, engineering, electronics, and manufacturing into a single workflow. Fusion is a major growth driver and a direct competitor to other cloud-native design platforms.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Platform</p>
+                            <p class="kpi-value text-blue-800 text-2xl">Fusion</p>
+                            <p class="content-text text-sm mt-2">A comprehensive, cloud-native platform for product development, from concept to manufacturing.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div id="meContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Media & Entertainment (M&E)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The M&E segment provides 3D animation and visual effects (VFX) software for the film, television, and video game industries. Its flagship products, <span class="highlight">Maya</span> and <span class="highlight">3ds Max</span>, are industry standards and have been used to create some of the most iconic visual effects in modern entertainment. The new **Autodesk Flow** cloud platform aims to connect workflows across the entire production pipeline.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Used In</p>
+                            <p class="kpi-value text-blue-800 text-base">Film, TV, & Video Games</p>
+                            <p class="content-text text-sm mt-2">Autodesk's M&E software is the tool of choice for many of the world's leading animation studios and VFX artists.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Autodesk's successful transition to a subscription model has created a highly predictable and profitable financial engine. The company consistently delivers strong revenue growth, high gross margins, and robust operating margins. Two key metrics for investors are **Annualized Recurring Revenue (ARR)**, which measures the growth of the subscription base, and **Net Revenue Retention Rate**, which shows the company's ability to retain and grow spending from existing customers.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2025)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Annual Recurring Revenue (ARR) ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="arr" selected>Total ARR Growth</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show a consistent upward trend in revenue and operating income. The strong, steady growth in ARR is a direct result of the successful subscription-based business model and a key indicator of future revenue.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Industry Standard</h2>
+            <p class="content-text mb-6">Autodesk has an exceptionally wide and durable competitive moat. This advantage is built on its products being the entrenched industry standard, which creates extremely high switching costs for its millions of users and powerful network effects.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Switching Costs:</strong> Professionals in architecture, engineering, and design invest years of their careers mastering Autodesk's complex software. Their workflows, project files (.DWG, .RVT), and entire organizational processes are built around these tools, making it incredibly costly and disruptive to switch to a competitor.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Network Effects:</strong> Because Autodesk products are the industry standard, a massive ecosystem of employers, educators, third-party developers, and collaborators exists around its file formats. This creates a powerful network effect: the value of using Autodesk software increases because everyone else uses it.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Broad, Integrated Portfolio:</strong> Autodesk offers the most comprehensive suite of software covering entire industry workflows. Its ability to integrate data and processes from design to manufacturing (with Fusion) or design to construction (with Forma) is a powerful advantage over point-solution competitors.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Specialized Software Vendors:</strong> Faces competition from a range of specialized companies, such as Dassault Systèmes (SolidWorks) in manufacturing, Bentley Systems in infrastructure, and Nemetschek in AEC.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Cloud-Native Startups:</strong> A new wave of venture-backed, cloud-native design tools (like Figma in UI/UX and Onshape in CAD) are challenging the incumbents with more collaborative and modern platforms.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Autodesk is a bet on a wide-moat, high-margin software leader that is capitalizing on the long-term digitalization of the industrial economy. The rewards come from its predictable growth and profitability, while the risks are centered on macroeconomic sensitivity and the threat of disruption from new, cloud-native competitors.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Durable, Recurring Revenue:</strong> The subscription model provides a highly predictable, high-margin revenue stream with excellent visibility.</li>
+                        <li><strong>Digital Transformation Tailwinds:</strong> The architecture, engineering, and manufacturing industries are still in the early innings of their digital transformation, providing a long runway for growth.</li>
+                        <li><strong>Cloud Platform Adoption:</strong> The shift to its integrated industry cloud platforms (Forma, Fusion, Flow) represents a significant opportunity to increase revenue per customer and deepen its competitive moat.</li>
+                        <li><strong>AI-Driven Innovation:</strong> Integrating AI into its products can automate design tasks and provide valuable insights, further embedding Autodesk into customer workflows.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Macroeconomic Sensitivity:</strong> The business is cyclical. A significant global downturn in construction or manufacturing activity would lead to slower seat growth and pressure on revenue.</li>
+                        <li><strong>Pace of Cloud Adoption:</strong> The transition to its new cloud platforms and business models can be complex and may face resistance or slower-than-expected adoption from its customer base.</li>
+                        <li><strong>Competition from Cloud-Native Players:</strong> While Autodesk's moat is strong, it faces a long-term threat from more nimble, cloud-native startups that could disrupt parts of its business with more modern and collaborative tools.</li>
+                        <li><strong>Premium Valuation:</strong> As a high-quality software company, Autodesk's stock often trades at a premium valuation, which assumes continued strong growth and execution.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Autodesk, Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#0696D7',
+            sky: '#3B82F6',
+            orange: '#F97316',
+            gray: '#6B7280',
+            teal: '#14B8A6'
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['AECO', 'AutoCAD', 'Manufacturing', 'Media & Entertainment'],
+                datasets: [{
+                    label: 'FY2025 Revenue Mix',
+                    data: [48, 26, 19, 5], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.orange, CHART_COLORS.teal],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2025 Revenue by Product Family (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
+            netRevenue: { data: [3.79, 4.39, 5.01, 5.50, 6.13], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingIncome: { data: [0.73, 1.05, 1.08, 1.13, 1.34], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            arr: { data: [4.86, 5.03, 5.18, 5.34, 5.51, 5.71, 5.89, 6.13], label: 'Total ARR ($B)', color: CHART_COLORS.blue },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyFinancialChart').getContext('2d'); // Directly get context
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            let yAxisTitle = metricDetails.label;
+            const labelParts = metricDetails.label.split('(');
+            if (labelParts.length > 1) {
+                yAxisTitle = labelParts[1].replace(')','');
+            }
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1,
+                        type: (metricKey === 'arr') ? 'line' : 'bar',
+                        fill: (metricKey === 'arr') ? false : true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { 
+                                display: true, 
+                                text: yAxisTitle
+                            } 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createChart(quarterlySelect, quarterlyChart, quarterlyDataStore, 'arr');
+
+    </script>
+</body>
+</html>
+

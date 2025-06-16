@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle Internet Financial (CRCL) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #0073E6; /* Circle Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* Lighter Blue */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #0073E6; /* Circle Blue */
+            color: #FFFFFF;
+            border-color: #005A9E; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #0073E6; /* Circle Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #0073E6;">Circle (CRCL) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials & KPIs</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials & KPIs</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Circle: The Regulated On-Ramp to the Digital Dollar</h2>
+            <p class="content-text mb-6">Circle Internet Financial is a global financial technology company at the center of the digital currency revolution. It is the sole issuer of **USD Coin (USDC)**, one of the world's largest and most trusted "stablecoins." A stablecoin is a type of cryptocurrency designed to maintain a stable value by being pegged to a reserve asset, in this case, the U.S. dollar. Circle's entire business model is built around promoting USDC as a safe, transparent, and regulated digital dollar that can move at internet speed. The company generates revenue primarily from the interest earned on its massive reserve assets that back the circulating supply of USDC. This analysis explores Circle's unique business model, its key role in the crypto ecosystem, and its strategic position following its blockbuster IPO in June 2025.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Circle's strategy is focused on trust, transparency, and utility:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Be the Most Trusted Stablecoin:</strong> Differentiate USDC from competitors by adhering to the highest standards of regulatory compliance, transparency, and reserve quality (holding only cash and short-term U.S. Treasuries).</li>
+                        <li><strong class="font-semibold text-gray-700">Drive USDC Adoption:</strong> Promote the use of USDC for payments, cross-border settlements, and as a fundamental building block for decentralized finance (DeFi) and other web3 applications.</li>
+                        <li><strong class="font-semibold text-gray-700">Build Platform Services:</strong> Offer a suite of developer tools and enterprise APIs (like the Circle Mint) that make it easy for businesses to integrate USDC into their products and services.</li>
+                        <li><strong class="font-semibold text-gray-700">Expand the Stablecoin Ecosystem:</strong> Introduce new stablecoins pegged to other major currencies (like EURC) to grow its global footprint.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">USDC in Circulation (March 2025)</p>
+                    <p class="kpi-value text-blue-800">~$61 Billion</p>
+                    <p class="content-text text-sm mt-2">The total value of USDC circulating on public blockchains, which is fully backed by Circle's reserve assets.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Circle Makes Money: Interest & Transactions</h2>
+            <p class="content-text mb-6">Circle's business model is unique. Unlike most crypto companies that profit from volatile trading, Circle's primary profit engine is stable and predictable. It generates revenue from two main sources: **Interest Income** on its massive reserve assets and **Transaction & Platform Fees** from its suite of services.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="interest">Interest on Reserves</button>
+                    <button class="segment-tab-button" data-target="fees">Transaction & Platform Fees</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="interestContent" class="segment-content">
+                    <h3 class="subsection-title">Interest on Reserves (The Engine)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the largest and most important driver of Circle's revenue and profitability. For every USDC token in circulation, Circle holds a corresponding U.S. dollar in reserve assets. These reserves are held in a combination of cash and short-duration U.S. Treasury bonds. Circle earns the interest generated by these Treasury bonds. As the supply of USDC grows and as interest rates rise, this revenue stream increases directly. This makes the business highly sensitive to both USDC adoption and prevailing interest rates.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Driver</p>
+                            <p class="kpi-value text-blue-800 text-base">USDC Market Cap & Interest Rates</p>
+                            <p class="content-text text-sm mt-2">The growth of USDC in circulation and the yield on U.S. Treasuries are the two primary variables that determine Circle's revenue potential.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="feesContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Transaction & Platform Fees</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">While smaller than interest income, this is a growing and strategically important revenue stream. Circle provides a suite of platform services for businesses and developers that want to use USDC. This includes the <span class="highlight">Circle Mint</span>, which allows institutions to mint and redeem large amounts of USDC, and various APIs for payments and payouts. Circle charges small fees for these transactions and services, creating a revenue stream tied directly to the utility and usage of the USDC network.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Service</p>
+                            <p class="kpi-value text-blue-800 text-2xl">Circle Mint</p>
+                            <p class="content-text text-sm mt-2">The primary platform for institutional clients to access USDC liquidity directly from the issuer, driving fee-based revenue.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">As a very newly public company (IPO on June 5, 2025), Circle has a limited public financial history. The data available from its S-1 filing and initial earnings reports show a business whose profitability is highly correlated with interest rates. The company's net income can be volatile, but its core business of earning interest on reserves is fundamentally stable as long as the USDC market cap remains robust. The most important key performance indicator (KPI) is the total market capitalization of USDC.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Historical Financials (2022-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($M)</option>
+                            <option value="preTaxEarnings">Pre-Tax Earnings ($M)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">USDC Market Cap ($B)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="marketCap" selected>USDC Market Cap Growth</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The yearly financials show the swing to profitability as interest rates rose. The market cap chart shows the growth and resilience of USDC, the ultimate driver of the business.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Trusted Digital Dollar</h2>
+            <p class="content-text mb-6">In the often tumultuous world of cryptocurrency, Circle has built a powerful competitive moat based on trust, transparency, and a steadfast commitment to regulation. This has positioned USDC as the preferred stablecoin for legitimate businesses, developers, and institutions.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Regulatory Compliance & Trust:</strong> Circle's key advantage is its "regulatory-first" approach. By being based in the U.S., proactively engaging with regulators, and providing transparent, audited attestations of its reserves, it has built a brand synonymous with trust and safety. This is a massive differentiator from offshore, less transparent competitors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Deep Ecosystem Integration:</strong> USDC is deeply woven into the fabric of the crypto economy. It is a primary trading pair on major exchanges like Coinbase, a core collateral type in decentralized finance (DeFi), and the stablecoin of choice for many web3 applications. This creates powerful network effects.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">First-Mover Advantage in Regulated Stablecoins:</strong> As the first major, regulated stablecoin issuer to go public in the U.S., Circle has a significant head start in establishing itself as the institutional-grade standard for digital dollars.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Tether (USDT):</strong> The largest stablecoin by market capitalization. However, Tether is based offshore and has faced long-standing questions about the transparency and quality of its reserves, making it less appealing to regulated institutions.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Stablecoins:</strong> Faces competition from a growing field of other stablecoins, including decentralized versions and those issued by other fintech and crypto companies.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">PayPal (PYUSD):</strong> A major new competitor. PayPal has launched its own stablecoin, and its massive existing user base and payment network represent a significant long-term competitive threat.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Circle is a bet on the long-term growth of the digital asset economy and the increasing role of regulated stablecoins as a core piece of its infrastructure. The rewards are tied to the continued adoption of USDC, while the risks are dominated by the uncertain regulatory future and intense competition.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Growth of the Digital Asset Economy:</strong> The primary tailwind. As the crypto ecosystem grows, the demand for a safe, reliable digital dollar to facilitate trading, payments, and DeFi is expected to grow with it.</li>
+                        <li><strong>Regulatory Clarity:</strong> The potential passage of stablecoin legislation in the U.S. could provide a clear regulatory framework, which would likely benefit a compliant-focused player like Circle and de-risk the business for institutional adoption.</li>
+                        <li><strong>Interest Rate Environment:</strong> A "higher for longer" interest rate environment is a direct benefit to Circle's primary revenue stream.</li>
+                        <li><strong>Expansion of Platform Services:</strong> A significant opportunity to grow its higher-margin, fee-based revenue by building more tools and services for businesses using USDC.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-red-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Regulatory Risk:</strong> This is the paramount risk. An adverse or overly restrictive regulatory framework for stablecoins could fundamentally harm Circle's business model.</li>
+                        <li><strong>Intense Competition:</strong> Faces fierce competition from the larger Tether and a growing number of well-funded new entrants, most notably PayPal.</li>
+                        <li><strong>Dependence on the Crypto Ecosystem:</strong> The demand for USDC is still largely tied to the health and activity of the broader crypto markets. A prolonged "crypto winter" would likely lead to a decline in USDC's market cap.</li>
+                        <li><strong>Interest Rate Risk:</strong> While currently a tailwind, a significant decline in interest rates would directly and negatively impact Circle's primary source of revenue.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Circle Internet Financial public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#0073E6',
+            sky: '#3B82F6',
+            gray: '#6B7280',
+        };
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [588, 599, 782], label: 'Total Revenue ($M)', color: CHART_COLORS.blue },
+            preTaxEarnings: { data: [-41, 268, 156], label: 'Pre-Tax Earnings ($M)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q1 23', 'Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25'],
+            marketCap: { data: [43, 33, 26, 24, 25, 30, 32, 45, 61, 62], label: 'USDC Market Cap ($B)', color: CHART_COLORS.blue },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            // Robustly determine Y-axis title
+            let yAxisTitle = metricDetails.label; // Default to the full label
+            const labelParts = metricDetails.label.split('(');
+            if (labelParts.length > 1) {
+                yAxisTitle = labelParts[1].replace(')','');
+            }
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1,
+                        type: (metricKey === 'marketCap') ? 'line' : 'bar',
+                        fill: (metricKey === 'marketCap') ? false : true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { 
+                                display: true, 
+                                text: yAxisTitle
+                            } 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'marketCap');
+
+    </script>
+</body>
+</html>
+

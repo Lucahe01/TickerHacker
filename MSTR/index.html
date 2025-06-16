@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MicroStrategy (MSTR) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #F97316; /* orange-500 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #FB923C; /* orange-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #F97316; /* orange-500 */
+            color: #FFFFFF;
+            border-color: #EA580C; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #F97316; /* orange-500 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #F97316;">MicroStrategy (MSTR) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Dual Strategy</a>
+                        <a href="#financials" class="nav-link">Financials & Holdings</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Dual Strategy</a>
+                    <a href="#financials" class="nav-link block text-base">Financials & Holdings</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">MicroStrategy: A Leveraged Bitcoin Company</h2>
+            <p class="content-text mb-6">MicroStrategy Incorporated operates a unique dual strategy: it is both an established enterprise software company and, more famously, the world's largest publicly-traded corporate holder of bitcoin. Since 2020, the company, under the direction of Executive Chairman Michael Saylor, has made acquiring and holding bitcoin its primary treasury reserve strategy. It uses cash flows from its software business and, more significantly, capital raised from debt and equity offerings to continuously accumulate bitcoin. Consequently, MicroStrategy's stock has become a popular, albeit leveraged, proxy for the price of bitcoin itself. This analysis explores the two distinct parts of MicroStrategy's business and the unprecedented corporate strategy that defines it.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Corporate Strategy</h3>
+                    <p class="content-text mb-4">MicroStrategy's strategy is built on a conviction in bitcoin:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Acquire and Hold Bitcoin:</strong> The primary goal is to accumulate as much bitcoin as possible and hold it for the long term, viewing it as a superior store of value compared to cash.</li>
+                        <li><strong class="font-semibold text-gray-700">Leverage the Corporate Structure:</strong> Uniquely use its status as an operating company to issue debt and equity in capital markets, using the proceeds to purchase more bitcoin.</li>
+                        <li><strong class="font-semibold text-gray-700">Fund Operations with Software Business:</strong> Maintain its enterprise business intelligence software business to generate cash flow to support operations and provide another avenue for bitcoin acquisition.</li>
+                        <li><strong class="font-semibold text-gray-700">Provide a Bitcoin Proxy:</strong> Offer investors who may be unable or unwilling to hold bitcoin directly a way to gain exposure through a traditional equity vehicle (MSTR stock).</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-orange-50 border-orange-200">
+                    <p class="kpi-label">Total Bitcoin Holdings (as of June 2025)</p>
+                    <p class="kpi-value text-orange-600">~226,331 BTC</p>
+                    <p class="content-text text-sm mt-2">Represents over 1% of the total bitcoin supply, making MicroStrategy the largest corporate holder by a wide margin.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">The Dual Strategy: Software & Bitcoin</h2>
+            <p class="content-text mb-6">MicroStrategy's business must be analyzed as two distinct parts. First is the **Software Business**, the original company that provides enterprise software and generates revenue. Second is the **Bitcoin Development** strategy, which does not generate revenue but dictates the company's balance sheet and market valuation.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="bitcoin">Bitcoin Development Strategy</button>
+                    <button class="segment-tab-button" data-target="software">Software Business</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="bitcoinContent" class="segment-content">
+                    <h3 class="subsection-title">Bitcoin Development Strategy</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the primary driver of the company's market valuation. MicroStrategy's core thesis is that bitcoin is a superior long-term asset for its corporate treasury. The company has aggressively issued billions in convertible debt and other securities, explicitly using the proceeds to buy more bitcoin. This makes MSTR a leveraged bitcoin holding company; its value rises and falls with the price of bitcoin, but with amplified volatility due to the debt on its balance sheet.</p>
+                        </div>
+                        <div class="kpi-card bg-orange-50 border-orange-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Total Acquisition Cost</p>
+                            <p class="kpi-value text-orange-600">$8.33 Billion</p>
+                             <p class="kpi-label mt-2">Average Purchase Price</p>
+                            <p class="kpi-value text-orange-600">$36,798 / BTC</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="softwareContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Enterprise Software Business</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is a mature, slow-growth business that provides an AI-powered business intelligence (BI) platform. Its software allows large enterprises to analyze internal and external data to make better business decisions. Revenue is generated from software licenses, subscriptions (cloud), and related consulting and support services. While no longer the primary focus, this business is important as it generates the cash flow that helps to service the debt taken on to buy bitcoin.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financials & Bitcoin Holdings</h2>
+            <p class="content-text mb-6">Analyzing MicroStrategy's financials requires a unique approach. While the software business generates relatively stable revenue, the company's GAAP financial statements are heavily distorted by accounting rules for digital assets. The most important financial chart for MSTR is not its revenue, but the growth of its bitcoin holdings over time. The company's stock price is almost perfectly correlated with the price of bitcoin, not its own operational performance.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Software Revenue (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                            <option value="netRevenue" selected>Software Revenue ($M)</option>
+                            <option value="operatingIncome">Software Op. Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Growth of Bitcoin Holdings</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
+                            <option value="btcHoldings" selected>Total Bitcoin Held (BTC)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The charts clearly show two different stories: a stable-to-declining software business, and an aggressively and continuously accumulating pile of bitcoin.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Unique Bitcoin Vehicle</h2>
+            <p class="content-text mb-6">MicroStrategy's competitive moat is unconventional. Its software business has a modest moat based on sticky enterprise customers. However, its primary and most powerful advantage comes from its unique corporate structure, which has allowed it to become the world's largest corporate holder of bitcoin, effectively operating as a leveraged bitcoin investment vehicle.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-orange-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Leveraged Acquisition Vehicle:</strong> MicroStrategy's unique advantage is its ability to use its corporate structure to issue debt (like convertible notes) to acquire bitcoin. This allows it to accumulate BTC faster than its cash flows would otherwise permit, offering investors a leveraged exposure that a direct investment or an ETF cannot.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-orange-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">First-Mover & Scale Advantage:</strong> As the first public company to adopt a major bitcoin treasury strategy, MicroStrategy has immense brand recognition in the space. Its scale as the largest holder gives it a platform and influence that is difficult for others to replicate.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-orange-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Sticky Software Customers:</strong> The underlying software business, while not a growth engine, provides a stable (if small) stream of cash flow from a sticky base of enterprise customers, which helps to service its debt.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-orange-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Spot Bitcoin ETFs:</strong> This is the most direct and significant competitor. ETFs from major asset managers like BlackRock and Fidelity offer investors a direct, low-cost way to get exposure to the price of bitcoin, potentially eroding the premium at which MSTR stock trades.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-orange-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Bitcoin-Linked Equities:</strong> Competes for investor capital with other publicly-traded companies in the bitcoin ecosystem, such as bitcoin miners (e.g., Marathon Digital) and crypto exchanges (e.g., Coinbase).</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-orange-400 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">In Software:</strong> In its legacy business, it competes with BI and analytics platforms from giants like Microsoft (Power BI) and Salesforce (Tableau).</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for MicroStrategy is a direct and highly leveraged bet on the future price of bitcoin. The company's fortunes are inextricably tied to the crypto market. The rewards are potentially immense if bitcoin's price appreciates significantly, but the risks are equally substantial due to the asset's volatility and the company's use of leverage.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Leveraged Bitcoin Exposure:</strong> The primary appeal. If the price of bitcoin rises, MSTR's stock price is expected to rise by a greater percentage due to the leverage on its balance sheet.</li>
+                        <li><strong>Continued Accumulation:</strong> The company's stated strategy to continue accumulating bitcoin means its exposure to the asset will likely grow over time.</li>
+                        <li><strong>Scarcity & Adoption Thesis:</strong> A bet on MicroStrategy is a bet on the long-term thesis that bitcoin's scarcity and growing adoption will lead to a significant increase in its value over time.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-red-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Extreme Bitcoin Price Volatility:</strong> This is the paramount risk. A significant or prolonged crash in the price of bitcoin would be catastrophic for the company's balance sheet and stock value.</li>
+                        <li><strong>Leverage Risk:</strong> The use of billions of dollars in debt to acquire a highly volatile asset is an extremely high-risk strategy. A downturn in bitcoin's price could create challenges in servicing or refinancing this debt.</li>
+                        <li><strong>Competition from ETFs:</strong> The availability of low-cost spot bitcoin ETFs provides a simpler alternative for bitcoin exposure, which could eliminate the historical premium on MSTR's stock price.</li>
+                        <li><strong>Regulatory Uncertainty:</strong> The global regulatory landscape for cryptocurrencies remains uncertain and a potential source of significant risk.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from MicroStrategy Incorporated public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            orange: '#F97316',
+            sky: '#38BDF8',
+            gray: '#6B7280',
+        };
+
+        // Software Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Subscription Services', 'Product Licenses & Other'],
+                datasets: [{
+                    label: 'FY2024 Software Revenue Mix',
+                    data: [81, 19], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.sky, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Software Revenue Mix (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [480.7, 510.8, 499.3, 496.3, 489.5], label: 'Software Revenue ($M)', color: CHART_COLORS.sky },
+            operatingIncome: { data: [-13.4, -40.6, -161.4, 88.2, 75.1], label: 'Software Op. Income ($M)', color: CHART_COLORS.gray },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            btcHoldings: { data: [152800, 158400, 189150, 190000, 205000, 214400, 222690, 226331], label: 'Total Bitcoin Held', color: CHART_COLORS.orange },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            // Robustly determine Y-axis title
+            let yAxisTitle = metricDetails.label; // Default to full label
+            const labelParts = metricDetails.label.split('(');
+            if (labelParts.length > 1) {
+                yAxisTitle = labelParts[1].replace(')','');
+            }
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { 
+                                display: true, 
+                                text: yAxisTitle
+                            } 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'btcHoldings');
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Digital (APLD) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #2563EB; /* blue-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* blue-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #2563EB; /* blue-600 */
+            color: #FFFFFF;
+            border-color: #1D4ED8; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #2563EB; /* blue-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #2563EB;">Applied Digital (APLD) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Lines</a>
+                        <a href="#financials" class="nav-link">Financials & KPIs</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Lines</a>
+                    <a href="#financials" class="nav-link block text-base">Financials & KPIs</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Applied Digital: A Pure-Play on AI Data Center Infrastructure</h2>
+            <p class="content-text mb-6">Applied Digital is a rapidly emerging company that designs, builds, and operates next-generation data centers specifically for the high-performance computing (HPC) industry. After a strategic pivot from its origins in cryptocurrency mining, the company is now squarely focused on capitalizing on the explosive demand for specialized infrastructure to power artificial intelligence (AI). Its core business model involves securing long-term leases with major AI and cloud companies for large-scale, purpose-built data center capacity. The company's entire investment thesis was transformed by a landmark <span class="highlight">$7 billion, 15-year lease agreement</span> with specialized AI cloud provider CoreWeave, which validates its model and provides immense revenue visibility. This analysis explores Applied Digital's focused business lines, its project-based financials, and its high-stakes role as a key builder in the AI revolution.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Applied Digital's strategy is focused on speed, specialization, and partnership:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Develop Purpose-Built HPC Data Centers:</strong> Design and construct data centers from the ground up that are optimized for the immense power and cooling demands of AI GPU clusters.</li>
+                        <li><strong class="font-semibold text-gray-700">Secure Long-Term Anchor Tenants:</strong> The primary strategy is to sign massive, multi-year lease agreements with large-scale AI cloud providers, like CoreWeave, to de-risk development and secure predictable revenue.</li>
+                        <li><strong class="font-semibold text-gray-700">Leverage Low-Cost Power:</strong> Build data centers in locations with access to abundant and low-cost power, a critical competitive advantage for energy-intensive AI workloads.</li>
+                        <li><strong class="font-semibold text-gray-700">Execute on Construction Timelines:</strong> The key operational focus is on delivering its large-scale data center projects on time and on budget to meet customer commitments.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Revenue from CoreWeave Leases</p>
+                    <p class="kpi-value text-blue-800">~$7 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents the total expected revenue over the ~15-year term of its landmark lease agreements, providing a massive backlog.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Applied Digital Makes Money: Business Lines</h2>
+            <p class="content-text mb-6">Applied Digital's business is transitioning rapidly. While it still has a legacy **Data Center Hosting** business for crypto miners, its entire focus and future value is tied to its new **HPC Data Center Hosting** and **Cloud Services** business lines, which are designed to serve the AI industry.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="hpc">HPC Data Center Hosting</button>
+                    <button class="segment-tab-button" data-target="cloud">Cloud Services</button>
+                    <button class="segment-tab-button" data-target="legacy">Legacy Hosting</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="hpcContent" class="segment-content">
+                    <h3 class="subsection-title">HPC Data Center Hosting (The Future)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the core of the new Applied Digital. The company designs and builds large-scale data center campuses, like its flagship 400MW facility in Ellendale, North Dakota. It then signs very long-term leases with anchor tenants who need the space and power for their AI hardware. This business model is capital-intensive upfront but provides highly predictable, recurring revenue for more than a decade once the facilities are operational.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Customer</p>
+                            <p class="kpi-value text-blue-800 text-2xl">CoreWeave</p>
+                            <p class="content-text text-sm mt-2">The AI hyperscaler has leased 250MW of capacity at the Ellendale campus, validating Applied Digital's business model and providing a massive revenue backlog.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="cloudContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Cloud Services (GPU-as-a-Service)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">In this business line, Applied Digital not only provides the data center but also owns and operates the GPUs within it. It then sells access to this computing power as a cloud service to customers who need to run AI/ML workloads but don't want to manage the hardware themselves. This offers a higher-margin opportunity but is also more operationally complex and competitive.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Offering</p>
+                            <p class="kpi-value text-blue-800 text-base">GPU Cloud</p>
+                            <p class="content-text text-sm mt-2">Provides on-demand access to high-performance NVIDIA GPU clusters for AI and machine learning development.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="legacyContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Legacy Data Center Hosting</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is the original business of the company. It involves operating data centers that provide energized space and managed services primarily for <span class="highlight">cryptocurrency mining</span> customers. This business provides a source of current revenue but is highly volatile and tied to the fortunes of the crypto market. The company's strategic focus has decisively shifted away from this segment towards the HPC and AI market.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Status</p>
+                            <p class="kpi-value text-blue-800 text-2xl">Non-Core</p>
+                            <p class="content-text text-sm mt-2">While still generating revenue, this legacy segment is no longer the strategic focus of the company.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financials & Key Performance Indicators</h2>
+            <p class="content-text mb-6">As a company in a state of rapid transition and heavy investment, traditional financial metrics like historical revenue and earnings are less important than forward-looking indicators. Applied Digital is currently unprofitable and has negative cash flow as it spends heavily on data center construction. The single most important KPI is the company's **contracted revenue backlog** and its ability to secure financing to build out its contracted capacity.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Revenue ($M)</h3>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Key Project & Backlog</h3>
+                     <div class="mb-4">
+                        <p class="content-text">The entire investment case for APLD currently rests on the execution of its **Ellendale, ND HPC Campus**.</p>
+                        <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-2">
+                           <li><strong>Total Campus Capacity:</strong> 400 MW</li>
+                           <li><strong>Capacity Leased to CoreWeave:</strong> 250 MW</li>
+                           <li><strong>Contract Duration:</strong> ~15 years</li>
+                           <li><strong>Total Contracted Revenue:</strong> ~$7 Billion</li>
+                           <li><strong>First 100MW Service Date:</strong> Q4 Calendar 2025</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The revenue chart shows the growth of the legacy business, but the key information lies in the massive, long-term contracted backlog which is not yet reflected in historical financials.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Niche in the AI Gold Rush</h2>
+            <p class="content-text mb-6">As an emerging player, Applied Digital's competitive moat is still being formed. It is not built on incumbency or massive scale, but rather on its specialized focus, speed, and its cornerstone partnership with a key player in the AI ecosystem.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Cornerstone Customer Contract:</strong> The massive, long-term lease agreement with CoreWeave provides an enormous and predictable revenue backlog. This contract de-risks the Ellendale campus development and serves as powerful market validation of Applied Digital's capabilities.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Specialization and Speed:</strong> By focusing exclusively on building next-generation data centers for HPC and AI, the company can potentially design and deploy these complex facilities faster and more efficiently than larger, less specialized competitors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Access to Low-Cost Power:</strong> A key part of its strategy is securing sites with access to abundant and low-cost energy, which is a critical success factor for the economics of power-hungry AI data centers.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Large Data Center REITs:</strong> Competes with established data center real estate investment trusts like Digital Realty (DLR) and Equinix (EQIX) for land, power, and large enterprise tenants.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Cloud Hyperscalers:</strong> The major cloud providers (AWS, Google, Microsoft) are also building out their own massive data center fleets, competing for the same resources (power, land, construction labor).</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Other AI Infrastructure Providers:</strong> A growing number of companies, both public and private, are looking to build and operate specialized data centers for AI, creating a competitive environment.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: A High-Stakes Bet on AI Infrastructure</h2>
+            <p class="content-text mb-6">The investment thesis for Applied Digital is a pure-play, high-risk, high-reward bet on the massive build-out of AI infrastructure. Its future is almost entirely dependent on the successful execution of its data center construction projects and the financial health of its key customer, CoreWeave.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Direct Play on AI Infrastructure Growth:</strong> The company is a direct beneficiary of the immense and growing demand for data center capacity to power AI.</li>
+                        <li><strong>Massive Contracted Backlog:</strong> The ~$7 billion in revenue from the CoreWeave lease provides an enormous degree of long-term revenue visibility, assuming the projects are delivered successfully.</li>
+                        <li><strong>Potential for Expansion:</strong> The Ellendale campus has the potential to expand to 1 gigawatt over time, and the company has a pipeline of other potential sites, offering significant long-term growth options.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Extreme Customer Concentration:</strong> This is the paramount risk. The company's future is almost entirely dependent on a single customer, CoreWeave. Any financial or operational issues at CoreWeave would be catastrophic for Applied Digital.</li>
+                        <li><strong>Construction & Execution Risk:</strong> Building out massive, complex data centers on a tight timeline is fraught with execution risk, including potential cost overruns and delays.</li>
+                        <li><strong>Capital Intensive & High Debt:</strong> The business requires immense upfront capital. The company has taken on significant debt and will likely need to raise more capital, which could lead to shareholder dilution.</li>
+                        <li><strong>Market & Technology Risk:</strong> The bet is on a specific customer (CoreWeave) in a specific, rapidly evolving technology niche (GPU cloud for AI). A slowdown in AI demand or a shift in technology could impact long-term growth prospects.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Applied Digital Corporation public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#2563EB',
+            sky: '#3B82F6',
+        };
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [7.6, 59.8, 148.5], label: 'Total Revenue ($M)', color: CHART_COLORS.blue },
+        };
+
+        // Quarterly Data Store is not used for a chart, but for the KPI box.
+        // Data is embedded directly in the HTML for simplicity.
+
+        let yearlyChart = null;
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            let yAxisTitle = metricDetails.label;
+            const labelParts = metricDetails.label.split('(');
+            if (labelParts.length > 1) {
+                yAxisTitle = labelParts[1].replace(')','');
+            }
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { 
+                                display: true, 
+                                text: yAxisTitle
+                            } 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+
+    </script>
+</body>
+</html>
+

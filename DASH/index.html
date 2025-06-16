@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoorDash, Inc. (DASH) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #FF3008; /* DoorDash Red */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #EF4444; /* Lighter Red */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #FF3008; /* DoorDash Red */
+            color: #FFFFFF;
+            border-color: #DC2626; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #FF3008; /* DoorDash Red */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #FF3008;">DoorDash, Inc. (DASH) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials & KPIs</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials & KPIs</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">DoorDash: The Local Commerce Logistics Layer</h2>
+            <p class="content-text mb-6">DoorDash is the definitive leader in the U.S. local logistics and food delivery market. Its business is a complex, three-sided marketplace that connects millions of consumers with hundreds of thousands of merchants and a massive fleet of independent delivery drivers, known as "Dashers." While best known for restaurant food delivery, the company is aggressively expanding into new categories like grocery, convenience, and retail. DoorDash's strategy is to leverage its scale and sophisticated logistics technology to become the essential "last-mile" infrastructure for all forms of local commerce. This analysis explores DoorDash's powerful marketplace business model, its key performance indicators, and its strategic path toward long-term profitability.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">DoorDash's strategy is focused on growing its marketplace and expanding its reach:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Win in Every Category:</strong> Leverage its logistics network and brand to expand beyond restaurants into every local commerce category, including grocery, convenience, alcohol, and retail.</li>
+                        <li><strong class="font-semibold text-gray-700">Grow the DashPass Ecosystem:</strong> Increase the adoption of its DashPass subscription service, which drives higher order frequency and builds strong customer loyalty.</li>
+                        <li><strong class="font-semibold text-gray-700">Empower Local Merchants:</strong> Provide a suite of tools for merchants, including advertising, white-label delivery (Drive), and online storefronts, to help them grow their own businesses.</li>
+                        <li><strong class="font-semibold text-gray-700">Drive Towards Profitability:</strong> Focus on improving logistics efficiency and operational discipline to grow Contribution Profit and achieve sustainable GAAP profitability.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-red-50 border-red-200">
+                    <p class="kpi-label">Marketplace GOV (Q1 2025)</p>
+                    <p class="kpi-value text-red-600">$23.1 Billion</p>
+                    <p class="content-text text-sm mt-2">Gross Order Volume represents the total value of all orders placed on the platform, a key measure of the scale and activity of DoorDash's marketplace.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How DoorDash Makes Money: A Multi-Sided Marketplace</h2>
+            <p class="content-text mb-6">DoorDash generates revenue from all three sides of its marketplace. **Consumers** pay delivery and service fees on their orders. **Merchants** pay a commission on the total value of orders facilitated by the platform. And **Dashers**, while not paying fees, are the essential third leg of the stool that makes the entire model work. The company's profitability is best measured by its **Contribution Profit**, which shows the profit per order after all variable costs are accounted for.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="consumer">Consumer Revenue</button>
+                    <button class="segment-tab-button" data-target="merchant">Merchant Revenue</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="consumerContent" class="segment-content">
+                    <h3 class="subsection-title">Consumer Revenue Streams</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The primary source of consumer revenue is the fee paid on each order. This is supplemented by the high-margin <span class="highlight">DashPass</span> subscription program, which offers members zero delivery fees and reduced service fees for a monthly or annual fee. DashPass is critical to the business model as its members are significantly more engaged and order more frequently than non-members.</p>
+                        </div>
+                        <div class="kpi-card bg-red-50 border-red-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Program</p>
+                            <p class="kpi-value text-red-600 text-2xl">DashPass</p>
+                            <p class="content-text text-sm mt-2">The subscription service is a powerful tool for driving customer loyalty and increasing order frequency, a cornerstone of the company's strategy.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="merchantContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Merchant Revenue Streams</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">DoorDash offers merchants a tiered commission structure. Restaurants can choose different plans (e.g., Basic, Plus, Premier) that charge a commission of 15% to 30% of the order value in exchange for varying levels of service and marketing support. Additionally, merchants can pay for <span class="highlight">advertising</span> and sponsored listings to increase their visibility on the platform, creating another high-margin revenue stream.</p>
+                        </div>
+                        <div class="kpi-card bg-red-50 border-red-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Metric</p>
+                            <p class="kpi-value text-red-600 text-2xl">Take Rate</p>
+                            <p class="content-text text-sm mt-2">Net Revenue as a percentage of Gross Order Volume (GOV). This shows how effectively DoorDash is monetizing the activity on its platform.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive: The Path to Profitability</h2>
+            <p class="content-text mb-6">DoorDash's financial story is one of rapid top-line growth and a disciplined march towards profitability. The company has successfully scaled its Gross Order Volume (GOV) and revenue while steadily improving its unit economics, as measured by its Contribution Profit as a percentage of GOV. After years of GAAP losses driven by heavy investment in growth and stock-based compensation, the company has recently achieved GAAP profitability, a major milestone. The key metrics to watch are GOV growth and Adjusted EBITDA.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="adjustedEbitda">Adjusted EBITDA ($M)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Gross Order Volume (GOV) ($B)</h3>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show impressive and consistent growth in both top-line revenue and the underlying volume of the marketplace (GOV), alongside a dramatic improvement in profitability (Adjusted EBITDA).</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Local Logistics Network</h2>
+            <p class="content-text mb-6">DoorDash has built a powerful competitive moat in the U.S. based on its superior scale and local network density. In a three-sided marketplace, the company with the most customers attracts the most merchants, which in turn attracts the most Dashers, creating a powerful, self-reinforcing flywheel.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-red-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Leading Local Network Density:</strong> By achieving the #1 market share position in the U.S., DoorDash has the highest density of customers, merchants, and Dashers in most local markets. This leads to more efficient order batching, faster delivery times, and lower costs per delivery, a structural advantage that is hard for competitors to overcome.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Strong Brand & Habit Formation:</strong> DoorDash has become synonymous with on-demand delivery in the minds of many consumers. The convenience of the platform and the value proposition of DashPass create strong user habits and brand loyalty.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary Logistics Technology:</strong> The company has invested heavily in the complex logistics technology required to orchestrate millions of real-time orders, a sophisticated system that represents a significant barrier to new entrants.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Uber Eats:</strong> The primary global competitor, with a strong international presence and the advantage of being able to cross-promote with its massive ride-sharing business.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Grubhub (owned by Just Eat Takeaway):</strong> A major competitor, particularly in certain large U.S. cities where it has long-standing restaurant relationships.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">Instacart & Other Grocery Deliverers:</strong> As DoorDash expands into grocery, it faces direct competition from established players like Instacart.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for DoorDash is a bet on the long-term, structural shift of local commerce from offline to online. The rewards come from its market-leading position and its ability to expand into new categories, while the risks are centered on the intense competition and the uncertain regulatory landscape for the gig economy.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Expansion into New Verticals:</strong> A massive opportunity to apply its logistics network to new categories beyond restaurants, such as grocery, convenience, alcohol, and retail, dramatically increasing its total addressable market.</li>
+                        <li><strong>International Growth:</strong> Significant runway for growth by continuing to expand and gain scale in less penetrated international markets.</li>
+                        <li><strong>Advertising Revenue Growth:</strong> A high-margin opportunity to continue growing its advertising business as more merchants compete for visibility on its platform.</li>
+                        <li><strong>Improving Profitability:</strong> A clear path to continued growth in Adjusted EBITDA and sustainable GAAP profitability as the business scales and logistics become more efficient.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Intense Competition:</strong> The delivery industry is fiercely competitive, which could lead to price wars or increased marketing spend that would pressure margins.</li>
+                        <li><strong>Regulatory Risk for Gig Economy:</strong> The single biggest risk. Potential changes in labor laws that could reclassify Dashers from independent contractors to employees would fundamentally challenge the business model and its cost structure.</li>
+                        <li><strong>Macroeconomic Sensitivity:</strong> As a consumer discretionary service, demand could soften significantly in a major economic downturn as consumers cut back on the premium cost of delivery.</li>
+                        <li><strong>Dependence on Key Markets:</strong> While expanding, the business is still heavily reliant on its core U.S. restaurant delivery market, making it vulnerable to any specific challenges in this area.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from DoorDash, Inc. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            red: '#FF3008',
+            sky: '#38BDF8',
+        };
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [2.89, 4.89, 6.58, 8.64, 10.72], label: 'Total Revenue ($B)', color: CHART_COLORS.red },
+            adjustedEbitda: { data: [-246, -155, 361, 936, 1920], label: 'Adjusted EBITDA ($M)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            gov: { data: [16.5, 16.8, 17.6, 19.2, 19.7, 20.0, 21.3, 23.1], label: 'Marketplace GOV ($B)', color: CHART_COLORS.red },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyFinancialChart').getContext('2d'); // Directly get context
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            let yAxisTitle = metricDetails.label;
+            const labelParts = metricDetails.label.split('(');
+            if (labelParts.length > 1) {
+                yAxisTitle = labelParts[1].replace(')','');
+            }
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { 
+                                display: true, 
+                                text: yAxisTitle
+                            } 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createChart(quarterlySelect, quarterlyChart, quarterlyDataStore, 'gov');
+
+    </script>
+</body>
+</html>
+

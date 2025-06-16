@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Union Pacific (UNP) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #003865; /* UNP Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #C54544; /* UNP Red */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #FBBF24; /* UNP Yellow */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #003865; /* UNP Blue */
+            color: #FFFFFF;
+            border-color: #002D50; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #003865; /* UNP Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #003865;">Union Pacific (UNP) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Union Pacific: The Backbone of the American Economy</h2>
+            <p class="content-text mb-6">Union Pacific Corporation is one of North America's premier transportation companies. Its principal operating subsidiary, Union Pacific Railroad, is the largest railroad in the United States, linking 23 states in the western two-thirds of the country. The company's business model is built on the foundation of its vast, irreplaceable rail network, which serves as a critical artery for the U.S. economy. Union Pacific's strategy is centered on **Precision Scheduled Railroading (PSR)**, a model focused on maximizing the efficiency and reliability of its network to drive profitability and deliver consistent shareholder returns. This analysis explores UNP's core business segments, its financial performance, and its formidable competitive moat.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Precision Scheduled Railroading (PSR)</h3>
+                    <p class="content-text mb-4">PSR is an operating philosophy that aims to improve service and control costs:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Improve Service Reliability:</strong> Shift focus from moving trains to moving individual cars on a fixed schedule, providing more consistent and predictable service for customers.</li>
+                        <li><strong class="font-semibold text-gray-700">Increase Asset Utilization:</strong> Reduce the number of locomotives and railcars needed by running longer trains and minimizing the time cars spend idle in yards.</li>
+                        <li><strong class="font-semibold text-gray-700">Control Costs:</strong> Drive down the operating ratio (operating expenses as a percentage of revenue) by improving fuel efficiency, labor productivity, and network fluidity.</li>
+                        <li><strong class="font-semibold text-gray-700">Deliver Strong Shareholder Returns:</strong> The efficiency gains from PSR are designed to generate strong free cash flow, which is used to fund a significant dividend and share repurchase program.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Full Year 2024 Operating Ratio</p>
+                    <p class="kpi-value text-blue-800">59.9%</p>
+                    <p class="content-text text-sm mt-2">A key metric of railroad efficiency. A lower operating ratio indicates better profitability. UNP's sub-60% ratio is a testament to the success of its PSR strategy.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Union Pacific Makes Money: Freight Groups</h2>
+            <p class="content-text mb-6">Union Pacific's business is organized into three diverse freight groups, each transporting different types of goods and subject to different economic drivers. The **Bulk** segment deals with large commodity shipments. The **Industrial** segment serves a wide range of manufacturing and construction end markets. The **Premium** segment focuses on time-sensitive shipments, including intermodal containers and finished vehicles.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="bulk">Bulk</button>
+                    <button class="segment-tab-button" data-target="industrial">Industrial</button>
+                    <button class="segment-tab-button" data-target="premium">Premium</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="bulkContent" class="segment-content">
+                    <h3 class="subsection-title">Bulk</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This segment handles large-volume, commodity-based shipments. Key products include <span class="highlight">grain and fertilizers</span>, food and refrigerated products, and coal and petroleum products. The performance of this segment is tied to factors like agricultural harvests, energy prices, and global demand for commodities.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="industrialContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Industrial</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is the largest and most diverse segment by revenue. It transports a wide variety of industrial goods essential to the economy, including <span class="highlight">chemicals and plastics</span>, forest products (lumber), industrial minerals (like sand for fracking), and metals and ores. The performance of this segment is closely linked to the health of the U.S. industrial and manufacturing sectors.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Advantage</p>
+                            <p class="kpi-value text-blue-800 text-base">Only Railroad Serving All 6 Major Mexico Gateways</p>
+                            <p class="content-text text-sm mt-2">This gives UNP a unique advantage in capturing cross-border industrial and automotive traffic driven by the "nearshoring" trend.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="premiumContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Premium</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Premium segment handles time-sensitive shipments. It consists of two main parts: **Intermodal**, which involves moving shipping containers and truck trailers on flatcars, and **Automotive**, which transports finished vehicles and auto parts. Intermodal is a direct competitor to long-haul trucking and is driven by import/export activity and consumer spending. The automotive business is tied to U.S. vehicle production and sales.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Core Operating Principle</p>
+                            <p class="kpi-value text-blue-800 text-base">Precision Scheduled Railroading (PSR)</p>
+                            <p class="content-text text-sm mt-2">PSR's focus on schedule reliability is particularly critical for winning and retaining time-sensitive business in the Premium segment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">As a mature, capital-intensive industrial leader, Union Pacific's financial performance is characterized by stability and strong profitability. The implementation of PSR has led to a significant and sustainable improvement in the company's operating ratio, driving strong earnings growth and free cash flow generation. The key performance indicator (KPI) for investors is the **operating ratio**, as it is the best measure of the company's operational efficiency and profitability.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingProfit">Operating Profit ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Operating Ratio (Lower is Better)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="operatingRatio" selected>Quarterly Operating Ratio (%)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The yearly revenue chart shows the cyclical but resilient nature of the business. The operating ratio chart clearly demonstrates the power of the PSR strategy, with the company consistently running its business more efficiently and profitably.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Western Duopoly</h2>
+            <p class="content-text mb-6">Union Pacific possesses one of the widest and most durable competitive moats in the entire stock market. The U.S. railroad industry is a natural duopoly in the West and the East, and the barriers to entry are effectively insurmountable.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Irreplaceable Asset Network:</strong> Union Pacific owns and operates a vast network of over 32,000 route miles of track. The cost, complexity, and political difficulty of replicating this physical network today are so immense as to be impossible, creating a powerful barrier to entry.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Natural Duopoly & Rational Competition:</strong> In the western U.S., UNP operates in a duopoly with BNSF Railway. This rational market structure limits the incentive for destructive price wars, allowing both companies to earn strong returns on their invested capital.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Significant Cost Advantages:</strong> For transporting heavy, bulk goods over long distances, rail has a massive structural cost and fuel efficiency advantage over trucking. A single train can move the equivalent of several hundred trucks, making it the most cost-effective mode of ground transport for many goods.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">BNSF Railway (owned by Berkshire Hathaway):</strong> The primary and only direct competitor in the western U.S. BNSF operates a similarly vast and efficient rail network.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">The Trucking Industry:</strong> While not a direct network competitor, the trucking industry competes for time-sensitive, higher-value freight, particularly in the intermodal segment.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Union Pacific is a bet on the long-term growth of the U.S. economy and the enduring competitive advantages of rail transportation. The rewards come from its predictable, high-margin business model and strong shareholder returns, while the risks are primarily tied to economic cyclicality and regulatory oversight.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Durable, Wide-Moat Business:</strong> A foundational asset of the U.S. economy with nearly insurmountable barriers to entry, providing exceptional long-term stability.</li>
+                        <li><strong>Strong Pricing Power:</strong> The rational duopoly structure and the cost advantages of rail allow for consistent pricing power that typically outpaces inflation.</li>
+                        <li><strong>Secular Growth from Nearshoring:</strong> Poised to be a major beneficiary of the trend of "nearshoring," as increased manufacturing and trade with Mexico drives significant cross-border rail volume.</li>
+                        <li><strong>Reliable Capital Returns:</strong> A commitment to returning a significant portion of its strong free cash flow to shareholders via a growing dividend and consistent share buybacks.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Economic Sensitivity:</strong> The single biggest risk. As a backbone of the economy, rail volumes are highly correlated with GDP and industrial production. A significant recession would directly impact revenue and profits.</li>
+                        <li><strong>Regulatory Risk:</strong> Railroads operate under the oversight of the Surface Transportation Board (STB). Increased regulation regarding service levels or pricing could negatively impact profitability.</li>
+                        <li><strong>Secular Decline of Coal:</strong> The long-term decline in coal usage for electricity generation represents a persistent headwind for a portion of the Bulk segment.</li>
+                        <li><strong>Labor Relations:</strong> The railroad industry is heavily unionized, and labor negotiations can sometimes be contentious and lead to operational disruptions or increased costs.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Union Pacific Corporation public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#003865',
+            red: '#C54544',
+            yellow: '#FBBF24',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Industrial', 'Bulk', 'Premium'],
+                datasets: [{
+                    label: 'FY2024 Revenue Mix',
+                    data: [36, 32, 32], // Approximate revenue %
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.red, CHART_COLORS.yellow],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Revenue by Freight Group (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [19.5, 21.8, 24.9, 24.1, 24.3], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingProfit: { data: [7.8, 8.9, 9.9, 9.1, 9.7], label: 'Operating Profit ($B)', color: CHART_COLORS.red },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            operatingRatio: { data: [63.0, 63.4, 60.9, 60.7, 59.9, 59.8, 58.7, 60.7], label: 'Operating Ratio (%)', color: CHART_COLORS.blue },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            // Robustly determine Y-axis title
+            let yAxisTitle = metricDetails.label; // Default to the full label
+            const labelParts = metricDetails.label.split('(');
+            if (labelParts.length > 1) {
+                yAxisTitle = labelParts[1].replace(')','');
+            }
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1,
+                        tension: 0.1,
+                        type: (metricKey === 'operatingRatio') ? 'line' : 'bar',
+                        fill: (metricKey === 'operatingRatio') ? false : true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { 
+                                display: true, 
+                                text: yAxisTitle
+                            } 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'operatingRatio');
+
+    </script>
+</body>
+</html>
+

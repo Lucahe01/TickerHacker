@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centrus Energy (LEU) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #003DA5; /* Centrus Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #0072CE; /* Lighter Centrus Blue */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #003DA5; /* Centrus Blue */
+            color: #FFFFFF;
+            border-color: #002D6E; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #003DA5; /* Centrus Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #003DA5;">Centrus Energy (LEU) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Centrus Energy: America's Nuclear Fuel Champion</h2>
+            <p class="content-text mb-6">Centrus Energy is a unique, publicly-traded company at the heart of the U.S. nuclear fuel supply chain. Its business model has two distinct parts: a profitable legacy business supplying **Low-Enriched Uranium (LEU)** to commercial nuclear power plants, and a strategically critical growth business focused on pioneering the domestic production of **High-Assay Low-Enriched Uranium (HALEU)**. HALEU is the advanced nuclear fuel required to power the next generation of small modular reactors (SMRs) and advanced reactors, which are seen as essential for both national security and the clean energy transition. Centrus is currently the only company in the U.S. licensed to produce HALEU, making it a pivotal player in the future of nuclear energy. This analysis explores Centrus's dual business segments, its financial performance, and its unique strategic position.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Centrus's strategy is focused on leveraging its unique position:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Pioneer Domestic HALEU Production:</strong> Execute on its contract with the U.S. Department of Energy (DOE) to establish the nation's first commercial-scale HALEU production facility, positioning Centrus as the sole domestic supplier for advanced reactors.</li>
+                        <li><strong class="font-semibold text-gray-700">Restore U.S. LEU Enrichment Capacity:</strong> Leverage its technology and infrastructure to potentially scale up production of standard LEU, reducing U.S. and allied reliance on foreign, particularly Russian, uranium enrichment services.</li>
+                        <li><strong class="font-semibold text-gray-700">Secure Long-Term Contracts:</strong> Lock in multi-year purchase commitments from commercial utilities and advanced reactor developers to underpin the massive investment required for new enrichment capacity.</li>
+                        <li><strong class="font-semibold text-gray-700">Partner with the U.S. Government:</strong> Work closely with the DOE and other government agencies to secure the federal funding and support necessary to rebuild America's domestic nuclear fuel supply chain.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Total Backlog (as of Q1 2025)</p>
+                    <p class="kpi-value text-blue-800">$3.8 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents the massive, multi-year pipeline of future revenue from secured and contingent contracts for both LEU and HALEU, extending to 2040.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Centrus Makes Money: The Two Segments</h2>
+            <p class="content-text mb-6">Centrus operates two distinct business segments. The **LEU Segment** is the current profit engine, acting as a trusted fuel broker for the existing nuclear power industry. The **Technical Solutions Segment** is the future growth engine, housing the pioneering HALEU production contract and other advanced engineering services.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="leu">LEU Segment</button>
+                    <button class="segment-tab-button" data-target="tech">Technical Solutions</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="leuContent" class="segment-content">
+                    <h3 class="subsection-title">LEU Segment</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the company's primary revenue driver today. The LEU segment acts as a fuel supplier to commercial nuclear power plants worldwide. It doesn't currently enrich its own LEU at scale; instead, it purchases enrichment services (measured in Separative Work Units or SWU) from a global network of suppliers and then sells the enriched uranium to utilities under long-term contracts. This segment's profitability is driven by the spread between its contracted purchase costs and sales prices.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Market</p>
+                            <p class="kpi-value text-blue-800 text-2xl">Nuclear Utilities</p>
+                            <p class="content-text text-sm mt-2">Serves as a reliable fuel supplier to the owners and operators of existing nuclear power reactors globally.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="techContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Technical Solutions Segment</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is the strategic heart of the company. This segment is home to the <span class="highlight">HALEU Operation Contract</span> with the U.S. Department of Energy. Under this cost-plus contract, Centrus is building and operating the nation's only NRC-licensed facility to produce HALEU. This segment leverages Centrus's unique technical expertise in uranium enrichment technology and provides advanced engineering and manufacturing services to government and private sector customers. Its growth is directly tied to government funding and the development of the advanced reactor industry.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Program</p>
+                            <p class="kpi-value text-blue-800 text-base">HALEU Production</p>
+                            <p class="content-text text-sm mt-2">Pioneering the domestic production of High-Assay Low-Enriched Uranium, the fuel required for most next-generation advanced nuclear reactors.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Centrus's financial performance is characterized by the stable, profitable nature of its long-term LEU contracts, supplemented by the cost-plus revenue from its Technical Solutions work with the DOE. The company's revenue can be lumpy, as it depends on the specific timing of customer deliveries under multi-year contracts. The company has recently experienced a significant uptick in profitability due to higher market prices for uranium enrichment and increased sales volumes. The charts below show the performance of its two key segments.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Revenue by Segment ($M)</h3>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Revenue by Segment ($M)</h3>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show the LEU segment (in blue) as the primary revenue generator. The Technical Solutions segment (in gray) provides a smaller but strategically vital revenue stream. Note the significant revenue spike in Q1 2025.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: America's Sole Enricher</h2>
+            <p class="content-text mb-6">Centrus Energy possesses a unique and powerful competitive moat. It is the only company with a U.S. owned and operated, NRC-licensed uranium enrichment facility, and crucially, it is the only entity in the Western hemisphere currently producing HALEU. This creates an unparalleled strategic position.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Monopolistic Position in Domestic HALEU:</strong> As the sole NRC-licensed producer of HALEU in the U.S., Centrus has a first-mover advantage and a de-facto monopoly on supplying this critical fuel for the next generation of American advanced reactors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Barriers to Entry (Regulatory & Technical):</strong> Uranium enrichment is one of the most highly regulated and technologically complex industries in the world. The immense capital cost, decades of technical expertise, and stringent NRC licensing process create nearly insurmountable barriers to new domestic entrants.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Strategic Importance to National Security:</strong> A reliable domestic supply of enriched uranium is critical for both energy independence and national security. This makes Centrus a strategically vital asset to the U.S. government, providing a strong foundation of support and funding.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Foreign State-Owned Enterprises:</strong> The primary global competitors in uranium enrichment are large, state-owned or state-backed companies, most notably Russia's Rosatom and European consortiums like Urenco.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Potential HALEU Producers:</strong> While Centrus is the first, other companies are exploring plans to produce HALEU in the future, although they are years behind in the licensing and development process.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for Centrus is a direct bet on the revitalization of the American nuclear industry and the commercial success of next-generation advanced reactors. The rewards are tied to its unique monopolistic position in HALEU, while the risks are centered on the massive execution and funding challenges ahead.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>The Advanced Reactor Market:</strong> The single greatest opportunity. If even a fraction of the planned advanced reactors and SMRs are built, they will require a secure supply of HALEU, and Centrus is the only domestic option.</li>
+                        <li><strong>Bipartisan Government Support:</strong> There is strong, bipartisan political will and significant federal funding allocated to rebuild the domestic nuclear fuel supply chain and reduce reliance on Russia.</li>
+                        <li><strong>Potential for LEU Expansion:</strong> The technology and infrastructure being built for HALEU could be leveraged to scale up production of standard LEU, allowing Centrus to become a major domestic enricher for the existing reactor fleet.</li>
+                        <li><strong>Strong Backlog:</strong> The multi-billion dollar backlog of contingent orders provides a strong signal of future demand if the company can secure the funding to build out its capacity.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Dependence on Government Funding:</strong> This is the paramount risk. The entire plan to scale up production is contingent on securing billions of dollars in funding from the Department of Energy. Any delays or denials of this funding would be a major setback.</li>
+                        <li><strong>Execution & Construction Risk:</strong> Building a first-of-a-kind, large-scale enrichment facility is an immense technical and logistical challenge with significant risk of cost overruns and delays.</li>
+                        <li><strong>Customer & Market Risk:</strong> The ultimate demand for HALEU depends on the successful licensing and commercial deployment of advanced reactors by other companies, which is itself a long and uncertain process.</li>
+                        <li><strong>Stock Volatility:</strong> As a company whose future is tied to major government decisions and long-cycle projects, the stock price is subject to extreme volatility based on news and policy developments.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Centrus Energy Corp. public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#003DA5',
+            sky: '#0072CE',
+            gray: '#6B7280',
+        };
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'LEU Segment',
+                        data: [186.1, 235.6, 269.0, 285.5],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                    {
+                        label: 'Technical Solutions',
+                        data: [112.2, 58.2, 51.2, 65.3],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentRevenue: {
+                datasets: [
+                    {
+                        label: 'LEU Segment',
+                        data: [87.6, 30.7, 72.8, 23.6, 95.1, 45.2, 80.1, 51.3],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                    {
+                        label: 'Technical Solutions',
+                        data: [13.1, 10.2, 12.3, 20.1, 15.5, 14.8, 16.2, 21.8],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createSegmentChart(canvas, existingChart, dataStore, metricKey, title) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Revenue ($M)'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: title } }
+                }
+            });
+        }
+        
+        // Initial chart renders
+        yearlyChart = createSegmentChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'segmentRevenue', 'Annual Revenue by Segment ($M)');
+        quarterlyChart = createSegmentChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentRevenue', 'Quarterly Revenue by Segment ($M)');
+
+    </script>
+</body>
+</html>
+
