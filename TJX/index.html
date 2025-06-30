@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The TJX Companies, Inc. (TJX) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">TJX Companies (TJX) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">TJX: The Off-Price Retail Juggernaut</h2>
+            <p class="content-text mb-6">The TJX Companies, Inc. is the world's leading off-price retailer of apparel and home fashions. Through its iconic brands like T.J. Maxx, Marshalls, and HomeGoods, TJX offers a compelling value proposition: a rapidly changing assortment of high-quality, brand-name merchandise at prices significantly below department and specialty stores. This unique, "treasure-hunt" shopping experience fosters customer loyalty and drives frequent store visits, making TJX a resilient leader in the competitive retail landscape.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: The "Treasure Hunt" Model</h3>
+                    <p class="content-text mb-4">TJX's success is rooted in its flexible and opportunistic business model, which is fundamentally different from traditional retail.</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Opportunistic Buying:</strong> A global team of over 1,200 buyers constantly sources inventory from a network of 21,000+ vendors, capitalizing on manufacturing overruns, closeouts, and cancellations.</li>
+                        <li><strong class="font-semibold text-gray-700">Rapidly Changing Assortment:</strong> New merchandise arrives in stores several times a week, creating a sense of urgency and excitement that encourages repeat shopping trips.</li>
+                        <li><strong class="font-semibold text-gray-700">Compelling Value:</strong> Offering branded and designer goods at prices 20% to 60% below full-price retailers attracts a broad spectrum of consumers.</li>
+                        <li><strong class="font-semibold text-gray-700">Efficient Operations:</strong> A no-frills store environment and a lean supply chain keep costs low, allowing savings to be passed directly to the customer.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Fiscal Year 2025 Revenue</p>
+                    <p class="kpi-value text-violet-600">$56.36 Billion</p>
+                    <p class="content-text text-sm mt-2">Continued growth reflects the power of the off-price model in attracting value-conscious consumers across the globe.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How TJX Makes Money: A Diversified Retail Portfolio</h2>
+            <p class="content-text mb-6">TJX's business is organized into four major divisions, each leveraging the core off-price model to cater to specific markets and product categories. This diversification provides stability and multiple avenues for growth.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="marmaxx">Marmaxx (U.S.)</button>
+                    <button class="segment-tab-button" data-target="homegoods">HomeGoods (U.S.)</button>
+                    <button class="segment-tab-button" data-target="canada">TJX Canada</button>
+                    <button class="segment-tab-button" data-target="international">TJX International</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="marmaxxContent" class="segment-content">
+                    <h3 class="subsection-title">Marmaxx (U.S.)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The largest and most profitable division, consisting of T.J. Maxx and Marshalls. It is the cornerstone of the company, offering a vast selection of family apparel, footwear, accessories, and home fashions. Marmaxx is the engine of TJX's U.S. operations.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="homegoodsContent" class="segment-content hidden">
+                    <h3 class="subsection-title">HomeGoods (U.S.)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">A high-growth chain focused exclusively on home fashions. HomeGoods offers a wide array of furniture, rugs, lighting, cookware, and decorative items. It has capitalized on strong consumer demand in the home category and operates as a standalone destination for home decor enthusiasts.</p>
+                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Strategic Focus</p>
+                             <p class="kpi-value text-sky-600">High-Growth Home</p>
+                             <p class="content-text text-sm mt-2">The HomeGoods segment is a key driver of growth, tapping into the powerful and enduring consumer trend of home improvement and decoration.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="canadaContent" class="segment-content hidden">
+                    <h3 class="subsection-title">TJX Canada</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Operates the Winners, HomeSense, and Marshalls banners in Canada. This division has successfully adapted the TJX off-price model for the Canadian market, establishing a strong leadership position and becoming a go-to destination for value-seeking Canadian shoppers.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="internationalContent" class="segment-content hidden">
+                    <h3 class="subsection-title">TJX International</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Includes T.K. Maxx and HomeSense in Europe (U.K., Ireland, Germany, Poland, Austria, the Netherlands) and T.K. Maxx in Australia. This segment represents a significant long-term growth opportunity by introducing the off-price concept to new international markets.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">TJX's financial track record is a testament to its operational excellence and the enduring appeal of its business model. The company consistently generates strong sales, profits, and cash flows, which it uses to reinvest in the business and reward shareholders.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY25)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                            <option value="operatingCashFlow">Operating Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Revenue Trend (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">Note: Fiscal year ends on the Saturday closest to January 31. The charts illustrate a consistent upward trend in core financial metrics, showcasing the company's resilience.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Off-Price Fortress</h2>
+            <p class="content-text mb-6">TJX's competitive moat is wide and deep, built upon decades of operational expertise, massive scale, and a unique business model that is incredibly difficult for competitors to replicate.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Scale & Vendor Relationships:</strong> A vast global network of over 21,000 vendors provides unparalleled access to merchandise. This buying power is a massive barrier to entry.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Recession-Resilient Model:</strong> The value proposition appeals to consumers in all economic climates. Shoppers flock to TJX for deals in tough times and for branded bargains in good times.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Efficient Inventory Management:</strong> A high inventory turnover rate ensures a fresh "treasure hunt" experience for customers and maximizes the return on capital.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Difficult-to-Replicate Experience:</strong> The excitement of the in-store "treasure hunt" is a key differentiator that pure-play e-commerce retailers struggle to match.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Ross Stores (ROST):</strong> The most direct competitor in the off-price apparel and home goods space in the U.S.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Burlington Stores (BURL):</strong> Another major off-price retailer competing for the same value-conscious consumer.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Department Stores & Specialty Retailers:</strong> Indirectly competes with any full-price retailer selling apparel and home goods.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">TJX is a world-class operator with a powerful, enduring business model. Its future prospects are tied to its ability to continue executing its proven strategy while navigating the evolving retail landscape.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Market Share Gains:</strong> Well-positioned to continue capturing market share from struggling department stores and full-price specialty retailers.</li>
+                        <li><strong>International Expansion:</strong> Significant white space for growth in Europe and Australia, where the off-price model is less mature.</li>
+                        <li><strong>Loyal Customer Base:</strong> The value proposition and unique shopping experience have cultivated a loyal following that transcends economic cycles.</li>
+                        <li><strong>Consistent Shareholder Returns:</strong> A strong commitment to returning cash to shareholders via dividends and stock buybacks.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Merchandise Sourcing:</strong> The business model is dependent on a steady supply of high-quality, excess inventory from the broader retail ecosystem.</li>
+                        <li><strong>Intense Competition:</strong> The off-price sector is competitive, and maintaining an edge over rivals like Ross Stores requires constant innovation and execution.</li>
+                        <li><strong>Evolving Retail Landscape:</strong> Must continue to adapt to changing consumer habits, including the ongoing shift towards e-commerce, without losing its core identity.</li>
+                        <li><strong>Macroeconomic Factors:</strong> While resilient, a severe global recession could ultimately impact discretionary spending and affect top-line growth.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from The TJX Companies, Inc. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Marmaxx', 'HomeGoods', 'TJX Canada', 'TJX International'],
+                datasets: [{
+                    data: [59, 16, 10, 15], // Approximate percentages for FY25
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.orange, CHART_COLORS.teal],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY25 Revenue by Segment' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end ~Jan 31)
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24', 'FY25'],
+            totalRevenue: { data: [48.55, 49.94, 54.22, 56.36], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            operatingIncome: { data: [4.76, 4.86, 5.80, 6.30], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+            netIncome: { data: [3.28, 3.50, 4.47, 4.86], label: 'Net Income ($B)', color: CHART_COLORS.teal },
+            operatingCashFlow: { data: [3.06, 4.08, 6.06, 6.12], label: 'Operating Cash Flow ($B)', color: CHART_COLORS.orange }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25'],
+            totalRevenue: { data: [12.27, 14.52, 11.80, 12.76, 13.27, 16.41, 12.48, 13.11], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true,
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

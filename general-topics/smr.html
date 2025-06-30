@@ -1,0 +1,537 @@
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>The Evolving Landscape of Small Modular Reactors (SMRs)</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+   <style>
+       body {
+           font-family: 'Inter', sans-serif;
+           background-color: #F8F8F8;
+           color: #1a202c;
+       }
+       .chart-container {
+           position: relative;
+           width: 100%;
+           max-width: 600px;
+           margin-left: auto;
+           margin-right: auto;
+           height: 350px;
+           max-height: 400px;
+       }
+       @media (min-width: 768px) {
+           .chart-container {
+               height: 400px;
+           }
+       }
+       .brilliant-blue-bg { background-color: #00449E; }
+       .brilliant-blue-text { color: #00449E; }
+       .brilliant-blue-medium { background-color: #0065D4; }
+       .brilliant-blue-light { background-color: #2DA9E1; }
+       .brilliant-blue-extralight { background-color: #96D6F6; }
+       .flow-line {
+           width: 2px;
+           background-color: #96D6F6;
+           flex-grow: 1;
+       }
+       .flow-node {
+           border-color: #0065D4;
+       }
+       .flow-node-gen4 {
+            border-color: #2DA9E1;
+       }
+       .stat-card {
+           background-color: white;
+           border-radius: 0.75rem;
+           padding: 1.5rem;
+           box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+           transition: transform 0.3s ease, box-shadow 0.3s ease;
+       }
+       .stat-card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+       }
+   </style>
+</head>
+<body class="antialiased">
+
+
+   <main class="container mx-auto px-4 py-8 md:py-12">
+
+
+       <header class="text-center mb-16">
+           <h1 class="text-4xl md:text-6xl font-black brilliant-blue-text mb-4">The SMR Revolution</h1>
+           <p class="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto">An analysis of the Small Modular Reactor landscape, identifying the market dynamics, key players, and strategic factors defining the future of clean, scalable nuclear energy.</p>
+       </header>
+
+
+       <section id="market-overview" class="mb-20">
+            <div class="text-center mb-12">
+               <h2 class="text-3xl font-bold brilliant-blue-text">A Multi-Billion Dollar Horizon</h2>
+               <p class="text-gray-600 mt-2 max-w-3xl mx-auto">The global SMR market is poised for explosive growth, driven by decarbonization mandates and rising energy demands. Projections indicate a rapid expansion as the technology matures and deployment accelerates.</p>
+           </div>
+           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+               <div class="stat-card">
+                   <p class="text-5xl font-extrabold brilliant-blue-text">$15B</p>
+                   <p class="text-gray-500 font-medium mt-2">Projected Market Value by 2030</p>
+               </div>
+               <div class="stat-card">
+                   <p class="text-5xl font-extrabold brilliant-blue-text">$50B</p>
+                   <p class="text-gray-500 font-medium mt-2">Optimistic Market Forecast by 2035</p>
+               </div>
+               <div class="stat-card">
+                   <p class="text-5xl font-extrabold brilliant-blue-text">190 GW</p>
+                   <p class="text-gray-500 font-medium mt-2">Potential SMR Capacity by 2050</p>
+               </div>
+           </div>
+            <div class="mt-12 bg-white p-6 rounded-lg shadow-lg">
+                <div class="chart-container mx-auto">
+                   <canvas id="marketGrowthChart"></canvas>
+               </div>
+           </div>
+       </section>
+
+
+       <section id="what-are-smrs" class="mb-20">
+           <div class="text-center mb-12">
+               <h2 class="text-3xl font-bold brilliant-blue-text">Redefining Nuclear Energy</h2>
+               <p class="text-gray-600 mt-2 max-w-3xl mx-auto">SMRs are a new class of nuclear reactors, engineered to be smaller, safer, and more flexible than their traditional counterparts. Their design philosophy addresses historical challenges of cost and construction time.</p>
+           </div>
+           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+               <div class="stat-card text-center">
+                   <div class="text-5xl mb-4">⚙️</div>
+                   <h3 class="font-bold text-xl mb-2 brilliant-blue-text">Modular Construction</h3>
+                   <p class="text-gray-600">Factory-built components reduce on-site construction, improving quality and shortening timelines.</p>
+               </div>
+               <div class="stat-card text-center">
+                   <div class="text-5xl mb-4">🛡️</div>
+                   <h3 class="font-bold text-xl mb-2 brilliant-blue-text">Enhanced Safety</h3>
+                   <p class="text-gray-600">Passive safety systems allow for shutdown without external power or human intervention.</p>
+               </div>
+               <div class="stat-card text-center">
+                   <div class="text-5xl mb-4">➕</div>
+                   <h3 class="font-bold text-xl mb-2 brilliant-blue-text">Scalability</h3>
+                   <p class="text-gray-600">Units can be added incrementally to match growing energy demand, from 1 MW to over 300 MW.</p>
+               </div>
+                <div class="stat-card text-center">
+                   <div class="text-5xl mb-4">📍</div>
+                   <h3 class="font-bold text-xl mb-2 brilliant-blue-text">Siting Flexibility</h3>
+                   <p class="text-gray-600">Smaller footprints allow deployment in remote areas or at retiring fossil fuel plant sites.</p>
+               </div>
+           </div>
+       </section>
+
+
+       <section id="global-race" class="mb-20">
+           <div class="text-center mb-12">
+               <h2 class="text-3xl font-bold brilliant-blue-text">The Global Race for SMR Dominance</h2>
+               <p class="text-gray-600 mt-2 max-w-3xl mx-auto">From North American innovation to operational leadership in Asia and strategic government backing in Europe, the SMR sector is a global endeavor with distinct regional trajectories.</p>
+           </div>
+           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+               <div class="bg-white p-6 rounded-lg shadow-lg">
+                   <h3 class="text-2xl font-bold mb-4 flex items-center"><span class="text-2xl mr-3">🇺🇸 🇨🇦</span> North America</h3>
+                   <ul class="list-disc list-inside space-y-2 text-gray-700">
+                       <li>Leads the world with 22 SMR designs in development.</li>
+                       <li><strong>USA:</strong> First NRC design certification awarded to NuScale Power.</li>
+                       <li><strong>Canada:</strong> Construction of the first GEH BWRX-300 at Darlington underway, targeting 2028 operation.</li>
+                   </ul>
+               </div>
+               <div class="bg-white p-6 rounded-lg shadow-lg">
+                   <h3 class="text-2xl font-bold mb-4 flex items-center"><span class="text-2xl mr-3">🇨🇳 🇷🇺</span> Asia-Pacific</h3>
+                   <ul class="list-disc list-inside space-y-2 text-gray-700">
+                       <li>The only region with commercially operational SMRs.</li>
+                       <li><strong>China:</strong> Grid-connected HTR-PM (210 MWe) operational since Dec 2021.</li>
+                       <li><strong>Russia:</strong> Floating PWR (70 MWe) operational since May 2020.</li>
+                       <li><strong>South Korea:</strong> Strong utility-led development with i-SMR design.</li>
+                   </ul>
+               </div>
+               <div class="bg-white p-6 rounded-lg shadow-lg">
+                   <h3 class="text-2xl font-bold mb-4 flex items-center"><span class="text-2xl mr-3">🇬🇧 🇵🇱 🇨🇿</span> Europe</h3>
+                   <ul class="list-disc list-inside space-y-2 text-gray-700">
+                       <li>Strong government backing and strategic national programs.</li>
+                       <li><strong>UK:</strong> Rolls-Royce SMR is in advanced stages of GDA regulatory review.</li>
+                       <li><strong>Poland & Romania:</strong> Actively pursuing deployments with GEH and NuScale.</li>
+                        <li><strong>Czech Republic:</strong> Selected Rolls-Royce as preferred supplier for up to 3GW.</li>
+                   </ul>
+               </div>
+           </div>
+       </section>
+
+
+       <section id="competitors" class="mb-20">
+           <div class="text-center mb-12">
+               <h2 class="text-3xl font-bold brilliant-blue-text">Competitive Landscape: Identifying the Leaders</h2>
+               <p class="text-gray-600 mt-2 max-w-3xl mx-auto">Success in the SMR market hinges on a combination of regulatory progress, commercial viability, technical maturity, and strategic partnerships. A few key players are emerging as front-runners.</p>
+           </div>
+           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+               <div class="bg-white p-6 rounded-lg shadow-lg">
+                   <h3 class="font-bold text-center text-xl mb-4 brilliant-blue-text">Leaders' Power Profile (MWe)</h3>
+                   <div class="chart-container h-96">
+                       <canvas id="powerOutputChart"></canvas>
+                   </div>
+               </div>
+               <div class="bg-white p-6 rounded-lg shadow-lg">
+                   <h3 class="font-bold text-center text-xl mb-4 brilliant-blue-text">Success Factor Analysis</h3>
+                   <div class="chart-container h-96">
+                       <canvas id="successFactorChart"></canvas>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+
+       <section id="likely-winners" class="mb-20">
+           <div class="text-center mb-12">
+               <h2 class="text-3xl font-bold brilliant-blue-text">Likely Winners by Strategic Position</h2>
+                <p class="text-gray-600 mt-2 max-w-3xl mx-auto">Our analysis identifies likely winners across different strategic categories, from near-term leaders with mature technology to long-term disruptors pioneering next-generation reactors.</p>
+           </div>
+
+
+           <div>
+               <h3 class="text-2xl font-bold mb-6 brilliant-blue-text border-b-2 border-blue-200 pb-2">Near-Term Commercialization Leaders</h3>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                   <div class="stat-card">
+                       <h4 class="text-xl font-bold">GE Vernova (GEH)</h4>
+                       <p class="font-semibold brilliant-blue-medium text-white px-2 py-1 rounded-full inline-block my-2">BWRX-300 (BWR)</p>
+                       <p class="text-gray-700">Most compelling case for near-term success due to mature tech, strong commercial traction with construction in Canada and plans for 24 units in Poland, and a pragmatic focus on converting coal plant sites.</p>
+                   </div>
+                   <div class="stat-card">
+                       <h4 class="text-xl font-bold">Rolls-Royce SMR</h4>
+                        <p class="font-semibold brilliant-blue-medium text-white px-2 py-1 rounded-full inline-block my-2">Rolls-Royce SMR (PWR)</p>
+                       <p class="text-gray-700">A "national champion" with unparalleled UK government backing, advanced regulatory progress, and significant international commitments. Its larger 470 MWe design may offer better economics.</p>
+                   </div>
+               </div>
+
+
+               <h3 class="text-2xl font-bold mb-6 brilliant-blue-text border-b-2 border-blue-200 pb-2">Strategic Enabler (Pick-and-Shovel Play)</h3>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                   <div class="stat-card">
+                       <h4 class="text-xl font-bold">BWX Technologies</h4>
+                       <p class="font-semibold brilliant-blue-light text-white px-2 py-1 rounded-full inline-block my-2">Component Manufacturer</p>
+                       <p class="text-gray-700">A critical supplier manufacturing key components for both GEH and NuScale. Offers exposure to SMR growth without direct reactor development risk, backed by stable government contracts.</p>
+                   </div>
+               </div>
+
+
+               <h3 class="text-2xl font-bold mb-6 brilliant-blue-text border-b-2 border-blue-200 pb-2">Potential Long-Term Disruptors (High-Risk/Reward)</h3>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="stat-card">
+                       <h4 class="text-xl font-bold">Terrestrial Energy</h4>
+                       <p class="font-semibold brilliant-blue-light text-white px-2 py-1 rounded-full inline-block my-2">IMSR (Molten Salt)</p>
+                       <p class="text-gray-700">A pioneer in Gen IV technology with significant efficiency and safety advantages. First Gen IV to complete Canadian design review, but faces higher technical and regulatory hurdles.</p>
+                   </div>
+                   <div class="stat-card">
+                       <h4 class="text-xl font-bold">NANO Nuclear Energy</h4>
+                       <p class="font-semibold brilliant-blue-light text-white px-2 py-1 rounded-full inline-block my-2">KRONOS (Microreactor)</p>
+                       <p class="text-gray-700">Targets the niche microreactor market with an ambitious vertical integration strategy. First to get NRC fuel qualification approval, de-risking a critical part of its development.</p>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+
+       <section id="tech-pathways" class="mb-20">
+           <div class="text-center mb-12">
+               <h2 class="text-3xl font-bold brilliant-blue-text">Pathways to Deployment: A Two-Track Race</h2>
+               <p class="text-gray-600 mt-2 max-w-3xl mx-auto">The SMR market is evolving along two primary technological tracks. Near-term success is dominated by familiar Light Water Reactor (LWR) designs, while advanced Generation IV concepts represent a longer-term, potentially more transformative investment.</p>
+           </div>
+           <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+               <div class="flex flex-col md:flex-row justify-around gap-8">
+                   <div class="flex-1">
+                       <h3 class="text-center text-xl font-bold brilliant-blue-text mb-6">Track 1: Light Water Reactors (LWR)</h3>
+                       <div class="flex flex-col items-center">
+                           <div class="w-full p-4 border-2 rounded-lg text-center flow-node">
+                               <p class="font-semibold">Established Technology</p>
+                               <p class="text-sm text-gray-600">(PWR, BWR)</p>
+                           </div>
+                           <div class="h-8 w-px bg-gray-300"></div>
+                            <div class="text-2xl">⬇️</div>
+                            <div class="h-8 w-px bg-gray-300"></div>
+                           <div class="w-full p-4 border-2 rounded-lg text-center flow-node">
+                               <p class="font-semibold">Regulatory Familiarity</p>
+                               <p class="text-sm text-gray-600">Faster path to licensing</p>
+                           </div>
+                           <div class="h-8 w-px bg-gray-300"></div>
+                            <div class="text-2xl">⬇️</div>
+                            <div class="h-8 w-px bg-gray-300"></div>
+                           <div class="w-full p-4 border-2 rounded-lg text-center flow-node">
+                               <p class="font-semibold">Near-Term Deployment</p>
+                               <p class="text-sm text-gray-600">(~2028-2030)</p>
+                           </div>
+                       </div>
+                   </div>
+
+
+                   <div class="hidden md:flex flex-col items-center justify-center">
+                       <div class="h-full w-px bg-gray-200"></div>
+                   </div>
+
+
+                    <div class="flex-1">
+                       <h3 class="text-center text-xl font-bold brilliant-blue-light mb-6">Track 2: Generation IV Reactors</h3>
+                       <div class="flex flex-col items-center">
+                          <div class="w-full p-4 border-2 rounded-lg text-center flow-node-gen4">
+                               <p class="font-semibold">Novel Technology</p>
+                               <p class="text-sm text-gray-600">(MSR, HTGR, FNR)</p>
+                           </div>
+                            <div class="h-8 w-px bg-gray-300"></div>
+                            <div class="text-2xl">⬇️</div>
+                            <div class="h-8 w-px bg-gray-300"></div>
+                            <div class="w-full p-4 border-2 rounded-lg text-center flow-node-gen4">
+                               <p class="font-semibold">Higher Technical Hurdles</p>
+                               <p class="text-sm text-gray-600">New regulatory frameworks needed</p>
+                           </div>
+                            <div class="h-8 w-px bg-gray-300"></div>
+                            <div class="text-2xl">⬇️</div>
+                            <div class="h-8 w-px bg-gray-300"></div>
+                            <div class="w-full p-4 border-2 rounded-lg text-center flow-node-gen4">
+                               <p class="font-semibold">Long-Term Deployment</p>
+                               <p class="text-sm text-gray-600">(~2030s)</p>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+
+       <footer class="text-center mt-16 text-gray-500 text-sm">
+           <p>Data synthesized from the "SMR Sector Winner Identification" deep research report. All financial figures and projections are based on data available in the source material.</p>
+           <p class="mt-2">This infographic is for informational purposes only and does not constitute investment advice. Chart.js was used for data visualization. No SVG or Mermaid JS was used in this output.</p>
+       </footer>
+
+
+   </main>
+
+
+   <script>
+       const brilliantBluePalette = {
+           dark: '#00449E',
+           medium: '#0065D4',
+           light: '#2DA9E1',
+           extraLight: '#96D6F6',
+           background: '#F8F8F8'
+       };
+
+
+       function wrapLabel(str, maxWidth) {
+           if (typeof str !== 'string' || str.length <= maxWidth) {
+               return str;
+           }
+           const words = str.split(' ');
+           let lines = [];
+           let currentLine = words[0];
+
+
+           for (let i = 1; i < words.length; i++) {
+               if ((currentLine + ' ' + words[i]).length > maxWidth) {
+                   lines.push(currentLine);
+                   currentLine = words[i];
+               } else {
+                   currentLine += ' ' + words[i];
+               }
+           }
+           lines.push(currentLine);
+           return lines;
+       }
+
+
+       const tooltipTitleCallback = (tooltipItems) => {
+           const item = tooltipItems[0];
+           let label = item.chart.data.labels[item.dataIndex];
+           if (Array.isArray(label)) {
+             return label.join(' ');
+           }
+           return label;
+       };
+
+
+       const chartOptionsTemplate = {
+           responsive: true,
+           maintainAspectRatio: false,
+           plugins: {
+               legend: {
+                   position: 'top',
+                   labels: {
+                       color: '#4a5568'
+                   }
+               },
+               tooltip: {
+                   callbacks: {
+                       title: tooltipTitleCallback
+                   }
+               }
+           },
+            scales: {
+               y: {
+                   beginAtZero: true,
+                   grid: {
+                       color: '#e2e8f0'
+                   },
+                   ticks: {
+                       color: '#4a5568'
+                   }
+               },
+               x: {
+                   grid: {
+                       display: false
+                   },
+                   ticks: {
+                       color: '#4a5568'
+                   }
+               }
+           }
+       };
+
+
+       const marketGrowthCtx = document.getElementById('marketGrowthChart').getContext('2d');
+       new Chart(marketGrowthCtx, {
+           type: 'line',
+           data: {
+               labels: ['2025', '2030', '2035', '2040', '2050'],
+               datasets: [{
+                   label: 'Global SMR Market Value (USD Billions)',
+                   data: [5, 15, 50, 120, 250],
+                   borderColor: brilliantBluePalette.dark,
+                   backgroundColor: 'rgba(0, 68, 158, 0.1)',
+                   fill: true,
+                   tension: 0.4
+               }]
+           },
+           options: {
+               ...chartOptionsTemplate,
+               plugins: {
+                    ...chartOptionsTemplate.plugins,
+                   title: {
+                       display: true,
+                       text: 'Projected SMR Market Growth',
+                       color: '#1a202c',
+                       font: { size: 16 }
+                   }
+               }
+           }
+       });
+
+
+       const powerOutputCtx = document.getElementById('powerOutputChart').getContext('2d');
+       new Chart(powerOutputCtx, {
+           type: 'bar',
+           data: {
+               labels: ['Rolls-Royce SMR', 'Terrestrial IMSR', 'GEH BWRX-300', 'KEPCO SMART100', 'NuScale VOYGR', 'NANO KRONOS'],
+               datasets: [{
+                   label: 'Gross Power Output (MWe)',
+                   data: [470, 390, 300, 110, 77, 20],
+                   backgroundColor: [
+                       brilliantBluePalette.dark,
+                       brilliantBluePalette.medium,
+                       brilliantBluePalette.light,
+                       brilliantBluePalette.extraLight,
+                       '#a0aec0',
+                       '#cbd5e0'
+                   ],
+                   borderColor: '#ffffff',
+                   borderWidth: 2
+               }]
+           },
+           options: {
+               ...chartOptionsTemplate,
+               indexAxis: 'y',
+               scales: {
+                    x: {
+                       beginAtZero: true,
+                        grid: { color: '#e2e8f0' },
+                        ticks: { color: '#4a5568' }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { color: '#4a5568' }
+                    }
+               },
+               plugins: {
+                   ...chartOptionsTemplate.plugins,
+                   legend: {
+                       display: false
+                   }
+               }
+           }
+       });
+
+
+       const successFactorCtx = document.getElementById('successFactorChart').getContext('2d');
+       new Chart(successFactorCtx, {
+           type: 'radar',
+           data: {
+               labels: [
+                   wrapLabel('Regulatory Progress', 16),
+                   wrapLabel('Commercial Traction', 16),
+                   wrapLabel('Government Backing', 16),
+                   wrapLabel('Technology Maturity', 16),
+                   wrapLabel('Supply Chain Strength', 16)
+               ],
+               datasets: [
+               {
+                   label: 'GE Vernova (GEH)',
+                   data: [8, 9, 7, 9, 8],
+                   borderColor: brilliantBluePalette.dark,
+                   backgroundColor: 'rgba(0, 68, 158, 0.2)',
+                   pointBackgroundColor: brilliantBluePalette.dark,
+                   pointBorderColor: '#fff',
+                   pointHoverBackgroundColor: '#fff',
+                   pointHoverBorderColor: brilliantBluePalette.dark
+               },
+               {
+                   label: 'Rolls-Royce SMR',
+                   data: [9, 7, 10, 8, 7],
+                   borderColor: brilliantBluePalette.light,
+                   backgroundColor: 'rgba(45, 169, 225, 0.2)',
+                   pointBackgroundColor: brilliantBluePalette.light,
+                   pointBorderColor: '#fff',
+                   pointHoverBackgroundColor: '#fff',
+                   pointHoverBorderColor: brilliantBluePalette.light
+               },
+                {
+                   label: 'NuScale Power',
+                   data: [10, 5, 6, 9, 6],
+                   borderColor: '#718096',
+                   backgroundColor: 'rgba(113, 128, 150, 0.2)',
+                   pointBackgroundColor: '#718096',
+                   pointBorderColor: '#fff',
+                   pointHoverBackgroundColor: '#fff',
+                   pointHoverBorderColor: '#718096'
+               }]
+           },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    ...chartOptionsTemplate.plugins,
+                    legend: { position: 'bottom', labels: {color: '#4a5568'} }
+                },
+                scales: {
+                   r: {
+                       angleLines: { color: '#e2e8f0' },
+                       grid: { color: '#e2e8f0' },
+                       pointLabels: {
+                            font: { size: 12 },
+                            color: '#4a5568'
+                       },
+                       ticks: {
+                           color: '#4a5568',
+                           backdropColor: 'rgba(255, 255, 255, 0.75)'
+                       },
+                       suggestedMin: 0,
+                       suggestedMax: 10
+                   }
+               }
+            }
+       });
+
+
+   </script>
+</body>
+</html>
+

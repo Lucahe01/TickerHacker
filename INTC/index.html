@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intel Corporation (INTC) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Intel (INTC) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Intel: An American Icon's High-Stakes Turnaround</h2>
+            <p class="content-text mb-6">Intel Corporation (NASDAQ: INTC), a titan of the semiconductor industry, is in the midst of its most significant transformation in decades. After a period of manufacturing missteps that saw it lose its long-held process technology leadership to rivals like TSMC and Samsung, Intel is executing an ambitious and costly turnaround strategy. Led by CEO Pat Gelsinger, the company is aiming to reclaim its manufacturing prowess, rebuild its product leadership, and establish itself as a major player in the foundry business for external customers. This analysis explores Intel's reorganized business model, its challenging financial performance, and the high-stakes battle for the future of silicon.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy: IDM 2.0</h3>
+                    <p class="content-text mb-4">Intel's turnaround is centered on its "IDM 2.0" (Integrated Device Manufacturing) strategy, which involves three key pillars:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Five Nodes in Four Years:</strong> An aggressive roadmap to accelerate the development of five new process nodes in four years, culminating in the "angstrom era" with Intel 18A, to regain process leadership by 2025.</li>
+                        <li><strong class="font-semibold text-gray-700">Intel Foundry:</strong> Opening its world-class manufacturing facilities to external chip designers, aiming to become the second-largest external foundry by 2030.</li>
+                        <li><strong class="font-semibold text-gray-700">Use of External Foundries:</strong> Pragmatically using third-party foundries like TSMC for certain components to ensure its products are always built on the best possible process technology.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Intel Foundry Operating Loss (2023)</p>
+                    <p class="kpi-value text-violet-600">~$7 Billion</p>
+                    <p class="content-text text-sm mt-2">This massive loss highlights the immense cost and investment required to build out a competitive foundry business from the ground up.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Intel Makes Money: Products vs. Foundry</h2>
+            <p class="content-text mb-6">Intel has recently reorganized its reporting structure to provide more transparency into its two core businesses. **Intel Products** includes the company's traditional business of designing and selling its own chips. **Intel Foundry** represents the new strategy of manufacturing chips for external customers, with Intel Products being its first major internal customer.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="products">Intel Products</button>
+                    <button class="segment-tab-button" data-target="foundry">Intel Foundry</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="productsContent" class="segment-content">
+                    <h3 class="subsection-title">Intel Products</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is Intel's historical core and still the vast majority of its revenue. It includes the design and sale of processors and related components for various markets.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Client Computing Group (CCG):</strong> Processors for desktop and notebook PCs (e.g., Core series). This is the largest segment.</li>
+                                <li><strong>Data Center and AI (DCAI):</strong> Processors for servers (e.g., Xeon series) and AI accelerators (e.g., Gaudi).</li>
+                                <li><strong>Network and Edge (NEX):</strong> Components for networking equipment and edge computing devices.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="foundryContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Intel Foundry</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is Intel's high-stakes bet on the future. The goal is to compete directly with TSMC and Samsung by offering leading-edge process technology and advanced packaging services to other chip design companies. Currently, its revenue is small and its losses are large, reflecting the massive upfront investment.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                 <li><strong>Wafer Manufacturing:</strong> Fabricating silicon wafers for external customers.</li>
+                                 <li><strong>Advanced Packaging:</strong> Offering advanced technologies like Foveros (3D stacking) and EMIB.</li>
+                                 <li><strong>Key Customer Target:</strong> The first major external customer announced for its 18A process is Microsoft.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Intel 18A Process</p>
+                             <p class="kpi-value text-sky-600">On Track for 2025</p>
+                             <p class="content-text text-sm mt-2">The successful delivery and performance of the 18A node is the single most critical milestone for the success of both Intel Products and the Foundry business.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Intel's financial performance reflects a company in the depths of a major turnaround. Revenue has declined from its peak, and the company has swung from massive profits to significant GAAP net losses. This is due to a combination of lost market share, a weak PC market, and the enormous capital expenditures required for its foundry build-out. The key for investors is to look for signs of stabilization and a credible path back to profitable growth.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="netIncome">GAAP Net Income/(Loss) ($B)</option>
+                            <option value="capex">Capital Expenditures ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="grossMargin">GAAP Gross Margin (%)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts clearly illustrate the recent downturn in revenue and the significant pressure on profitability and gross margins, a direct result of the company's turnaround investments and market challenges.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Integrated Device Manufacturer (IDM)</h2>
+            <p class="content-text mb-6">Intel's traditional competitive advantage has been its status as an Integrated Device Manufacturer (IDM), designing and manufacturing its own chips. While this model has been challenged, it still provides unique advantages in co-optimizing design and manufacturing. The success of IDM 2.0 will determine if this moat can be rebuilt and expanded.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Manufacturing Scale & Expertise:</strong> Despite recent setbacks, Intel remains one of only three companies in the world capable of manufacturing leading-edge semiconductors at scale.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Intellectual Property & x86 Architecture:</strong> A vast portfolio of patents and the dominance of the x86 architecture in PCs and servers provide a strong, albeit challenged, competitive advantage.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Government Support (CHIPS Act):</strong> Intel is a primary beneficiary of U.S. government efforts to onshore semiconductor manufacturing, receiving billions in grants and loans to build new fabs in the U.S.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">TSMC & Samsung (Foundry):</strong> These are the undisputed leaders in semiconductor manufacturing. Intel Foundry must compete directly with them for external customers.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">AMD (CPU):</strong> A fierce competitor that has taken significant market share from Intel in both the PC and data center markets with its high-performance processors.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">NVIDIA (AI & GPU):</strong> The dominant leader in AI accelerators and discrete GPUs, a market where Intel is trying to gain a foothold.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Investing in Intel today is a bet on one of the most ambitious and capital-intensive turnarounds in corporate history. The potential rewards are immense if the company succeeds, but the execution risk is equally substantial.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Regaining Process Leadership:</strong> If Intel successfully delivers on its "five nodes in four years" roadmap and 18A proves to be a world-class process, it could lead to a massive re-rating of the company and its products.</li>
+                        <li><strong>Foundry Success:</strong> Winning major external customers for Intel Foundry would create a powerful new revenue stream and diversify the business.</li>
+                        <li><strong>AI Everywhere:</strong> The explosion in demand for AI, from data centers to PCs, creates a massive market for Intel's full range of silicon products.</li>
+                        <li><strong>Geopolitical Tailwinds:</strong> The desire of Western governments to create a more resilient and geographically diverse semiconductor supply chain provides a strong tailwind for Intel Foundry.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Execution Risk:</strong> The "five nodes in four years" roadmap is incredibly aggressive. Any delays or stumbles could be catastrophic for the turnaround story.</li>
+                        <li><strong>Intense Competition:</strong> Intel is competing against formidable, well-run companies like TSMC, Samsung, AMD, and NVIDIA, who are not standing still.</li>
+                        <li><strong>Massive Capital Investment:</strong> The IDM 2.0 strategy requires tens of billions of dollars in capital expenditures, which will continue to pressure free cash flow for several years.</li>
+                        <li><strong>Foundry Profitability:</strong> The foundry business is currently losing billions of dollars, and the path to breakeven (targeted around 2027) is long and uncertain.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Intel Corporation public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Client Computing (CCG)', 'Data Center & AI (DCAI)', 'Network & Edge (NEX)'],
+                datasets: [{
+                    data: [55, 30, 15], // Approximate FY2024 percentages
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Product Segment (FY2024)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end Dec 31)
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [77.9, 79.0, 63.1, 54.2, 53.1], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            netIncome: { data: [20.9, 19.9, 8.0, 1.7, -4.7], label: 'GAAP Net Income/(Loss) ($B)', color: CHART_COLORS.sky },
+            capex: { data: [14.3, 18.7, 24.8, 24.9, 21.0], label: 'Capital Expenditures ($B)', color: CHART_COLORS.orange }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [12.9, 14.2, 15.4, 14.8, 12.5, 12.9, 14.1, 12.7], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            grossMargin: { data: [35.8, 42.5, 45.7, 44.5, 41.0, 42.0, 43.5, 39.2], label: 'GAAP Gross Margin (%)', color: CHART_COLORS.teal }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'capex' || metricKey === 'grossMargin';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

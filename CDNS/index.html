@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadence Design Systems (CDNS) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Cadence (CDNS) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Cadence: Architecting the Future of Electronics</h2>
+            <p class="content-text mb-6">Cadence Design Systems, Inc. is a titan in the computational software arena, standing at the epicenter of the electronics industry. As one half of the dominant Electronic Design Automation (EDA) duopoly, Cadence provides the indispensable software, hardware, and intellectual property (IP) that engineers use to design everything from the most advanced semiconductor chips to entire electronic systems. The company's strategic vision, known as <span class="highlight">Intelligent System Design™</span>, aims to solve the growing complexity of modern technology by delivering holistic, AI-powered solutions. This positions Cadence as a critical enabler for secular mega-trends like AI, 5G, automotive innovation, and hyperscale computing.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Intelligent System Design™</h3>
+                    <p class="content-text mb-4">Cadence's strategy extends beyond traditional chip design to address the entire product development lifecycle:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">EDA and Digital Leadership:</strong> Providing best-in-class tools for chip design, verification, and implementation, forming the core of its business.</li>
+                        <li><strong class="font-semibold text-gray-700">System Innovation:</strong> Expanding into system-level design and analysis, covering PCBs, 3D-IC packaging, and multi-physics simulation to ensure all components work together seamlessly.</li>
+                        <li><strong class="font-semibold text-gray-700">Pervasive Intelligence (AI):</strong> Infusing AI and machine learning across its software suite (e.g., the Cadence.AI portfolio) to automate design processes, optimize performance, and accelerate time-to-market for customers.</li>
+                        <li><strong class="font-semibold text-gray-700">Broad IP Portfolio:</strong> Offering a wide range of pre-verified design IP blocks, such as Tensilica DSPs and high-speed interfaces, which customers license to reduce their own design time and risk.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Year-End Backlog (FY2023)</p>
+                    <p class="kpi-value text-violet-600">$6.0 Billion</p>
+                    <p class="content-text text-sm mt-2">A massive backlog provides excellent visibility and highlights the sustained, long-term demand for Cadence's solutions and its highly recurring revenue model.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Cadence Makes Money: A Multi-Pillar Model</h2>
+            <p class="content-text mb-6">Cadence’s revenue is primarily driven by time-based software licenses, subscriptions, and royalties for its IP, creating a highly predictable and profitable business model. The business is organized into several key product categories that address different stages of the design process.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="functional">Functional Verification</button>
+                    <button class="segment-tab-button" data-target="digital">Digital IC & Signoff</button>
+                    <button class="segment-tab-button" data-target="custom">Custom IC & Simulation</button>
+                    <button class="segment-tab-button" data-target="ip">IP Portfolio</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="functionalContent" class="segment-content">
+                    <h3 class="subsection-title">Functional Verification (~30% of Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This segment provides the hardware and software used to verify that a chip design will function correctly before the costly manufacturing process begins. As chip complexity soars, verification has become one of the most critical and time-consuming parts of the design flow.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Platforms:</strong> Palladium (Emulation) and Protium (Prototyping) hardware systems.</li>
+                                <li><strong>Core Software:</strong> Xcelium (Logic Simulation) and Jasper (Formal Verification).</li>
+                                <li><strong>Growth Driver:</strong> Insatiable demand for compute power for AI and data centers drives the need for larger and faster verification systems.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="digitalContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Digital IC & Signoff (~30% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is the core EDA software suite for creating digital chip designs. These tools take a design from a high-level description to a final "GDSII" file ready for manufacturing. The <span class="highlight">Cadence.AI</span> platform is a key differentiator, automating placement, routing, and timing closure.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Genus (Synthesis), Innovus (Implementation), and Tempus (Timing Signoff).</li>
+                                <li><strong>Strategy:</strong> Integrating AI through tools like Cerebrus to dramatically improve chip performance, power, and area (PPA).</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                            <p class="kpi-label">AI-Driven Automation</p>
+                            <p class="kpi-value text-sky-600">Cadence.AI</p>
+                            <p class="content-text text-sm mt-2">A portfolio of AI-powered solutions that automates and accelerates the entire chip development process, from system design to final signoff.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="customContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Custom IC & Simulation (~20% of Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                           <p class="content-text mb-2">This segment focuses on designing analog, mixed-signal, and radio-frequency (RF) circuits, which are crucial for interfacing digital chips with the real world. This includes power management chips, sensors, and 5G/6G communication circuits.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                               <li><strong>Key Products:</strong> Virtuoso (Custom Layout) and Spectre (Circuit Simulation).</li>
+                               <li><strong>Market:</strong> Strong demand from the automotive, industrial, and consumer electronics sectors.</li>
+                           </ul>
+                       </div>
+                        <div class="kpi-card bg-teal-50 border-teal-200">
+                           <p class="kpi-label">Market Position</p>
+                           <p class="kpi-value text-teal-600">Industry Standard</p>
+                           <p class="content-text text-sm mt-2">The Virtuoso and Spectre platforms are considered the gold standard for custom analog and mixed-signal design worldwide.</p>
+                       </div>
+                   </div>
+               </div>
+                 <div id="ipContent" class="segment-content hidden">
+                    <h3 class="subsection-title">IP Portfolio (~15% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Cadence develops and licenses pre-designed and pre-verified blocks of functionality (Intellectual Property) that customers can integrate into their chips. This significantly reduces design time and risk.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Flagship IP:</strong> Tensilica customizable processors and DSPs for AI, audio, and vision applications.</li>
+                                <li><strong>Interface IP:</strong> Industry-standard IP for protocols like DDR, PCIe, and Ethernet.</li>
+                                <li><strong>Growth:</strong> This is one of Cadence's fastest-growing segments, fueled by demand for specialized compute and connectivity in AI and automotive applications.</li>
+                            </ul>
+                        </div>
+                         <div class="kpi-card bg-orange-50 border-orange-200">
+                            <p class="kpi-label">IP Revenue Growth (Q1 2025)</p>
+                            <p class="kpi-value text-orange-600">~40% YoY</p>
+                            <p class="content-text text-sm mt-2">Explosive growth in the IP business highlights the strong demand for specialized, pre-built solutions in complex chip designs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Cadence boasts a stellar financial profile, defined by consistent double-digit growth, best-in-class operating margins, and powerful free cash flow. This financial strength is a direct result of its defensible market position and subscription-based business model, allowing for continuous reinvestment in R&D and strategic initiatives.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="nonGaapEps">Non-GAAP EPS ($)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="nonGaapEps">Non-GAAP EPS ($)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">Cadence's financial charts demonstrate a remarkably consistent and powerful growth engine, reflecting the mission-critical nature of its products and services.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Indispensable Duopoly</h2>
+            <p class="content-text mb-6">Cadence's competitive moat is exceptionally wide, anchored by its position in the EDA duopoly with Synopsys. The barriers to entry are immense due to the sheer technical complexity, billions in cumulative R&D investment, and deep, sticky relationships with every major semiconductor and systems company on the planet.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Duopoly Market Structure:</strong> Cadence and Synopsys control over 80% of the core EDA market, creating a rational competitive environment and significant pricing power.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Extreme Switching Costs:</strong> Chip design workflows are incredibly complex and are standardized on EDA toolchains. The cost, risk, and retraining required to switch providers are prohibitive for customers, leading to near-100% client retention.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Intangible Assets & R&D Scale:</strong> Decades of proprietary code, patents, and deep domain expertise are impossible to replicate. Cadence's massive R&D budget perpetuates its technology leadership.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Ecosystem Integration:</strong> Deep partnerships with foundries (like TSMC, Samsung, Intel) and cloud providers (AWS, Google, Azure) ensure its tools are optimized for the latest manufacturing processes and workflows.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Synopsys (SNPS):</strong> The primary and most direct competitor, sharing the EDA duopoly. They compete fiercely across all product segments.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Siemens EDA (formerly Mentor Graphics):</strong> A significant but distant third-place player in the EDA market.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Ansys:</strong> A leader in physics-based simulation software that competes in the broader system analysis space.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Cadence is a high-quality, wide-moat business perfectly aligned with the most potent long-term technology trends. Its future is tied to the ever-increasing complexity of chip design. While exposed to semiconductor industry dynamics, its subscription model and critical role provide substantial resilience.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Secular AI Tailwinds:</strong> The AI revolution requires a massive increase in the complexity and quantity of specialized chips, directly driving demand for Cadence's entire product suite.</li>
+                        <li><strong>System-Level Design Expansion:</strong> Growth in areas like 3D-ICs, chiplets, and multi-physics simulation represents a significant expansion of the company's total addressable market.</li>
+                        <li><strong>Durable & Profitable Model:</strong> Highly recurring revenue, strong pricing power, and expanding margins provide exceptional financial predictability and strength.</li>
+                        <li><strong>AI-Powered Automation:</strong> Cadence's leadership in using AI to design chips (Cadence.AI) creates a powerful value proposition for customers, further cementing its competitive position.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Geopolitical Risk:</strong> Exposure to China (around 11% of Q1'25 revenue) presents a risk amid ongoing trade tensions and U.S. export controls on advanced EDA software.</li>
+                        <li><strong>Semiconductor Cyclicality:</strong> A prolonged and severe downturn in the semiconductor industry could eventually impact customer R&D spending and slow growth.</li>
+                        <li><strong>Intense Competition:</strong> The head-to-head battle with Synopsys requires constant innovation and investment to maintain technology leadership.</li>
+                        <li><strong>Premium Valuation:</strong> As a best-in-class company, Cadence stock often trades at a premium valuation, which could lead to volatility during market corrections.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Cadence Design Systems, Inc. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Functional Verification', 'Digital IC', 'Custom IC', 'IP Portfolio', 'System Design'],
+                datasets: [{
+                    data: [30, 30, 20, 15, 5], // Approximate percentages
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal, CHART_COLORS.orange, CHART_COLORS.darkViolet],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Product Category (Approx. %)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end Dec 31)
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [2.99, 3.56, 4.09, 4.64], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            operatingIncome: { data: [0.78, 1.07, 1.25, 1.48], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+            nonGaapEps: { data: [3.29, 4.27, 5.15, 5.97], label: 'Non-GAAP EPS ($)', color: CHART_COLORS.teal }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25(E)'],
+            totalRevenue: { data: [1.02, 1.07, 1.01, 1.06, 1.22, 1.36, 1.24, 1.04], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            nonGaapEps: { data: [1.26, 1.38, 1.17, 1.28, 1.64, 1.49, 1.57, 1.22], label: 'Non-GAAP EPS ($)', color: CHART_COLORS.orange }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'nonGaapEps';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

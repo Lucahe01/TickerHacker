@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>American Express (AXP) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #0369a1; /* sky-700 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #0891b2; /* cyan-600 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #be185d; /* pink-700 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* sky-700 */
+            color: #FFFFFF;
+            border-color: #075985; /* sky-800 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #0369a1; /* sky-700 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #0369a1;">American Express (AXP) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-700" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">American Express: The Premium Integrated Payments Platform</h2>
+            <p class="content-text mb-6">American Express (AXP) is a globally integrated payments company that operates a unique "closed-loop" network, acting as both the card issuer and the network operator. This model differentiates it from competitors like Visa and Mastercard, which partner with banks to issue cards. AXP's business is built on a powerful brand synonymous with prestige, trust, and superior service. The company's strategy revolves around a <span class="highlight">"premium membership" model</span>, focusing on attracting high-spending consumers and small-to-medium-sized businesses (SMEs) with a suite of products, rewards, and experiences that go far beyond a simple payment transaction. This focus on the premium segment results in industry-leading spending per cardmember and a resilient, fee-based revenue stream.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: The "Membership" Flywheel</h3>
+                    <p class="content-text mb-4">AXP's strategy is designed to create a self-reinforcing cycle of growth:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Attract High-Value Customers:</strong> Focus on acquiring and retaining premium consumers and SMEs who spend more and have higher credit quality.</li>
+                        <li><strong class="font-semibold text-gray-700">Deliver Differentiated Value:</strong> Offer a rich suite of benefits, including the Membership Rewards program, travel perks (like lounge access), dining programs, and exclusive experiences to justify annual fees and drive loyalty.</li>
+                        <li><strong class="font-semibold text-gray-700">Expand Merchant Acceptance:</strong> Continuously grow the network of merchants that accept American Express cards, enhancing the value proposition for cardmembers.</li>
+                        <li><strong class="font-semibold text-gray-700">Leverage the Closed-Loop Advantage:</strong> Utilize proprietary data from both cardmembers and merchants to manage risk effectively, create targeted offers, and provide valuable insights to business customers.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-sky-50 border-sky-200">
+                    <p class="kpi-label">Total Billed Business (FY2024)</p>
+                    <p class="kpi-value text-sky-700">$1.5 Trillion</p>
+                    <p class="content-text text-sm mt-2">The immense volume of spending on its network demonstrates the engagement of its premium cardmember base and drives high-margin discount revenue.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How American Express Makes Money: Three Core Segments</h2>
+            <p class="content-text mb-6">American Express's revenue is generated through three primary streams: discount revenue (fees charged to merchants for accepting AmEx cards), net card fees (annual fees for products like the Platinum and Gold cards), and net interest income (interest earned on cardmember loans). These revenue streams are generated across three main business segments.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="consumer">Global Consumer Services</button>
+                    <button class="segment-tab-button" data-target="commercial">Global Commercial Services</button>
+                    <button class="segment-tab-button" data-target="merchant">Global Merchant & Network</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="consumerContent" class="segment-content">
+                    <h3 class="subsection-title">Global Consumer Services (~55% of Pre-Tax Income)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the largest and most prominent segment, offering a wide range of credit and charge cards to consumers around the world. It focuses on premium products that carry significant annual fees in exchange for robust rewards and benefits, particularly in the travel and dining categories.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Flagship Products:</strong> The Platinum Card®, Gold Card, and co-branded cards like the Delta SkyMiles card.</li>
+                                <li><strong>Key Revenue Drivers:</strong> Discount revenue, net card fees, and net interest income.</li>
+                                <li><strong>Strategic Focus:</strong> Acquiring "Gen Z" and Millennial customers, who now account for over 60% of new card acquisitions.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="incomeBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="commercialContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Global Commercial Services (~30% of Pre-Tax Income)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment provides payment and financing solutions to small, medium, and large corporations. AXP is the leading provider of commercial cards in the U.S. This is a high-growth area, as businesses increasingly look for digital payment solutions to manage their expenses.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Corporate cards, business charge cards, and B2B payment automation solutions.</li>
+                                <li><strong>Key Driver:</strong> Discount revenue from the high volume of business spending.</li>
+                                <li><strong>Strategic Focus:</strong> Deepening its leadership position with SMEs, which represent a significant growth opportunity.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-cyan-50 border-cyan-200">
+                             <p class="kpi-label">Leadership in SME</p>
+                             <p class="kpi-value text-cyan-700">#1 Position</p>
+                             <p class="content-text text-sm mt-2">American Express holds a leading position in providing payment solutions to U.S. small and medium-sized enterprises, a lucrative and growing market segment.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="merchantContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Global Merchant & Network Services (~15% of Pre-Tax Income)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment is responsible for managing the relationships with the millions of merchants that accept American Express cards globally. Its primary goal is to expand merchant coverage and provide value-added services, such as marketing solutions and data analytics, to its merchant partners.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Primary Function:</strong> Sign up and manage relationships with merchants.</li>
+                                <li><strong>Key Driver:</strong> Generates discount revenue which is allocated to the consumer and commercial segments.</li>
+                                <li><strong>Strategic Focus:</strong> Closing the merchant acceptance gap with Visa/Mastercard and demonstrating the value of attracting high-spending AXP cardmembers.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-pink-50 border-pink-200">
+                           <p class="kpi-label">Merchant Value Proposition</p>
+                           <p class="kpi-value text-pink-700">3.5x</p>
+                           <p class="content-text text-sm mt-2">The average spending of an American Express cardmember is approximately 3.5 times that of cardholders on competing networks, providing a powerful incentive for merchants to join the network.</p>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">American Express has demonstrated a consistent ability to grow revenue at a double-digit pace, driven by strong spending growth and a steady increase in fee-paying cardmembers. The company's premium focus leads to best-in-class credit quality, though it is not immune to economic cycles. Investors closely watch billed business growth as a key indicator of volume, and the provision for credit losses as a measure of the health of the loan portfolio.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-sky-700 focus:border-sky-700">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                            <option value="billedBusiness">Billed Business ($T)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-sky-700 focus:border-sky-700">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="eps">EPS ($)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">Financials show strong post-pandemic recovery in spending and revenue, with a normalization of credit provisions from artificially low levels in 2021.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Closed-Loop of Luxury</h2>
+            <p class="content-text mb-6">American Express's competitive moat is deep and multifaceted, stemming from its unique business model, premium brand, and the rich data it controls. This combination creates a powerful ecosystem that is difficult for competitors to replicate.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">The Closed-Loop Network:</strong> By controlling both the issuing and acquiring sides of the transaction, AXP has proprietary data on both cardmember spending and merchant activity. This allows for superior fraud detection, risk management, and marketing insights.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Powerful Brand & Premium Positioning:</strong> The American Express brand is a globally recognized symbol of status and purchasing power. This allows it to command high annual fees and attract affluent customers who are less sensitive to economic downturns.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Spending-Centric Model:</strong> The business model is geared towards maximizing spending volume, not just the number of cards or accounts. This focus on high-spending customers generates highly profitable discount fee revenue.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Membership Rewards Ecosystem:</strong> The highly valued Membership Rewards program creates sticky customer relationships and high switching costs, locking members into the AmEx ecosystem.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-cyan-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Open-Loop Networks (Visa, Mastercard):</strong> These giants have a larger merchant network and partner with thousands of banks, creating immense scale.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-cyan-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Large Bank Issuers (JPMorgan Chase, Bank of America):</strong> These banks have massive customer bases and have invested heavily in their own premium card offerings (e.g., Chase Sapphire Reserve) that compete directly for AXP's target customers.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-cyan-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Fintech & "Buy Now, Pay Later" (BNPL):</strong> Newer players like Block and Affirm offer innovative payment and credit solutions, particularly appealing to younger demographics.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">American Express is well-positioned to benefit from long-term trends in premium consumption, travel, and the shift to digital payments. However, its success is closely tied to the health of the high-end consumer and the broader economy, which presents both opportunities and risks.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-emerald-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Durable Revenue Growth:</strong> The company has a clear path to achieving its 10%+ long-term revenue growth target, driven by continued spending growth and fee income.</li>
+                        <li><strong>Gen Z & Millennial Momentum:</strong> Success in attracting younger generations to the brand provides a long runway for future growth as their spending power increases.</li>
+                        <li><strong>Resilient Premium Customer Base:</strong> The spending of affluent customers tends to be more resilient during economic downturns compared to the broader population.</li>
+                        <li><strong>SME Market Penetration:</strong> The commercial services segment, particularly with small and medium-sized businesses, continues to be a significant and underpenetrated growth opportunity.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-pink-700">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Economic Sensitivity:</strong> A severe economic downturn would negatively impact spending volumes (especially in travel and dining), and could lead to higher credit losses.</li>
+                        <li><strong>Regulatory Risk:</strong> As a major financial institution, AXP is subject to regulatory scrutiny. Changes in regulations, such as caps on credit card late fees, could impact profitability.</li>
+                        <li><strong>Intense Competition:</strong> The premium credit card space is highly competitive, with large banks aggressively competing for affluent customers with rich reward programs.</li>
+                        <li><strong>Maintaining the Value Proposition:</strong> The company must continually invest in and refresh its benefits and rewards to justify the high annual fees on its premium products.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-gray-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from American Express Co. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            sky: '#0369a1',
+            cyan: '#0891b2',
+            pink: '#be185d',
+            teal: '#0d9488',
+            gray: '#4B5563'
+        };
+
+        // Revenue Breakdown Chart
+        const incomeBreakdownCtx = document.getElementById('incomeBreakdownChart').getContext('2d');
+        new Chart(incomeBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Consumer Services', 'Commercial Services', 'Merchant & Network'],
+                datasets: [{
+                    data: [55, 30, 15], // Approximate Pre-Tax Income percentages
+                    backgroundColor: [CHART_COLORS.sky, CHART_COLORS.cyan, CHART_COLORS.pink],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Pre-Tax Income by Segment (Approx. %)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end Dec 31)
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [42.38, 52.86, 60.52, 65.39], label: 'Total Revenue ($B)', color: CHART_COLORS.sky },
+            netIncome: { data: [8.06, 7.51, 8.37, 9.98], label: 'Net Income ($B)', color: CHART_COLORS.cyan },
+            billedBusiness: { data: [1.08, 1.34, 1.46, 1.50], label: 'Billed Business ($T)', color: CHART_COLORS.pink }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25(E)'],
+            totalRevenue: { data: [15.38, 15.80, 15.80, 16.03, 16.48, 17.08, 16.51, 16.80], label: 'Total Revenue ($B)', color: CHART_COLORS.sky },
+            eps: { data: [3.30, 2.62, 2.80, 2.92, 3.57, 3.89, 3.35, 3.45], label: 'EPS ($)', color: CHART_COLORS.teal }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'eps' || metricKey === 'billedBusiness';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

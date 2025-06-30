@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex Pharmaceuticals (VRTX) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Vertex (VRTX) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Vertex: The King of CF Seeks Its Next Kingdom</h2>
+            <p class="content-text mb-6">Vertex Pharmaceuticals Incorporated (NASDAQ: VRTX) is a global biotechnology company that has achieved a near-monopoly in the treatment of cystic fibrosis (CF), a rare, life-threatening genetic disease. By developing medicines that treat the underlying cause of CF, Vertex has transformed the standard of care and built an incredibly profitable and durable business. The company is now leveraging its scientific expertise and massive cash flow to expand into new therapeutic areas, aiming to replicate its CF success and build the next great biotech franchise. This analysis explores Vertex's dominant business, its strong financials, and its pipeline-driven future.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Vertex's strategy is a clear three-pronged approach:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Maximize the CF Franchise:</strong> Continue to expand the number of CF patients treated with its modulators globally and innovate with next-generation therapies.</li>
+                        <li><strong class="font-semibold text-gray-700">Diversify the Pipeline:</strong> Advance a broad and deep pipeline of potentially transformative medicines in new disease areas, including pain, diabetes, and rare diseases.</li>
+                        <li><strong class="font-semibold text-gray-700">Strategic Business Development:</strong> Use its strong financial position to acquire external innovation and technology that complements its internal R&D efforts, such as the recent acquisition of Alpine Immune Sciences.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Q1 2025 Product Revenue</p>
+                    <p class="kpi-value text-violet-600">$2.69 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents 13% YoY growth, demonstrating the ongoing strength and durability of the company's core Cystic Fibrosis franchise.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Vertex Makes Money: The CF Fortress & The Pipeline</h2>
+            <p class="content-text mb-6">Vertex's current business is overwhelmingly dominated by its portfolio of medicines for cystic fibrosis. However, the company's future value is intrinsically linked to its ability to successfully develop and launch new products from its diverse R&D pipeline.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="cf">Cystic Fibrosis Franchise</button>
+                    <button class="segment-tab-button" data-target="pipeline">Pipeline & New Frontiers</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="cfContent" class="segment-content">
+                    <h3 class="subsection-title">The Cystic Fibrosis (CF) Franchise</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the engine of Vertex's profitability. The company has developed a series of CFTR modulators that treat the underlying cause of the disease. Its flagship product, TRIKAFTA/KAFTRIO, is a triple-combination therapy that can treat up to 90% of CF patients.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>TRIKAFTA/KAFTRIO:</strong> The dominant product, generating over 85% of total revenue.</li>
+                                <li><strong>Other CF Products:</strong> Includes SYMDEKO/SYMKEVI, ORKAMBI, and KALYDECO.</li>
+                                <li><strong>Next-Gen Therapy:</strong> A new, more effective once-daily combination therapy (the "vanza triple") is expected to launch soon.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="cfRevenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="pipelineContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Pipeline & New Frontiers</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Vertex is investing its massive cash flow into a high-potential R&D pipeline aimed at creating its next major franchises. The company is taking on complex diseases where it believes its scientific approach can lead to transformative results.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                 <li><strong>Acute & Neuropathic Pain:</strong> Developing a new class of non-opioid pain medication (Sunosapain) with blockbuster potential.</li>
+                                 <li><strong>Type 1 Diabetes:</strong> A cell therapy program with the potential to be a functional cure for T1D.</li>
+                                 <li><strong>APOL1-Mediated Kidney Disease (AMKD):</strong> A treatment for a common cause of kidney disease in people of African ancestry.</li>
+                                 <li><strong>Sickle Cell Disease/Beta Thalassemia:</strong> Recently launched CASGEVY, the first-ever CRISPR-based gene-editing therapy.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="pipelineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Vertex is a financial powerhouse, characterized by industry-leading revenue growth, exceptional profitability, and massive cash flow generation from its CF franchise. This financial strength provides the company with significant flexibility to invest in its future growth through both internal R&D and external business development, all while maintaining a strong balance sheet.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Product Revenue ($B)</option>
+                            <option value="netIncome">GAAP Net Income ($B)</option>
+                            <option value="rdExpense">R&D Expense ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Product Revenue ($M)</option>
+                             <option value="netIncome">GAAP Net Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts clearly show the steady, strong growth of the CF franchise, which funds the significant and increasing investment in research and development for future growth.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The CF Fortress</h2>
+            <p class="content-text mb-6">Vertex's competitive advantage is one of the strongest in the biotechnology industry. It is built on a deep scientific understanding of cystic fibrosis, a dominant intellectual property estate, and the high barriers to entry in developing complex therapies for rare diseases.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Scientific Leadership in CF:</strong> Decades of focused research have given Vertex an unparalleled understanding of the CFTR protein, allowing it to create a portfolio of best-in-class medicines that no competitor has been able to match.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Intellectual Property:</strong> A wall of patents protects Vertex's CF modulators from generic competition, ensuring long-duration profitability from its core franchise.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Financial Strength:</strong> The massive cash flow from the CF franchise provides a significant R&D and business development budget, allowing Vertex to out-invest potential competitors and pursue high-risk, high-reward science.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">In Cystic Fibrosis:</strong> Currently, there are no direct competitors to Vertex's CFTR modulators. Potential future competition could come from companies developing gene therapies or other novel approaches.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">In Pain Management:</strong> The market for non-opioid pain relief is large and attracts competition from numerous large and small pharmaceutical companies.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">In Type 1 Diabetes:</strong> The cell therapy space for T1D is highly innovative and competitive, with several biotech companies pursuing similar curative approaches.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Vertex presents a unique investment case: a highly profitable, monopolistic business funding a high-risk, high-reward pipeline. The company's future is a story of balancing the durability of its core franchise with the binary outcomes of clinical-stage drug development.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Durable CF Monopoly:</strong> The CF franchise is expected to continue growing and generating massive cash flow for years to come, providing a stable foundation.</li>
+                        <li><strong>Multiple "Shots on Goal":</strong> The diversified pipeline offers several opportunities for a major blockbuster win in large markets like pain and diabetes.</li>
+                        <li><strong>Pipeline De-risking:</strong> Positive late-stage data from any of its key pipeline assets could be a significant catalyst for the stock.</li>
+                        <li><strong>Financial Firepower:</strong> The company has the resources to continue to acquire promising external assets to supplement its internal pipeline.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Clinical Trial Risk:</strong> The primary risk is the binary nature of drug development. A failure in a key late-stage trial, particularly in the pain or diabetes programs, would be a major setback.</li>
+                        <li><strong>Concentration Risk:</strong> The company is still overwhelmingly dependent on the success of its CF franchise. Any unforeseen threat to this business would have a massive impact.</li>
+                        <li><strong>Competition in New Markets:</strong> As Vertex expands, it will face entrenched and well-funded competitors in its new therapeutic areas.</li>
+                        <li><strong>Valuation:</strong> The stock's premium valuation already prices in a degree of pipeline success, creating high expectations that must be met.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Vertex Pharmaceuticals Inc. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // CF Revenue Chart
+        const cfRevenueCtx = document.getElementById('cfRevenueChart').getContext('2d');
+        new Chart(cfRevenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+                datasets: [{
+                    label: 'TRIKAFTA/KAFTRIO Revenue ($B)',
+                    data: [5.7, 7.6, 8.9, 9.8],
+                    backgroundColor: CHART_COLORS.violet + 'BF',
+                    borderColor: CHART_COLORS.violet,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { y: { beginAtZero: false, title: { display: true, text: 'Revenue ($B)' } } },
+                plugins: { legend: { display: false }, title: { display: true, text: 'Flagship Product Revenue Growth' } }
+            }
+        });
+        
+        // Pipeline Chart (Illustrative)
+        const pipelineCtx = document.getElementById('pipelineChart').getContext('2d');
+        new Chart(pipelineCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pain', 'Type 1 Diabetes', 'AMKD', 'Other'],
+                datasets: [{
+                    data: [35, 30, 20, 15], // Illustrative potential
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal, CHART_COLORS.orange],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Illustrative Pipeline Potential' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [6.21, 7.57, 8.95, 9.87, 10.51], label: 'Product Revenue ($B)', color: CHART_COLORS.violet },
+            netIncome: { data: [3.31, 3.72, 3.34, 3.63, 4.05], label: 'GAAP Net Income ($B)', color: CHART_COLORS.sky },
+            rdExpense: { data: [1.73, 2.24, 2.76, 3.51, 3.12], label: 'R&D Expense ($B)', color: CHART_COLORS.teal }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [2490, 2480, 2520, 2570, 2600, 2650, 2750, 2690], label: 'Product Revenue ($M)', color: CHART_COLORS.violet },
+            netIncome: { data: [889, 878, 895, 916, 980, 1050, 1100, 1070], label: 'GAAP Net Income ($M)', color: CHART_COLORS.sky }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'rdExpense';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

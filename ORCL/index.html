@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle Corp. (ORCL) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Oracle (ORCL) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Oracle: A Tech Titan's Cloud & AI Offensive</h2>
+            <p class="content-text mb-6">Oracle Corporation (NYSE: ORCL), a cornerstone of the enterprise software industry, is executing an aggressive and high-stakes pivot to become a dominant force in cloud computing and artificial intelligence. Long known for its commanding position in on-premise databases, Oracle is now challenging the cloud hyperscalers with its high-performance Oracle Cloud Infrastructure (OCI). Recent strategic partnerships with AI leaders like OpenAI and Google, coupled with surging cloud demand, signal that Oracle's multi-year transformation is gaining significant momentum. This analysis explores Oracle's evolving business model, its impressive financial metrics, and its competitive strategy in the new era of computing.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Oracle's strategy is a focused assault on the cloud and AI markets:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">OCI Hyper-Growth:</strong> Aggressively investing in data center expansion and high-performance computing to capture a larger share of the cloud infrastructure market.</li>
+                        <li><strong class="font-semibold text-gray-700">AI Infrastructure Provider:</strong> Positioning OCI as the premier platform for training and deploying large language models (LLMs) through partnerships and superior performance.</li>
+                        <li><strong class="font-semibold text-gray-700">Leveraging the Database Moat:</strong> Migrating its massive on-premise database customer base to the cloud and offering unique multi-cloud database capabilities.</li>
+                        <li><strong class="font-semibold text-gray-700">Integrated Application Suite:</strong> Driving growth in its cloud-based ERP (Fusion) and NetSuite applications, offering a fully integrated stack from infrastructure to apps.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Remaining Performance Obligations (RPO) - Q4 FY25</p>
+                    <p class="kpi-value text-violet-600">$98 Billion</p>
+                    <p class="content-text text-sm mt-2">This massive backlog of contracted future revenue, up 44% year-over-year, provides strong visibility into the durability of Oracle's cloud growth.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Oracle Makes Money: The Cloud Transition</h2>
+            <p class="content-text mb-6">Oracle's business model is undergoing a profound shift. While the highly profitable maintenance fees from its legacy on-premise software still form a large, stable base, the future is all about the cloud. The company's revenue is now primarily driven by its Cloud Services and License Support segment, which is seeing explosive growth in its infrastructure-as-a-service (IaaS) component.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="cloud">Cloud Services & License Support</button>
+                    <button class="segment-tab-button" data-target="onprem">Cloud & On-Premise License</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="cloudContent" class="segment-content">
+                    <h3 class="subsection-title">Cloud Services & License Support</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is Oracle's largest and most important segment, representing over <span class="highlight">80%</span> of total revenue. It combines the steady, high-margin recurring revenue from legacy support contracts with the hyper-growth revenue from cloud services.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Cloud Infrastructure (OCI):</strong> The fastest-growing component, offering high-performance compute, storage, and networking for AI and enterprise workloads.</li>
+                                <li><strong>Cloud Applications (SaaS):</strong> A comprehensive suite of enterprise applications, including Fusion ERP, NetSuite ERP, and industry-specific apps.</li>
+                                <li><strong>License Support:</strong> Highly profitable maintenance fees for on-premise software installations.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="onpremContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Cloud & On-Premise License</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment represents the upfront sale of new software licenses for customers to run in their own data centers or in the Oracle Cloud. While this business is shrinking as a percentage of total revenue, it remains a significant source of cash flow and a key funnel for future cloud and support revenue.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                 <li><strong>Database Licenses:</strong> The classic Oracle database software.</li>
+                                 <li><strong>Application Licenses:</strong> Upfront licenses for on-premise versions of Oracle's enterprise applications.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="ociGrowthChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Oracle is a financial juggernaut, consistently generating strong revenue, profitability, and massive free cash flow. The key story in its financials is the accelerating growth of its cloud business, particularly OCI, which is now large enough to drive the company's overall growth rate higher. The company's commitment to returning capital to shareholders through dividends and buybacks remains a core tenet of its financial strategy.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY21-FY25)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">GAAP Operating Income ($B)</option>
+                            <option value="freeCashFlow">Free Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="ociRevenue">Cloud Infrastructure (IaaS) Revenue ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts clearly illustrate the powerful acceleration in Oracle's cloud infrastructure business, which is now driving the company's overall growth trajectory higher.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Integrated Tech Stack</h2>
+            <p class="content-text mb-6">Oracle's competitive advantage is built on its massive, sticky customer base for its mission-critical database and applications, and its unique ability to offer a fully integrated stack of technology, from infrastructure to applications.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Entrenched Enterprise Presence:</strong> The Oracle database is the bedrock of countless large enterprises worldwide. This creates extremely high switching costs and a captive audience for Oracle's cloud offerings.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Full-Stack Integration:</strong> Oracle is one of the only companies that can offer a complete, integrated suite of technology, from the infrastructure layer (OCI) to the database layer to the application layer (Fusion, NetSuite).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High-Performance Infrastructure:</strong> OCI has developed a reputation for high performance and cost-effectiveness, particularly for demanding AI and database workloads, which is attracting new customers.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Cloud Hyperscalers:</strong> Amazon Web Services (AWS), Microsoft Azure, and Google Cloud are the primary competitors in the cloud infrastructure market.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Enterprise SaaS Providers:</strong> SAP, Salesforce, and Workday are major competitors in the cloud applications (SaaS) market.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Database Alternatives:</strong> A growing number of open-source and cloud-native database solutions (e.g., Snowflake, MongoDB) are competing with Oracle's core database business.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Oracle is making a powerful and convincing move into the cloud and AI markets. Its future success will depend on its ability to continue its hyper-growth in OCI, successfully compete with the established cloud giants, and leverage its new AI partnerships to drive growth across its entire business.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>AI Infrastructure Boom:</strong> The massive global demand for AI training and inference capacity presents a generational opportunity for OCI to capture significant market share.</li>
+                        <li><strong>Cloud Migration Runway:</strong> A large portion of Oracle's on-premise customer base has yet to migrate to the cloud, providing a long runway for continued growth.</li>
+                        <li><strong>Margin Expansion:</strong> As the high-growth cloud business scales, it has the potential to drive significant operating margin expansion for the company as a whole.</li>
+                        <li><strong>Stock Re-rating:</strong> If Oracle continues to execute on its cloud and AI strategy, its stock could see a further re-rating as the market recognizes it as a true cloud growth company.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Intense Competition:</strong> Competing with the scale, resources, and developer ecosystems of AWS, Microsoft, and Google is a formidable challenge.</li>
+                        <li><strong>Execution Risk:</strong> Oracle's ambitious data center build-out and its ability to meet the massive demand from its new AI partners require flawless execution.</li>
+                        <li><strong>High Capital Expenditures:</strong> The rapid expansion of its cloud infrastructure requires significant capital investment, which could pressure free cash flow in the near term.</li>
+                        <li><strong>Legacy Business Decline:</strong> The eventual decline of the highly profitable on-premise license and support business is a long-term headwind that the cloud business must overcome.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Oracle Corporation public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Cloud Services & License Support', 'Cloud & On-Premise License', 'Hardware', 'Services'],
+                datasets: [{
+                    data: [82, 9, 5, 4], // Approx. FY2025 percentages
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal, CHART_COLORS.orange],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment (FY2025)' } }
+            }
+        });
+        
+        // OCI Growth Chart
+        const ociGrowthCtx = document.getElementById('ociGrowthChart').getContext('2d');
+        new Chart(ociGrowthCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25', 'Q4 25'],
+                datasets: [{
+                    label: 'OCI Revenue Growth (YoY %)',
+                    data: [66, 52, 49, 44, 45, 47, 50, 52],
+                    backgroundColor: CHART_COLORS.sky + 'BF',
+                    borderColor: CHART_COLORS.sky,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { y: { beginAtZero: false, title: { display: true, text: 'YoY Growth %' } } },
+                plugins: { legend: { display: false }, title: { display: true, text: 'Oracle Cloud Infrastructure (OCI) Growth' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end May 31)
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
+            totalRevenue: { data: [40.5, 42.4, 50.0, 53.0, 57.4], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            operatingIncome: { data: [15.1, 10.9, 13.0, 15.3, 17.7], label: 'GAAP Operating Income ($B)', color: CHART_COLORS.sky },
+            freeCashFlow: { data: [13.8, 5.0, 8.5, 9.7, 11.8], label: 'Free Cash Flow ($B)', color: CHART_COLORS.teal }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25', 'Q4 25', 'FY26 Q1 (E)'],
+            totalRevenue: { data: [12.9, 13.3, 14.3, 13.3, 14.1, 14.1, 15.9, 16.2], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            ociRevenue: { data: [1.6, 1.8, 1.9, 1.7, 1.9, 2.1, 3.0, 3.5], label: 'Cloud Infrastructure (IaaS) Revenue ($B)', color: CHART_COLORS.sky }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'freeCashFlow';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

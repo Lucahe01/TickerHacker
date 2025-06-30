@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderna, Inc. (MRNA) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Moderna (MRNA) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Moderna: The mRNA Pioneer Beyond the Pandemic</h2>
+            <p class="content-text mb-6">Moderna, Inc. (NASDAQ: MRNA) is a biotechnology company that became a global name by pioneering a new class of medicines based on messenger RNA (mRNA). Its groundbreaking COVID-19 vaccine, Spikevax, demonstrated the power and speed of its platform technology. Now, Moderna is at a critical transition point, aiming to leverage its scientific leadership and substantial cash reserves to evolve from a single-product pandemic story into a diversified powerhouse of mRNA-based vaccines and therapeutics. This analysis explores Moderna's platform-based business model, its financial state, and its high-stakes future.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Moderna's strategy is focused on maximizing the potential of its mRNA platform:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Platform Expansion:</strong> Leveraging its core mRNA technology to build a broad pipeline of candidates across multiple therapeutic areas.</li>
+                        <li><strong class="font-semibold text-gray-700">Focus on Unmet Needs:</strong> Targeting diseases with significant unmet needs where mRNA technology can offer a differentiated solution, such as infectious diseases, oncology, and rare diseases.</li>
+                        <li><strong class="font-semibold text-gray-700">Heavy R&D Investment:</strong> Aggressively investing the capital generated from Spikevax into research and development to accelerate its pipeline and bring new products to market.</li>
+                        <li><strong class="font-semibold text-gray-700">Preparing for Commercialization:</strong> Building out its global commercial infrastructure to support the potential launch of multiple new products in the coming years.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Cash & Investments (Q1 2025)</p>
+                    <p class="kpi-value text-violet-600">$12.2 Billion</p>
+                    <p class="content-text text-sm mt-2">Moderna's massive cash pile provides the financial strength and flexibility to fund its ambitious, long-term R&D pipeline without relying on external financing.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Moderna Makes Money: A Bet on the Pipeline</h2>
+            <p class="content-text mb-6">Currently, nearly all of Moderna's revenue comes from the sale of its COVID-19 vaccine, Spikevax. However, the company's business model and long-term value are predicated on the success of its deep and diverse development pipeline. The company is organized around key therapeutic areas, each representing a potential future revenue stream.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="covid">COVID-19 Franchise</button>
+                    <button class="segment-tab-button" data-target="respiratory">Respiratory Vaccines</button>
+                    <button class="segment-tab-button" data-target="oncology">Oncology & Other</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="covidContent" class="segment-content">
+                    <h3 class="subsection-title">COVID-19 Franchise</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is Moderna's only commercial product to date. While sales have declined significantly from their pandemic peak, Spikevax continues to generate revenue and provides crucial cash flow to fund the company's R&D efforts. Future revenue depends on the evolution of the virus and public health recommendations for annual boosters.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="covidRevenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="respiratoryContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Respiratory Vaccines (The Next Wave)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is the most critical area for Moderna's near-term future. The company has late-stage vaccine candidates for other major respiratory viruses and is pioneering combination vaccines, which could become a new standard of care.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                 <li><strong>RSV Vaccine:</strong> A vaccine for respiratory syncytial virus, a major cause of illness in infants and older adults, awaiting regulatory approval.</li>
+                                 <li><strong>Seasonal Flu Vaccine:</strong> An mRNA-based flu shot that could offer broader protection than traditional vaccines.</li>
+                                 <li><strong>Combination Vaccines:</strong> A single shot combining COVID-19 and flu vaccines, offering greater convenience.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="pipelineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                 <div id="oncologyContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Oncology & Other Therapeutics</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This represents the long-term, high-risk, high-reward potential of the mRNA platform. Moderna is exploring therapies for a wide range of difficult-to-treat diseases.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Personalized Cancer Vaccines (PCV):</strong> In partnership with Merck, developing vaccines tailored to a patient's individual tumor.</li>
+                                <li><strong>Latent Virus Vaccines:</strong> Developing vaccines for viruses like CMV and EBV.</li>
+                                <li><strong>Rare Disease Therapies:</strong> Exploring mRNA therapies for rare genetic disorders.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">R&D Investment</p>
+                             <p class="kpi-value text-teal-600">$4.5B+</p>
+                             <p class="content-text text-sm mt-2">Moderna's massive annual R&D spend underscores its commitment to advancing this broad and ambitious pipeline.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Moderna's financial story is unique. The company experienced an unprecedented ramp-up in revenue and profitability during the pandemic. It is now in a "post-pandemic" phase, characterized by declining COVID-19 sales and a significant increase in R&D investment, leading to net losses. The company's future financial performance is entirely dependent on the successful commercialization of its pipeline products.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="netIncome">GAAP Net Income/(Loss) ($B)</option>
+                            <option value="rdExpense">R&D Expense ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                            <option value="netIncome">GAAP Net Income/(Loss) ($M)</option>
+                             <option value="rdExpense">R&D Expense ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts clearly show the peak and subsequent decline of pandemic-era revenue, and the corresponding shift from massive profits to significant net losses driven by escalating R&D investment.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The mRNA Platform</h2>
+            <p class="content-text mb-6">Moderna's competitive advantage is rooted in its pioneering and proprietary mRNA technology platform. This platform allows for rapid design and development of new drug candidates, a capability that was powerfully demonstrated during the COVID-19 pandemic.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary mRNA Platform:</strong> Years of focused research have given Moderna a deep understanding of mRNA science, from sequence design to manufacturing, creating a significant technological lead.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Speed and Scalability:</strong> The digital and programmable nature of mRNA allows Moderna to move from vaccine design to clinical trials in record time, a key advantage in responding to new infectious threats.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Strong Balance Sheet:</strong> A massive cash position provides the capital to fund a broad and ambitious pipeline and out-invest smaller competitors without needing to raise additional funds.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Pfizer/BioNTech:</strong> The primary competitor in the mRNA vaccine space, particularly for COVID-19 and now likely for flu and other combination shots.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Traditional Vaccine Makers:</strong> Established giants like GSK and Sanofi are major competitors in the respiratory vaccine market (RSV, flu) with their traditional protein-based vaccines.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Biotech Companies:</strong> A growing number of biotech firms are developing their own mRNA and other novel vaccine/therapeutic platforms, creating a dynamic and competitive R&D landscape.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Investing in Moderna is a high-risk, high-reward proposition based on the future of its technology platform. The company's success is almost entirely dependent on its ability to convert its ambitious pipeline into a portfolio of commercially successful products.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Multiple Near-Term Catalysts:</strong> Potential regulatory approvals and launches for RSV and flu vaccines in the near future could create significant new revenue streams.</li>
+                        <li><strong>Combination Vaccine Market:</strong> A successful COVID-flu combination vaccine could capture a large share of the annual respiratory vaccine market.</li>
+                        <li><strong>Personalized Cancer Vaccine (PCV):</strong> While early-stage, positive data from the PCV program could represent a massive long-term opportunity and a paradigm shift in cancer treatment.</li>
+                        <li><strong>Platform Potential:</strong> The ultimate bull case is that the mRNA platform proves to be a true "drug discovery engine," capable of producing a steady stream of new medicines for years to come.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Pipeline & Clinical Trial Risk:</strong> Drug development is inherently uncertain. Any failure in a late-stage clinical trial for a key product (e.g., RSV, flu) would be a major setback.</li>
+                        <li><strong>Commercial Execution Risk:</strong> Moderna has limited experience in commercializing multiple products simultaneously and will be competing against established players with deep commercial expertise.</li>
+                        <li><strong>Declining COVID-19 Market:</strong> The predictable decline in Spikevax sales creates a significant revenue headwind that the pipeline must overcome.</li>
+                        <li><strong>Valuation Uncertainty:</strong> Valuing a company based on a pipeline of unapproved products is extremely difficult, leading to high stock price volatility.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Moderna, Inc. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // COVID Revenue Chart
+        const covidRevenueCtx = document.getElementById('covidRevenueChart').getContext('2d');
+        new Chart(covidRevenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'Spikevax Revenue ($B)',
+                    data: [18.5, 19.3, 6.7, 4.8],
+                    backgroundColor: CHART_COLORS.violet + 'BF',
+                    borderColor: CHART_COLORS.violet,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { y: { beginAtZero: false, title: { display: true, text: 'Revenue ($B)' } } },
+                plugins: { legend: { display: false }, title: { display: true, text: 'COVID-19 Vaccine Sales' } }
+            }
+        });
+        
+        // Pipeline Chart (Illustrative)
+        const pipelineCtx = document.getElementById('pipelineChart').getContext('2d');
+        new Chart(pipelineCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Phase 3', 'Phase 2', 'Phase 1'],
+                datasets: [{
+                    label: 'Number of Programs in Pipeline',
+                    data: [8, 10, 25],
+                    backgroundColor: [CHART_COLORS.darkViolet, CHART_COLORS.violet, CHART_COLORS.sky],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: { x: { beginAtZero: true, title: { display: true, text: '# of Programs' } } },
+                plugins: { legend: { display: false }, title: { display: true, text: 'Moderna\'s Development Pipeline' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end Dec 31)
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [0.8, 18.5, 19.3, 6.8, 4.8], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            netIncome: { data: [-0.7, 12.2, 8.4, -4.7, -6.0], label: 'GAAP Net Income/(Loss) ($B)', color: CHART_COLORS.sky },
+            rdExpense: { data: [1.4, 2.0, 3.3, 4.5, 4.8], label: 'R&D Expense ($B)', color: CHART_COLORS.teal }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [344, 1828, 2810, 1789, 250, 1800, 2500, 167], label: 'Total Revenue ($M)', color: CHART_COLORS.violet },
+            netIncome: { data: [-1380, -3630, 217, -980, -1100, -3900, -1000, -3000], label: 'GAAP Net Income/(Loss) ($M)', color: CHART_COLORS.sky },
+            rdExpense: { data: [1100, 1200, 1150, 1100, 1100, 1200, 1400, 1080], label: 'R&D Expense ($M)', color: CHART_GEO_Political_MapS.teal }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'rdExpense';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

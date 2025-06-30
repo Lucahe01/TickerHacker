@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreWeave, Inc. (CRWV) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">CoreWeave (CRWV) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">CoreWeave: The AI Hyperscaler</h2>
+            <p class="content-text mb-6">CoreWeave, Inc. (NASDAQ: CRWV) has emerged as a pivotal player in the artificial intelligence revolution, branding itself as "the AI Hyperscaler." It is a specialized cloud provider hyper-focused on delivering the most advanced, large-scale GPU-accelerated computing infrastructure. By providing on-demand access to a massive fleet of NVIDIA's top-tier GPUs, CoreWeave enables AI developers, from innovative startups to major enterprises, to train, serve, and deploy the most demanding AI models. Following its landmark IPO in March 2025, CoreWeave's performance is closely watched as a key indicator of the health and trajectory of the entire AI infrastructure market.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">CoreWeave's strategy is built on specialization, partnership, and performance:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">GPU Specialization:</strong> Focusing exclusively on providing the best and most scalable GPU infrastructure, rather than competing with the broad service catalogs of general-purpose clouds.</li>
+                        <li><strong class="font-semibold text-gray-700">Deep NVIDIA Partnership:</strong> Leveraging a close, strategic relationship with NVIDIA to gain priority access to the latest and most powerful GPUs (like the H100 and Blackwell series).</li>
+                        <li><strong class="font-semibold text-gray-700">Performance and Flexibility:</strong> Offering superior performance for AI workloads through a highly optimized network and infrastructure stack, with flexible, usage-based pricing.</li>
+                        <li><strong class="font-semibold text-gray-700">Aggressive Infrastructure Build-out:</strong> Rapidly expanding its data center footprint and GPU capacity to meet the insatiable demand from the AI industry.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Full Year 2024 Revenue</p>
+                    <p class="kpi-value text-violet-600">$1.9 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents a staggering 737% year-over-year growth, highlighting the explosive demand for the company's specialized AI cloud services.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How CoreWeave Makes Money: The AI Compute Utility</h2>
+            <p class="content-text mb-6">CoreWeave operates a straightforward, yet powerful, business model. It acts as a utility for artificial intelligence, providing the raw computational power necessary for modern AI development. The company's revenue is generated almost entirely from providing access to its GPU-accelerated cloud infrastructure.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="gpu">GPU-as-a-Service</button>
+                    <button class="segment-tab-button" data-target="clients">Key Client Profile</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="gpuContent" class="segment-content">
+                    <h3 class="subsection-title">GPU-as-a-Service</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The core of CoreWeave's business is offering its massive fleet of NVIDIA GPUs as a rentable, on-demand service. This allows customers to access the computational power they need for a variety of tasks without the massive upfront cost and complexity of building their own infrastructure.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>AI Model Training:</strong> The most computationally intensive task, requiring large clusters of GPUs for extended periods.</li>
+                                <li><strong>Inference:</strong> Running trained AI models to generate responses, images, or other outputs.</li>
+                                <li><strong>VFX Rendering & Scientific Computing:</strong> Serving other high-performance computing (HPC) workloads.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="clientsContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Key Client Profile</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">CoreWeave's customer base consists of companies at the forefront of the AI revolution. While this provides access to the fastest-growing part of the market, it also leads to significant customer concentration.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                 <li><strong>Leading AI Labs:</strong> Companies developing foundational large language models.</li>
+                                 <li><strong>Generative AI Startups:</strong> Well-funded startups building new AI-powered applications.</li>
+                                 <li><strong>Enterprises:</strong> Large corporations adopting generative AI for internal and external use cases.</li>
+                                 <li><strong>Major Partner:</strong> Microsoft is a key client, using CoreWeave's infrastructure to supplement its own Azure capacity for OpenAI's needs.</li>
+                            </ul>
+                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Customer Concentration</p>
+                             <p class="kpi-value text-sky-600">77%</p>
+                             <p class="content-text text-sm mt-2">In 2024, the top two customers accounted for 77% of total revenue, highlighting a key risk for the company.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">CoreWeave's financial profile is a quintessential "hypergrowth" story. The company is experiencing an unprecedented ramp-up in revenue, but this is accompanied by significant net losses and negative free cash flow. This is due to the massive capital expenditures required to acquire tens of thousands of expensive NVIDIA GPUs and build out data centers. The key investment debate centers on when, and if, this explosive growth will translate into sustainable profitability.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2023-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                            <option value="netLoss">GAAP Net Loss ($M)</option>
+                             <option value="ebitda">Adjusted EBITDA ($M)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Since IPO)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="netLoss">GAAP Net Loss ($M)</option>
+                             <option value="ebitda">Adjusted EBITDA ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">Note: As a newly public company, the historical financial data is limited. The charts illustrate the explosive revenue growth alongside significant investments and losses.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The NVIDIA Advantage</h2>
+            <p class="content-text mb-6">In a market with some of the largest and most powerful companies in the world, CoreWeave's competitive advantage is built on its specialization, its speed, and, most importantly, its symbiotic relationship with the undisputed leader in AI silicon, NVIDIA.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Priority Access to NVIDIA GPUs:</strong> CoreWeave's deep partnership with NVIDIA gives it priority access to the latest and most powerful GPUs. In a supply-constrained market, this is a massive competitive advantage.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Specialization and Expertise:</strong> By focusing solely on high-performance GPU clouds, CoreWeave has developed deep expertise in designing and operating the specific infrastructure that AI workloads require, often outperforming the more general-purpose offerings of larger rivals.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Speed and Agility:</strong> As a smaller, more focused company, CoreWeave can often move faster to deploy new technologies and respond to customer needs than the massive cloud hyperscalers.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Cloud Hyperscalers:</strong> Amazon Web Services (AWS), Microsoft Azure, and Google Cloud are the primary competitors, all of whom are investing billions to build out their own AI infrastructure.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Specialized Cloud Providers:</strong> Companies like Lambda Labs and other venture-backed startups are also competing to provide specialized GPU cloud services.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">On-Premise Build-outs:</strong> The alternative for very large customers is to build their own AI data centers, although this is extremely expensive and complex.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">CoreWeave is a pure-play investment in the AI infrastructure boom. The potential rewards are astronomical if the demand for AI compute continues on its current trajectory, but the risks are equally substantial given the competitive landscape and the company's financial profile.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Massive Secular Growth:</strong> The demand for AI training and inference is the strongest secular growth trend in the technology market today, providing a powerful tailwind.</li>
+                        <li><strong>Leading-Edge Technology:</strong> CoreWeave's access to the latest NVIDIA hardware makes it the go-to provider for companies that need the absolute best performance.</li>
+                        <li><strong>Potential for Profitability at Scale:</strong> If the company can continue to grow its revenue base while its massive capital investments mature, it has the potential to become highly profitable.</li>
+                        <li><strong>Strategic Importance:</strong> As a key enabler of the AI ecosystem, CoreWeave could be a strategic acquisition target for a larger technology company or a major industrial firm.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Intense Competition from Hyperscalers:</strong> AWS, Microsoft, and Google have immense resources, existing customer relationships, and are aggressively competing for AI workloads.</li>
+                        <li><strong>Dependence on NVIDIA:</strong> The company's success is almost entirely dependent on its relationship with NVIDIA. Any change in this relationship or a shift in the AI chip market away from NVIDIA would be a major threat.</li>
+                        <li><strong>High Capital Intensity and Debt:</strong> The business requires a constant and massive infusion of capital to buy new hardware, creating significant financial risk. The company has a substantial debt load.</li>
+                        <li><strong>Customer Concentration:</strong> A very large percentage of revenue comes from a small number of customers, making the business vulnerable to the loss of any single client.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from CoreWeave, Inc. public filings (e.g., S-1) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'pie',
+            data: {
+                labels: ['GPU Compute', 'Other'],
+                datasets: [{
+                    data: [98, 2], // Illustrative percentages
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue Mix' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY23', 'FY24'],
+            totalRevenue: { data: [229, 1900], label: 'Total Revenue ($M)', color: CHART_COLORS.violet },
+            netLoss: { data: [-594, -863], label: 'GAAP Net Loss ($M)', color: CHART_COLORS.sky },
+            ebitda: { data: [-150, 350], label: 'Adjusted EBITDA ($M)', color: CHART_COLORS.teal } // Illustrative
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q4 24', 'Q1 25'],
+            totalRevenue: { data: [650, 982], label: 'Total Revenue ($M)', color: CHART_COLORS.violet },
+            netLoss: { data: [-51, -315], label: 'GAAP Net Loss ($M)', color: CHART_COLORS.sky },
+            ebitda: { data: [200, 416], label: 'Adjusted EBITDA ($M)', color: CHART_COLORS.teal }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'ebitda';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConocoPhillips (COP) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #0088CE; /* ConocoPhillips Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #3B82F6; /* Lighter Blue */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #EF4444; /* red-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #0088CE; /* ConocoPhillips Blue */
+            color: #FFFFFF;
+            border-color: #006FB3; 
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #0088CE; /* ConocoPhillips Blue */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-600 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #0088CE;">ConocoPhillips (COP) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">ConocoPhillips: A Global E&P Powerhouse</h2>
+            <p class="content-text mb-6">ConocoPhillips is one of the world's largest independent exploration and production (E&P) companies, focused on finding, developing, and producing crude oil and natural gas. After spinning off its downstream refining assets, the company has become a pure-play upstream operator with a globally diverse, low-cost portfolio. Its strategy, centered on a returns-focused value proposition, prioritizes disciplined capital allocation and robust shareholder returns over production growth at any cost. This approach was recently reinforced by the blockbuster <span class="highlight">$22.5 billion acquisition of Marathon Oil</span>, a move designed to bolster its low-cost U.S. unconventional asset base. This analysis explores ConocoPhillips's key operating regions, its financial framework, and its strategic position in the global energy market.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy: The Triple Mandate</h3>
+                    <p class="content-text mb-4">ConocoPhillips's strategy is focused on a "Triple Mandate":</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Meet Future Energy Demand:</strong> Responsibly and reliably produce oil and natural gas to meet the world's growing energy needs.</li>
+                        <li><strong class="font-semibold text-gray-700">Deliver Competitive Returns:</strong> Maintain a disciplined, returns-focused capital allocation framework to generate superior returns on and of capital through the commodity cycle.</li>
+                        <li><strong class="font-semibold text-gray-700">Achieve Net-Zero Ambition:</strong> Pursue its operational net-zero ambition by investing in technologies and projects that reduce the GHG emissions intensity of its operations.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Shareholder Return Commitment</p>
+                    <p class="kpi-value text-blue-800">>30% of CFO</p>
+                    <p class="content-text text-sm mt-2">The company is committed to returning over 30% of its cash from operations (CFO) to shareholders annually through dividends and buybacks.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How ConocoPhillips Makes Money: Geographic Segments</h2>
+            <p class="content-text mb-6">As a pure-play E&P company, ConocoPhillips's business is organized by geographic operating segments. The **Lower 48** is its largest and most important region, home to its high-quality unconventional assets. **Alaska** is another key domestic production hub, while its **International** portfolio provides diversification and exposure to global LNG markets.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="l48">Lower 48</button>
+                    <button class="segment-tab-button" data-target="alaska">Alaska</button>
+                    <button class="segment-tab-button" data-target="intl">International</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="l48Content" class="segment-content">
+                    <h3 class="subsection-title">Lower 48 (The Growth Engine)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the heart of ConocoPhillips's production and growth strategy. The segment holds premier, low-cost positions in the three major U.S. unconventional plays: the <span class="highlight">Permian Basin</span> (Delaware and Midland), the <span class="highlight">Eagle Ford</span> in South Texas, and the <span class="highlight">Bakken</span> in North Dakota. The recent acquisition of Marathon Oil significantly deepens its inventory of high-quality, short-cycle drilling locations in these key basins.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="segmentBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="alaskaContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Alaska</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">ConocoPhillips is the largest crude oil producer in Alaska and has been operating there for decades. Its operations are centered on the North Slope, including the giant Prudhoe Bay and Kuparuk River fields. The future of this segment is tied to the massive <span class="highlight">Willow project</span>, a multi-billion dollar development expected to produce oil for decades, though it faces significant environmental and regulatory scrutiny.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Key Future Project</p>
+                            <p class="kpi-value text-blue-800 text-2xl">Willow</p>
+                            <p class="content-text text-sm mt-2">A major, long-term development project on the Alaskan North Slope that is central to the company's future production profile.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="intlContent" class="segment-content hidden">
+                    <h3 class="subsection-title">International</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The international segment provides geographic diversification and exposure to key global markets. It includes production from conventional fields in regions like **Norway** and **Asia Pacific**, as well as a significant position in Canadian oil sands through its **Surmont** project. A cornerstone of the international strategy is its growing portfolio of **Liquefied Natural Gas (LNG)** projects, including equity stakes in facilities in Australia (APLNG) and Qatar, and offtake agreements for future U.S. projects.</p>
+                        </div>
+                        <div class="kpi-card bg-blue-50 border-blue-200 p-6 flex flex-col justify-center">
+                            <p class="kpi-label">Strategic Focus</p>
+                            <p class="kpi-value text-blue-800 text-2xl">LNG</p>
+                            <p class="content-text text-sm mt-2">ConocoPhillips is strategically expanding its global LNG portfolio to meet the growing demand for natural gas as a key energy transition fuel.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">As a pure-play E&P company, ConocoPhillips's financial results are inherently tied to volatile commodity prices. The company experienced record profitability in 2022 during the post-pandemic energy price spike, with results normalizing in 2023 and 2024. The company's disciplined cost structure and focus on low-cost supply allow it to generate strong cash flow even in more moderate price environments. A key metric is **Return on Capital Employed (ROCE)**, which measures how efficiently the company is using its capital to generate profits.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="netRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Production by Region (MBOED)</h3>
+                    <div class="mb-4">
+                         <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">View:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="segmentProduction" selected>Production by Region</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The yearly financial chart clearly shows the impact of the commodity cycle, with the peak in 2022. The quarterly production chart highlights the dominance of the Lower 48 segment in the company's overall production volumes.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Low-Cost Producer</h2>
+            <p class="content-text mb-6">ConocoPhillips has a wide and durable competitive moat built on the quality and low-cost nature of its asset base, its immense scale, and its disciplined capital allocation strategy. These factors allow it to generate superior returns through the cycles.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Low-Cost, High-Quality Asset Portfolio:</strong> This is the company's core advantage. It possesses a deep inventory of low-cost-of-supply resources, particularly in the U.S. unconventional basins. This means it can remain profitable even when oil and gas prices are low, a key differentiator from higher-cost producers.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Economies of Scale:</strong> As one of the world's largest independent E&P companies, ConocoPhillips benefits from massive scale in its operations, from negotiating with oilfield service providers to securing financing for major projects.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-700 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Disciplined Capital Allocation Framework:</strong> The company's strict, returns-focused approach to capital spending prevents it from chasing growth at any cost, leading to superior shareholder returns and balance sheet strength over the long term.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Integrated Supermajors:</strong> Competes globally with the upstream divisions of the major integrated oil companies like ExxonMobil and Chevron.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Large Independent E&Ps:</strong> Competes directly with other large U.S. independent E&P companies, particularly in the Permian Basin, such as EOG Resources and Pioneer Natural Resources (now part of ExxonMobil).</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                             <span class="content-text"><strong class="text-gray-700">National Oil Companies (NOCs):</strong> On a global scale, competes for resources and market access with large, state-owned oil companies.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">The investment thesis for ConocoPhillips is a bet on a best-in-class E&P operator with a high-quality, low-cost asset base and a shareholder-friendly capital return policy. The rewards are tied to its operational excellence and the price of oil and gas, while the risks are inherent to the volatile and capital-intensive energy sector.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Strong, Returns-Focused Capital Allocation:</strong> A clear and disciplined framework that prioritizes returning cash to shareholders, providing a strong and reliable total return proposition.</li>
+                        <li><strong>Deep, Low-Cost U.S. Unconventional Portfolio:</strong> The enhanced Permian and Eagle Ford position following the Marathon acquisition provides a deep inventory of high-return, short-cycle drilling opportunities.</li>
+                        <li><strong>Leverage to Oil & Gas Prices:</strong> The company is a direct beneficiary of any sustained period of high energy prices.</li>
+                        <li><strong>Growth in Global LNG:</strong> A growing portfolio of LNG assets provides long-term exposure to the global demand for natural gas as a key energy transition fuel.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Commodity Price Volatility:</strong> This is the paramount risk. The company's revenue, cash flow, and profitability are directly and powerfully exposed to the unpredictable fluctuations of global oil and gas prices.</li>
+                        <li><strong>Project Execution Risk:</strong> Faces significant execution risk on its large-scale, multi-billion dollar projects, such as the Willow project in Alaska, which are subject to potential delays and cost overruns.</li>
+                        <li><strong>Regulatory & Environmental Risk:</strong> The oil and gas industry faces increasing regulatory scrutiny and public pressure related to climate change, which could lead to stricter regulations, carbon taxes, and challenges in securing permits for new projects.</li>
+                        <li><strong>Integration Risk:</strong> Successfully integrating a massive acquisition like Marathon Oil and delivering on the promised cost and operational synergies is a significant management challenge.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from ConocoPhillips public filings and credible financial news sources as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#0088CE',
+            sky: '#3B82F6',
+            gray: '#6B7280',
+        };
+
+        // Segment Breakdown Chart (Doughnut)
+        const segmentBreakdownCtx = document.getElementById('segmentBreakdownChart').getContext('2d');
+        new Chart(segmentBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Lower 48', 'Alaska', 'International'],
+                datasets: [{
+                    label: 'FY2024 Production Mix',
+                    data: [63, 14, 23], // Approximate production % by region
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'FY2024 Production Mix by Region (%)' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            netRevenue: { data: [48.3, 78.8, 56.5, 58.2], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            operatingIncome: { data: [13.7, 36.4, 16.7, 18.2], label: 'Operating Income ($B)', color: CHART_COLORS.sky },
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            segmentProduction: {
+                datasets: [
+                    {
+                        label: 'Lower 48',
+                        data: [1.02, 1.05, 1.09, 1.15, 1.21, 1.25, 1.31, 1.46],
+                        backgroundColor: CHART_COLORS.blue
+                    },
+                    {
+                        label: 'Alaska',
+                        data: [0.22, 0.21, 0.23, 0.24, 0.23, 0.22, 0.25, 0.24],
+                        backgroundColor: CHART_COLORS.sky
+                    },
+                     {
+                        label: 'International',
+                        data: [0.45, 0.46, 0.48, 0.49, 0.50, 0.51, 0.52, 0.53],
+                        backgroundColor: CHART_COLORS.gray
+                    }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            // Robustly determine Y-axis title
+            let yAxisTitle = metricDetails.label; // Default to the full label
+            const labelParts = metricDetails.label.split('(');
+            if (labelParts.length > 1) {
+                yAxisTitle = labelParts[1].replace(')','');
+            }
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { 
+                                display: true, 
+                                text: yAxisTitle
+                            } 
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        function createQuarterlyChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'MBOED'} } 
+                    },
+                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Quarterly Production by Region (MBOED)' } }
+                }
+            });
+        }
+
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'netRevenue');
+        quarterlyChart = createQuarterlyChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'segmentProduction');
+
+    </script>
+</body>
+</html>
+

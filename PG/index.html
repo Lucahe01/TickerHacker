@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procter & Gamble (PG) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Procter & Gamble (PG) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Procter & Gamble: A Fortress of Brands</h2>
+            <p class="content-text mb-6">The Procter & Gamble Company (NYSE: PG) is a global consumer staples behemoth with one of the most powerful and recognizable brand portfolios in the world. From Tide and Pampers to Gillette and Crest, P&G products are a daily part of life for billions of consumers. The company's business model is built on a foundation of massive scale, best-in-class branding and marketing, and a relentless focus on product innovation. This analysis explores P&G's five core business segments, its consistent financial performance, and its strategic position as a defensive leader in the global consumer goods industry.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy: Superiority</h3>
+                    <p class="content-text mb-4">P&G's strategy is centered on an integrated set of choices designed to deliver "irresistibly superior" products and value:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">A Focused Portfolio:</strong> Concentrating on daily-use categories where product performance drives brand choice.</li>
+                        <li><strong class="font-semibold text-gray-700">Superiority Strategy:</strong> A commitment to delivering superior products, packaging, brand communication, retail execution, and value.</li>
+                        <li><strong class="font-semibold text-gray-700">Productivity and Cost Savings:</strong> A continuous focus on driving cost out of the business to fund investments in innovation and provide value to consumers.</li>
+                        <li><strong class="font-semibold text-gray-700">Global Brand Building:</strong> Leveraging its immense scale and marketing expertise to build and maintain iconic, category-leading brands around the world.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Fiscal 2024 Net Sales</p>
+                    <p class="kpi-value text-violet-600">$84.0 Billion</p>
+                    <p class="content-text text-sm mt-2">P&G's enormous sales base highlights its deep penetration into households across the globe and the essential nature of its products.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How P&G Makes Money: Five Core Segments</h2>
+            <p class="content-text mb-6">P&G's business is organized into five "Sector Business Units" (SBUs), each focused on a specific set of consumer needs and containing a portfolio of iconic, billion-dollar brands.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="fabric">Fabric & Home Care</button>
+                    <button class="segment-tab-button" data-target="baby">Baby, Feminine & Family Care</button>
+                    <button class="segment-tab-button" data-target="beauty">Beauty</button>
+                    <button class="segment-tab-button" data-target="health">Health Care</button>
+                    <button class="segment-tab-button" data-target="grooming">Grooming</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="fabricContent" class="segment-content">
+                    <h3 class="subsection-title">Fabric & Home Care</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is P&G's largest and most profitable segment, representing over a third of total company sales. It includes a portfolio of market-leading laundry detergents, fabric enhancers, and home cleaning products.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Brands:</strong> Tide, Ariel, Downy, Febreze, Swiffer.</li>
+                                <li><strong>Market Position:</strong> Global leader in the fabric care market.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="babyContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Baby, Feminine & Family Care</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment includes some of P&G's most essential products. It is a major contributor to revenue and profitability, with strong brand loyalty and a global presence.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                 <li><strong>Key Brands:</strong> Pampers, Luvs, Always, Tampax, Charmin, Bounty.</li>
+                                 <li><strong>Market Position:</strong> Global leader in baby care and feminine care.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Market Share</p>
+                             <p class="kpi-value text-sky-600">Leader</p>
+                             <p class="content-text text-sm mt-2">P&G holds a leading or significant market share in the vast majority of the categories in which it competes.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="beautyContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Beauty</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Beauty segment includes a range of hair care and skin & personal care products. P&G has a strong portfolio of iconic brands in this space, although it faces intense competition.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Brands:</strong> Pantene, Head & Shoulders, Olay, SK-II.</li>
+                             </ul>
+                        </div>
+                        <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">Hair Care Leadership</p>
+                             <p class="kpi-value text-teal-600">>20%</p>
+                             <p class="content-text text-sm mt-2">P&G holds over 20% of the global hair care market, driven by its powerhouse brands Pantene and Head & Shoulders.</p>
+                         </div>
+                    </div>
+                </div>
+                <div id="healthContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Health Care</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment focuses on oral care and personal health care products. It includes some of the most trusted and recognized brands in the world.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                 <li><strong>Key Brands:</strong> Crest, Oral-B, Vicks, Pepto-Bismol.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-orange-50 border-orange-200">
+                             <p class="kpi-label">Innovation Focus</p>
+                             <p class="kpi-value text-orange-600">Nervive</p>
+                             <p class="content-text text-sm mt-2">The successful launch of new brands like Nervive for nerve care demonstrates P&G's ability to innovate and create new categories.</p>
+                         </div>
+                    </div>
+                </div>
+                <div id="groomingContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Grooming</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Grooming segment is a global leader in shave care products for both men and women. While facing competition from new entrants, its brands remain dominant.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                 <li><strong>Key Brands:</strong> Gillette, Venus, Braun.</li>
+                                 <li><strong>Market Share:</strong> P&G holds over 60% of the global shave care market.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-stone-100 border-stone-200">
+                             <p class="kpi-label">Brand Dominance</p>
+                             <p class="kpi-value text-stone-600">Gillette</p>
+                             <p class="content-text text-sm mt-2">Gillette remains one of the most powerful and recognized brands in the world, a testament to P&G's brand-building expertise.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">P&G is a financial fortress, characterized by stable revenue growth, high and consistent profitability, and massive cash flow generation. The company's financial strategy is focused on delivering steady, balanced growth in both the top and bottom lines, and returning a significant amount of cash to shareholders through a combination of a strong dividend and share repurchases.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY21-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Net Sales ($B)</option>
+                            <option value="netEarnings">Net Earnings ($B)</option>
+                            <option value="coreEps">Core EPS ($)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Net Sales ($B)</option>
+                             <option value="organicSales">Organic Sales Growth (%)</option>
+                             <option value="coreEps">Core EPS ($)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show the remarkable consistency of P&G's business, with steady growth in sales and earnings, even in a volatile macroeconomic environment. Organic sales growth, which strips out the effects of currency and acquisitions, is a key indicator of the underlying health of the business.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Fortress of Brands and Scale</h2>
+            <p class="content-text mb-6">P&G's competitive advantage is one of the widest and most durable in the business world. It is built on a foundation of iconic brands, massive global scale, deep customer relationships, and a culture of innovation.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Iconic Brand Portfolio:</strong> P&G owns some of the most valuable and trusted brands in the world. This brand equity creates strong consumer loyalty and allows the company to command premium pricing.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Massive Scale & Distribution:</strong> The company's immense scale gives it significant purchasing power with suppliers and unparalleled access to shelf space with retailers globally.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Advertising & Marketing Prowess:</strong> P&G is one of the largest advertisers in the world, with deep expertise in building and maintaining brand awareness and consumer loyalty.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Global Consumer Goods Giants:</strong> Unilever, Colgate-Palmolive, and Kimberly-Clark are major global competitors across multiple product categories.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Retailer Private Label Brands:</strong> A growing threat as major retailers increasingly promote their own lower-priced store brands.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Niche & Direct-to-Consumer (DTC) Brands:</strong> A host of smaller, agile brands that are using digital marketing to target specific consumer segments.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">P&G is a quintessential blue-chip stock, offering stability, a strong and growing dividend, and modest but consistent growth. It is a defensive stalwart in any investment portfolio, though it is not immune to broader economic pressures and shifting consumer trends.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Defensive Business Model:</strong> Demand for P&G's essential household products is highly resilient, even during economic downturns.</li>
+                        <li><strong>Strong Shareholder Returns:</strong> A "Dividend King" with a multi-decade history of raising its dividend, supplemented by consistent share repurchases.</li>
+                        <li><strong>Pricing Power:</strong> The strength of its brands gives P&G the ability to pass on rising input costs to consumers, protecting its profit margins.</li>
+                        <li><strong>Growth in Emerging Markets:</strong> A significant long-term opportunity to increase penetration and per capita consumption in developing markets.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Macroeconomic Headwinds:</strong> A severe global recession could eventually lead to consumers trading down to cheaper private label brands.</li>
+                        <li><strong>Commodity Costs & FX:</strong> The company's profitability is sensitive to fluctuations in raw material costs and foreign currency exchange rates.</li>
+                        <li><strong>Competition from Private Label:</strong> The increasing quality and market share of retailer-owned private label brands is a significant long-term threat.</li>
+                        <li><strong>Shifting Consumer Preferences:</strong> The company must continue to innovate and adapt to evolving consumer preferences, particularly around sustainability and natural ingredients.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from The Procter & Gamble Company public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Fabric & Home', 'Baby, Feminine & Family', 'Beauty', 'Health Care', 'Grooming'],
+                datasets: [{
+                    data: [35, 25, 18, 13, 8], // Approximate percentages
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal, CHART_COLORS.orange, '#F472B6'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end June 30)
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [76.1, 80.2, 82.0, 84.0], label: 'Net Sales ($B)', color: CHART_COLORS.violet },
+            netEarnings: { data: [14.3, 14.7, 14.7, 14.9], label: 'Net Earnings ($B)', color: CHART_COLORS.sky },
+            coreEps: { data: [5.66, 5.81, 6.13, 6.59], label: 'Core EPS ($)', color: CHART_COLORS.teal }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25'],
+            totalRevenue: { data: [20.07, 20.55, 21.87, 21.44, 20.8, 21.0, 21.9, 21.5], label: 'Net Sales ($B)', color: CHART_COLORS.violet },
+            organicSales: { data: [7, 8, 5, 4, 3, 2, 1, 2], label: 'Organic Sales Growth (%)', color: CHART_COLORS.orange },
+            coreEps: { data: [1.37, 1.39, 1.59, 1.66, 1.45, 1.65, 1.89, 1.54], label: 'Core EPS ($)', color: CHART_COLORS.darkViolet }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'coreEps' || metricKey === 'organicSales';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

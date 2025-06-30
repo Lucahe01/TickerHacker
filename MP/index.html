@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MP Materials Corp. (MP) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">MP Materials (MP) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">MP Materials: America's Rare Earth Champion</h2>
+            <p class="content-text mb-6">MP Materials Corp. (NYSE: MP) is the largest producer of rare earth materials in the Western Hemisphere. The company owns and operates the Mountain Pass mine in California, a world-class deposit of rare earth elements that are essential components for a wide range of modern technologies, including electric vehicles, wind turbines, and defense systems. MP Materials is on a mission to restore the full rare earth supply chain to the United States, a goal of significant strategic importance. This analysis explores MP's vertically integrated business model, its financial sensitivity to commodity prices, and its unique position in a geopolitically charged market.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">MP Materials' strategy is a three-stage plan for vertical integration:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Stage I (Complete):</strong> Mine and process rare earth ore into a high-grade concentrate.</li>
+                        <li><strong class="font-semibold text-gray-700">Stage II (In Progress):</strong> Separate the concentrate into individual rare earth oxides (REOs), particularly Neodymium-Praseodymium (NdPr), at their Mountain Pass facility.</li>
+                        <li><strong class="font-semibold text-gray-700">Stage III (In Progress):</strong> Transform separated NdPr oxide into high-performance rare earth magnets at a new facility in Fort Worth, Texas, for use in EV motors and other high-tech applications.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Realized REO Price (Q1 2025)</p>
+                    <p class="kpi-value text-violet-600">$5,246 / mt</p>
+                    <p class="content-text text-sm mt-2">This is down significantly from over $14,000/mt in 2022, highlighting the extreme price volatility that directly impacts the company's revenue and profitability.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How MP Materials Makes Money: A Phased Approach</h2>
+            <p class="content-text mb-6">MP Materials' business model is evolving. Currently, all revenue is generated from Stage I operations. The successful execution of Stages II and III will transform the company from a simple commodity producer into a fully integrated, high-value materials technology company.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="stage1">Stage I: Concentrate</button>
+                    <button class="segment-tab-button" data-target="stage2">Stage II: Separation</button>
+                    <button class="segment-tab-button" data-target="stage3">Stage III: Magnets</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="stage1Content" class="segment-content">
+                    <h3 class="subsection-title">Stage I: Rare Earth Concentrate</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the company's current and sole source of revenue. MP mines rare earth ore, crushes it, and processes it into a concentrate containing a mix of rare earth elements. This concentrate is then sold, primarily to a single offtake partner in China for further processing.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Product:</strong> Mixed Rare Earth Oxide (REO) Concentrate.</li>
+                                <li><strong>Customer:</strong> Primarily Shenghe Resources, a Chinese rare earth company.</li>
+                                <li><strong>Profit Driver:</strong> The spread between the market price of REO and MP's cost of production.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="priceVsRevenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="stage2Content" class="segment-content hidden">
+                    <h3 class="subsection-title">Stage II: Separated Oxides</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is the crucial next step, which is currently being commissioned. By separating the concentrate into individual oxides at Mountain Pass, MP can capture significantly more value and sell directly to a wider range of customers outside of China. The most important product is NdPr oxide.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                 <li><strong>Product:</strong> Separated Neodymium-Praseodymium (NdPr) oxide, Lanthanum, Cerium.</li>
+                                 <li><strong>Value Proposition:</strong> Creates a Western supply of critical separated oxides and captures more of the value chain.</li>
+                                 <li><strong>Status:</strong> Commissioning in progress, with first sales expected soon.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Target Production</p>
+                             <p class="kpi-value text-sky-600">~6,000 mt/year</p>
+                             <p class="content-text text-sm mt-2">Target annual production of NdPr oxide, a key material for high-performance magnets used in EVs and wind turbines.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="stage3Content" class="segment-content hidden">
+                    <h3 class="subsection-title">Stage III: Magnets</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The ultimate goal of the vertical integration strategy. MP is building a facility in Texas to convert its separated NdPr oxide into finished NdFeB permanent magnets. This will create a complete "mine-to-magnet" domestic supply chain, a capability that does not currently exist in the U.S.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Product:</strong> Neodymium-Iron-Boron (NdFeB) permanent magnets.</li>
+                                <li><strong>Anchor Customer:</strong> General Motors has signed on as a foundational customer for the magnet facility.</li>
+                                <li><strong>Status:</strong> Facility under construction.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">Strategic Importance</p>
+                             <p class="kpi-value text-teal-600">National Security</p>
+                             <p class="content-text text-sm mt-2">Creating a domestic source of high-performance magnets is critical for the U.S. automotive and defense industries, reducing reliance on China.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">MP Materials' financial results are highly sensitive to the global price of rare earth elements. The company enjoyed massive profitability when prices spiked in 2021-2022 but has seen revenue and net income decline sharply as prices have normalized. The company is investing heavily in its downstream projects, which consumes significant capital, but it maintains a strong balance sheet with a healthy cash position and low debt.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                            <option value="netIncome">GAAP Net Income ($M)</option>
+                            <option value="adjustedEbitda">Adjusted EBITDA ($M)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="netIncome">GAAP Net Income/(Loss) ($M)</option>
+                            <option value="adjustedEbitda">Adjusted EBITDA ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts clearly show the direct correlation between revenue/profitability and the cyclical nature of rare earth commodity prices. The focus is now on executing downstream projects to capture more value.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Strategic National Asset</h2>
+            <p class="content-text mb-6">MP Materials' competitive advantage is rooted in its ownership of a unique, world-class asset and its position as the only scaled producer of rare earths in the United States, a factor of immense geopolitical significance.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">World-Class Ore Body:</strong> The Mountain Pass mine is one of the richest rare earth deposits in the world, with a high concentration of valuable NdPr, which gives it a structural cost advantage.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Geopolitical Importance:</strong> As the only scaled domestic source of rare earths, MP Materials has strong support from the U.S. government, including financial awards from the Department of Defense, creating a significant barrier to entry.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Vertical Integration Plan:</strong> The strategy to become a fully integrated "mine-to-magnet" producer would create a powerful moat that no other company in the Western Hemisphere currently possesses.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Chinese State-Owned Enterprises:</strong> The global rare earth market is dominated by a handful of Chinese state-owned producers who control the majority of mining, separation, and magnet manufacturing.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Lynas Rare Earths (Australia):</strong> The largest rare earth producer outside of China, operating a mine in Western Australia and a separation facility in Malaysia.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Development-Stage Projects:</strong> Numerous smaller companies are attempting to develop rare earth projects around the world, but most face significant technical, financial, and permitting hurdles.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Investing in MP Materials is a high-conviction bet on the long-term demand for critical materials and the successful execution of an ambitious industrial project. The potential rewards are substantial, but the risks are equally significant.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Secular Demand Growth:</strong> The global transition to electric vehicles and renewable energy will drive a massive, long-term increase in demand for NdPr magnets.</li>
+                        <li><strong>Value Chain Capture:</strong> Successfully completing Stages II and III will allow MP to capture significantly more of the value chain, moving from a low-margin concentrate producer to a high-margin magnet manufacturer.</li>
+                        "Western" Supply Chain Premium: Automakers and defense contractors may be willing to pay a premium for a secure, transparent, and ESG-friendly supply of rare earths from the U.S.</li>
+                        <li><strong>Government Support:</strong> Continued financial and political support from the U.S. government could de-risk the company's expansion projects.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Commodity Price Volatility:</strong> The company's financial performance is, and will remain, highly sensitive to the volatile and opaque pricing of rare earth elements, which is heavily influenced by China.</li>
+                        <li><strong>Execution Risk:</strong> There is significant technical and operational risk in commissioning the separation plant and building the magnetics facility on time and on budget.</li>
+                        <li><strong>Customer Concentration:</strong> The company is currently dependent on a single offtake partner (Shenghe) for all of its revenue.</li>
+                        <li><strong>Competitive Response from China:</strong> Chinese producers could use their market power to lower prices and make it difficult for non-Chinese producers to compete.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from MP Materials Corp. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // Price vs Revenue Chart
+        const priceVsRevenueCtx = document.getElementById('priceVsRevenueChart').getContext('2d');
+        new Chart(priceVsRevenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Q1 23', 'Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+                datasets: [
+                    {
+                        label: 'Revenue ($M)',
+                        data: [162, 98, 63, 67, 55, 64, 75, 54, 49],
+                        backgroundColor: CHART_COLORS.violet,
+                        yAxisID: 'yRevenue',
+                    },
+                    {
+                        label: 'Realized REO Price ($/mt)',
+                        data: [10800, 8100, 6200, 6000, 5500, 5800, 6100, 5300, 5246],
+                        backgroundColor: 'transparent',
+                        borderColor: CHART_COLORS.orange,
+                        type: 'line',
+                        yAxisID: 'yPrice',
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { 
+                    yRevenue: {
+                        position: 'left',
+                        title: { display: true, text: 'Revenue ($M)'}
+                    },
+                    yPrice: {
+                        position: 'right',
+                        title: { display: true, text: 'Realized Price ($/mt)'},
+                        grid: { display: false }
+                    }
+                },
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue vs. Commodity Price' } }
+            }
+        });
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end Dec 31)
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [134.3, 332.0, 567.5, 341.2, 252.8], label: 'Total Revenue ($M)', color: CHART_COLORS.violet },
+            netIncome: { data: [5.2, 134.8, 290.0, 71.0, 23.6], label: 'GAAP Net Income ($M)', color: CHART_COLORS.sky },
+            adjustedEbitda: { data: [36.0, 203.0, 410.0, 131.0, 50.1], label: 'Adjusted EBITDA ($M)', color: CHART_COLORS.teal }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [98, 63, 67, 55, 64, 75, 54, 49], label: 'Total Revenue ($M)', color: CHART_COLORS.violet },
+            netIncome: { data: [25, -2, -4, -15, -8, 2, -1, -24], label: 'GAAP Net Income/(Loss) ($M)', color: CHART_COLORS.sky },
+            adjustedEbitda: { data: [45, 10, 12, -2, 4, 15, 2, -15], label: 'Adjusted EBITDA ($M)', color: CHART_COLORS.teal }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'adjustedEbitda' || metricKey === 'netIncome';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berkshire Hathaway (BRK) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #4f46e5; /* indigo-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2563eb; /* blue-600 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #4f46e5; /* indigo-600 */
+            color: #FFFFFF;
+            border-color: #3730a3; /* indigo-800 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #4f46e5; /* indigo-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #4f46e5;">Berkshire Hathaway (BRK) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Berkshire Hathaway: A Conglomerate Like No Other</h2>
+            <p class="content-text mb-6">Berkshire Hathaway Inc. is a unique holding company that owns a vast and diverse collection of businesses outright, in addition to a massive portfolio of publicly traded stocks. Led for decades by legendary investor Warren Buffett, Berkshire's success is built on a disciplined, value-oriented philosophy of acquiring and holding high-quality companies with durable competitive advantages, or "moats." The company is best understood as a powerful combination of a world-class insurance operation that generates enormous, low-cost capital (the "float"), and a collection of high-performing, cash-generating operating businesses spanning railroads, utilities, manufacturing, and retail.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Philosophy: Built to Last</h3>
+                    <p class="content-text mb-4">Berkshire's strategy deviates significantly from typical corporate models:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Acquire Wonderful Businesses:</strong> Seek out companies with strong management teams, consistent earning power, and a durable competitive moat, purchased at a fair price.</li>
+                        <li><strong class="font-semibold text-gray-700">Decentralized Operations:</strong> Allow the managers of its subsidiary businesses to operate with extreme autonomy, freeing headquarters to focus on capital allocation.</li>
+                        <li><strong class="font-semibold text-gray-700">Leverage Insurance Float:</strong> Use the non-interest-bearing capital generated by its insurance businesses to acquire other companies and invest in stocks.</li>
+                        <li><strong class="font-semibold text-gray-700">Extreme Long-Term Focus:</strong> Make decisions based on decades-long outlooks, ignoring short-term market volatility and focusing on compounding intrinsic value over time.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-indigo-50 border-indigo-200">
+                    <p class="kpi-label">Cash & T-Bills (Q1 2025)</p>
+                    <p class="kpi-value text-indigo-600">$189 Billion</p>
+                    <p class="content-text text-sm mt-2">A record cash hoard provides immense financial strength, flexibility, and the "dry powder" to make a massive acquisition when opportunities arise.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Berkshire Makes Money: Four Engines of Value</h2>
+            <p class="content-text mb-6">Berkshire Hathaway's earnings are generated by a diverse set of businesses that can be grouped into four main segments. The insurance group is the foundational engine, providing capital for the other three: the essential services of a major railroad and a large energy utility, and a vast collection of manufacturing, service, and retail companies.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="insurance">Insurance</button>
+                    <button class="segment-tab-button" data-target="railroad">Railroad</button>
+                    <button class="segment-tab-button" data-target="energy">Utilities & Energy</button>
+                    <button class="segment-tab-button" data-target="msr">Manufacturing, Service & Retailing</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="insuranceContent" class="segment-content">
+                    <h3 class="subsection-title">Insurance (~25% of Operating Earnings)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the heart of Berkshire's financial model. The group, which includes GEICO, Berkshire Hathaway Reinsurance, and Alleghany, collects premiums from customers upfront. This cash, known as "float," can be invested for Berkshire's benefit before claims are paid out. The goal is to achieve an underwriting profit (premiums exceed expenses and losses), making the float a source of free, long-term capital.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Brands:</strong> GEICO, General Re, National Indemnity.</li>
+                                <li><strong>Primary Function:</strong> Generate low-cost investment capital ("float").</li>
+                                <li><strong>Insurance Float (FY2024):</strong> An astonishing $169 billion.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="earningsBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="railroadContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Railroad (BNSF) (~20% of Operating Earnings)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Burlington Northern Santa Fe (BNSF) is one of the largest railroad systems in North America. It is an essential artery of the U.S. economy, transporting consumer goods, agricultural products, and industrial materials across the western United States. Railroads are a duopoly in most regions, giving them significant pricing power and high barriers to entry.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Core Business:</strong> A capital-intensive, essential service with a strong competitive moat.</li>
+                                <li><strong>Key Metrics:</strong> Carloads (volume) and revenue per carload.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Economic Backbone</p>
+                             <p class="kpi-value text-sky-600">~15%</p>
+                             <p class="content-text text-sm mt-2">BNSF transports approximately 15% of the nation's intercity ton-miles, more than any other single company, highlighting its critical role in the U.S. economy.</p>
+                         </div>
+                    </div>
+                </div>
+                <div id="energyContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Utilities & Energy (BHE) (~10% of Operating Earnings)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Berkshire Hathaway Energy (BHE) owns a portfolio of regulated electric and natural gas utilities serving millions of customers across the U.S., U.K., and Canada. It also has a large and growing renewable energy business. Regulated utilities are granted monopolies in their service areas in exchange for rate regulation, leading to very stable and predictable earnings streams.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Brands:</strong> PacifiCorp, MidAmerican Energy.</li>
+                                <li><strong>Business Model:</strong> Highly regulated, capital-intensive, with a focus on renewable energy investment.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-teal-50 border-teal-200">
+                           <p class="kpi-label">Renewable Energy Leader</p>
+                           <p class="kpi-value text-teal-600">No. 1</p>
+                           <p class="content-text text-sm mt-2">BHE is the largest rate-regulated utility owner of renewable energy (wind and solar) in the United States.</p>
+                       </div>
+                    </div>
+                </div>
+                 <div id="msrContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Manufacturing, Service & Retailing (~45% of Op. Earnings)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is Berkshire's largest and most diverse group of businesses. It includes dozens of independently managed companies across a wide range of industries, from industrial manufacturing to retail.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Industrial Products:</strong> Precision Castparts (aerospace components), Lubrizol (specialty chemicals), Clayton Homes (manufactured housing).</li>
+                                <li><strong>Building Products:</strong> Shaw (carpeting), Benjamin Moore (paints), Johns Manville (insulation).</li>
+                                <li><strong>Consumer & Retail:</strong> See's Candies, Dairy Queen, Fruit of the Loom, Nebraska Furniture Mart.</li>
+                            </ul>
+                        </div>
+                         <div class="kpi-card bg-orange-50 border-orange-200">
+                            <p class="kpi-label">Major Public Stock Holdings</p>
+                            <p class="kpi-value text-orange-600">~$336 Billion</p>
+                            <p class="content-text text-sm mt-2">In addition to its owned businesses, Berkshire holds a massive stock portfolio, heavily concentrated in companies like Apple, Bank of America, and Coca-Cola.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Berkshire's financial statements are unique due to an accounting rule that requires changes in the value of its massive stock portfolio to be included in net income. For this reason, investors focus on <span class="highlight">Operating Earnings</span>, which excludes these volatile investment gains/losses and better reflects the true earning power of the underlying businesses. The company generates enormous and growing streams of cash, a testament to the quality of its subsidiaries.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingEarnings">Operating Earnings ($B)</option>
+                            <option value="operatingCashFlow">Operating Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="operatingEarnings">Operating Earnings ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">Financials show remarkable stability and growth in operating earnings, demonstrating the resilience of Berkshire's diversified business model across economic cycles.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Financial Fortress</h2>
+            <p class="content-text mb-6">Berkshire Hathaway's competitive moat is arguably the widest in the corporate world. It's not derived from a single product or service, but from its unique structure, scale, culture, and financial strength, which create a self-reinforcing system that is nearly impossible to replicate.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-indigo-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Structural Advantage (Insurance Float):</strong> Access to a massive, permanent, and low-cost pool of capital from its insurance operations provides an unparalleled advantage for making acquisitions and investments.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-indigo-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Diversification & Scale:</strong> The sheer diversity of cash-producing businesses creates extreme resilience. A downturn in one sector is often offset by strength in another. Its immense scale provides purchasing power and operational advantages.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-indigo-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Reputation & Culture:</strong> Berkshire is the preferred buyer for many family-owned businesses who want a permanent home for their company. The culture of trust and autonomy attracts and retains top-tier management talent.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-indigo-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Rational Capital Allocation:</strong> A famously disciplined and rational approach to deploying capital, focused entirely on maximizing long-term intrinsic value per share.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Competition</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">No Direct Competitor:</strong> No other single company competes with Berkshire as a whole. Its structure is unique.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Segment-Level Competition:</strong> Each of its subsidiaries faces strong competition in its respective industry (e.g., BNSF vs. Union Pacific; GEICO vs. Progressive).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Capital Competition:</strong> In the hunt for large acquisitions, Berkshire competes with private equity firms and other large corporations, though its ability to act quickly and offer a permanent home remains a key advantage.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Berkshire Hathaway's future is one of immense stability and continued cash generation. The primary challenge is not survival but efficiently deploying its ever-growing mountain of cash to continue compounding value at a meaningful rate. The inevitable leadership transition remains the largest uncertainty for investors.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-emerald-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Unmatched Financial Strength:</strong> The fortress balance sheet and massive cash hoard allow Berkshire to weather any economic storm and play offense during market dislocations.</li>
+                        <li><strong>Compounding Machine:</strong> The collection of high-quality, cash-generating businesses provides a steady stream of capital that can be reinvested to continue the compounding process.</li>
+                        <li><strong>Shareholder-Friendly Culture:</strong> A deeply ingrained culture of treating shareholders as partners, focused on increasing long-term intrinsic value per share.</li>
+                        <li><strong>Potential for a Massive Acquisition:</strong> The record cash pile gives Berkshire the capacity to make a transformative, "elephant-sized" acquisition that could meaningfully boost future earnings.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Key-Person Risk & Succession:</strong> The eventual departure of Warren Buffett represents the loss of an investing legend. While a successor is in place (Greg Abel), Buffett's unique capital allocation skill is irreplaceable.</li>
+                        <li><strong>The Law of Large Numbers:</strong> Berkshire's immense size makes it mathematically difficult to find investment opportunities large enough to have a significant impact on its overall growth rate.</li>
+                        <li><strong>Capital Deployment Challenge:</strong> The massive and growing cash pile can become a drag on returns if it cannot be deployed into attractive investments, earning only minimal returns in T-bills.</li>
+                        <li><strong>Regulatory & Political Risk:</strong> The size and scope of Berkshire's operations (especially in regulated areas like utilities and railroads) expose it to increased political and regulatory scrutiny.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-gray-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Berkshire Hathaway Inc. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            indigo: '#4f46e5',
+            blue: '#2563eb',
+            emerald: '#059669',
+            orange: '#f97316',
+            gray: '#4B5563'
+        };
+
+        // Revenue Breakdown Chart
+        const earningsBreakdownCtx = document.getElementById('earningsBreakdownChart').getContext('2d');
+        new Chart(earningsBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Mfg/Svc/Retail', 'Insurance', 'Railroad (BNSF)', 'Utilities (BHE)'],
+                datasets: [{
+                    data: [45, 25, 20, 10], // Approximate operating earnings percentages
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.indigo, CHART_COLORS.emerald, CHART_COLORS.orange],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Operating Earnings by Segment (Approx. %)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end Dec 31)
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [276.1, 302.1, 364.5, 375.9], label: 'Total Revenue ($B)', color: CHART_COLORS.indigo },
+            operatingEarnings: { data: [27.46, 30.89, 37.35, 38.62], label: 'Operating Earnings ($B)', color: CHART_COLORS.blue },
+            operatingCashFlow: { data: [39.06, 35.79, 40.59, 41.21], label: 'Operating Cash Flow ($B)', color: CHART_COLORS.emerald }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25(E)'],
+            totalRevenue: { data: [93.2, 92.5, 89.9, 94.6, 95.2, 96.2, 93.5, 95.0], label: 'Total Revenue ($B)', color: CHART_COLORS.indigo },
+            operatingEarnings: { data: [10.76, 8.48, 11.22, 9.43, 8.54, 9.43, 11.60, 10.50], label: 'Operating Earnings ($B)', color: CHART_COLORS.blue }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

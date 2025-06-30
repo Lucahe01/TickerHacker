@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank of America (BAC) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #c2410c; /* orange-700 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #0369a1; /* sky-700 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #be123c; /* rose-700 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #c2410c; /* orange-700 */
+            color: #FFFFFF;
+            border-color: #9a3412; /* orange-800 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #c2410c; /* orange-700 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #c2410c;">Bank of America (BAC) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-700" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Bank of America: A Diversified Financial Supermarket</h2>
+            <p class="content-text mb-6">Bank of America Corporation (BAC) is one of the world's largest and most diversified financial institutions, serving a vast range of clients from individual consumers to the largest global corporations. Its operations span the entire financial spectrum, including consumer and small business banking, wealth management, corporate and investment banking, and sales and trading. The company's immense scale and leadership across all its businesses make it a bellwether for the U.S. economy. The core of its strategy is a disciplined approach to <span class="highlight">"Responsible Growth,"</span> which emphasizes sustainable, client-focused growth within a strong risk management framework. This strategy has transformed the bank over the past decade into a more stable, predictable, and profitable enterprise.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Responsible Growth</h3>
+                    <p class="content-text mb-4">The "Responsible Growth" philosophy is built on four key pillars:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">We have to grow - no excuses:</strong> Focusing on capturing organic growth by leveraging its brand, scale, and digital capabilities to deepen client relationships across all business lines.</li>
+                        <li><strong class="font-semibold text-gray-700">Customer-focused strategy:</strong> Driving growth by providing integrated solutions and a seamless client experience, whether in-person, online, or through its top-rated mobile app.</li>
+                        <li><strong class="font-semibold text-gray-700">Within our risk framework:</strong> Maintaining a "fortress" balance sheet with strong capital and liquidity levels, ensuring the company can operate safely through all economic cycles.</li>
+                        <li><strong class="font-semibold text-gray-700">It must be sustainable:</strong> Investing in talent, technology, and communities, with a focus on operational excellence and a commitment to being a great place to work.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-orange-50 border-orange-200">
+                    <p class="kpi-label">Active Digital Banking Users</p>
+                    <p class="kpi-value text-orange-700">58 Million</p>
+                    <p class="content-text text-sm mt-2">A massive and growing digital user base highlights the success of BofA's technology investments and provides a low-cost platform to serve clients and deepen relationships.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Bank of America Makes Money: Four Key Engines</h2>
+            <p class="content-text mb-6">Bank of America's business is structured into four major segments, each a leader in its respective market. This diversification across different client types and revenue streams (Net Interest Income and Noninterest Income) provides stability and multiple avenues for growth. The core of its earnings comes from the spread between the interest it earns on loans and the interest it pays on deposits (Net Interest Income), supplemented by fees from wealth management, investment banking, and trading.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="consumer">Consumer Banking</button>
+                    <button class="segment-tab-button" data-target="gwim">Global Wealth & Inv. Mgmt.</button>
+                    <button class="segment-tab-button" data-target="banking">Global Banking</button>
+                    <button class="segment-tab-button" data-target="markets">Global Markets</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="consumerContent" class="segment-content">
+                    <h3 class="subsection-title">Consumer Banking (~40% of Net Income)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the largest and most visible part of the bank, serving 69 million consumer and small business clients. It provides a full suite of products including checking and savings accounts, credit and debit cards, mortgages, and auto loans through its nationwide network of financial centers and its industry-leading digital platform.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Deposits, credit cards, mortgage lending.</li>
+                                <li><strong>Key Driver:</strong> Net Interest Income (NII) generated from its massive base of low-cost consumer deposits.</li>
+                                <li><strong>Strategic Focus:</strong> Driving digital adoption and household acquisition.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="incomeBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="gwimContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Global Wealth & Inv. Mgmt. (GWIM) (~20% of Net Income)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment is a global leader in wealth management, serving affluent and high-net-worth individuals through its Merrill Lynch and Bank of America Private Bank brands. It generates stable, fee-based revenue from asset management, brokerage services, and customized lending and banking solutions.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Brands:</strong> Merrill Lynch, Bank of America Private Bank.</li>
+                                <li><strong>Key Driver:</strong> Fee income based on client asset levels ($4.1 Trillion in AUM).</li>
+                                <li><strong>Strategic Focus:</strong> Capturing the generational wealth transfer and integrating wealth management with consumer banking.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Client Balances</p>
+                             <p class="kpi-value text-sky-700">$4.1 Trillion</p>
+                             <p class="content-text text-sm mt-2">The sheer scale of client assets in the GWIM division makes it a fee-generating powerhouse and a key source of stable, high-margin revenue.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="bankingContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Global Banking (~25% of Net Income)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment serves commercial, corporate, and investment banking clients globally. It provides a wide range of services including lending, treasury solutions (cash management, payments), investment banking (M&A advisory, debt and equity underwriting), and corporate finance.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Services:</strong> Corporate lending, treasury management, investment banking.</li>
+                                <li><strong>Key Driver:</strong> A mix of Net Interest Income from loans and fee income from investment banking and treasury services.</li>
+                                <li><strong>Strategic Focus:</strong> Deepening relationships with existing clients to capture more of their banking business.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-rose-50 border-rose-200">
+                           <p class="kpi-label">Market Position</p>
+                           <p class="kpi-value text-rose-700">Top Tier</p>
+                           <p class="content-text text-sm mt-2">Holds a top 3 market share position in global investment banking fees, showcasing its leadership in advising the world's largest corporations.</p>
+                       </div>
+                    </div>
+                </div>
+                <div id="marketsContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Global Markets (~15% of Net Income)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Global Markets segment provides sales and trading services to institutional clients across the globe. This includes trading in fixed-income, currencies, and commodities (FICC) as well as equities. It also encompasses securities services, research, and market-making activities.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Services:</strong> Sales & Trading (FICC and Equities).</li>
+                                <li><strong>Key Driver:</strong> Trading revenue, which is influenced by market volatility and client activity.</li>
+                                <li><strong>Strategic Focus:</strong> Maintaining a strong risk management culture while providing liquidity and solutions for institutional clients.</li>
+                            </ul>
+                        </div>
+                         <div class="kpi-card bg-indigo-50 border-indigo-200">
+                            <p class="kpi-label">Return on Equity</p>
+                            <p class="kpi-value text-indigo-700">High Returns</p>
+                            <p class="content-text text-sm mt-2">While often the most volatile segment, Global Markets consistently generates high returns on the capital allocated to it, contributing significantly to overall profitability.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Bank of America's financial performance reflects its disciplined "Responsible Growth" strategy. The company has consistently delivered strong returns for shareholders while maintaining a fortress balance sheet. Key metrics for investors include Net Interest Income (NII), which is sensitive to interest rate changes, the Efficiency Ratio, which measures cost control, and Return on Tangible Common Equity (ROTCE), a key measure of profitability.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-orange-700 focus:border-orange-700">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="netIncome">Net Income ($B)</option>
+                            <option value="rotce">Return on Tangible Common Equity (%)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-orange-700 focus:border-orange-700">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="netInterestIncome">Net Interest Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">Financials demonstrate the powerful earnings engine, with a significant boost to Net Interest Income in 2022-2023 from higher interest rates, which has since stabilized.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Fortress of Scale and Diversification</h2>
+            <p class="content-text mb-6">Bank of America's competitive moat is formidable, derived from its massive scale, diversified business model, and the sticky nature of its customer relationships. These advantages create significant barriers to entry and allow the bank to generate consistent profits through economic cycles.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-orange-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Massive Scale & Cost Advantages:</strong> As one of the largest banks in the U.S., BofA benefits from enormous economies of scale. Its low-cost deposit base, gathered from 69 million consumer clients, provides a significant funding advantage over smaller competitors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-orange-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Diversified Business Model:</strong> Leadership across four distinct business lines (Consumer, Wealth, Banking, Markets) provides multiple, often counter-cyclical, streams of revenue, leading to more stable earnings.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-orange-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Digital Leadership:</strong> Heavy and successful investment in its digital and mobile platforms creates high customer satisfaction and high switching costs, as clients become deeply integrated into its ecosystem.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-orange-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Brand & Trust:</strong> The Bank of America and Merrill Lynch brands are globally recognized and trusted, which is a critical asset in the financial services industry for attracting and retaining clients.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">JPMorgan Chase (JPM):</strong> The largest U.S. bank and BofA's most direct competitor across all business segments.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Wells Fargo (WFC):</strong> A major competitor in consumer and commercial banking in the U.S.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Citigroup (C):</strong> A key competitor in global banking and markets, particularly with multinational corporations.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Morgan Stanley & Goldman Sachs:</strong> Primary competitors in the wealth management and investment banking/trading arenas.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Bank of America's future performance is inextricably linked to the health of the U.S. and global economies. Its "Responsible Growth" strategy has positioned it well for stable, long-term value creation, but it is not immune to the risks inherent in the banking sector.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-emerald-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Durable Earnings Power:</strong> The diversified business model is expected to continue generating strong, stable earnings and a high return on tangible equity.</li>
+                        <li><strong>Capital Returns:</strong> The company is committed to returning significant capital to shareholders through a combination of a growing dividend and share buybacks.</li>
+                        <li><strong>Operating Leverage:</strong> As revenue grows, the bank's disciplined expense management (strong efficiency ratio) should allow a greater portion of that revenue to fall to the bottom line.</li>
+                        <li><strong>Wealth Management Growth:</strong> Positioned to be a primary beneficiary of the multi-trillion dollar generational transfer of wealth through its leading Merrill Lynch franchise.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-rose-700">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Economic Sensitivity:</strong> As a bellwether for the economy, a significant economic downturn would lead to higher credit losses (loan defaults) and reduced business activity.</li>
+                        <li><strong>Interest Rate Volatility:</strong> Bank earnings are highly sensitive to changes in interest rates. A rapid decline in rates could compress Net Interest Margins and profitability.</li>
+                        <li><strong>Regulatory Scrutiny:</strong> As a Globally Systemically Important Bank (GSIB), BofA operates under strict regulatory oversight, which can limit its operational flexibility and require higher capital levels.</li>
+                        <li><strong>Geopolitical & Market Risk:</strong> The Global Banking & Markets segments are exposed to risks from global political instability and sharp downturns in financial markets.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-gray-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Bank of America Corp. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            orange: '#c2410c',
+            sky: '#0369a1',
+            rose: '#be123c',
+            indigo: '#4338ca',
+            gray: '#4B5563'
+        };
+
+        // Revenue Breakdown Chart
+        const incomeBreakdownCtx = document.getElementById('incomeBreakdownChart').getContext('2d');
+        new Chart(incomeBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Consumer Banking', 'Global Banking', 'Wealth Mgmt (GWIM)', 'Global Markets'],
+                datasets: [{
+                    data: [40, 25, 20, 15], // Approximate net income percentages
+                    backgroundColor: [CHART_COLORS.sky, CHART_COLORS.orange, CHART_COLORS.indigo, CHART_COLORS.rose],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Net Income by Segment (Approx. %)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end Dec 31)
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [89.1, 94.9, 98.6, 96.2], label: 'Total Revenue ($B)', color: CHART_COLORS.orange },
+            netIncome: { data: [32.0, 27.5, 30.6, 26.5], label: 'Net Income ($B)', color: CHART_COLORS.sky },
+            rotce: { data: [17.0, 15.6, 17.9, 14.2], label: 'Return on Tangible Common Equity (%)', color: CHART_COLORS.indigo }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25(E)'],
+            totalRevenue: { data: [24.5, 22.0, 25.8, 25.2, 24.5, 23.5, 25.0, 24.8], label: 'Total Revenue ($B)', color: CHART_COLORS.orange },
+            netInterestIncome: { data: [14.4, 13.9, 14.0, 14.2, 13.8, 13.7, 13.9, 14.0], label: 'Net Interest Income ($B)', color: CHART_COLORS.rose }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'rotce';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

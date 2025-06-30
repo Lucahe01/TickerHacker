@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gilead Sciences, Inc. (GILD) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Gilead Sciences (GILD) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Gilead Sciences: A Pioneer in Antiviral Therapies</h2>
+            <p class="content-text mb-6">Gilead Sciences, Inc. (NASDAQ: GILD) is a leading biopharmaceutical company that has discovered, developed, and commercialized innovative medicines for over three decades. The company is best known for its revolutionary treatments for HIV and viral hepatitis, which have transformed these diseases from death sentences into manageable chronic conditions. While its antiviral portfolio remains the cornerstone of the business, Gilead has strategically expanded into oncology through key acquisitions and is now a major player in cell therapy. This analysis explores Gilead's diversified business, its financial profile, and its strategic efforts to build its next wave of growth drivers.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
+                    <p class="content-text mb-4">Gilead's strategy is focused on scientific innovation and long-term growth:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Leadership in Virology:</strong> Maintaining and extending its dominance in HIV treatment and prevention through the development of new, long-acting therapies like Lenacapavir.</li>
+                        <li><strong class="font-semibold text-gray-700">Building a Diversified Oncology Portfolio:</strong> Growing its oncology business through the expansion of its cell therapy products (Yescarta) and antibody-drug conjugates (Trodelvy).</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Business Development:</strong> Using its strong cash flow to make strategic acquisitions and partnerships that enhance its pipeline and technological capabilities.</li>
+                        <li><strong class="font-semibold text-gray-700">Commitment to Shareholder Returns:</strong> A dedication to a strong and growing dividend, supplemented by opportunistic share repurchases.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">HIV Franchise Sales (Q1 2025)</p>
+                    <p class="kpi-value text-violet-600">$4.6 Billion</p>
+                    <p class="content-text text-sm mt-2">Up 6% year-over-year, the HIV franchise, led by the blockbuster drug Biktarvy, remains the primary engine of Gilead's revenue and profitability.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Gilead Makes Money: A Portfolio of Life-Changing Drugs</h2>
+            <p class="content-text mb-6">Gilead's revenue is generated from the sale of its innovative medicines across several major therapeutic areas. The company's business is dominated by its virology franchise, but its oncology division is becoming an increasingly important contributor to growth.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="hiv">HIV</button>
+                    <button class="segment-tab-button" data-target="oncology">Oncology</button>
+                    <button class="segment-tab-button" data-target="liver">Liver Disease</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="hivContent" class="segment-content">
+                    <h3 class="subsection-title">HIV Franchise</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is Gilead's largest and most important business, representing nearly <span class="highlight">70%</span> of total product sales. The company has revolutionized HIV treatment with its single-tablet regimens and is now pioneering long-acting injectable therapies for both treatment and prevention.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Biktarvy®:</strong> The number one prescribed HIV treatment in the U.S. and a multi-billion dollar blockbuster.</li>
+                                <li><strong>Descovy®:</strong> A leading product for HIV pre-exposure prophylaxis (PrEP).</li>
+                                <li><strong>Lenacapavir:</strong> A promising long-acting injectable for HIV prevention, recently approved by the FDA.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="oncologyContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Oncology Franchise</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Built through strategic acquisitions (Kite Pharma, Immunomedics), Gilead's oncology business is a key growth driver. It is focused on innovative cell therapies and antibody-drug conjugates (ADCs).</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                 <li><strong>Yescarta® & Tecartus®:</strong> CAR T-cell therapies for certain types of blood cancers.</li>
+                                 <li><strong>Trodelvy®:</strong> An ADC for the treatment of metastatic triple-negative breast cancer and other solid tumors.</li>
+                            </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="oncologyGrowthChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                 <div id="liverContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Liver Disease Franchise</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Gilead developed the first curative therapies for Hepatitis C (HCV), generating massive revenues in the past. While HCV sales have declined as the patient population has been cured, the company maintains a significant business in treating other liver diseases.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>HCV Products:</strong> Epclusa® and Harvoni®.</li>
+                                <li><strong>Hepatitis B (HBV) & Hepatitis D (HDV):</strong> Vemlidy® and other treatments for chronic hepatitis.</li>
+                            </ul>
+                        </div>
+                         <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">Legacy Franchise</p>
+                             <p class="kpi-value text-teal-600">HCV Cures</p>
+                             <p class="content-text text-sm mt-2">Gilead's groundbreaking cure for Hepatitis C generated over $20 billion in sales at its peak, providing the capital for its expansion into other therapeutic areas.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Gilead is a financial powerhouse, consistently generating strong revenue, high profit margins, and robust free cash flow. This financial strength allows the company to navigate the patent cliff of its older drugs, invest heavily in its R&D pipeline, and reward shareholders with a significant and growing dividend.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2020-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="netIncome">GAAP Net Income ($B)</option>
+                            <option value="opCashFlow">Operating Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="nonGaapEps">Non-GAAP EPS ($)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show a stable revenue base, with the growth in the HIV and oncology franchises largely offsetting the decline in the HCV and COVID-19 (Veklury) businesses. The company's profitability and cash flow remain very strong.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Virology Fortress</h2>
+            <p class="content-text mb-6">Gilead's competitive advantage is built on decades of scientific leadership in virology, a strong intellectual property portfolio, and a well-established global commercial infrastructure. This has created a dominant and highly profitable franchise in HIV that is difficult for competitors to challenge.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Dominant Market Share in HIV:</strong> Gilead's single-tablet regimens have become the standard of care in HIV treatment, giving the company a massive and loyal patient and physician base.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Scientific & R&D Expertise:</strong> A world-class research and development organization with a proven track record of discovering and developing groundbreaking antiviral medicines.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Strong Intellectual Property:</strong> A robust portfolio of patents protects Gilead's key products from generic competition, ensuring long-duration profitability.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">GSK (ViiV Healthcare):</strong> The primary competitor in the HIV market, with a strong portfolio of its own innovative treatments.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Large Biopharma Companies:</strong> Johnson & Johnson, Merck, AbbVie, and Bristol Myers Squibb compete with Gilead across its various therapeutic areas.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Biotech Companies:</strong> A wide range of smaller biotech firms are developing novel therapies that could compete with Gilead's products in the future, particularly in oncology and cell therapy.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Gilead is a blue-chip biopharmaceutical company that offers a compelling combination of a stable, profitable core business and significant long-term growth potential from its oncology and virology pipelines. For investors, it represents a more value-oriented investment in the biotech sector, with a strong and growing dividend.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Long-Acting HIV Therapies:</strong> The potential launch of long-acting injectable treatments like lenacapavir could further strengthen Gilead's dominance in the HIV market and drive significant growth.</li>
+                        <li><strong>Oncology Growth:</strong> The continued expansion of Trodelvy and the growth of the cell therapy franchise represent major long-term growth opportunities.</li>
+                        <li><strong>Strong Dividend and Capital Returns:</strong> A commitment to a strong, growing dividend provides a reliable income stream for shareholders.</li>
+                        <li><strong>Attractive Valuation:</strong> The stock often trades at a lower P/E multiple compared to other large-cap biotechs, offering a potential value opportunity.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Competition in HIV:</strong> While Gilead is the leader, the HIV market is highly competitive, with strong rivals like GSK constantly innovating.</li>
+                        <li><strong>Pipeline Risk:</strong> Drug development is inherently risky. Any failures in late-stage clinical trials for key pipeline assets could negatively impact the stock.</li>
+                        <li><strong>Patent Expirations:</strong> The eventual loss of patent protection for key drugs like Biktarvy is a long-term headwind that the pipeline must overcome.</li>
+                        <li><strong>Drug Pricing Pressure:</strong> Like all pharmaceutical companies, Gilead faces ongoing political and regulatory pressure to control drug prices, which could impact future profitability.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Gilead Sciences, Inc. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of June 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            stone: '#E7E5E4',
+            gray: '#4B5563',
+            darkViolet: '#8B5CF6',
+            darkSky: '#38BDF8',
+            teal: '#5EEAD4'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['HIV', 'Oncology', 'Liver Disease', 'Other'],
+                datasets: [{
+                    data: [69, 11, 10, 10], // Approx. Q1 2025 percentages
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal, CHART_COLORS.orange],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Therapeutic Area (Q1 2025)' } }
+            }
+        });
+        
+        // Oncology Growth Chart
+        const oncologyGrowthCtx = document.getElementById('oncologyGrowthChart').getContext('2d');
+        new Chart(oncologyGrowthCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Yescarta', 'Tecartus', 'Trodelvy'],
+                datasets: [{
+                    label: 'Sales Growth (YoY) - Q1 2025',
+                    data: [2, -22, -5],
+                    backgroundColor: [CHART_COLORS.sky, CHART_COLORS.orange, CHART_COLORS.violet],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { x: { grid: { display: false } }, y: { title: { display: true, text: 'YoY Growth %' } } },
+                plugins: { legend: { display: false }, title: { display: true, text: 'Oncology Product Sales Growth' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store
+        const yearlyDataStore = {
+            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [24.7, 27.3, 27.3, 27.1, 28.8], label: 'Total Revenue ($B)', color: CHART_COLORS.violet },
+            netIncome: { data: [0.1, 6.2, 4.6, 5.9, 1.7], label: 'GAAP Net Income ($B)', color: CHART_COLORS.sky },
+            opCashFlow: { data: [9.7, 8.3, 9.1, 8.4, 9.9], label: 'Operating Cash Flow ($B)', color: CHART_COLORS.teal }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [6.6, 7.1, 7.1, 6.7, 7.0, 7.5, 7.6, 6.7], label: 'Total Revenue ($M)', color: CHART_COLORS.violet },
+            nonGaapEps: { data: [1.34, 2.29, 1.72, 1.50, 1.81, 1.96, 2.15, 1.81], label: 'Non-GAAP EPS ($)', color: CHART_COLORS.orange }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'opCashFlow' || metricKey === 'nonGaapEps' || metricKey === 'netIncome';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: false, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+
