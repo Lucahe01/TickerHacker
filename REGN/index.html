@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regeneron (REGN) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 450px;
+                max-height: 500px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Regeneron (REGN) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Regeneron: A Science-First Biotech Powerhouse</h2>
+            <p class="content-text mb-6">Regeneron Pharmaceuticals is a premier biotechnology company built on a foundation of cutting-edge science and a remarkable ability to translate that science into transformative medicines. The company's core identity is its proprietary <span class="highlight">VelociSuite® technologies</span>, an industry-leading platform for discovering, developing, and manufacturing fully human antibody-based drugs. This has resulted in a portfolio of blockbuster medicines for eye diseases, inflammatory conditions, and cancer, led by the mega-blockbusters EYLEA® and Dupixent®. Regeneron's strategy balances internal R&D with powerful strategic collaborations to fund innovation and maximize the global reach of its products.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: From Discovery Engine to Commercial Success</h3>
+                    <p class="content-text mb-4">Regeneron's strategy is a virtuous cycle fueled by its R&D prowess:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">VelociSuite® Dominance:</strong> Continuously leveraging its unique technology suite to rapidly identify promising drug targets and develop best-in-class antibodies.</li>
+                        <li><strong class="font-semibold text-gray-700">Strategic Collaborations:</strong> Partnering with global pharmaceutical leaders like Sanofi and Bayer to co-develop and co-commercialize assets, sharing costs and maximizing market penetration.</li>
+                        <li><strong class="font-semibold text-gray-700">Pipeline Reinvestment:</strong> Aggressively reinvesting substantial revenues from its marketed products back into its deep and diverse pipeline of ~45 clinical candidates.</li>
+                        <li><strong class="font-semibold text-gray-700">Expanding Indications:</strong> Maximizing the value of its blockbuster drugs by pursuing and securing approvals for new diseases and patient populations.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Dupixent® Global Net Sales (Q1 2025)</p>
+                    <p class="kpi-value text-violet-600">$3.67 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents 19% YoY growth, showcasing the incredible momentum of this key drug co-developed with Sanofi.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Regeneron Makes Money: A Multi-Pillar Revenue Model</h2>
+            <p class="content-text mb-6">Regeneron's revenue is generated from two primary sources: direct sales of its own products in the U.S. and high-margin collaboration revenue from its partners who sell its co-developed drugs internationally. This diversified model provides both top-line growth and significant profitability.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="products">Net Product Sales</button>
+                    <button class="segment-tab-button" data-target="collab">Collaboration Revenue</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="productsContent" class="segment-content">
+                    <h3 class="subsection-title">U.S. Net Product Sales</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is revenue from direct sales of products for which Regeneron has sole U.S. commercialization rights. The flagship product here is EYLEA®.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>EYLEA® & EYLEA HD®:</strong> The dominant force in treating retinal diseases. Regeneron is defending this franchise from competition with the launch of a higher-dose version, EYLEA HD.</li>
+                                <li><strong>Libtayo®:</strong> A key oncology drug for which Regeneron now has full global rights and records all net product sales.</li>
+                                <li><strong>Other Products:</strong> Includes sales from drugs like Praluent®, Evkeeza®, and Inmazeb®.</li>
+                             </ul>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                            <p class="kpi-label">EYLEA® Franchise U.S. Sales (2024)</p>
+                            <p class="kpi-value text-sky-600">$5.97 Billion</p>
+                            <p class="content-text text-sm mt-2">While facing competitive pressures, the EYLEA franchise remains a massive contributor to Regeneron's top line.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="collabContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Collaboration Revenue (Sanofi & Bayer)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This highly profitable revenue stream comes from Regeneron's share of profits from drugs sold by its partners outside the U.S. or co-developed globally.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Sanofi Collaboration:</strong> The most significant partnership, driven by the phenomenal success of Dupixent®. Regeneron shares in the global profits of Dupixent and other drugs like Kevzara®.</li>
+                                <li><strong>Bayer Collaboration:</strong> Bayer commercializes EYLEA® outside the U.S., and Regeneron receives a share of the profits from these sales.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Regeneron's financial performance is characterized by strong revenue growth, industry-leading profitability, and significant cash flow generation, which it strategically deploys into its R&D pipeline and, more recently, capital return programs for shareholders.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="revenue" selected>Revenue by Source ($B)</option>
+                            <option value="operatingIncome">GAAP Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="revenue" selected>Revenue by Source ($B)</option>
+                             <option value="operatingIncome">GAAP Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts illustrate the strong contribution from both direct product sales and high-margin collaboration revenues, leading to robust and consistent profitability.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The R&D Engine</h2>
+            <p class="content-text mb-6">Regeneron's most durable competitive advantage is its science-first culture and the proprietary VelociSuite® technology platform. This creates a powerful R&D engine that is difficult for competitors to replicate, consistently producing innovative drug candidates.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary VelociSuite® Platform:</strong> This end-to-end technology suite for antibody discovery and development provides a significant speed and quality advantage over competitors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Track Record of Innovation:</strong> A proven ability to successfully move from scientific concept to blockbuster drug creates a culture and reputation that attracts top scientific talent.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Entrenched Market Leadership:</strong> EYLEA® and Dupixent® are the established standards of care in their fields, benefiting from physician familiarity, extensive safety data, and strong brand recognition.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Roche (Vabysmo):</strong> A major competitor in the ophthalmology space, challenging EYLEA's market share with its drug Vabysmo.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Biosimilars:</strong> Multiple companies are developing or have launched biosimilar versions of EYLEA, which will exert pricing pressure.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Biotechs:</strong> Numerous companies, including Amgen, Vertex, and AbbVie, compete across Regeneron's therapeutic areas of inflammation and oncology.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Regeneron's future is a balance between defending its highly profitable flagship products and delivering on the promise of its extensive pipeline. The company's scientific prowess is its greatest asset, but it faces undeniable competitive and market-related headwinds.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Dupixent's Continued Growth:</strong> Label expansion into massive indications like COPD could continue to fuel double-digit growth for years.</li>
+                        <li><strong>Deep and Diverse Pipeline:</strong> With ~45 candidates in development, Regeneron has many shots on goal to produce the next generation of blockbuster drugs.</li>
+                        <li><strong>EYLEA HD Transition:</strong> Successfully converting the market from EYLEA to the higher-dose, longer-acting EYLEA HD could defend a significant portion of the franchise's revenue from biosimilar erosion.</li>
+                        <li><strong>Oncology Expansion:</strong> Libtayo's growth and other pipeline assets could establish oncology as a third major therapeutic pillar for the company.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>EYLEA Competition:</strong> This is the most significant near-term risk. The combined pressure from branded competitors like Vabysmo and incoming biosimilars will challenge revenue and profitability.</li>
+                        <li><strong>Product Concentration:</strong> The company remains heavily reliant on EYLEA and Dupixent, making its financial results highly sensitive to the performance of these two assets.</li>
+                        <li><strong>R&D Execution Risk:</strong> There is no guarantee that the promising candidates in the pipeline will succeed in late-stage clinical trials or achieve commercial success.</li>
+                        <li><strong>Dependence on Partners:</strong> A significant portion of revenue is derived from collaborations. Any deterioration in the relationship with Sanofi or Bayer could have negative consequences.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Regeneron Pharmaceuticals, Inc. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of July 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4',
+            pink: '#F472B6',
+            amber: '#FBBF24'
+        };
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        const yearlyDataStore = {
+            labels: ['2021', '2022', '2023', '2024'],
+            revenue: {
+                datasets: [
+                    { label: 'Net Product Sales ($B)', data: [9.15, 7.91, 7.86, 7.45], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet, stack: 'Stack 0' },
+                    { label: 'Sanofi Collab Revenue ($B)', data: [5.84, 4.34, 4.14, 4.34], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' },
+                    { label: 'Bayer Collab Revenue ($B)', data: [1.34, 1.43, 1.49, 1.50], backgroundColor: CHART_COLORS.orange + 'BF', borderColor: CHART_COLORS.orange, stack: 'Stack 0' }
+                ]
+            },
+            operatingIncome: {
+                datasets: [
+                    { label: 'GAAP Operating Income ($B)', data: [9.05, 5.09, 4.31, 4.87], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal }
+                ]
+            }
+        };
+
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            revenue: {
+                datasets: [
+                    { label: 'Net Product Sales ($B)', data: [1.83, 1.83, 1.89, 1.76, 1.90, 1.95, 2.01, 1.42], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet, stack: 'Stack 0' },
+                    { label: 'Sanofi Collab Revenue ($B)', data: [0.93, 1.07, 1.10, 0.91, 1.05, 1.26, 1.21, 1.18], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' },
+                    { label: 'Bayer Collab Revenue ($B)', data: [0.37, 0.38, 0.35, 0.36, 0.38, 0.39, 0.38, 0.34], backgroundColor: CHART_COLORS.orange + 'BF', borderColor: CHART_COLORS.orange, stack: 'Stack 0' }
+                ]
+            },
+            operatingIncome: {
+                datasets: [
+                    { label: 'GAAP Operating Income ($B)', data: [0.92, 1.05, 1.13, 0.61, 1.12, 1.39, 1.15, 0.72], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isStacked = metricKey === 'revenue';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y) + 'B';
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: isStacked,
+                        },
+                        y: {
+                            stacked: isStacked,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Billions of USD'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value + 'B';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'revenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'revenue');
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dexcom, Inc. (DXCM) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Dexcom (DXCM) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Dexcom: Leading the CGM Revolution in Diabetes Care</h2>
+            <p class="content-text mb-6">Dexcom is a leading medical device company focused on the design and commercialization of continuous glucose monitoring (CGM) systems. Its technology has transformed diabetes management by replacing painful, episodic fingersticks with a continuous, real-time stream of glucose data. The company's strategy is centered on relentless innovation, exemplified by the transition to its new <span class="highlight">G7 platform</span>, and expanding access to new patient populations. As CGM shifts from a niche tool to the standard of care, Dexcom is poised to capitalize on a massive and underpenetrated global market.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Innovation and Market Expansion</h3>
+                    <p class="content-text mb-4">Dexcom's growth strategy is built on several key pillars:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Technology Leadership:</strong> Driving the adoption of the G7 CGM system, which is 60% smaller than the G6 and has a much faster 30-minute sensor warm-up time.</li>
+                        <li><strong class="font-semibold text-gray-700">Expanding Access:</strong> Securing broader reimbursement coverage to expand into the vast Type 2 diabetes market, including patients on basal-only insulin therapy.</li>
+                        <li><strong class="font-semibold text-gray-700">Automated Insulin Delivery (AID):</strong> Deeply integrating its CGM with insulin pump partners like Tandem and Insulet to create "artificial pancreas" systems.</li>
+                        <li><strong class="font-semibold text-gray-700">Global Growth:</strong> Increasing penetration in international markets where CGM adoption is still in its early stages.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Total Revenue (2024)</p>
+                    <p class="kpi-value text-violet-600">$4.18 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents strong 15% year-over-year growth, driven by new customer additions and the global rollout of the G7 platform.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Dexcom Makes Money: A Recurring Revenue Model</h2>
+            <p class="content-text mb-6">Dexcom's business model is primarily based on the recurring sale of its single-use, wearable CGM sensors, which creates a highly predictable and durable revenue stream. The company reports its revenue based on geography.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="us">U.S. Revenue</button>
+                    <button class="segment-tab-button" data-target="intl">International Revenue</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="usContent" class="segment-content">
+                    <h3 class="subsection-title">U.S. Revenue</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The United States is Dexcom's largest and most established market. Growth is driven by the increasing adoption of CGM technology, the successful launch of the G7 system, and the recent expansion of Medicare coverage to include basal insulin users, which significantly grew the addressable market.</p>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                            <p class="kpi-label">U.S. Revenue (2024)</p>
+                            <p class="kpi-value text-sky-600">$2.95 Billion</p>
+                            <p class="content-text text-sm mt-2">Represents 13% YoY growth and constitutes the majority of the company's sales.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="intlContent" class="segment-content hidden">
+                    <h3 class="subsection-title">International Revenue</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Dexcom's international segment represents a major long-term growth opportunity. CGM penetration in many international markets is still well below that of the U.S., providing a long runway for growth as awareness and reimbursement continue to expand. The G7 launch is a key catalyst for accelerating international growth.</p>
+                        </div>
+                         <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">International Revenue (2024)</p>
+                             <p class="kpi-value text-teal-600">$1.23 Billion</p>
+                             <p class="content-text text-sm mt-2">Grew a robust 22% YoY, highlighting the significant opportunity outside the United States.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Dexcom's financial performance is characterized by rapid and consistent revenue growth, strong gross margins, and expanding operating profitability. This financial strength allows the company to make significant investments in R&D and global commercial expansion.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="revenue" selected>Revenue by Geography ($B)</option>
+                            <option value="grossMargin">Non-GAAP Gross Margin (%)</option>
+                            <option value="operatingIncome">Non-GAAP Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="revenue" selected>Revenue by Geography ($M)</option>
+                             <option value="grossMargin">Non-GAAP Gross Margin (%)</option>
+                             <option value="operatingIncome">Non-GAAP Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show a consistent uptrend in both U.S. and International revenues, alongside strong and stable profitability metrics.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Power of Performance and Integration</h2>
+            <p class="content-text mb-6">Dexcom has built a strong competitive moat based on its superior technology, trusted brand, and deep integration into the diabetes care ecosystem.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technology Leadership:</strong> Dexcom's CGM sensors are widely considered the gold standard for accuracy and reliability, a critical factor for managing diabetes.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Ecosystem Integration:</strong> Deep partnerships with insulin pump manufacturers (Tandem, Insulet) create a sticky automated insulin delivery (AID) ecosystem that is difficult for users to leave.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Brand Trust:</strong> The company has cultivated a strong, trusted brand among patients and endocrinologists over many years.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Abbott (FreeStyle Libre):</strong> The primary competitor, offering a lower-priced CGM system that has captured significant market share, creating a duopoly in the market.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Medtronic:</strong> A smaller player in the standalone CGM market, but a significant competitor in the integrated insulin pump and CGM system space.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Diabetes Tech Companies:</strong> The market includes other smaller players and is a target for innovation from both established medical device companies and startups.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Dexcom is a premier growth company in the medical technology sector with a massive runway for expansion. However, it faces a fierce and well-capitalized primary competitor.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Massive Untapped Market:</strong> The global market for diabetes management is enormous and CGM technology is still only used by a fraction of the total patient population.</li>
+                        <li><strong>Expansion into Type 2 Diabetes:</strong> The recent expansion of reimbursement for less-intensive Type 2 diabetes patients has dramatically increased the company's addressable market.</li>
+                        <li><strong>G7 Adoption:</strong> The smaller, easier-to-use G7 platform is a major catalyst for attracting new users and driving upgrades from the existing G6 user base.</li>
+                        <li><strong>Continued Innovation:</strong> Dexcom's robust R&D pipeline includes plans for even smaller sensors, longer wear times, and integration with new digital health platforms.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Intense Competition:</strong> The CGM market is largely a duopoly between Dexcom and Abbott. Abbott's lower-priced FreeStyle Libre system creates constant competitive and pricing pressure.</li>
+                        <li>**Pricing Pressure:** As CGM becomes more widespread, payers (insurance companies) may exert more pressure to lower prices, which could impact gross margins.</li>
+                        <li><strong>Execution of G7 Launch:</strong> The global commercial launch of a new medical device is a complex undertaking. Any manufacturing or supply chain issues could hinder growth.</li>
+                        <li><strong>Maintaining Technological Lead:** The company's premium position is dependent on maintaining its technological advantage. A leapfrog innovation from a competitor is a key risk.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Dexcom, Inc. public filings and credible financial data providers as of July 2, 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
+        
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            revenue: {
+                datasets: [
+                    { label: 'U.S. Revenue ($B)', data: [2.14, 2.61, 2.95], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet, stack: 'Stack 0' },
+                    { label: 'International Revenue ($B)', data: [0.77, 1.01, 1.23], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' },
+                ],
+                yAxisLabel: 'Billions of USD'
+            },
+            grossMargin: {
+                datasets: [ { label: 'Non-GAAP Gross Margin (%)', data: [65, 63, 64], type: 'line', fill: false, backgroundColor: CHART_COLORS.orange, borderColor: CHART_COLORS.orange } ],
+                yAxisLabel: 'Margin (%)'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Non-GAAP Operating Income ($B)', data: [0.47, 0.67, 0.85], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            revenue: {
+                datasets: [
+                    { label: 'U.S. Revenue ($M)', data: [638, 706, 730, 653, 730, 785, 825, 710], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet, stack: 'Stack 0' },
+                    { label: 'International Revenue ($M)', data: [233, 269, 300, 268, 320, 345, 385, 330], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' },
+                ],
+                yAxisLabel: 'Millions of USD'
+            },
+             grossMargin: {
+                datasets: [ { label: 'Non-GAAP Gross Margin (%)', data: [64, 63, 63, 62, 63, 64, 65, 63], type: 'line', fill: false, backgroundColor: CHART_COLORS.orange, borderColor: CHART_COLORS.orange } ],
+                 yAxisLabel: 'Margin (%)'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Non-GAAP Operating Income ($M)', data: [159, 211, 240, 147, 200, 250, 290, 165], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Millions of USD'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isStacked = metricKey === 'revenue';
+            const isLine = metricDetails.datasets[0].type === 'line';
+
+            return new Chart(canvas, {
+                type: isLine ? 'line' : 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        let val = context.parsed.y;
+                                        let unit = label.includes('($B)') ? 'B' : (label.includes('($M)') ? 'M' : (label.includes('(%)') ? '%' : ''));
+                                        let prefix = (unit === '%' ? '' : '$');
+                                        label += prefix + val.toFixed(1) + (unit !== '%' ? unit : '%');
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            display: isStacked // Only display legend for stacked charts
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: isStacked,
+                        },
+                        y: {
+                            stacked: isStacked,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'revenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'revenue');
+
+    </script>
+</body>
+</html>
+

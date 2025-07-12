@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xometry Inc. (XMTR) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Xometry (XMTR) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Xometry: Digitizing the $2 Trillion Manufacturing Industry</h2>
+            <p class="content-text mb-6">Xometry Inc. (NASDAQ: XMTR) operates a leading global AI-powered marketplace for on-demand manufacturing, fundamentally disrupting one of the world's largest and most fragmented industries. The company's platform connects enterprise buyers, ranging from startups to Fortune 100 companies, with a vast, distributed network of manufacturing suppliers. By digitizing a traditionally opaque and slow procurement process, Xometry provides speed, transparency, and resilient supply chains, making it easier for engineers and designers to turn their ideas into reality. This analysis delves into Xometry's powerful network-based business model, its rapid growth trajectory, and its strategic position in the ongoing digital transformation of manufacturing.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Business Strategy: The AI-Powered Marketplace</h3>
+                    <p class="content-text mb-4">Xometry's strategy is centered on creating a liquid, scalable global marketplace that solves critical pain points for both buyers and sellers:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">AI-Driven Instant Quoting:</strong> Its proprietary engine analyzes complex 3D CAD files in real-time to provide instant, data-driven pricing and lead times, replacing a manual process that could take days or weeks.</li>
+                        <li><strong class="font-semibold text-gray-700">Network Expansion:</strong> Aggressively growing its two-sided network of active buyers and manufacturing partners, enhanced by the strategic acquisition of Thomasnet.</li>
+                        <li><strong class="font-semibold text-gray-700">Enterprise Penetration:</strong> Focusing on large enterprise accounts by offering dedicated tools like Teamspace, a cloud-based collaboration software, to help them manage projects and streamline procurement.</li>
+                        <li><strong class="font-semibold text-gray-700">Expanding Service Offerings:</strong> Continuously adding new manufacturing processes like CNC machining, 3D printing, injection molding, and sheet metal fabrication, as well as integrated financial services for suppliers.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Active Buyers (Q1 2025)</p>
+                    <p class="kpi-value text-violet-600">71,454</p>
+                    <p class="content-text text-sm mt-2">Represents strong 22% year-over-year growth, highlighting the platform's increasing adoption and the powerful network effects of the marketplace.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Xometry Makes Money: A Two-Sided Value Proposition</h2>
+            <p class="content-text mb-6">Xometry's business model is built on two primary revenue streams: its core Marketplace, which generates transaction fees, and its Supplier Services, which offers marketing and data services. This dual approach strengthens the entire ecosystem, creating a virtuous cycle of growth.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="marketplace">Marketplace Revenue</button>
+                    <button class="segment-tab-button" data-target="supplier">Supplier Services</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="marketplaceContent" class="segment-content">
+                    <h3 class="subsection-title">Marketplace Revenue</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is Xometry's core business. When a buyer accepts a quote and places an order, Xometry receives payment and then matches the job to a vetted supplier in its network. Xometry earns revenue on the spread between what the buyer pays and what Xometry pays the supplier. In Q1 2025, this segment grew a robust 27% YoY to $136 million.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>For Buyers:</strong> Provides a single platform to access a global network with capacity for over a dozen manufacturing processes, simplifying procurement and creating resilient supply chains.</li>
+                                <li><strong>For Sellers (Suppliers):</strong> Offers access to a stream of jobs from major corporations, helping them fill excess capacity and grow their business without the need for a large sales force.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="supplierContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Supplier Services</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Primarily driven by its acquisition of <span class="highlight">Thomasnet.com</span>, a 120+ year-old platform for product sourcing and supplier discovery. Xometry sells advertising, data, and marketing services to its vast network of suppliers, allowing them to promote their businesses. While Q1 2025 revenue for this segment declined 6% to $14.6 million, it is a high-margin business that complements the marketplace. The company has noted it is strategically exiting some non-core services in this area.</p>
+                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Strategic Asset</p>
+                             <p class="kpi-value text-sky-600">Thomasnet.com</p>
+                             <p class="content-text text-sm mt-2">The 2021 acquisition for $300 million dramatically increased Xometry's buyer and seller base, adding a platform with over 1.3 million registered users.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Xometry's financial story is one of rapid top-line growth and a clear, deliberate march toward profitability. The company has consistently grown revenue while expanding gross margins, and recently achieved a significant milestone of positive Adjusted EBITDA, demonstrating the operating leverage inherent in its marketplace model.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY21-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                            <option value="grossProfit">Gross Profit ($M)</option>
+                            <option value="adjEbitda">Adjusted EBITDA ($M)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="adjEbitda">Adjusted EBITDA ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts illustrate a powerful combination of strong, durable revenue growth and significant improvement in operating leverage, culminating in positive Adjusted EBITDA in Q4 2024 and Q1 2025.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Network Effect Flywheel</h2>
+            <p class="content-text mb-6">Xometry's competitive advantage stems from the powerful flywheel created by its two-sided marketplace. As more buyers join the platform, it becomes more attractive for suppliers, who in turn add more capacity and capabilities, which further enhances the value proposition for buyers. This creates strong barriers to entry.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Network Effects:</strong> With over 71,000 active buyers and over 4,300 active suppliers, the scale of its network is a significant deterrent to new entrants.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary AI & Data:</strong> The AI-powered quoting engine has been trained on millions of data points, creating an advantage that makes it difficult for competitors to replicate its pricing accuracy and speed.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Brand & Trust:</strong> As a leading public player, Xometry has built a trusted brand, particularly with large enterprise customers, 40% of which are in the Fortune 100. This trust is further solidified by certifications like CMMC Level 2 for aerospace and defense work.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Protolabs (PRLB):</strong> A key public competitor that largely owns its manufacturing facilities, offering fast turnaround times but with a different, asset-heavy business model.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Fictiv:</strong> A private, venture-backed competitor with a similar digital manufacturing marketplace model.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Traditional Manufacturing:</strong> The primary competition remains the vast, fragmented world of traditional, offline machine shops and procurement processes that Xometry is actively digitizing.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Xometry is a high-growth company with a massive addressable market, positioning it for long-term success. However, its growth story is not without risks, including navigating economic cycles and proving the sustainability of its profitability.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Massive TAM:</strong> The global manufacturing market is a multi-trillion dollar industry. Xometry's revenue represents a tiny fraction of this, offering a long runway for growth.</li>
+                        <li><strong>Path to Profitability:</strong> Achieving positive Adjusted EBITDA is a major inflection point, demonstrating the model's ability to scale profitably.</li>
+                        <li><strong>Secular Tailwinds:</strong> Trends of supply chain resilience, reshoring, and the need for speed-to-market all play directly into Xometry's value proposition.</li>
+                        <li><strong>Enterprise Adoption:</strong> Deeper penetration into large enterprise accounts, which have sticky, high-volume needs, can accelerate growth. In Q1 2025, accounts spending over $50,000 annually grew 12% to 1,545.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Economic Cyclicality:</strong> Demand for manufacturing is tied to the broader economic health. A significant industrial recession could slow buyer demand.</li>
+                        <li><strong>Competition:</strong> While Xometry has a strong lead, competition from both digital players and established industrial giants could intensify.</li>
+                        <li><strong>Sustaining Profitability:</strong> The company must prove it can generate sustained GAAP net income and positive free cash flow. The net loss in Q1 2025 was $15.1 million.</li>
+                        <li><strong>Supplier Reliance:</strong> The business model is dependent on the quality, reliability, and capacity of its third-party manufacturing partners.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Xometry, Inc. public filings and credible financial data providers as of July 2, 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Marketplace', 'Supplier Services'],
+                datasets: [{
+                    data: [90, 10], // Approximate percentages based on Q1 2025 data
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment (Approx. %)' } }
+            }
+        });
+        
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end Dec 31)
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [218.3, 381.1, 463.4, 545.5], label: 'Total Revenue ($M)', color: CHART_COLORS.violet },
+            grossProfit: { data: [57.1, 146.0, 178.3, 215.6], label: 'Gross Profit ($M)', color: CHART_COLORS.sky },
+            adjEbitda: { data: [-53.8, -66.8, -27.5, -9.7], label: 'Adjusted EBITDA ($M)', color: CHART_COLORS.orange }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: { data: [110.3, 114.7, 128.1, 122.7, 131.5, 142.3, 148.5, 151.0], label: 'Total Revenue ($M)', color: CHART_COLORS.violet },
+            adjEbitda: { data: [-15.9, -13.0, -2.9, -7.5, -2.6, -2.3, 1.0, 0.1], label: 'Adjusted EBITDA ($M)', color: CHART_COLORS.orange }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isAdjEbitda = metricKey === 'adjEbitda';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: (context) => {
+                           if (!isAdjEbitda) return metricDetails.color + 'BF';
+                           const value = context.dataset.data[context.dataIndex];
+                           return value >= 0 ? CHART_COLORS.teal + 'BF' : CHART_COLORS.orange + 'BF';
+                        },
+                        borderColor: (context) => {
+                           if (!isAdjEbitda) return metricDetails.color;
+                           const value = context.dataset.data[context.dataIndex];
+                           return value >= 0 ? CHART_COLORS.teal : CHART_COLORS.orange;
+                        },
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

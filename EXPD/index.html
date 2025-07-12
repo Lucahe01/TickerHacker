@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expeditors International (EXPD) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Expeditors (EXPD) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Expeditors: A Global Logistics Leader Built on Culture</h2>
+            <p class="content-text mb-6">Expeditors is a premier, non-asset-based global logistics company that acts as a vital intermediary in the world's supply chains. Instead of owning planes or ships, Expeditors leverages its vast network, unified technology platform, and renowned company culture to manage the complex flow of goods for its clients. The company's business model provides flexibility and a focus on high-value services like customs brokerage. After a period of unprecedented volatility and high freight rates during the pandemic, Expeditors is now navigating a <span class="highlight">market normalization</span>, focusing on its core principles of customer service and operational excellence to drive long-term organic growth.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: The Four Pillars</h3>
+                    <p class="content-text mb-4">Expeditors' long-standing strategy is built on a foundation of consistency and a focus on fundamentals:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">People & Culture:</strong> A commitment to employee development, with a focus on promoting from within to maintain a strong, decentralized, and customer-centric culture.</li>
+                        <li><strong class="font-semibold text-gray-700">Global Systems:</strong> Operating a single, proprietary logistics and accounting system across its entire network ensures seamless data flow, consistency, and high-quality service.</li>
+                        <li><strong class="font-semibold text-gray-700">Performance & Execution:</strong> A relentless focus on operational excellence, compliance, and providing reliable, high-quality services to its customers.</li>
+                        <li><strong class="font-semibold text-gray-700">Financial Prudence:</strong> Maintaining a strong, debt-free balance sheet provides stability and flexibility through economic cycles.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Business Model</p>
+                    <p class="kpi-value text-violet-600">Non-Asset-Based</p>
+                    <p class="content-text text-sm mt-2">This model provides flexibility, reduces capital intensity, and allows the company to select the optimal transportation solutions for its clients without bias.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Expeditors Makes Money: A Trifecta of Services</h2>
+            <p class="content-text mb-6">Expeditors' revenue is derived from three core logistics services that cover the entire international supply chain, from transport to customs clearance.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="air">Airfreight Services</button>
+                    <button class="segment-tab-button" data-target="ocean">Ocean Freight & Services</button>
+                    <button class="segment-tab-button" data-target="customs">Customs & Other</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="airContent" class="segment-content">
+                    <h3 class="subsection-title">Airfreight Services</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">Expeditors acts as a freight consolidator, purchasing cargo space from airlines and reselling it to customers. This service is crucial for time-sensitive, high-value goods and represents a significant portion of the company's revenue. Profitability is determined by the spread between the cost of purchased transportation and the rates charged to clients.</p>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                            <p class="kpi-label">Airfreight Revenue (2024)</p>
+                            <p class="kpi-value text-sky-600">$3.1 Billion</p>
+                            <p class="content-text text-sm mt-2">Represents the largest segment by revenue, though highly sensitive to changes in global air cargo capacity and rates.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="oceanContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Ocean Freight and Ocean Services</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">As a non-vessel operating common carrier (NVOCC), Expeditors consolidates shipments from various customers to fill ocean containers, purchasing space from ocean carriers. This segment is the backbone of global trade for less time-sensitive goods and is critical for cost-effective supply chains.</p>
+                        </div>
+                         <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">Ocean Freight Revenue (2024)</p>
+                             <p class="kpi-value text-teal-600">$2.5 Billion</p>
+                             <p class="content-text text-sm mt-2">Performance is tied to ocean freight volumes and the normalization of container shipping rates from pandemic-era highs.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="customsContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Customs Brokerage and Other Services</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is a highly valuable and profitable segment. Expeditors acts as a customs broker, helping clients navigate complex international trade regulations and ensure the efficient clearance of goods. This service is deeply integrated into a client's supply chain and creates significant customer stickiness. This segment also includes warehousing and distribution services.</p>
+                        </div>
+                         <div class="kpi-card bg-orange-50 border-orange-200">
+                             <p class="kpi-label">Customs Brokerage Revenue (2024)</p>
+                             <p class="kpi-value text-orange-600">$3.3 Billion</p>
+                             <p class="content-text text-sm mt-2">A high-margin, consistent revenue stream that is less volatile than freight-rate-dependent services.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Expeditors' financial results show the dramatic impact of the pandemic-era supply chain disruptions, which drove revenues and profits to record highs in 2022, followed by a sharp normalization in 2023 and 2024 as freight rates declined. The company is now operating in a more stable but less profitable environment.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Revenue by Segment ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="operatingIncome">Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts clearly illustrate the revenue and profit normalization from the extraordinary peaks of 2022 to the more stable environment of 2023-2025.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Culture of Excellence</h2>
+            <p class="content-text mb-6">Expeditors' competitive advantages are deeply rooted in its intangible assets—its people, systems, and processes—which are incredibly difficult for competitors to replicate.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Unique Company Culture:</strong> A powerful, decentralized culture that empowers employees and fosters long-term retention results in a highly experienced workforce and superior customer service.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Unified Technology Platform:</strong> A single, global, proprietary system for all operations ensures consistency, data integrity, and efficiency across the entire company.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High-Value Services:</strong> Deep expertise in complex areas like customs brokerage creates sticky customer relationships and provides a stable, high-margin revenue stream.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Kuehne + Nagel:</strong> A major global competitor with a similar focus on sea and air freight forwarding.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">DHL Global Forwarding:</strong> A division of the massive Deutsche Post DHL Group, offering a full suite of logistics services.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">DSV:</strong> A large Danish competitor that has grown aggressively through acquisitions.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Expeditors' future is tied to the health of the global economy and its ability to maintain its unique culture and service levels in a competitive market. The company offers stability and quality but is not immune to macroeconomic headwinds.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Organic Market Share Gains:</strong> The company's focus on service can allow it to win business from competitors, especially during periods of supply chain disruption.</li>
+                        <li><strong>Strong Balance Sheet:</strong> A debt-free balance sheet provides immense financial stability and flexibility to navigate economic downturns and invest in technology.</li>
+                        <li><strong>Consistent Capital Returns:</strong> Expeditors has a long history of returning capital to shareholders through consistent dividends and share buybacks.</li>
+                        <li><strong>Global Trade Growth:</strong> Over the long term, the continued growth of global trade provides a natural tailwind for the business.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Macroeconomic Sensitivity:</strong> As a bellwether for global trade, the company's financial results are highly sensitive to global economic growth, consumer demand, and industrial production.</li>
+                        <li>**Freight Rate Volatility:** Sharp fluctuations in air and ocean freight rates can impact revenues and the company's ability to manage its margins.</li>
+                        <li><strong>Intense Competition:** The logistics industry is highly fragmented and competitive, which can limit pricing power.</li>
+                        <li><strong>Geopolitical Disruptions:** Trade wars, tariffs, and global conflicts can disrupt established shipping lanes and create operational challenges and increased costs.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Expeditors International public filings and credible financial data providers as of July 2, 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
+        
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [
+                    { label: 'Airfreight ($B)', data: [7.2, 3.8, 3.1], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet, stack: 'Stack 0' },
+                    { label: 'Ocean Freight ($B)', data: [6.5, 2.4, 2.5], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' },
+                    { label: 'Customs Brokerage & Other ($B)', data: [3.4, 3.1, 3.3], backgroundColor: CHART_COLORS.orange + 'BF', borderColor: CHART_COLORS.orange, stack: 'Stack 0' }
+                ]
+            },
+            operatingIncome: {
+                datasets: [
+                    { label: 'Operating Income ($B)', data: [1.7, 0.9, 0.8], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal }
+                ]
+            }
+        };
+
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: {
+                 datasets: [
+                    { label: 'Total Revenue ($B)', data: [2.2, 2.2, 2.3, 2.2, 2.1, 2.1, 2.0, 2.0], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet }
+                ]
+            },
+            operatingIncome: {
+                datasets: [
+                    { label: 'Operating Income ($M)', data: [210, 200, 220, 190, 180, 170, 160, 150], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal }
+                ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isStacked = metricKey === 'totalRevenue';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        let val = context.parsed.y;
+                                        let unit = label.includes('($B)') ? 'B' : (label.includes('($M)') ? 'M' : '');
+                                        label += '$' + val.toFixed(1) + unit;
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: isStacked,
+                        },
+                        y: {
+                            stacked: isStacked,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Billions of USD'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value + 'B';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createSingleBarChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isQuarterly = canvas.id.includes('quarterly');
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                         legend: { display: false },
+                         tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        let val = context.parsed.y;
+                                        let unit = isQuarterly ? 'M' : 'B';
+                                        label += '$' + (isQuarterly ? val.toFixed(0) : val.toFixed(1)) + unit;
+                                    }
+                                    return label;
+                                }
+                            }
+                         }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: isQuarterly ? 'Millions of USD' : 'Billions of USD'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    let unit = isQuarterly ? 'M' : 'B';
+                                    return '$' + value + unit;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+             if (event.target.value === 'operatingIncome') {
+                 yearlyChart = createSingleBarChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'operatingIncome');
+             } else {
+                 yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+             }
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            if (event.target.value === 'operatingIncome') {
+                 quarterlyChart = createSingleBarChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'operatingIncome');
+             } else {
+                 quarterlyChart = createSingleBarChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+             }
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createSingleBarChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

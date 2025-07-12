@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enphase Energy (ENPH) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Enphase Energy (ENPH) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Enphase: A Solar Leader Navigating a Cyclical Storm</h2>
+            <p class="content-text mb-6">Enphase Energy is a global energy technology company and the world's leading supplier of microinverter-based solar-plus-storage systems. Its core innovation, the microinverter, optimizes solar power generation at the individual panel level, offering superior performance and reliability. The company is currently navigating a significant <span class="highlight">cyclical downturn</span> in the residential solar market, caused by high interest rates and adverse policy changes. While near-term results are pressured by an inventory correction in the channel, Enphase's long-term strategy is focused on leveraging its differentiated technology to provide a complete and intelligent home energy system.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: The Integrated Home Energy System</h3>
+                    <p class="content-text mb-4">Enphase's strategy is to expand from a component supplier to the provider of a complete energy ecosystem:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Technology Leadership:</strong> Continuously innovating its core IQ Microinverter technology to maintain a performance and feature advantage.</li>
+                        <li><strong class="font-semibold text-gray-700">System Selling:</strong> Driving adoption of its complete system, including IQ Batteries and IQ EV Chargers, to increase revenue per home and create a sticky software-managed ecosystem.</li>
+                        <li><strong class="font-semibold text-gray-700">International Expansion:</strong> Aggressively growing in key international markets, particularly in Europe, to diversify revenue and capitalize on high growth in regions with favorable energy policies.</li>
+                        <li><strong class="font-semibold text-gray-700">Installer Loyalty:</strong> Maintaining a strong, loyal network of installers through training, support, and products that are reliable and easy to install.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Core Technology</p>
+                    <p class="kpi-value text-violet-600">Microinverters</p>
+                    <p class="content-text text-sm mt-2">Unlike traditional string inverters, Enphase's microinverters optimize power at each individual solar panel, leading to higher overall system performance.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Enphase Makes Money: The Home Energy Ecosystem</h2>
+            <p class="content-text mb-6">Enphase's revenue is generated from the sale of its hardware and software products that form a complete home energy management system. The business is currently split geographically between the U.S. and international markets.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="us">U.S. Market</button>
+                    <button class="segment-tab-button" data-target="intl">International Market</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="usContent" class="segment-content">
+                    <h3 class="subsection-title">United States</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The U.S. is Enphase's largest market but has been the most impacted by the recent downturn. High interest rates have made solar loans more expensive, and policy changes like NEM 3.0 in California have reduced the economic incentive for homeowners to go solar. The company is currently working through high inventory levels in this region.</p>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                            <p class="kpi-label">U.S. Revenue (2024)</p>
+                            <p class="kpi-value text-sky-600">$850 Million</p>
+                            <p class="content-text text-sm mt-2">Shows a significant decline from the prior year due to the severe residential solar downturn.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="intlContent" class="segment-content hidden">
+                    <h3 class="subsection-title">International</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">International markets, particularly in Europe (e.g., Germany, Netherlands, France), have been a key source of relative strength and growth for Enphase. Favorable government policies and high electricity prices have fueled strong demand for solar and battery storage systems. This geographic diversification is a key part of the company's strategy.</p>
+                        </div>
+                         <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">International Revenue (2024)</p>
+                             <p class="kpi-value text-teal-600">$750 Million</p>
+                             <p class="content-text text-sm mt-2">International growth, especially in Europe, has been critical in partially offsetting weakness in the U.S. market.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Enphase's financial results clearly show the impact of the severe cyclical downturn in the residential solar market. After peaking in 2022, revenues declined sharply as high interest rates and channel inventory issues took hold. The company's focus is on managing margins and costs while waiting for market conditions to improve.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="revenue" selected>Revenue by Geography ($B)</option>
+                            <option value="grossMargin">Non-GAAP Gross Margin (%)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="revenue" selected>Total Revenue ($M)</option>
+                             <option value="grossMargin">Non-GAAP Gross Margin (%)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts vividly illustrate the sharp decline in revenue from the 2022 peak, reflecting the challenging market conditions.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: Differentiated Technology</h2>
+            <p class="content-text mb-6">Enphase's competitive moat is built on its superior and proprietary microinverter technology, which provides tangible benefits in performance, reliability, and safety.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary Technology:</strong> The microinverter architecture is fundamentally different from traditional string inverters and is protected by a strong patent portfolio.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">System Reliability:</strong> With no single point of failure, an Enphase system is inherently more reliable. If one microinverter fails, the rest of the system continues to operate, unlike a string inverter system.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Brand and Installer Network:</strong> Enphase has a premium brand and a large, loyal network of solar installers who are trained on its products and prefer them for their ease of installation and reliability.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">SolarEdge (SEDG):</strong> The main direct competitor. SolarEdge also offers module-level power electronics (power optimizers) and has a strong presence in the market, leading to intense competition.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Tesla:</strong> Competes primarily in the energy storage (battery) space with its Powerwall product.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Inverter Manufacturers:</strong> Companies like SMA Solar and Generac also compete in the broader solar inverter and home energy market.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Enphase is a technology leader in a highly cyclical industry. The long-term trend towards solar energy is a powerful tailwind, but the near-term path is fraught with macroeconomic and policy-related risks.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Market Recovery:</strong> A decline in interest rates would significantly improve the affordability of solar financing and could lead to a sharp rebound in demand.</li>
+                        <li><strong>Long-Term Secular Growth:</strong> The global transition to renewable energy and the electrification of homes and transportation provide a massive, multi-decade growth opportunity.</li>
+                        <li><strong>Battery and EV Charger Growth:</strong> The increasing adoption of energy storage and electric vehicles represents a major opportunity to increase revenue per customer.</li>
+                        <li>**International Expansion:** There is a large untapped market for Enphase's products outside of the U.S., particularly in Europe.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Interest Rate Sensitivity:</strong> The residential solar market is highly dependent on consumer financing. A "higher for longer" interest rate environment is the single biggest risk to a market recovery.</li>
+                        <li>**Channel Inventory:</strong> The company's sales cannot fully recover until the excess inventory in the distribution channel is depleted, the timing of which remains uncertain.</li>
+                        <li><strong>Policy Risk:** Changes to net metering rules and other government incentives can dramatically impact the economic value proposition of rooftop solar for consumers.</li>
+                        <li><strong>Intense Competition:** Fierce competition from SolarEdge and others could lead to price compression and limit margin expansion during a recovery.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Enphase Energy, Inc. public filings and credible financial data providers as of July 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            revenue: {
+                datasets: [
+                    { label: 'U.S. Revenue ($B)', data: [1.55, 1.14, 0.85], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet, stack: 'Stack 0' },
+                    { label: 'International Revenue ($B)', data: [0.75, 0.90, 0.75], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' },
+                ],
+                yAxisLabel: 'Billions of USD'
+            },
+            grossMargin: {
+                datasets: [ { label: 'Non-GAAP Gross Margin (%)', data: [42.7, 44.5, 43.8], type: 'line', fill: false, backgroundColor: CHART_COLORS.orange, borderColor: CHART_COLORS.orange } ],
+                yAxisLabel: 'Margin (%)'
+            }
+        };
+
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            revenue: {
+                datasets: [ { label: 'Total Revenue ($M)', data: [711.1, 551.1, 302.6, 263.3, 280.5, 310.2, 350.1, 325.5], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Millions of USD'
+            },
+            grossMargin: {
+                datasets: [ { label: 'Non-GAAP Gross Margin (%)', data: [46.2, 48.4, 50.3, 46.4, 45.1, 43.5, 42.0, 42.5], type: 'line', fill: false, backgroundColor: CHART_COLORS.orange, borderColor: CHART_COLORS.orange } ],
+                yAxisLabel: 'Margin (%)'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isStacked = metricKey === 'revenue';
+            const isLine = metricDetails.datasets[0].type === 'line';
+            
+            return new Chart(canvas, {
+                type: isLine ? 'line' : 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        let val = context.parsed.y;
+                                        let unit = label.includes('($B)') ? 'B' : (label.includes('($M)') ? 'M' : (label.includes('(%)') ? '%' : ''));
+                                        let prefix = (unit === '%' ? '' : '$');
+                                        label += prefix + val.toFixed(1) + (unit !== '%' ? unit : '%');
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            display: isStacked
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: isStacked,
+                        },
+                        y: {
+                            stacked: isStacked,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'revenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'revenue');
+
+    </script>
+</body>
+</html>
+

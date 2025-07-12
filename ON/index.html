@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>onsemi (ON) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #16a34a; /* green-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #0d9488; /* teal-600 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #c026d3; /* fuchsia-600 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #16a34a; /* green-600 */
+            color: #FFFFFF;
+            border-color: #15803d; /* green-700 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #16a34a; /* green-600 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #16a34a;">onsemi (ON) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-600" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">onsemi: Powering the Intelligent Future</h2>
+            <p class="content-text mb-6">onsemi (formerly ON Semiconductor) is a global semiconductor company that has undergone a significant strategic transformation. Once a broad-based supplier of commodity chips, the company has pivoted to become a leader in <span class="highlight">intelligent power and sensing technologies</span>. This strategic shift focuses on two of the fastest-growing and most durable secular megatrends: vehicle electrification (EVs) and renewable energy. onsemi provides the critical components that enable efficient energy conversion, management, and sensing in these applications. This transformation, combined with a "fab-right" manufacturing strategy to improve cost structure, has fundamentally reshaped the company's growth and profitability profile.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Megatrends & Manufacturing</h3>
+                    <p class="content-text mb-4">onsemi's turnaround and future growth are built on a clear and disciplined strategy:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Focus on Automotive & Industrial:</strong> Deliberately shifting its portfolio to serve the automotive and industrial end markets, which now represent over 80% of revenue and benefit from long-term secular growth trends.</li>
+                        <li><strong class="font-semibold text-gray-700">Leadership in Intelligent Power & Sensing:</strong> Specializing in high-value technologies like Silicon Carbide (SiC) for EVs, power management ICs, and advanced image sensors for autonomous driving.</li>
+                        <li><strong class="font-semibold text-gray-700">"Fab-Right" Manufacturing:</strong> Optimizing its manufacturing footprint by divesting non-core fabs, consolidating production, and transitioning to more cost-effective 300mm wafers.</li>
+                        <li><strong class="font-semibold text-gray-700">Vertical Integration in Silicon Carbide:</strong> Owning the entire SiC supply chain, from raw material (boule growth) to finished chips, providing a significant cost and supply assurance advantage.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-green-50 border-green-200">
+                    <p class="kpi-label">Target End Market Mix</p>
+                    <p class="kpi-value text-green-600">80%+ Automotive & Industrial</p>
+                    <p class="content-text text-sm mt-2">The successful pivot to these high-growth, higher-margin markets has been the cornerstone of onsemi's transformation, driving significant margin expansion.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How onsemi Makes Money: Three Technology Groups</h2>
+            <p class="content-text mb-6">onsemi's business is organized into three specialized groups that align with its strategy of providing intelligent power and sensing solutions. The company's revenue is increasingly concentrated in the high-growth automotive and industrial sectors, where its technology enables key functionalities like power efficiency in electric vehicles and advanced safety systems.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="psg">Power Solutions Group</button>
+                    <button class="segment-tab-button" data-target="asg">Advanced Solutions Group</button>
+                    <button class="segment-tab-button" data-target="isg">Intelligent Sensing Group</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="psgContent" class="segment-content">
+                    <h3 class="subsection-title">Power Solutions Group (PSG) (~52% of Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is onsemi's largest and most important segment, at the heart of its pivot to electrification. PSG provides a wide portfolio of analog, discrete, and module semiconductor products that perform power conversion, regulation, and protection functions. Its most critical and fastest-growing products are those based on Silicon Carbide (SiC), which are essential for high-voltage applications like EV traction inverters.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Technology:</strong> Silicon Carbide (SiC) and Insulated Gate Bipolar Transistors (IGBTs).</li>
+                                <li><strong>Applications:</strong> EV traction inverters, on-board chargers, solar inverters, and energy storage systems.</li>
+                                <li><strong>Strategic Importance:</strong> Leader in SiC, the key enabling technology for EV efficiency.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="asgContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Advanced Solutions Group (ASG) (~33% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">ASG provides a range of analog, mixed-signal, and advanced logic solutions. This includes power management integrated circuits (PMICs), drivers, and other components that provide essential functionality in complex systems. In automotive, these products manage power for vehicle electronics, while in industrial applications they support factory automation and 5G infrastructure.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Analog and mixed-signal ICs, power management ICs (PMICs), connectivity solutions.</li>
+                                <li><strong>Applications:</strong> Factory automation, 5G infrastructure, cloud computing, and medical devices.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">Silicon Carbide (SiC) Revenue</p>
+                             <p class="kpi-value text-teal-600">$1B+ Run Rate</p>
+                             <p class="content-text text-sm mt-2">Rapid growth in high-demand SiC products for EVs has been a major driver of revenue and profitability, with onsemi capturing a ~30% market share.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="isgContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Intelligent Sensing Group (ISG) (~15% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">ISG is a global leader in designing and fabricating CMOS image sensors and other sensing solutions. These products serve as the "eyes" of electronic systems. In the automotive market, ISG is a leader in sensors for Advanced Driver-Assistance Systems (ADAS) and in-cabin monitoring. In industrial, its sensors are used for machine vision and robotics.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Core Product:</strong> CMOS image sensors.</li>
+                                <li><strong>Key Driver:</strong> The increasing number of cameras per vehicle for safety and autonomous driving features.</li>
+                                <li><strong>Market Position:</strong> #1 market share in image sensors for the automotive and industrial end markets.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-fuchsia-50 border-fuchsia-200">
+                           <p class="kpi-label">Manufacturing Transformation</p>
+                           <p class="kpi-value text-fuchsia-600">Fab-Right</p>
+                           <p class="content-text text-sm mt-2">The "fab-right" strategy aims to optimize the manufacturing footprint, targeting a ~50% reduction in fabs and a shift to more cost-effective 300mm wafer production.</p>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">onsemi's strategic transformation has had a dramatic impact on its financial results. The pivot to higher-value products in the automotive and industrial markets has driven significant gross margin expansion. The company is currently navigating a cyclical downturn, particularly softness in the mass-market industrial space, but its long-term financial targets remain focused on driving superior margins and free cash flow.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-green-600 focus:border-green-600">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="grossMargin">Non-GAAP Gross Margin (%)</option>
+                            <option value="freeCashFlow">Free Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-green-600 focus:border-green-600">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="nonGaapEps">Non-GAAP EPS ($)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">Financials clearly show the margin expansion story from the strategic pivot, followed by a cyclical revenue decline in 2024 due to broad inventory correction.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Silicon Carbide Leader</h2>
+            <p class="content-text mb-6">onsemi's competitive moat is strengthening as it executes its transformation. It is built on a foundation of deep technical expertise in mission-critical applications, a sticky customer base in the automotive and industrial sectors, and a key strategic advantage in the production of Silicon Carbide.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Vertical Integration in Silicon Carbide (SiC):</strong> By acquiring GT Advanced Technologies, onsemi controls its entire SiC supply chain from raw material to finished chip. This provides a significant cost advantage and, crucially, supply assurance for automotive customers who require long-term supply reliability.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technical Leadership & Design Wins:</strong> The company is a recognized leader in automotive power and sensing. Long-term supply agreements and deep design-in relationships with major automakers and Tier 1 suppliers create high switching costs.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Sticky Automotive & Industrial Customer Base:</strong> These markets are characterized by long product lifecycles and stringent qualification requirements, making it difficult for competitors to displace an incumbent supplier once designed into a platform.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-teal-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Infineon Technologies (IFX):</strong> A major competitor across automotive and industrial power semiconductors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-teal-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">STMicroelectronics (STM):</strong> A key competitor in SiC technology, microcontrollers, and image sensors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-teal-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Wolfspeed (WOLF):</strong> A pure-play competitor focused primarily on Silicon Carbide materials and devices.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-teal-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Texas Instruments (TXN) & NXP Semiconductors (NXPI):</strong> Broad-based competitors in the automotive and industrial semiconductor markets.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">onsemi has successfully executed a difficult strategic pivot, positioning the company to capitalize on powerful secular growth trends. The primary risks involve the cyclicality of the semiconductor industry and the high level of execution required to complete its manufacturing transformation.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-emerald-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Secular Growth in EVs and Energy:</strong> Directly exposed to the long-term, high-growth markets of vehicle electrification and renewable energy infrastructure.</li>
+                        <li><strong>Leadership in Silicon Carbide:</strong> Strong market position and vertical integration in SiC, the key technology for EV efficiency, provides a multi-year growth runway.</li>
+                        <li><strong>Durable Margin Expansion:</strong> The shift to higher-value products and a more efficient manufacturing footprint should support structurally higher gross margins through the cycle.</li>
+                        <li><strong>Strong Free Cash Flow Generation:</strong> The company is positioned to generate significant free cash flow once it moves past the peak of its current capital investment cycle.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-fuchsia-700">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Semiconductor Cyclicality:</strong> The business is subject to the inventory cycles of the semiconductor industry. The current downturn in industrial and automotive demand is impacting short-term results.</li>
+                        <li><strong>Execution Risk:</strong> The "fab-right" strategy and the ramp-up of 300mm and SiC production are complex and capital-intensive. Any delays or missteps could impact profitability.</li>
+                        <li><strong>Customer & End Market Concentration:</strong> Increased reliance on the automotive market, while strategic, also increases concentration risk if that sector experiences a prolonged downturn.</li>
+                        <li><strong>Intense Competition:</strong> The attractive SiC and automotive semiconductor markets are drawing heavy investment from large, well-capitalized competitors.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-gray-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from onsemi public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of July 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            green: '#16a34a',
+            teal: '#0d9488',
+            fuchsia: '#c026d3',
+            sky: '#0ea5e9',
+            gray: '#4B5563'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Power Solutions (PSG)', 'Advanced Solutions (ASG)', 'Intelligent Sensing (ISG)'],
+                datasets: [{
+                    data: [52, 33, 15], // Approximate revenue percentages
+                    backgroundColor: [CHART_COLORS.green, CHART_COLORS.teal, CHART_COLORS.fuchsia],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment (Approx. %)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end Dec 31)
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [6.74, 8.33, 8.25, 7.37], label: 'Total Revenue ($B)', color: CHART_COLORS.green },
+            grossMargin: { data: [38.1, 49.0, 47.3, 45.9], label: 'Non-GAAP Gross Margin (%)', color: CHART_COLORS.teal },
+            freeCashFlow: { data: [1.29, 1.68, 1.34, 0.76], label: 'Free Cash Flow ($B)', color: CHART_COLORS.sky }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25'],
+            totalRevenue: { data: [2.18, 1.96, 1.86, 1.79, 1.76, 1.75, 1.70, 1.72], label: 'Total Revenue ($B)', color: CHART_COLORS.green },
+            nonGaapEps: { data: [1.39, 1.25, 1.08, 1.04, 0.99, 0.95, 0.91, 0.93], label: 'Non-GAAP EPS ($)', color: CHART_COLORS.fuchsia }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'grossMargin' || metricKey === 'freeCashFlow' || metricKey === 'nonGaapEps';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
+    </script>
+</body>
+</html>
+

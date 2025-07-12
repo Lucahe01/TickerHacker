@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RxSight, Inc. (RXST) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">RxSight, Inc. (RXST) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">RxSight: Customizing Vision After Cataract Surgery</h2>
+            <p class="content-text mb-6">RxSight is a commercial-stage medical technology company that has created a paradigm shift in the premium cataract surgery market. Its platform, featuring the Light Adjustable Lens™ (LAL®), is the first and only system that allows surgeons to non-invasively customize and optimize a patient's vision *after* cataract surgery. This unique capability addresses a key unmet need for precision in a market previously defined by pre-operative estimates. RxSight's business operates on a classic <span class="highlight">"razor and blades"</span> model, driving adoption by placing its Light Delivery Device ("razor") and generating recurring revenue from high-margin LAL ("blade") sales.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Driving Adoption and Utilization</h3>
+                    <p class="content-text mb-4">RxSight's strategy is focused on making its technology the standard of care in premium cataract surgery:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Expand the Installed Base:</strong> Place Light Delivery Device (LDD) systems in high-volume cataract surgery practices to create a captive market for the lenses.</li>
+                        <li><strong class="font-semibold text-gray-700">Increase LAL Procedures:</strong> Once an LDD is placed, work with the practice to drive the utilization of Light Adjustable Lenses per system.</li>
+                        <li><strong class="font-semibold text-gray-700">Highlight Superior Outcomes:</strong> Leverage strong clinical data showing the LAL's ability to deliver superior, customized vision compared to traditional premium lenses.</li>
+                        <li><strong class="font-semibold text-gray-700">International Expansion:</strong> Grow its commercial footprint in key international markets to broaden its addressable market.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">LDD Installed Base (Q1 2025)</p>
+                    <p class="kpi-value text-violet-600">812 Units</p>
+                    <p class="content-text text-sm mt-2">Represents 45% YoY growth, demonstrating the rapid adoption of the LAL system by leading ophthalmology practices.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How RxSight Makes Money: The Razor and Blades Model</h2>
+            <p class="content-text mb-6">RxSight's business model is designed for long-term, recurring growth. It consists of the initial sale of a capital equipment system (the "razor") and the ongoing, high-margin sale of a proprietary consumable (the "blades").</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="blades">The Blades: LALs</button>
+                    <button class="segment-tab-button" data-target="razor">The Razor: LDDs</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="bladesContent" class="segment-content">
+                    <h3 class="subsection-title">The Blades: Light Adjustable Lenses (LALs)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is the primary long-term revenue and profit engine for the company. The LAL is the proprietary, single-use intraocular lens implanted during cataract surgery. Made of photosensitive silicone, its shape and power can be precisely modified post-surgery. Sales of LALs are recurring and grow as the installed base of LDDs and utilization per site increase.</p>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                            <p class="kpi-label">LAL Revenue (2024)</p>
+                            <p class="kpi-value text-sky-600">$73 Million</p>
+                            <p class="content-text text-sm mt-2">Grew over 90% YoY, highlighting the powerful recurring revenue stream from the growing installed base.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="razorContent" class="segment-content hidden">
+                    <h3 class="subsection-title">The Razor: Light Delivery Devices (LDDs)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The LDD is the capital equipment that ophthalmologists purchase to be able to offer the LAL procedure. It is an in-office device that uses UV light to perform the non-invasive adjustments to the LAL. Each LDD placement creates a new customer for the recurring LAL revenue stream.</p>
+                        </div>
+                         <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">LDD Revenue (2024)</p>
+                             <p class="kpi-value text-teal-600">$45 Million</p>
+                             <p class="content-text text-sm mt-2">Represents the expansion of the "razor" base, which is the leading indicator of future "blade" sales.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">RxSight is in a phase of rapid commercial acceleration. Its financial results show explosive revenue growth as the company expands its installed base of LDDs and drives higher sales of its high-margin LALs. The company is scaling its operations and is on a clear path toward profitability.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="revenue" selected>Revenue by Type ($M)</option>
+                            <option value="grossMargin">Gross Margin (%)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="revenue" selected>Revenue by Type ($M)</option>
+                             <option value="lddPlaced">LDD Systems Placed</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts clearly illustrate the "razor and blades" model in action, with recurring LAL revenue growing to become the dominant part of the business.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Unique and Protected Technology</h2>
+            <p class="content-text mb-6">RxSight enjoys a powerful competitive moat as the only company in the world with an FDA-approved intraocular lens that can be adjusted after surgery.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">First & Only Mover Status:</strong> The LAL system is a one-of-a-kind, FDA-approved technology with no direct competitors offering post-operative adjustability.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Intellectual Property:</strong> A strong and broad patent portfolio protects the unique photosensitive material of the LAL and the Light Delivery Device system.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">"Razor and Blades" Lock-In:</strong> Practices that invest in the LDD capital equipment are effectively locked into using RxSight's proprietary and high-margin LALs.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Premium IOLs:</strong> RxSight does not compete with another adjustable lens, but it does compete for the patient's out-of-pocket payment against other premium lenses (multifocal, toric, etc.) from giants like **Alcon** and **Johnson & Johnson Vision**.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">RxSight is a high-growth, disruptive med-tech company with a massive market opportunity. Its success will depend on its ability to execute its commercial strategy and make its unique technology the new gold standard in premium vision correction.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Huge Addressable Market:</strong> The premium cataract surgery market is large and growing, and the LAL's unique value proposition could allow it to capture significant share.</li>
+                        <li><strong>Clear Path to Profitability:</strong> As the installed base grows and high-margin LAL sales accelerate, the company has a clear line of sight to sustained profitability.</li>
+                        <li>**Strong Competitive Position:** With no direct competitors for its core technology, RxSight has a multi-year head start to establish itself as the market leader.</li>
+                        <li><strong>Potential for International Expansion:** The company is in the early stages of its international launch, which represents a significant long-term growth opportunity.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Commercial Execution:** The company's success depends on its sales force's ability to continue placing LDDs and helping clinics drive patient adoption.</li>
+                        <li><strong>Competition for Patient Dollars:** The LAL must successfully compete against the well-established premium IOL offerings from large, well-funded competitors like Alcon and J&J.</li>
+                        <li><strong>Economic Sensitivity:** As a premium, out-of-pocket procedure, demand for the LAL could be sensitive to a downturn in consumer discretionary spending.</li>
+                        <li><strong>Manufacturing & Scale-Up:** As a rapidly growing company, it must effectively scale its manufacturing and operations to meet demand without compromising quality.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from RxSight, Inc. public filings and credible financial data providers as of July 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
+        
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            revenue: {
+                datasets: [
+                    { label: 'LAL Revenue ($M)', data: [28.2, 53.9, 73.0], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet, stack: 'Stack 0' },
+                    { label: 'LDD Revenue ($M)', data: [21.0, 35.8, 45.1], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' },
+                ],
+                yAxisLabel: 'Millions of USD'
+            },
+            grossMargin: {
+                datasets: [ { label: 'Gross Margin (%)', data: [51.5, 59.8, 64.1], type: 'line', fill: false, backgroundColor: CHART_COLORS.orange, borderColor: CHART_COLORS.orange } ],
+                yAxisLabel: 'Margin (%)'
+            }
+        };
+
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            revenue: {
+                datasets: [
+                    { label: 'LAL Revenue ($M)', data: [12.6, 14.2, 16.9, 18.0, 19.5, 21.0, 23.5, 25.1], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet, stack: 'Stack 0' },
+                    { label: 'LDD Revenue ($M)', data: [8.8, 9.3, 11.2, 10.5, 11.3, 11.8, 12.8, 13.5], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' },
+                ],
+                yAxisLabel: 'Millions of USD'
+            },
+            lddPlaced: {
+                datasets: [ { label: 'LDD Systems Placed', data: [55, 60, 71, 65, 70, 75, 80, 85], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Units Placed'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isStacked = metricKey === 'revenue';
+            const isLine = metricDetails.datasets[0].type === 'line';
+            
+            return new Chart(canvas, {
+                type: isLine ? 'line' : 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        let val = context.parsed.y;
+                                        let unit = label.includes('(%)') ? '%' : '';
+                                        let prefix = label.includes('($M)') ? '$' : '';
+                                        let suffix = label.includes('($M)') ? 'M' : unit;
+                                        label += prefix + val.toFixed(1) + suffix;
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            display: isStacked
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: isStacked,
+                        },
+                        y: {
+                            stacked: isStacked,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'revenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'revenue');
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monolithic Power Systems (MPWR) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Monolithic Power Systems (MPWR)</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">End Markets</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">End Markets</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Monolithic Power Systems: A Premier Analog Growth Story</h2>
+            <p class="content-text mb-6">Monolithic Power Systems (MPWR) is a high-performance analog semiconductor company that has established itself as a leader in power management solutions. The company's core strength lies in its proprietary <span class="highlight">BCD process technology</span>, which allows it to create highly integrated, single-chip power solutions that are smaller, more efficient, and more reliable than competing products. This technological edge has enabled MPWR to consistently gain market share and command premium gross margins while serving a diverse set of high-growth end markets, from AI-driven data centers to the electrification of automobiles.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Technology and Integration</h3>
+                    <p class="content-text mb-4">MPWR's success is built on a clear and consistent strategy:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Proprietary Process Technology:</strong> Leveraging its internally developed BCD process to integrate multiple analog and digital components onto a single chip.</li>
+                        <li><strong class="font-semibold text-gray-700">Systems-Level Expertise:</strong> Focusing on understanding the entire power system of its customers to provide holistic, problem-solving solutions rather than just components.</li>
+                        <li><strong class="font-semibold text-gray-700">Targeting High-Growth Markets:</strong> Strategically focusing on the fastest-growing applications within the data center, automotive, industrial, and consumer markets.</li>
+                        <li><strong class="font-semibold text-gray-700">Vertically Integrated Fabless Model:</strong> Maintaining control over its proprietary technology by installing its own equipment in partner foundries, combining flexibility with technological control.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Non-GAAP Gross Margin (Q1 2025)</p>
+                    <p class="kpi-value text-violet-600">55.7%</p>
+                    <p class="content-text text-sm mt-2">MPWR's ability to consistently maintain industry-leading gross margins is a direct result of its differentiated technology and premium product positioning.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How MPWR Makes Money: Powering Diverse End Markets</h2>
+            <p class="content-text mb-6">MPWR's revenue is diversified across four key end markets. The company's strategy is to grow its presence in markets with strong secular tailwinds, such as AI and vehicle electrification.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="data">Data Center</button>
+                    <button class="segment-tab-button" data-target="auto">Automotive</button>
+                    <button class="segment-tab-button" data-target="ind">Industrial</button>
+                    <button class="segment-tab-button" data-target="cons">Consumer</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="dataContent" class="segment-content">
+                    <h3 class="subsection-title">Data Center</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The largest and fastest-growing segment, driven by the proliferation of cloud computing and, more recently, the massive power requirements of AI accelerators (GPUs). MPWR provides highly efficient power conversion and management solutions for servers, storage, and networking equipment.</p>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                            <p class="kpi-label">Data Center Revenue (Q1 2025)</p>
+                            <p class="kpi-value text-sky-600">$158 Million</p>
+                            <p class="content-text text-sm mt-2">Grew 14% year-over-year, demonstrating the powerful tailwind from AI infrastructure investment.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="autoContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Automotive</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment is benefiting from the dual trends of vehicle electrification and the growth of advanced driver-assistance systems (ADAS). MPWR's products are used in infotainment systems, lighting, and battery management systems.</p>
+                        </div>
+                         <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">Automotive Revenue (Q1 2025)</p>
+                             <p class="kpi-value text-teal-600">$116 Million</p>
+                             <p class="content-text text-sm mt-2">A key long-term growth driver as the amount of electronic content per vehicle continues to increase.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="indContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Industrial</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">A broad market encompassing power solutions for factory automation, security systems, medical equipment, and other demanding applications. This segment is currently experiencing a cyclical inventory correction but has strong long-term fundamentals.</p>
+                        </div>
+                         <div class="kpi-card bg-orange-50 border-orange-200">
+                             <p class="kpi-label">Industrial Revenue (Q1 2025)</p>
+                             <p class="kpi-value text-orange-600">$90 Million</p>
+                             <p class="content-text text-sm mt-2">Represents a diverse and stable long-term market, currently navigating near-term cyclical headwinds.</p>
+                         </div>
+                    </div>
+                </div>
+                <div id="consContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Consumer</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment provides power management solutions for high-performance consumer applications like gaming consoles, high-end notebooks, and home appliances. Like the Industrial segment, it is currently working through an inventory correction.</p>
+                        </div>
+                         <div class="kpi-card bg-red-50 border-red-200">
+                             <p class="kpi-label">Consumer Revenue (Q1 2025)</p>
+                             <p class="kpi-value text-red-600">$112 Million</p>
+                             <p class="content-text text-sm mt-2">A large but more cyclical market for MPWR's high-performance power solutions.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">MPWR's financial performance is a hallmark of a best-in-class semiconductor company, characterized by high growth, premium gross margins, and strong profitability. The diversification of its end markets has helped it navigate the recent cyclical downturn in the broader industry.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="revenue" selected>Revenue by Segment ($B)</option>
+                            <option value="grossMargin">Non-GAAP Gross Margin (%)</option>
+                            <option value="operatingIncome">Non-GAAP Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="revenue" selected>Revenue by Segment ($M)</option>
+                             <option value="grossMargin">Non-GAAP Gross Margin (%)</option>
+                             <option value="operatingIncome">Non-GAAP Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase the strong growth in the Data Center and Automotive segments, which are offsetting cyclical weakness in the Industrial and Consumer markets.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Foundation of Technology</h2>
+            <p class="content-text mb-6">MPWR's most durable competitive advantage is its proprietary BCD process technology, which allows it to build smaller, more efficient, and more integrated power management solutions than its competitors.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary Process Technology:</strong> The internally-developed BCD process is the cornerstone of the company's ability to deliver highly differentiated, single-chip solutions.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Systems-Level Integration:</strong> By integrating multiple functions onto one chip, MPWR provides customers with superior performance in a smaller footprint, creating high switching costs.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Deep Design Expertise:</strong> A culture of engineering excellence and deep knowledge of customer systems allow MPWR to solve the most complex power challenges.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Texas Instruments (TXN):</strong> The largest player in the analog semiconductor market, with a massive portfolio and scale.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Analog Devices (ADI):</strong> Another major competitor with a broad portfolio of high-performance analog and mixed-signal products.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Infineon Technologies:</strong> A key competitor, particularly in the automotive and industrial power semiconductor markets.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">MPWR is a premier semiconductor company that is exceptionally well-positioned to benefit from several powerful, long-term secular growth trends. However, its high valuation and exposure to the cyclical semiconductor industry present risks.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Artificial Intelligence (AI) Boom:</strong> The massive power requirements of AI data centers create a powerful and sustained demand for MPWR's high-efficiency power solutions.</li>
+                        <li><strong>Vehicle Electrification:</strong> The transition to electric and hybrid vehicles dramatically increases the semiconductor content per car, providing a long runway for growth in the automotive segment.</li>
+                        <li><strong>Market Share Gains:</strong> The company's technological advantages should allow it to continue to gain market share from larger, less nimble competitors.</li>
+                        <li><strong>Margin Expansion:</strong> As the company grows and achieves greater economies of scale, it has the potential to further expand its already industry-leading margins.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Semiconductor Cyclicality:</strong> The industry is prone to cycles of boom and bust. A future downturn could impact inventory levels and financial results.</li>
+                        <li><strong>Premium Valuation:</strong> MPWR trades at a high valuation, which reflects its high quality and growth prospects. This could lead to volatility if growth expectations are not met.</li>
+                        <li><strong>Customer Concentration:</strong> A significant portion of revenue comes from a limited number of large customers, creating risk if any one of them were to reduce their orders.</li>
+                        <li><strong>Geopolitical Risk:</strong> As a global semiconductor company with a supply chain that involves Taiwan, MPWR is exposed to geopolitical tensions.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Monolithic Power Systems, Inc. public filings and credible financial data providers as of July 2, 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4',
+            red: '#F87171'
+        };
+        
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            revenue: {
+                datasets: [
+                    { label: 'Data Center ($B)', data: [0.51, 0.47, 0.52], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' },
+                    { label: 'Automotive ($B)', data: [0.31, 0.36, 0.41], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal, stack: 'Stack 0' },
+                    { label: 'Industrial ($B)', data: [0.40, 0.44, 0.43], backgroundColor: CHART_COLORS.orange + 'BF', borderColor: CHART_COLORS.orange, stack: 'Stack 0' },
+                    { label: 'Consumer ($B)', data: [0.60, 0.55, 0.51], backgroundColor: CHART_COLORS.red + 'BF', borderColor: CHART_COLORS.red, stack: 'Stack 0' }
+                ]
+            },
+            grossMargin: {
+                datasets: [ { label: 'Non-GAAP Gross Margin (%)', data: [58.9, 58.0, 56.6], backgroundColor: 'transparent', borderColor: CHART_COLORS.violet, type: 'line', fill: false } ]
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Non-GAAP Operating Income ($B)', data: [0.61, 0.55, 0.50], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ]
+            }
+        };
+
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            revenue: {
+                datasets: [
+                    { label: 'Data Center ($M)', data: [119, 114, 122, 138, 145, 140, 149, 158], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' },
+                    { label: 'Automotive ($M)', data: [94, 95, 99, 104, 108, 110, 112, 116], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal, stack: 'Stack 0' },
+                    { label: 'Industrial ($M)', data: [113, 109, 104, 96, 95, 90, 95, 90], backgroundColor: CHART_COLORS.orange + 'BF', borderColor: CHART_COLORS.orange, stack: 'Stack 0' },
+                    { label: 'Consumer ($M)', data: [145, 136, 126, 120, 123, 120, 125, 112], backgroundColor: CHART_COLORS.red + 'BF', borderColor: CHART_COLORS.red, stack: 'Stack 0' }
+                ]
+            },
+            grossMargin: {
+                datasets: [ { label: 'Non-GAAP Gross Margin (%)', data: [58.2, 57.8, 57.5, 56.4, 56.1, 56.0, 55.7, 55.7], backgroundColor: 'transparent', borderColor: CHART_COLORS.violet, type: 'line', fill: false } ]
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Non-GAAP Operating Income ($M)', data: [145, 130, 125, 121, 128, 123, 130, 126], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ]
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isStacked = metricKey === 'revenue';
+            
+            const chartType = 'bar';
+            if (metricDetails.datasets[0].type === 'line') {
+                chartType = 'line';
+            }
+
+            return new Chart(canvas, {
+                type: 'bar', // Base type is bar, individual datasets can override
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        let val = context.parsed.y;
+                                        let unit = label.includes('($B)') ? 'B' : (label.includes('($M)') ? 'M' : (label.includes('(%)') ? '%' : ''));
+                                        label += (unit === '%' || unit === '' ? val.toFixed(1) : '$' + val.toFixed(2)) + (unit === '%' ? '%' : (unit ? unit : ''));
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: isStacked,
+                        },
+                        y: {
+                            stacked: isStacked,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricKey === 'revenue' ? 'Billions/Millions of USD' : (metricDetails.datasets[0].label.split('(')[1] ? metricDetails.datasets[0].label.split('(')[1].replace(')','') : '')
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'revenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'revenue');
+
+    </script>
+</body>
+</html>
+

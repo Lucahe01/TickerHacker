@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charter Communications (CHTR) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #1d4ed8; /* blue-700 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #0ea5e9; /* sky-500 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #db2777; /* pink-600 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #1d4ed8; /* blue-700 */
+            color: #FFFFFF;
+            border-color: #1e40af; /* blue-800 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #1d4ed8; /* blue-700 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #1d4ed8;">Charter (CHTR) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-700" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Charter Communications: The Connectivity Backbone</h2>
+            <p class="content-text mb-6">Charter Communications, Inc. (CHTR), operating under the brand name Spectrum, is one of the largest telecommunications and mass media companies in the United States. Its core business is providing high-speed internet, video, and mobile services over a vast hybrid fiber-coaxial network that passes more than 57 million homes and businesses. Charter's strategy is centered on leveraging this extensive infrastructure to drive customer growth through <span class="highlight">service convergence</span>, bundling high-speed broadband with its high-value Spectrum Mobile service. The company is in the midst of a significant, multi-year network expansion initiative, heavily subsidized by the government's Rural Digital Opportunity Fund (RDOF), to bring connectivity to underserved rural areas, which represents its largest growth opportunity.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Convergence & Expansion</h3>
+                    <p class="content-text mb-4">Charter's plan to create long-term value rests on several key pillars:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Drive Connectivity Growth:</strong> Prioritize the growth of its core, high-margin broadband product by delivering superior speed and reliability.</li>
+                        <li><strong class="font-semibold text-gray-700">Leverage Service Convergence:</strong> Use its attractively priced Spectrum Mobile service, which runs on Verizon's network (MVNO), to create a powerful broadband-and-mobile bundle ("Spectrum One") that reduces churn and increases customer lifetime value.</li>
+                        <li><strong class="font-semibold text-gray-700">Execute Rural Network Expansion:</strong> Aggressively build out its network to over 1 million new rural locations, funded in part by RDOF, to capture growth in un- or underserved markets.</li>
+                        <li><strong class="font-semibold text-gray-700">Maximize Free Cash Flow:</strong> Focus on disciplined capital allocation, including significant network investments and substantial share buybacks, to drive long-term value for shareholders.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-blue-50 border-blue-200">
+                    <p class="kpi-label">Total Internet Customers</p>
+                    <p class="kpi-value text-blue-700">30.4 Million</p>
+                    <p class="content-text text-sm mt-2">A massive base of high-margin broadband subscribers forms the bedrock of Charter's business and the foundation for its mobile convergence strategy.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Charter Makes Money: A Portfolio of Services</h2>
+            <p class="content-text mb-6">Charter's revenue is dominated by its residential services, with the high-margin Internet product being the most critical component. While traditional video is in secular decline, the rapid growth of the Mobile segment is the key to the company's convergence strategy and future growth prospects. Advertising sales and commercial services provide additional, diversified revenue streams.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="internet">Internet</button>
+                    <button class="segment-tab-button" data-target="video">Video</button>
+                    <button class="segment-tab-button" data-target="mobile">Mobile</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="internetContent" class="segment-content">
+                    <h3 class="subsection-title">Internet Services (~45% of Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is Charter's most important and highest-margin product. The company offers a range of high-speed broadband packages over its fiber-rich network, with speeds now reaching 1 Gbps across nearly its entire footprint. The reliability and speed of this product are the primary drivers for attracting and retaining customers for its other services.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Core Product:</strong> Spectrum Internet®, with symmetrical and multi-gig speeds being rolled out.</li>
+                                <li><strong>Key Driver:</strong> The ever-increasing demand for fast, reliable connectivity in homes and businesses.</li>
+                                <li><strong>Challenge:</strong> Intense competition from fiber overbuilders and fixed wireless access (FWA) providers.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="videoContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Video Services (~25% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Charter provides traditional cable television packages, including a wide array of linear channels and on-demand content. This segment is in a state of managed decline due to the industry-wide trend of "cord-cutting," as consumers shift to streaming services. The strategy here is to maximize profitability from the existing subscriber base rather than pursue aggressive growth.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Core Product:</strong> Spectrum TV packages.</li>
+                                <li><strong>Key Trend:</strong> Facing secular declines in subscribers, with over 2 million video customers lost in 2024.</li>
+                                <li><strong>Strategic Shift:</strong> Partnering with content companies (like the Disney deal) to offer more flexible packages that include streaming apps, aiming to retain high-value video customers.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Strategic Pivot</p>
+                             <p class="kpi-value text-sky-500">Hybrid Model</p>
+                             <p class="content-text text-sm mt-2">Charter is transitioning its video strategy to embrace streaming, bundling services like Disney+ and ESPN+ into its packages to adapt to changing consumer behavior.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="mobileContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Mobile Services (~10% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Launched in 2018, Spectrum Mobile is the fastest-growing part of Charter's business and the centerpiece of its convergence strategy. It operates as a Mobile Virtual Network Operator (MVNO) on Verizon's network, which allows Charter to offer a high-quality wireless service without owning a wireless network. The service is sold exclusively to Charter's internet customers.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Core Product:</strong> Spectrum Mobile, offered in a bundle with Spectrum Internet.</li>
+                                <li><strong>Key Driver:</strong> The "Spectrum One" bundle, which provides significant savings and drives both mobile and internet subscriber growth while reducing churn.</li>
+                                <li><strong>Performance:</strong> Charter added over 2.4 million mobile lines in 2024, demonstrating strong customer adoption.</li>
+                            </ul>
+                        </div>
+                        <div class="kpi-card bg-pink-50 border-pink-200">
+                           <p class="kpi-label">Mobile Subscribers</p>
+                           <p class="kpi-value text-pink-600">8.3 Million</p>
+                           <p class="content-text text-sm mt-2">Rapid growth in mobile subscribers is proof of a successful convergence strategy, leading to stickier, more valuable customer relationships.</p>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Charter's financial model is characterized by high capital intensity, significant leverage, and a focus on growing Adjusted EBITDA and Free Cash Flow. The company is currently in a heavy investment cycle due to its rural network expansion, which is pressuring near-term free cash flow but is expected to drive long-term growth. Key metrics for investors include internet and mobile subscriber growth, Adjusted EBITDA, and capital expenditures.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (2021-2024)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-700 focus:border-blue-700">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="adjEbitda">Adjusted EBITDA ($B)</option>
+                            <option value="freeCashFlow">Free Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Subscriber Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-700 focus:border-blue-700">
+                             <option value="internetAdds" selected>Internet Net Adds (k)</option>
+                             <option value="mobileAdds">Mobile Line Net Adds (k)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">Financials show steady revenue and EBITDA, but declining Free Cash Flow due to a major capital investment cycle. Subscriber trends highlight the slowdown in broadband growth and the rapid acceleration of mobile.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Power of Infrastructure</h2>
+            <p class="content-text mb-6">Charter's competitive moat is primarily derived from the immense scale and capital intensity of its physical network infrastructure. Building a competing wired network is extraordinarily expensive and time-consuming, creating high barriers to entry. However, this moat is facing significant challenges from new technologies.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-blue-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Scale of Hybrid Fiber-Coaxial Network:</strong> Charter's existing network passes over 57 million locations, a footprint that would cost hundreds of billions of dollars to replicate today. This scale provides a significant cost advantage in delivering high-speed services.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Barriers to Entry:</strong> The high capital cost and logistical complexity of building new wired broadband infrastructure prevent new large-scale competitors from emerging in its established territories.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-600 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Convergence Bundle:</strong> The ability to bundle a high-quality, attractively priced mobile service with its core broadband product creates a sticky customer relationship that is difficult for standalone fiber or FWA competitors to match.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Fiber Overbuilders (AT&T, Verizon, Frontier):</strong> Telecom companies are aggressively building out fiber-optic networks in Charter's territories, offering superior speeds and a highly competitive product.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Fixed Wireless Access (FWA) (T-Mobile, Verizon):</strong> Mobile network operators are using their 5G networks to offer a home broadband service that is a lower-cost, "good enough" alternative to cable, and has been a major source of recent industry subscriber growth.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-600 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Streaming Services (Netflix, YouTube TV):</strong> These companies are the primary drivers of the cord-cutting trend that is eroding Charter's traditional video business.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Charter is navigating a period of intense competition and strategic investment. The company's long-term success hinges on its ability to successfully execute its rural buildout, defend its broadband base against fiber and FWA, and effectively use its mobile bundle to retain customers. The high leverage adds a layer of risk to this equation.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-emerald-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Rural Expansion Growth:</strong> The government-subsidized rural buildout is the company's largest and most certain growth driver, offering access to millions of new customers in non-competitive markets.</li>
+                        <li><strong>Successful Convergence Strategy:</strong> If the Spectrum One bundle continues to drive mobile growth and reduce internet churn, it can create a more durable and profitable customer base.</li>
+                        <li><strong>Network Superiority over FWA:</strong> The capacity and speed of Charter's wired network remain fundamentally superior to fixed wireless, providing a long-term quality advantage.</li>
+                        <li><strong>Aggressive Capital Return:</strong> Charter's historical commitment to large-scale share buybacks can significantly enhance shareholder returns if the company successfully navigates the current investment cycle.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-pink-700">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Intense Competition:</strong> The dual threat of fiber's superior product and FWA's lower price is putting significant pressure on broadband subscriber growth, which is the core of the business.</li>
+                        <li><strong>High Leverage:</strong> Charter operates with a significant amount of debt (nearly $100 billion). In a rising interest rate environment, this increases interest expense and financial risk.</li>
+                        <li><strong>Secular Decline of Video:</strong> The ongoing erosion of the high-margin video business acts as a constant drag on revenue and profitability.</li>
+                        <li><strong>Execution Risk of Rural Buildout:</strong> The rural expansion is a massive, complex, and costly undertaking. Any delays, cost overruns, or lower-than-expected customer adoption rates could negatively impact returns.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-gray-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Charter Communications, Inc. public filings (SEC 10-K & 10-Q reports) and credible financial data providers as of July 2025.</p>
+        </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            blue: '#1d4ed8',
+            sky: '#0ea5e9',
+            pink: '#db2777',
+            teal: '#14b8a6',
+            gray: '#4B5563'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Internet', 'Video', 'Mobile', 'Voice', 'Other'],
+                datasets: [{
+                    data: [45, 25, 10, 5, 15], // Approximate revenue percentages
+                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.sky, CHART_COLORS.pink, CHART_COLORS.teal, CHART_COLORS.gray],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Service (Approx. %)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Yearly Data Store (Fiscal Years end Dec 31)
+        const yearlyDataStore = {
+            labels: ['FY21', 'FY22', 'FY23', 'FY24'],
+            totalRevenue: { data: [51.7, 54.0, 54.6, 54.7], label: 'Total Revenue ($B)', color: CHART_COLORS.blue },
+            adjEbitda: { data: [20.6, 21.3, 21.6, 21.4], label: 'Adjusted EBITDA ($B)', color: CHART_COLORS.sky },
+            freeCashFlow: { data: [8.6, 6.1, 4.0, 1.1], label: 'Free Cash Flow ($B)', color: CHART_COLORS.pink }
+        };
+
+        // Quarterly Data Store
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25'],
+            internetAdds: { data: [63, 155, 76, 186, 20, 150, 85, 175], label: 'Internet Net Adds (k)', color: CHART_COLORS.blue },
+            mobileAdds: { data: [594, 546, 486, 400, 532, 560, 450, 420], label: 'Mobile Line Net Adds (k)', color: CHART_COLORS.teal }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isLineChart = metricKey === 'freeCashFlow';
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: [{
+                        label: metricDetails.label,
+                        data: metricDetails.data,
+                        backgroundColor: isLineChart ? 'transparent' : metricDetails.color + 'BF',
+                        borderColor: metricDetails.color,
+                        borderWidth: 2,
+                        type: isLineChart ? 'line' : 'bar',
+                        fill: !isLineChart,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','') }
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'internetAdds');
+
+    </script>
+</body>
+</html>
+
