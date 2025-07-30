@@ -1,687 +1,515 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GE Vernova: Interactive Business Analysis</title>
+    <title>GE Vernova (GEV) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    <!-- Visualization & Content Choices: 
-        - Report Info: GEV's mission, scale -> Goal: Inform -> Viz/Method: Key metric cards, introductory text -> Interaction: Static display -> Justification: Quick understanding of GEV's identity.
-        - Report Info: Business Segments (Power, Wind, Electrification details) -> Goal: Organize & Inform -> Viz/Method: Interactive cards for each segment, detailing sub-segments, revenue streams, operational model -> Interaction: Click/hover to expand details or switch between segments -> Justification: Clear, structured presentation of GEV's operational core.
-        - Report Info: Consolidated Financials (Revenue, NI, EBITDA, CFO Trends 2022-2024) -> Goal: Show Change & Compare -> Viz/Method: Line charts (Chart.js) -> Interaction: Tooltips on hover -> Justification: Visual trend analysis of overall financial health.
-        - Report Info: Segment Financials (Revenue, EBITDA Trends 2022-2024, Q1 2025) -> Goal: Show Change & Compare per Segment -> Viz/Method: Grouped Bar charts or Line charts (Chart.js) selectable by segment -> Interaction: Buttons/dropdown to filter by segment -> Justification: Detailed financial performance view for each operational unit.
-        - Report Info: Q1 2025 Highlights -> Goal: Inform (latest performance) -> Viz/Method: Key metric cards/list -> Interaction: Static display -> Justification: Quick snapshot of recent progress.
-        - Report Info: Competitor Overview & GEV Differentiation -> Goal: Compare & Highlight Strengths -> Viz/Method: Cards for key competitors summarizing their models, and a separate section for GEV's advantages using styled lists/callouts -> Interaction: Potentially filterable competitor cards or toggle GEV's advantages -> Justification: Clear positioning of GEV in the market.
-        - Report Info: Outlook & Conclusion -> Goal: Summarize -> Viz/Method: Thematic text blocks -> Interaction: Minimal, perhaps collapsible sections -> Justification: Concise presentation of future perspectives.
-        - All visualizations will use Chart.js (Canvas). Textual content will be presented in structured HTML with Tailwind CSS. NO SVG or Mermaid JS will be used. This approach ensures interactivity and adherence to technical constraints while supporting the application's goal of clarity and user engagement.
-    -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .chart-container { position: relative; width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
-        @media (min-width: 768px) { .chart-container { height: 400px; } }
-        .nav-link { padding: 0.5rem 1rem; border-radius: 0.375rem; transition: background-color 0.3s ease, color 0.3s ease; }
-        .nav-link.active, .nav-link:hover { background-color: #0284c7; color: white; }
-        .section-title { font-size: 1.875rem; line-height: 2.25rem; font-weight: 700; color: #065f46; margin-bottom: 1.5rem; text-align: center; }
-        .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); padding: 1.5rem; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
-        .tab-button { padding: 0.5rem 1rem; border-radius: 0.375rem; transition: background-color 0.3s ease, color 0.3s ease; border: 1px solid transparent; }
-        .tab-button.active { background-color: #065f46; color: white; border-color: #065f46; }
-        .tab-button:not(.active):hover { background-color: #d1fae5; color: #065f46; }
-        .tooltip { position: absolute; background-color: rgba(0,0,0,0.75); color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.875rem; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 10; }
-        h1, h2, h3 { font-weight: 600; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-stone-100 text-neutral-800 antialiased">
-    <header class="bg-white shadow-md sticky top-0 z-50">
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <span class="font-bold text-xl text-emerald-700">GE Vernova</span>
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">GE Vernova (GEV) Analysis</h1>
                 </div>
                 <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#overview" class="nav-link text-neutral-700">Overview</a>
-                        <a href="#segments" class="nav-link text-neutral-700">Business Segments</a>
-                        <a href="#financials" class="nav-link text-neutral-700">Financials</a>
-                        <a href="#competition" class="nav-link text-neutral-700">Competition</a>
-                        <a href="#outlook" class="nav-link text-neutral-700">Outlook</a>
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-neutral-700 hover:text-emerald-700 focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
             </div>
-        </nav>
-        <div id="mobile-menu" class="md:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#overview" class="block nav-link text-neutral-700">Overview</a>
-                <a href="#segments" class="block nav-link text-neutral-700">Business Segments</a>
-                <a href="#financials" class="block nav-link text-neutral-700">Financials</a>
-                <a href="#competition" class="block nav-link text-neutral-700">Competition</a>
-                <a href="#outlook" class="block nav-link text-neutral-700">Outlook</a>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
             </div>
-        </div>
+        </nav>
     </header>
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        <section id="overview" class="mb-12 scroll-mt-20">
-            <h2 class="section-title">GE Vernova: Powering the Future</h2>
-            <div class="card">
-                <p class="text-lg leading-relaxed mb-4">
-                    GE Vernova Inc. (NYSE: GEV) emerged as an independent entity on April 2, 2024, spun off from General Electric. Headquartered in Cambridge, Massachusetts, it is purpose-built to lead the energy transition by electrifying and decarbonizing the global energy system. With a legacy of over 130 years under GE, the company boasts a significant installed base, including approximately 7,000 gas turbines and 57,000 wind turbines, contributing to about 25% of the world's electricity generation.
-                </p>
-                <p class="text-lg leading-relaxed">
-                    This interactive application provides an analysis of GE Vernova's business model, financial performance, and competitive positioning, drawing insights from the provided comprehensive report. Explore the sections to understand how GE Vernova aims to deliver more reliable, affordable, and sustainable energy globally.
-                </p>
-                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                    <div class="bg-emerald-50 p-4 rounded-lg">
-                        <h3 class="text-2xl font-bold text-emerald-700">~76,800</h3>
-                        <p class="text-neutral-600">Employees</p>
-                    </div>
-                    <div class="bg-sky-50 p-4 rounded-lg">
-                        <h3 class="text-2xl font-bold text-sky-700">~100</h3>
-                        <p class="text-neutral-600">Countries of Operation</p>
-                    </div>
-                    <div class="bg-amber-50 p-4 rounded-lg">
-                        <h3 class="text-2xl font-bold text-amber-700">25%</h3>
-                        <p class="text-neutral-600">of World's Electricity Generated with GEV Tech</p>
-                    </div>
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
+
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">GE Vernova: Powering the Energy Transition</h2>
+            <p class="content-text mb-6">GE Vernova (NYSE: GEV), the recently spun-off energy powerhouse from General Electric, is a purpose-built company designed to lead the global energy transition. With a legacy spanning over 130 years, GE Vernova combines a vast installed base of power generation equipment with a growing portfolio of renewable energy and grid modernization technologies. The company is structured to provide end-to-end solutions, from generating power with gas and wind to electrifying the world with advanced grid technologies. The core of GE Vernova's strategy is a relentless focus on <span class="highlight">lean management and operational execution</span> to drive profitability and sustainable free cash flow, capitalizing on the multi-trillion dollar opportunity in electrification and decarbonization.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: From Spin-Off to Sustainable Growth</h3>
+                    <p class="content-text mb-4">As a newly independent company, GE Vernova's strategy is clear and focused:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Drive Service Excellence:</strong> Leverage its massive installed base—including ~7,000 gas turbines and ~55,000 wind turbines—to generate stable, high-margin service and aftermarket revenue.</li>
+                        <li><strong class="font-semibold text-gray-700">Execute a Profitable Wind Turnaround:</strong> Focus on a smaller, more profitable product portfolio and disciplined project execution to restore profitability to the Onshore and Offshore Wind businesses.</li>
+                        <li><strong class="font-semibold text-gray-700">Lead in Grid Modernization:</strong> Capitalize on the need to upgrade and expand electrical grids worldwide to support renewables and increasing electricity demand with its Grid and Electrification Systems portfolio.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Capital Allocation:</strong> Maintain a strong balance sheet and focus on generating consistent free cash flow to reinvest in growth and return capital to shareholders.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Global Installed Base</p>
+                    <p class="kpi-value text-violet-600">~30%</p>
+                    <p class="content-text text-sm mt-2">GE Vernova's equipment helps generate approximately 30% of the world's electricity, providing a massive foundation for long-term service revenue.</p>
                 </div>
             </div>
         </section>
 
-        <section id="segments" class="mb-12 scroll-mt-20">
-            <h2 class="section-title">Core Business Segments</h2>
-            <p class="text-center text-lg text-neutral-700 mb-8">
-                GE Vernova operates through three primary business segments: Power, Wind, and Electrification. Each segment plays a crucial role in the company's mission to electrify and decarbonize the world. Click on the tabs below to explore each segment's offerings, revenue generation model, and operational highlights.
-            </p>
-            <div class="flex justify-center mb-6 space-x-2 md:space-x-4">
-                <button class="tab-button active" data-tab="power">⚡ Power</button>
-                <button class="tab-button" data-tab="wind">🌬️ Wind</button>
-                <button class="tab-button" data-tab="electrification">🔌 Electrification</button>
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How GE Vernova Makes Money: Three Pillars of Energy</h2>
+            <p class="content-text mb-6">GE Vernova's business is organized into three distinct, yet complementary, segments that address the generation and distribution of electricity. The Power segment is the current cash cow, funding the growth and turnaround efforts in the Wind and Electrification segments.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="power">Power</button>
+                    <button class="segment-tab-button" data-target="wind">Wind</button>
+                    <button class="segment-tab-button" data-target="electrification">Electrification</button>
+                </nav>
             </div>
 
-            <div id="segment-content">
-                <div class="segment-pane active card" data-pane="power">
-                    <h3 class="text-2xl font-semibold text-emerald-700 mb-3">Power Segment</h3>
-                    <p class="mb-4 text-neutral-700">Focuses on dispatchable and flexible power generation, supporting grid stability and transition to lower carbon intensity.</p>
-                    <div class="space-y-4">
-                        <div>
-                            <h4 class="text-xl font-semibold text-sky-700">Gas Power</h4>
-                            <p class="text-neutral-600">Designs, manufactures, and services heavy-duty and aeroderivative gas turbines. Revenue from equipment sales, upgrades, and long-term service agreements (LTSAs). Investing in capacity, partly driven by AI data center demand.</p>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-sky-700">Nuclear Power</h4>
-                            <p class="text-neutral-600">Provides nuclear fuel bundles, services, and advanced reactor designs (BWRs, SMRs like BWRX-300) through a global alliance with Hitachi. Revenue from licensing, equipment, fuel, and services.</p>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-sky-700">Hydro Power</h4>
-                            <p class="text-neutral-600">Offers solutions and services for hydroelectric power generation.</p>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-sky-700">Steam Power</h4>
-                            <p class="text-neutral-600">Provides steam turbine technologies and services, mainly for nuclear plants in North America and existing coal plants globally.</p>
-                        </div>
-                    </div>
-                    <p class="mt-4 text-neutral-700"><strong>Operational Model:</strong> Advanced manufacturing and global service network. Lean initiatives manage costs.</p>
-                </div>
-
-                <div class="segment-pane hidden card" data-pane="wind">
-                    <h3 class="text-2xl font-semibold text-emerald-700 mb-3">Wind Segment</h3>
-                    <p class="mb-4 text-neutral-700">Dedicated to harnessing wind energy through advanced turbine technologies and service solutions.</p>
-                    <div class="space-y-4">
-                        <div>
-                            <h4 class="text-xl font-semibold text-sky-700">Onshore Wind</h4>
-                            <p class="text-neutral-600">Delivers "work-horse" wind turbines, technology, and services. Services leverage digital tools for performance optimization. Secured over 1 GW of U.S. repowering orders in 2024.</p>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-sky-700">Offshore Wind</h4>
-                            <p class="text-neutral-600">Provides large-scale offshore turbines (e.g., Haliade-X). Faced challenges in 2024 with blade issues and project delays.</p>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-sky-700">LM Wind Power</h4>
-                            <p class="text-neutral-600">Designs, manufactures, and tests wind turbine blades for internal use and the broader industry.</p>
-                        </div>
-                    </div>
-                     <p class="mt-4 text-neutral-700"><strong>Operational Model:</strong> Engineering and manufacturing in facilities like Schenectady, NY, and Pensacola, FL. Turnaround effort focused on supply chain and product reliability.</p>
-                </div>
-
-                <div class="segment-pane hidden card" data-pane="electrification">
-                    <h3 class="text-2xl font-semibold text-emerald-700 mb-3">Electrification Segment</h3>
-                    <p class="mb-4 text-neutral-700">Provides technologies for transmission, distribution, conversion, storage, and orchestration of electricity.</p>
-                    <div class="space-y-4">
-                        <div>
-                            <h4 class="text-xl font-semibold text-sky-700">Grid Solutions</h4>
-                            <p class="text-neutral-600">Offers equipment (transformers, switchgear), hardware, control systems, automation, and digital services. Focus on integrating renewables, including HVDC systems. Growing demand, with significant orders in Europe and North America.</p>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-sky-700">Power Conversion & Storage</h4>
-                            <p class="text-neutral-600">Provides motors, generators, automation for energy-intensive industries. Develops energy storage and renewable integration solutions.</p>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-sky-700">Electrification Software</h4>
-                            <p class="text-neutral-600">Develops software (asset performance, GridOS™, HMI/SCADA, MES) to digitize and optimize the energy ecosystem. 75% of Fortune 500 utilities use its grid software.</p>
-                        </div>
-                    </div>
-                    <p class="mt-4 text-neutral-700"><strong>Operational Model:</strong> Manufactures large-scale transmission equipment, investing in capacity. Lean initiatives address increased customer lead times due to high demand.</p>
-                </div>
-            </div>
-            <p class="text-center text-md text-neutral-600 mt-6">Accelerator businesses (Financial Services, Advanced Research, Consulting Services) support these core segments.</p>
-        </section>
-
-        <section id="financials" class="mb-12 scroll-mt-20">
-            <h2 class="section-title">Financial Performance Analysis</h2>
-            <p class="text-center text-lg text-neutral-700 mb-8">
-                GE Vernova has shown a trajectory of revenue growth and significant improvement in profitability. This section provides an interactive view of its consolidated and segment-specific financial trends. Use the buttons to switch between different financial views and hover over charts for more details.
-            </p>
-            <div class="flex justify-center mb-6 space-x-2 md:space-x-4">
-                <button class="tab-button active" data-financial-tab="consolidated">Consolidated Performance</button>
-                <button class="tab-button" data-financial-tab="segment">Segment Performance</button>
-                 <button class="tab-button" data-financial-tab="q1_2025">Q1 2025 Highlights</button>
-            </div>
-
-            <div id="financial-content">
-                <div class="financial-pane active card" data-financial-pane="consolidated">
-                    <h3 class="text-xl font-semibold text-emerald-700 mb-4 text-center">Consolidated Financial Trends (FY 2022-2024)</h3>
+            <div id="segmentDetails">
+                <div id="powerContent" class="segment-content">
+                    <h3 class="subsection-title">Power (~53% of Revenue)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <p class="text-center font-medium text-neutral-700 mb-2">Total Revenues & Operating Income ($M)</p>
-                            <div class="chart-container"><canvas id="consolidatedRevenueOpIncomeChart"></canvas></div>
+                            <p class="content-text mb-2">The Power segment is a global leader in gas power technology and services. It is the most profitable part of the company, anchored by its large installed base of gas turbines. This segment provides reliable, dispatchable power that is critical for grid stability, especially as more intermittent renewables are added.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Highly efficient gas turbines (including the HA-class), steam turbines, and nuclear power plant equipment.</li>
+                                <li><strong>Revenue Driver:</strong> Long-term service agreements (LTSAs) for its gas turbine fleet provide a stable, high-margin revenue stream.</li>
+                             </ul>
                         </div>
-                        <div>
-                            <p class="text-center font-medium text-neutral-700 mb-2">Net Income & Adjusted EBITDA ($M)</p>
-                            <div class="chart-container"><canvas id="consolidatedNetIncomeEbitdaChart"></canvas></div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Segment Profitability</p>
+                             <p class="kpi-value text-sky-600">High Single-Digit Margins</p>
+                             <p class="content-text text-sm mt-2">The Power segment is the financial engine of the company, generating the cash flow needed to invest in other areas of the business.</p>
+                         </div>
+                    </div>
+                </div>
+                <div id="windContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Wind (~28% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Wind segment provides a comprehensive portfolio of onshore and offshore wind turbines, as well as services. While facing recent profitability challenges due to industry-wide pressures, this segment is central to GE Vernova's identity as a leader in renewable energy. The focus is now on disciplined execution and a more selective approach to new projects.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Flagship Products:</strong> Haliade-X offshore wind turbines and next-generation onshore workhorse turbines.</li>
+                                <li><strong>Strategic Focus:</strong> Shifting from a "growth at all costs" mindset to one focused on selectivity, pricing discipline, and profitability.</li>
+                             </ul>
                         </div>
-                        <div>
-                            <p class="text-center font-medium text-neutral-700 mb-2">Cash from Operating Activities ($M)</p>
-                            <div class="chart-container"><canvas id="consolidatedCfoChart"></canvas></div>
+                         <div class="kpi-card bg-orange-50 border-orange-200">
+                             <p class="kpi-label">Turnaround in Progress</p>
+                             <p class="kpi-value text-orange-600">Path to Profitability</p>
+                             <p class="content-text text-sm mt-2">Management is focused on achieving low single-digit profit margins in the near term as the business stabilizes and executes on its backlog.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="electrificationContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Electrification (~19% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment contains a suite of technologies required to upgrade and modernize the electrical grid. As electricity demand grows and more renewables come online, the need for advanced grid solutions—from high-voltage DC (HVDC) systems to automation software—becomes paramount. This is a key long-term growth area for the company.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Offerings:</strong> Grid Solutions, Power Conversion, and Solar & Storage Solutions.</li>
+                                <li><strong>Growth Driver:</strong> The global need for grid investment to support decarbonization and electrification trends.</li>
+                            </ul>
                         </div>
-                        <div>
-                            <p class="text-center font-medium text-neutral-700 mb-2">Orders & Backlog ($M / $B)</p>
-                             <div class="chart-container"><canvas id="consolidatedOrdersBacklogChart"></canvas></div>
+                         <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
                         </div>
                     </div>
-                    <p class="mt-6 text-sm text-neutral-600 text-center">Organic revenue, Adjusted EBITDA, Free Cash Flow, and Adjusted Backlog are non-GAAP measures as reported by the company. FY2024 strength attributed to robust equipment growth in Power & Electrification and double-digit services growth.</p>
                 </div>
+            </div>
+        </section>
 
-                <div class="financial-pane hidden card" data-financial-pane="segment">
-                    <h3 class="text-xl font-semibold text-emerald-700 mb-4 text-center">Segment Financial Performance (FY 2024 & Q1 2025 YoY)</h3>
-                    <div class="mb-6 flex justify-center">
-                        <select id="segmentPerformanceSelector" class="p-2 border border-neutral-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
-                            <option value="power">Power Segment</option>
-                            <option value="wind">Wind Segment</option>
-                            <option value="electrification">Electrification Segment</option>
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">As a newly independent entity, GE Vernova is focused on demonstrating a clear trajectory of improving profitability and cash flow. The pro forma historical data shows a business with a stable revenue base, with the key story being the operational turnaround and margin expansion, particularly in the Wind and Electrification segments.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Pro Forma Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="adjEBITDA">Adjusted EBITDA ($B)</option>
                         </select>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <p class="text-center font-medium text-neutral-700 mb-2">Segment Revenues ($M): FY22-FY24</p>
-                            <div class="chart-container"><canvas id="segmentRevenueChart"></canvas></div>
-                        </div>
-                        <div>
-                             <p class="text-center font-medium text-neutral-700 mb-2">Segment EBITDA & Margin (%): FY22-FY24</p>
-                            <div class="chart-container"><canvas id="segmentEbitdaChart"></canvas></div>
-                        </div>
-                         <div>
-                            <p class="text-center font-medium text-neutral-700 mb-2">Segment Revenue Growth (Q1 YoY %)</p>
-                            <div class="chart-container"><canvas id="segmentQ1RevenueGrowthChart"></canvas></div>
-                        </div>
-                        <div>
-                            <p class="text-center font-medium text-neutral-700 mb-2">Segment EBITDA Margin (Q1 YoY %)</p>
-                            <div class="chart-container"><canvas id="segmentQ1EbitdaMarginChart"></canvas></div>
-                        </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
                     </div>
-                     <p class="mt-6 text-sm text-neutral-600 text-center">Organic growth rates as reported by the company. Hover for specific values. Select a segment to view its detailed trends.</p>
                 </div>
-                
-                <div class="financial-pane hidden card" data-financial-pane="q1_2025">
-                    <h3 class="text-xl font-semibold text-emerald-700 mb-4 text-center">Q1 2025 Performance Highlights</h3>
-                    <p class="text-center text-neutral-700 mb-6">GE Vernova reported a strong start to 2025, building on momentum from 2024.</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div class="bg-emerald-50 p-4 rounded-lg text-center">
-                            <h4 class="text-lg font-semibold text-emerald-700">Orders</h4>
-                            <p class="text-2xl font-bold text-emerald-600">$10.2B</p>
-                            <p class="text-sm text-neutral-500">+8% organic YoY</p>
-                        </div>
-                        <div class="bg-sky-50 p-4 rounded-lg text-center">
-                            <h4 class="text-lg font-semibold text-sky-700">Revenue</h4>
-                            <p class="text-2xl font-bold text-sky-600">$8.0B</p>
-                            <p class="text-sm text-neutral-500">+15% organic YoY</p>
-                        </div>
-                        <div class="bg-amber-50 p-4 rounded-lg text-center">
-                            <h4 class="text-lg font-semibold text-amber-700">Net Income</h4>
-                            <p class="text-2xl font-bold text-amber-600">$0.3B</p>
-                            <p class="text-sm text-neutral-500">3.3% margin, up 480 bps</p>
-                        </div>
-                        <div class="bg-indigo-50 p-4 rounded-lg text-center">
-                            <h4 class="text-lg font-semibold text-indigo-700">Adjusted EBITDA</h4>
-                            <p class="text-2xl font-bold text-indigo-600">$0.5B</p>
-                            <p class="text-sm text-neutral-500">5.7% margin</p>
-                        </div>
-                        <div class="bg-pink-50 p-4 rounded-lg text-center">
-                            <h4 class="text-lg font-semibold text-pink-700">Cash from Ops</h4>
-                            <p class="text-2xl font-bold text-pink-600">$1.2B</p>
-                            <p class="text-sm text-neutral-500">Up $1.6B YoY</p>
-                        </div>
-                         <div class="bg-lime-50 p-4 rounded-lg text-center">
-                            <h4 class="text-lg font-semibold text-lime-700">Free Cash Flow</h4>
-                            <p class="text-2xl font-bold text-lime-600">$1.0B</p>
-                            <p class="text-sm text-neutral-500">Up $1.6B YoY</p>
-                        </div>
+
+                <div>
+                    <h3 class="subsection-title">Pro Forma Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="adjEBITDA">Adjusted EBITDA ($M)</option>
+                        </select>
                     </div>
-                    <p class="mt-6 text-sm text-neutral-600 text-center">Management highlighted meaningful margin improvement in each segment and reaffirmed full-year 2025 guidance.</p>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
                 </div>
             </div>
+             <p class="content-text text-sm mt-6 text-center">Note: Financials are based on pro forma combined results prior to the April 2025 spin-off. Charts illustrate the seasonality and turnaround progress of the business.</p>
         </section>
 
-        <section id="competition" class="mb-12 scroll-mt-20">
-            <h2 class="section-title">Competitive Landscape & Differentiation</h2>
-            <p class="text-center text-lg text-neutral-700 mb-8">
-                GE Vernova operates in highly competitive energy markets. This section outlines key competitors across its segments and highlights GEV's strategic differentiating factors.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card">
-                    <h3 class="text-xl font-semibold text-emerald-700 mb-4">Key Competitors by Segment</h3>
-                    <div class="space-y-3">
-                        <div>
-                            <h4 class="font-medium text-sky-700">Power Segment:</h4>
-                            <p class="text-sm text-neutral-600">Siemens Energy, Mitsubishi Heavy Industries (MHI), Ansaldo Energia. (Nuclear: Westinghouse, Framatome)</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-sky-700">Wind Segment:</h4>
-                            <p class="text-sm text-neutral-600">Vestas, Siemens Gamesa, Nordex, Chinese OEMs (Goldwind, Envision, Mingyang).</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-sky-700">Electrification Segment:</h4>
-                            <p class="text-sm text-neutral-600">Siemens Energy, Schneider Electric, ABB, Hitachi Energy, Mitsubishi Electric.</p>
-                        </div>
-                    </div>
-                     <p class="mt-4 text-sm text-neutral-500">GEV holds leading positions in gas turbines and US onshore wind, operating in oligopolistic markets for some products.</p>
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Power of the Installed Base</h2>
+            <p class="content-text mb-6">GE Vernova's most significant competitive advantage is its massive global installed base of power generation equipment. This creates a durable, long-term relationship with its customers and a resilient, high-margin services business.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Massive Installed Base:</strong> With equipment helping to generate ~30% of the world's power, GEV has unparalleled access to a recurring, high-margin services revenue stream that is less cyclical than equipment sales.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technological Expertise and IP:</strong> A long history of innovation has resulted in a deep portfolio of patents and proprietary technology, particularly in advanced gas turbines and wind turbine blades.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Customer Relationships & Long-Term Contracts:</strong> The critical nature of its equipment and the prevalence of long-term service agreements (LTSAs) create very high switching costs and deep, multi-decade relationships with utility customers.</span>
+                        </li>
+                    </ul>
                 </div>
-                <div class="card">
-                    <h3 class="text-xl font-semibold text-emerald-700 mb-4">GEV's Differentiating Factors</h3>
-                    <ul class="space-y-3 list-disc list-inside text-neutral-700">
-                        <li><strong>Vast Installed Base & Service Franchise:</strong> ~7,000 gas turbines, ~57,000 wind turbines. Services are ~65% of backlog, offering recurring, high-margin revenue and upgrade opportunities.</li>
-                        <li><strong>Integrated Solutions:</strong> Capabilities span power generation (Power, Wind) to T&D (Electrification), enabling holistic project solutions.</li>
-                        <li><strong>Technological Heritage & R&D Focus:</strong> Legacy of GE innovation, planned 20% R&D spending increase in 2025, focus on HA-class turbines, SMRs, HVDC, GridOS™.</li>
-                        <li><strong>Global Scale & Execution:</strong> Operates in ~100 countries, capable of large, complex global projects.</li>
-                        <li><strong>Purpose-Built Focus on Energy Transition:</strong> Singular strategic focus as a standalone company, enhancing agility and attracting talent.</li>
-                        <li><strong>Lean Operating Model:</strong> Emphasis on safety, quality, delivery, and cost (SQDC) to drive efficiency and competitiveness.</li>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Siemens Energy:</strong> The most direct competitor, with a similar portfolio spanning gas power, wind (through Siemens Gamesa), and grid technologies.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Mitsubishi Heavy Industries (MHI):</strong> A major competitor in the gas turbine market.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Vestas & Nordex:</strong> Leading players in the onshore wind market.</span>
+                         </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Hitachi Energy & Schneider Electric:</strong> Compete in the grid solutions and electrification space.</span>
+                        </li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <section id="outlook" class="scroll-mt-20">
-            <h2 class="section-title">Outlook & Concluding Remarks</h2>
-            <div class="card">
-                <p class="text-lg leading-relaxed mb-4 text-neutral-700">
-                    GE Vernova is positioned as a pivotal player in the global energy transition, benefiting from secular tailwinds like accelerating electricity demand, grid modernization needs, and growth in sectors like data centers. Management refers to an "electricity investment supercycle."
-                </p>
-                <p class="text-lg leading-relaxed mb-4 text-neutral-700">
-                    Key challenges include intense competition, turning around the Wind segment, managing supply chains, inflation, and geopolitical risks. Continuous innovation and cost management are vital.
-                </p>
-                <p class="text-lg leading-relaxed mb-2 font-semibold text-emerald-700">2025 Guidance Highlights:</p>
-                <ul class="list-disc list-inside space-y-1 text-neutral-600 mb-4">
-                    <li>Revenues: $36-$37 billion</li>
-                    <li>Adjusted EBITDA Margins: High-single-digit</li>
-                    <li>Free Cash Flow: $2.0-$2.5 billion</li>
-                </ul>
-                <p class="text-lg leading-relaxed text-neutral-700">
-                    The company's transformation into a focused, standalone entity provides a strong platform. Sustained execution against strategic priorities will be key to capitalizing on opportunities and navigating the complexities of the global energy sector. Initial post-spin performance is encouraging.
-                </p>
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">GE Vernova represents a compelling turnaround and cyclical growth story. The investment thesis is centered on the company's ability to execute its lean transformation and capitalize on the immense, long-term investments required for the global energy transition.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>The Energy Transition Tail-wind:</strong> The global push for decarbonization and electrification requires massive investment in renewables and grid infrastructure, directly benefiting all three of GEV's segments.</li>
+                        <li><strong>Wind Segment Turnaround:</strong> A successful operational and financial turnaround of the Wind business presents a significant catalyst for margin expansion and improved investor sentiment.</li>
+                        <li><strong>Durable Services Revenue:</strong> The high-margin, recurring revenue from the Power segment's installed base provides a stable foundation of cash flow to fund growth and shareholder returns.</li>
+                        <li><strong>Lean Management Focus:</strong> A renewed focus on operational excellence and cost discipline under the "lean" methodology could unlock significant value and drive profitability higher than historical levels.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Execution Risk:</strong> The turnaround in the Wind segment is critical and not guaranteed. Failure to achieve profitability due to project delays, cost overruns, or quality issues remains a key risk.</li>
+                        <li><strong>Project-Based Volatility:</strong> A significant portion of revenue, particularly for large equipment orders, is project-based and can be lumpy, leading to quarter-to-quarter volatility.</li>
+                        <li><strong>Intense Competition and Price Pressure:</strong> The energy equipment market is highly competitive, which can lead to pressure on pricing and margins, especially for new equipment orders.</li>
+                        <li><strong>Supply Chain and Geopolitical Risks:</strong> As a global industrial company, GEV is exposed to risks from supply chain disruptions, raw material inflation, and changing geopolitical landscapes.</li>
+                    </ul>
+                </div>
             </div>
         </section>
-    </main>
 
-    <footer class="bg-neutral-800 text-neutral-300 py-8 mt-12">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p>&copy; <span id="currentYear"></span> GE Vernova Interactive Analysis. For informational purposes only.</p>
-            <p class="text-sm mt-1">Content derived from "An Analytical Review of GE Vernova Inc." report.</p>
-        </div>
-    </footer>
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from GE Vernova public filings (SEC reports), investor presentations, and credible financial data providers as of July 2025.</p>
+        </footer>
 
     <script>
-        // Data from the report
-        const financialData = {
-            consolidated: {
-                years: ['2022', '2023', '2024'],
-                revenues: [29654, 33239, 34935],
-                opIncome: [-2881, -923, 471],
-                netIncome: [-2722, -474, 1559],
-                adjEbitda: [-428, 807, 2035],
-                cfo: [-2722, 1186, 2583],
-                orders: [null, 41637, 44089], // 2022 orders not given for this chart
-                backlog: [null, 115.6, 119.0] // 2022 backlog not given for this chart
-            },
-            q1_2025_highlights: {
-                orders: 10.2, revenue: 8.0, netIncome: 0.3, adjEbitda: 0.5, cfo: 1.2, fcf: 1.0
-            },
-            segments: {
-                power: {
-                    fy_revenues: [16124, 17436, 18127], // 2022, 2023, 2024
-                    fy_ebitda: [1655, 1722, 2268],
-                    fy_ebitda_margin: [10.3, 9.9, 12.5],
-                    q1_2024_revenue: 4035, q1_2025_revenue: 4423,
-                    q1_2024_ebitda_margin: 8.6, q1_2025_ebitda_margin: 11.5,
-                    q1_revenue_growth_organic: 16.0,
-                    q1_ebitda_margin_organic_bps_change: 70 // up 70bps
-                },
-                wind: {
-                    fy_revenues: [8905, 9826, 9701],
-                    fy_ebitda: [-1710, -1033, -588],
-                    fy_ebitda_margin: [-19.2, -10.5, -6.1],
-                    q1_2024_revenue: 1639, q1_2025_revenue: 1850,
-                    q1_2024_ebitda_margin: -10.6, q1_2025_ebitda_margin: -7.9,
-                    q1_revenue_growth_organic: 15.0,
-                    q1_ebitda_margin_organic_bps_change: 190 // up 190bps
-                },
-                electrification: {
-                    fy_revenues: [5076, 6378, 7550],
-                    fy_ebitda: [-164, 234, 679],
-                    fy_ebitda_margin: [-3.2, 3.7, 9.0],
-                    q1_2024_revenue: 1651, q1_2025_revenue: 1879,
-                    q1_2024_ebitda_margin: 4.0, q1_2025_ebitda_margin: 11.4,
-                    q1_revenue_growth_organic: 18.0,
-                    q1_ebitda_margin_organic_bps_change: 680 // up 680bps
-                }
-            },
-            years: ['2022', '2023', '2024']
-        };
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
 
-        // Chart instances
-        let consolidatedRevenueOpIncomeChart, consolidatedNetIncomeEbitdaChart, consolidatedCfoChart, consolidatedOrdersBacklogChart;
-        let segmentRevenueChart, segmentEbitdaChart, segmentQ1RevenueGrowthChart, segmentQ1EbitdaMarginChart;
-        
-        // Utility for wrapping long labels
-        function wrapLabels(labels, maxWidth) {
-            return labels.map(label => {
-                if (typeof label !== 'string') return label;
-                const words = label.split(' ');
-                let line = '';
-                const lines = [];
-                for (let i = 0; i < words.length; i++) {
-                    let testLine = line + words[i] + ' ';
-                    if (testLine.length > maxWidth && i > 0) {
-                        lines.push(line.trim());
-                        line = words[i] + ' ';
-                    } else {
-                        line = testLine;
-                    }
-                }
-                lines.push(line.trim());
-                return lines;
-            });
-        }
-        
-        const defaultChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: false, ticks: { color: '#4b5563'} }, // neutral-600
-                x: { ticks: { color: '#4b5563'} }
-            },
-            plugins: {
-                legend: { labels: { color: '#1f2937'} }, // neutral-800
-                tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    titleColor: '#ffffff',
-                    bodyColor: '#ffffff',
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed.y !== null) {
-                                label += new Intl.NumberFormat('en-US').format(context.parsed.y);
-                                if (context.dataset.yAxisID === 'yMargin') label += '%';
-                            }
-                            return label;
-                        }
-                    }
-                }
-            },
-            animation: {
-                duration: 1000,
-                easing: 'easeInOutQuart'
-            }
-        };
-
-        function createConsolidatedCharts() {
-            const revOpCtx = document.getElementById('consolidatedRevenueOpIncomeChart').getContext('2d');
-            consolidatedRevenueOpIncomeChart = new Chart(revOpCtx, {
-                type: 'bar',
-                data: {
-                    labels: financialData.consolidated.years,
-                    datasets: [
-                        { label: 'Total Revenues ($M)', data: financialData.consolidated.revenues, backgroundColor: 'rgba(6, 182, 212, 0.7)', borderColor: 'rgb(6, 182, 212)', yAxisID: 'yRevenues' }, // sky-500
-                        { label: 'Operating Income ($M)', data: financialData.consolidated.opIncome, backgroundColor: 'rgba(16, 185, 129, 0.7)', borderColor: 'rgb(16, 185, 129)', type: 'line', tension: 0.1, yAxisID: 'yOpIncome'} // emerald-500
-                    ]
-                },
-                options: {...defaultChartOptions, scales: { 
-                    yRevenues: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Revenues ($M)', color: '#065f46' } },
-                    yOpIncome: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Op. Income ($M)', color: '#065f46' } } 
-                }}
-            });
-
-            const netIncEbitdaCtx = document.getElementById('consolidatedNetIncomeEbitdaChart').getContext('2d');
-            consolidatedNetIncomeEbitdaChart = new Chart(netIncEbitdaCtx, {
-                type: 'bar',
-                data: {
-                    labels: financialData.consolidated.years,
-                    datasets: [
-                        { label: 'Net Income ($M)', data: financialData.consolidated.netIncome, backgroundColor: 'rgba(245, 158, 11, 0.7)', borderColor: 'rgb(245, 158, 11)', yAxisID: 'yNetIncome' }, // amber-500
-                        { label: 'Adjusted EBITDA ($M)', data: financialData.consolidated.adjEbitda, backgroundColor: 'rgba(236, 72, 153, 0.7)', borderColor: 'rgb(236, 72, 153)', type: 'line', tension: 0.1, yAxisID: 'yEbitda'} // pink-500
-                    ]
-                },
-                options: {...defaultChartOptions, scales: { 
-                    yNetIncome: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Net Income ($M)', color: '#065f46' } },
-                    yEbitda: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Adj. EBITDA ($M)', color: '#065f46' } } 
-                }}
-            });
-
-            const cfoCtx = document.getElementById('consolidatedCfoChart').getContext('2d');
-            consolidatedCfoChart = new Chart(cfoCtx, {
-                type: 'line',
-                data: {
-                    labels: financialData.consolidated.years,
-                    datasets: [
-                        { label: 'Cash from Operating Activities ($M)', data: financialData.consolidated.cfo, backgroundColor: 'rgba(132, 204, 22, 0.5)', borderColor: 'rgb(132, 204, 22)', fill: true, tension: 0.1 } // lime-500
-                    ]
-                },
-                options: defaultChartOptions
-            });
-
-            const ordersBacklogCtx = document.getElementById('consolidatedOrdersBacklogChart').getContext('2d');
-            consolidatedOrdersBacklogChart = new Chart(ordersBacklogCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['2023', '2024'], // Only 2023 and 2024 data available from report table
-                    datasets: [
-                        { label: 'Orders ($M)', data: financialData.consolidated.orders.slice(1), backgroundColor: 'rgba(99, 102, 241, 0.7)', borderColor: 'rgb(99, 102, 241)', yAxisID: 'yOrders' }, // indigo-500
-                        { label: 'Backlog ($B)', data: financialData.consolidated.backlog.slice(1), backgroundColor: 'rgba(168, 85, 247, 0.7)', borderColor: 'rgb(168, 85, 247)', yAxisID: 'yBacklog' } // purple-500
-                    ]
-                },
-                 options: {...defaultChartOptions, scales: { 
-                    yOrders: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Orders ($M)', color: '#065f46' } },
-                    yBacklog: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Backlog ($B)', color: '#065f46' } } 
-                }}
-            });
-        }
-        
-        function updateSegmentCharts(segmentKey) {
-            const segment = financialData.segments[segmentKey];
-            const years = financialData.years;
-
-            // Segment FY Revenue Chart
-            if (segmentRevenueChart) segmentRevenueChart.destroy();
-            const segRevCtx = document.getElementById('segmentRevenueChart').getContext('2d');
-            segmentRevenueChart = new Chart(segRevCtx, {
-                type: 'bar',
-                data: {
-                    labels: years,
-                    datasets: [{ label: `${segmentKey.charAt(0).toUpperCase() + segmentKey.slice(1)} Revenues ($M)`, data: segment.fy_revenues, backgroundColor: 'rgba(6, 182, 212, 0.7)', borderColor: 'rgb(6, 182, 212)' }]
-                },
-                options: defaultChartOptions
-            });
-
-            // Segment FY EBITDA Chart
-            if (segmentEbitdaChart) segmentEbitdaChart.destroy();
-            const segEbitdaCtx = document.getElementById('segmentEbitdaChart').getContext('2d');
-            segmentEbitdaChart = new Chart(segEbitdaCtx, {
-                type: 'bar',
-                data: {
-                    labels: years,
-                    datasets: [
-                        { label: `${segmentKey.charAt(0).toUpperCase() + segmentKey.slice(1)} EBITDA ($M)`, data: segment.fy_ebitda, backgroundColor: 'rgba(16, 185, 129, 0.7)', borderColor: 'rgb(16, 185, 129)', yAxisID: 'yEbitda' },
-                        { label: `${segmentKey.charAt(0).toUpperCase() + segmentKey.slice(1)} EBITDA Margin (%)`, data: segment.fy_ebitda_margin, backgroundColor: 'rgba(245, 158, 11, 0.7)', borderColor: 'rgb(245, 158, 11)', type: 'line', tension: 0.1, yAxisID: 'yMargin' }
-                    ]
-                },
-                options: {...defaultChartOptions, scales: { 
-                    yEbitda: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'EBITDA ($M)', color: '#065f46' } },
-                    yMargin: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'EBITDA Margin (%)', color: '#065f46' } } 
-                }}
-            });
-
-            // Segment Q1 Revenue Growth Chart
-            if (segmentQ1RevenueGrowthChart) segmentQ1RevenueGrowthChart.destroy();
-            const segQ1RevGrowthCtx = document.getElementById('segmentQ1RevenueGrowthChart').getContext('2d');
-            segmentQ1RevenueGrowthChart = new Chart(segQ1RevGrowthCtx, {
-                type: 'bar',
-                data: {
-                    labels: [`${segmentKey.charAt(0).toUpperCase() + segmentKey.slice(1)} Q1 Organic Revenue Growth (%)`],
-                    datasets: [{ label: 'Q1 YoY Organic Growth', data: [segment.q1_revenue_growth_organic], backgroundColor: 'rgba(99, 102, 241, 0.7)', borderColor: 'rgb(99, 102, 241)' }]
-                },
-                options: {...defaultChartOptions, scales: { y: { title: { display: true, text: 'Growth (%)', color: '#065f46'}}}}
-            });
-            
-            // Segment Q1 EBITDA Margin Chart
-            if (segmentQ1EbitdaMarginChart) segmentQ1EbitdaMarginChart.destroy();
-            const segQ1EbitdaMarginCtx = document.getElementById('segmentQ1EbitdaMarginChart').getContext('2d');
-            segmentQ1EbitdaMarginChart = new Chart(segQ1EbitdaMarginCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Q1 2024', 'Q1 2025'],
-                    datasets: [{ 
-                        label: `${segmentKey.charAt(0).toUpperCase() + segmentKey.slice(1)} Q1 EBITDA Margin (%)`, 
-                        data: [segment.q1_2024_ebitda_margin, segment.q1_2025_ebitda_margin], 
-                        backgroundColor: ['rgba(236, 72, 153, 0.7)', 'rgba(168, 85, 247, 0.7)'], 
-                        borderColor: ['rgb(236, 72, 153)', 'rgb(168, 85, 247)'] 
-                    }]
-                },
-                options: {...defaultChartOptions, scales: { y: { title: { display: true, text: 'EBITDA Margin (%)', color: '#065f46'}}}}
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Smooth scrolling for nav links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({ behavior: 'smooth' });
-                        // For mobile menu, close it after clicking a link
-                        if (document.getElementById('mobile-menu').classList.contains('hidden') === false) {
-                             document.getElementById('mobile-menu').classList.add('hidden');
-                        }
-                    }
-                });
-            });
-
-            // Active nav link highlighting on scroll
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('nav a.nav-link');
-            window.addEventListener('scroll', () => {
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    if (pageYOffset >= sectionTop - 80) { // 80 as offset for sticky header
-                        current = section.getAttribute('id');
-                    }
-                });
-
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href').substring(1) === current) {
-                        link.classList.add('active');
-                    }
-                });
-            });
-            
-            // Mobile menu toggle
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-            
-            // Business Segment Tabs
-            const segmentTabButtons = document.querySelectorAll('.tab-button[data-tab]');
-            const segmentPanes = document.querySelectorAll('.segment-pane[data-pane]');
-            segmentTabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    segmentTabButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    const tab = button.dataset.tab;
-                    segmentPanes.forEach(pane => {
-                        pane.classList.add('hidden');
-                        if (pane.dataset.pane === tab) {
-                            pane.classList.remove('hidden');
-                        }
-                    });
-                });
-            });
-
-            // Financial Tabs
-            const financialTabButtons = document.querySelectorAll('.tab-button[data-financial-tab]');
-            const financialPanes = document.querySelectorAll('.financial-pane[data-financial-pane]');
-            financialTabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    financialTabButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    const tab = button.dataset.financialTab;
-                    financialPanes.forEach(pane => {
-                        pane.classList.add('hidden');
-                        if (pane.dataset.financialPane === tab) {
-                            pane.classList.remove('hidden');
-                        }
-                    });
-                     // Initialize charts if consolidated tab is active and charts not yet created
-                    if (tab === 'consolidated' && !consolidatedRevenueOpIncomeChart) {
-                        createConsolidatedCharts();
-                    } else if (tab === 'segment' && !segmentRevenueChart) { // Also init segment charts if this tab is first
-                         updateSegmentCharts(document.getElementById('segmentPerformanceSelector').value);
-                    }
-                });
-            });
-
-            // Initialize consolidated charts by default if that tab is active on load
-            if (document.querySelector('.financial-pane[data-financial-pane="consolidated"].active')) {
-                 createConsolidatedCharts();
-            }
-             // Initialize segment charts if segment tab is active on load or if it's the first financial tab clicked
-            const segmentSelector = document.getElementById('segmentPerformanceSelector');
-            if (segmentSelector){
-                 updateSegmentCharts(segmentSelector.value); // Initial call for default segment
-                 segmentSelector.addEventListener('change', (event) => {
-                    updateSegmentCharts(event.target.value);
-                });
-            }
-
-
-            // Footer Year
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
         });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
+
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Power', 'Wind', 'Electrification'],
+                datasets: [{
+                    data: [53, 28, 19], // Approximate percentages for FY 2024
+                    backgroundColor: [CHART_COLORS.sky, CHART_COLORS.teal, CHART_COLORS.violet],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment (FY24 Pro Forma)' } }
+            }
+        });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Pro Forma Fiscal Year ends December 31
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [33.2, 33.2, 33.5], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            adjEBITDA: {
+                datasets: [ { label: 'Adjusted EBITDA ($B)', data: [1.1, 1.6, 2.5], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        // Pro Forma Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24(E)', 'Q3 24(E)', 'Q4 24(E)', 'Q1 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($M)', data: [8215, 8936, 9691, 7553, 8500, 9200, 9900, 7500], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Millions of USD'
+            },
+            adjEBITDA: {
+                datasets: [ { label: 'Adjusted EBITDA ($M)', data: [478, 672, 977, 439, 600, 800, 1000, 400], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Millions of USD'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            const datasets = metricDetails.datasets.map(ds => {
+                 if (metricKey === 'adjEBITDA') {
+                    return {
+                        ...ds,
+                        backgroundColor: ds.data.map(value => value >= 0 ? CHART_COLORS.teal + 'BF' : CHART_COLORS.orange + 'BF'),
+                        borderColor: ds.data.map(value => value >= 0 ? CHART_COLORS.teal : CHART_COLORS.orange),
+                    };
+                }
+                return ds;
+            });
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
     </script>
 </body>
 </html>

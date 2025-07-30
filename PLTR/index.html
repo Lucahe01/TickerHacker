@@ -3,35 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palantir Technologies (PLTR) - Interactive Analysis</title>
+    <title>Palantir Technologies (PLTR) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Application Structure Plan: The SPA is structured thematically to guide the user through Palantir's complex business.
-        1.  Hero/Introduction: Briefly introduces Palantir and the SPA's purpose.
-        2.  Core Business & Platforms: Explains Palantir's unique model, key tenets (Ontology, FDEs), and provides an interactive overview of Gotham, Foundry, AIP, and Apollo.
-        3.  Segment Performance: Interactive tabs to compare Government and Commercial segments, focusing on revenue growth, customer acquisition, and the U.S. commercial surge with AIP.
-        4.  Financial Deep Dive: An interactive section allowing users to select and visualize key financial trends (Revenue, Margins, SBC, Cash Flow, Rule of 40).
-        5.  Competitive Edge: Details Palantir's differentiators and positions it against various competitor types.
-        6.  Strategic Outlook: Presents a SWOT-like summary of Palantir's future prospects.
-        7.  Conclusion: Key takeaways.
-        This structure aims for a narrative flow, starting broad and delving into specifics, enhancing usability. Interactions include tab navigation for platforms/segments and a dropdown for financial chart selection.
-    -->
-
-    <!-- Visualization & Content Choices:
-        - Platform Overviews: Tabbed content (HTML/JS). Goal: Organize/Inform. Justification: Allows detailed exploration without clutter. Method: HTML/Tailwind/JS.
-        - M&A + R&D Cycle / FDE Model: Simple flow diagrams (HTML/CSS). Goal: Organize. Justification: Visual explanation of key concepts. Method: HTML/Tailwind.
-        - Segment Revenue Contribution (FY23): Donut Chart (Chart.js Canvas). Goal: Compare. Justification: Clear proportion. Method: Chart.js.
-        - U.S. Commercial & Gov Revenue Growth (Q1 FY25 YoY): Bar Chart (Chart.js Canvas). Goal: Compare. Justification: Highlight growth drivers. Method: Chart.js.
-        - Customer Count Growth Trend: Line Chart (Chart.js Canvas). Goal: Change. Justification: Show customer acquisition. Method: Chart.js.
-        - Avg. Revenue per Top 20 Customer Trend: Line Chart (Chart.js Canvas). Goal: Change. Justification: Show "land and expand" success. Method: Chart.js.
-        - Financial Metrics (Selected via dropdown - Revenue, GAAP OpInc, Adj OpInc, GAAP NetInc, Adj NetInc, OCF, Adj FCF): Dynamic Line Chart (Chart.js Canvas). Goal: Change/Compare. Justification: Interactive exploration of financial health. Method: Chart.js/JS.
-        - SBC as % of Revenue Trend: Line Chart (Chart.js Canvas). Goal: Change. Justification: Visualize impact of SBC. Method: Chart.js.
-        - Business Model Comparison: HTML Table. Goal: Compare/Organize. Method: HTML/Tailwind.
-        - SWOT elements: Styled lists/cards (HTML/CSS). Goal: Organize. Method: HTML/Tailwind.
-        All charts use Chart.js on Canvas. Interactions via navigation, tabs, dropdowns, and chart tooltips. This supports the designed interactive structure by providing dynamic data views and organized textual information.
-    -->
-
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -44,7 +19,7 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px; 
+            height: 300px;
             max-height: 350px;
         }
         @media (min-width: 768px) { /* md */
@@ -70,7 +45,7 @@
         .section-title {
             font-size: 1.875rem; /* text-3xl */
             font-weight: 600; /* font-semibold */
-            color: #60A5FA; /* blue-400 */
+            color: #A78BFA; /* violet-400 */
             margin-bottom: 1.5rem; /* mb-6 */
             padding-bottom: 0.5rem; /* pb-2 */
             border-bottom: 2px solid #E7E5E4; /* stone-200 */
@@ -78,7 +53,7 @@
         .subsection-title {
             font-size: 1.5rem; /* text-2xl */
             font-weight: 600; /* font-semibold */
-            color: #2DD4BF; /* teal-400 */
+            color: #7DD3FC; /* sky-400 */
             margin-top: 1.5rem; /* mt-6 */
             margin-bottom: 1rem; /* mb-4 */
         }
@@ -92,7 +67,7 @@
             font-weight: 600;
         }
         .tab-button {
-            padding: 0.5rem 1rem; /* Smaller padding */
+            padding: 0.5rem 1rem;
             border-radius: 0.375rem; /* rounded-md */
             font-weight: 500;
             font-size: 0.875rem; /* text-sm */
@@ -103,26 +78,9 @@
             border: 1px solid transparent;
         }
         .tab-button.active {
-            background-color: #60A5FA; /* blue-400 */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
-            border-color: #3B82F6; /* blue-500 */
-        }
-        .flow-step {
-            background-color: #EFF6FF; /* blue-50 */
-            border: 1px solid #BFDBFE; /* blue-200 */
-            color: #1E40AF; /* blue-800 */
-            padding: 0.75rem;
-            border-radius: 0.375rem; /* rounded-md */
-            text-align: center;
-            flex: 1;
-            min-width: 100px;
-            font-size: 0.875rem;
-        }
-        .flow-arrow {
-            font-size: 1.25rem; /* text-xl */
-            color: #60A5FA; /* blue-400 */
-            margin: 0.25rem 0.5rem;
-            align-self: center;
+            border-color: #8B5CF6; /* violet-500 */
         }
         .nav-link {
             padding: 0.5rem 1rem;
@@ -133,7 +91,7 @@
             white-space: nowrap;
         }
         .nav-link:hover, .nav-link.active {
-            background-color: #60A5FA; /* blue-400 */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
         }
         .kpi-card {
@@ -153,16 +111,6 @@
             font-weight: 600;
             color: #1F2937; /* gray-800 */
         }
-        .platform-card {
-            background-color: #F9FAFB; /* gray-50 */
-            border: 1px solid #E7E5E4; /* stone-200 */
-            border-radius: 0.5rem;
-            padding: 1rem;
-            min-height: 200px; /* Ensure cards have some height */
-        }
-        .platform-card h4 {
-            color: #60A5FA; /* blue-400 */
-        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -171,20 +119,19 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold" style="color: #60A5FA;">Palantir (PLTR) Analysis</h1>
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Palantir (PLTR) Analysis</h1>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
                         <a href="#overview" class="nav-link">Overview</a>
-                        <a href="#platforms" class="nav-link">Platforms</a>
-                        <a href="#segments" class="nav-link">Segments</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
                         <a href="#financials" class="nav-link">Financials</a>
-                        <a href="#competition" class="nav-link">Competition</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
                         <a href="#outlook" class="nav-link">Outlook</a>
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                         <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -194,10 +141,9 @@
             <div class="md:hidden hidden" id="mobile-menu">
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                     <a href="#overview" class="nav-link block text-base">Overview</a>
-                    <a href="#platforms" class="nav-link block text-base">Platforms</a>
-                    <a href="#segments" class="nav-link block text-base">Segments</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
                     <a href="#financials" class="nav-link block text-base">Financials</a>
-                    <a href="#competition" class="nav-link block text-base">Competition</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
                     <a href="#outlook" class="nav-link block text-base">Outlook</a>
                 </div>
             </div>
@@ -207,302 +153,182 @@
     <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
         <section id="overview" class="section-card scroll-mt-20">
-            <h2 class="section-title">Palantir: Operating System for the Modern Enterprise & AI</h2>
-            <p class="content-text mb-6">Palantir Technologies builds advanced software platforms to help organizations integrate their data, analytics, and operations. Originating from complex challenges in the U.S. intelligence community, Palantir now serves both government and commercial sectors, aiming to solve "billion-dollar problems" by enabling data-driven decision-making and operationalizing AI. This interactive application explores Palantir's business model, its core platforms, financial performance, and strategic positioning.</p>
+            <h2 class="section-title">Palantir: The Operating System for the Modern Enterprise</h2>
+            <p class="content-text mb-6">Palantir Technologies (NYSE: PLTR) is a leading provider of software platforms that empower organizations to integrate and analyze their vast, disparate datasets to make better, faster decisions. Originally forged in the complex and mission-critical environments of the U.S. intelligence community, Palantir has expanded its powerful data "operating systems" to the commercial sector. The company's core mission is to solve the world's hardest problems by building software that lets organizations see and understand their data. With the launch of its <span class="highlight">Artificial Intelligence Platform (AIP)</span>, Palantir is positioning itself as the essential secure and trusted framework for enterprises to deploy large language models (LLMs) and other AI capabilities on top of their own private data.</p>
             
-            <div class="grid md:grid-cols-2 gap-6 items-start">
+            <div class="grid md-grid-cols-2 gap-6 items-start">
                 <div>
-                    <h3 class="subsection-title !mt-0">Core Value Proposition</h3>
-                    <p class="content-text mb-4">Palantir enables organizations to transform vast, siloed datasets into actionable intelligence and operational plans. Key strengths include:</p>
+                    <h3 class="subsection-title !mt-0">Core Strategy: From Bespoke Projects to Scalable Platform</h3>
+                    <p class="content-text mb-4">Palantir's strategy is focused on driving widespread adoption of its platforms:</p>
                     <ul class="list-disc list-inside content-text space-y-1 pl-4">
-                        <li>Solving complex, high-stakes data challenges.</li>
-                        <li>Integrating disparate data sources into a unified view.</li>
-                        <li>Powering AI-driven insights and operationalization.</li>
-                        <li>Ensuring security and governance for sensitive data.</li>
+                        <li><strong class="font-semibold text-gray-700">Lead with AI:</strong> Position AIP as the premier platform for enterprises to safely and securely leverage generative AI, driving a new wave of customer acquisition.</li>
+                        <li><strong class="font-semibold text-gray-700">Accelerate U.S. Commercial Growth:</strong> Aggressively target the U.S. commercial market, using "bootcamps" and a more modular, faster-to-deploy product offering to shorten sales cycles.</li>
+                        <li><strong class="font-semibold text-gray-700">Land and Expand:</strong> Secure initial contracts with new customers and then expand the relationship over time by demonstrating the platform's value and selling additional capabilities.</li>
+                        <li><strong class="font-semibold text-gray-700">Drive Profitability:</strong> Maintain and expand upon its recent achievement of GAAP profitability, demonstrating the operating leverage inherent in its software model.</li>
                     </ul>
                 </div>
-                <div>
-                    <h3 class="subsection-title !mt-0">The Palantir Way: Key Tenets</h3>
-                    <p class="content-text mb-4">Palantir's approach is built on distinct principles:</p>
-                     <div class="space-y-3">
-                        <div class="p-3 bg-stone-50 rounded-md border border-stone-200">
-                            <h4 class="font-semibold text-blue-500">Ontology-Powered Platforms</h4>
-                            <p class="text-sm content-text">A semantic layer mapping data to real-world concepts, enabling contextual AI and human understanding.</p>
-                        </div>
-                        <div class="p-3 bg-stone-50 rounded-md border border-stone-200">
-                            <h4 class="font-semibold text-teal-500">Forward Deployed Engineers (FDEs)</h4>
-                            <p class="text-sm content-text">Elite technical teams embedded with clients to solve unique, complex problems, fostering deep partnerships.</p>
-                        </div>
-                         <div class="p-3 bg-stone-50 rounded-md border border-stone-200">
-                            <h4 class="font-semibold text-orange-500">Mission-Critical Focus</h4>
-                            <p class="text-sm content-text">Expertise in high-stakes environments, ensuring reliability and security for critical operations.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="platforms" class="section-card scroll-mt-20">
-            <h2 class="section-title">The Engine: Palantir's Software Platforms</h2>
-            <p class="content-text mb-6">Palantir's core offerings are a suite of interconnected software platforms: Gotham for government, Foundry for enterprise data operations, AIP for operationalizing AI, and Apollo for deployment and management. Explore each platform by clicking the tabs below.</p>
-
-            <div class="mb-6 border-b border-stone-200">
-                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
-                    <button class="platform-tab-button active" data-target="gotham">Gotham</button>
-                    <button class="platform-tab-button" data-target="foundry">Foundry</button>
-                    <button class="platform-tab-button" data-target="aip">AIP</button>
-                    <button class="platform-tab-button" data-target="apollo">Apollo</button>
-                </nav>
-            </div>
-
-            <div id="platformDetails">
-                <div id="gothamContent" class="platform-content">
-                    <h3 class="subsection-title">Palantir Gotham</h3>
-                    <p class="content-text mb-2">Primarily for government (defense, intelligence, law enforcement). Integrates vast, disparate datasets for mission planning, investigations, and intelligence production with robust security and privacy safeguards.</p>
-                    <p class="content-text text-sm"><span class="font-semibold">Key Features:</span> Data integration from diverse sources, link analysis, geospatial analysis, AI investigation helper, traceable data lineage, comprehensive auditing, configurable data protection.</p>
-                    <p class="content-text text-sm mt-1"><span class="font-semibold">Use Cases:</span> Counter-terrorism, military operations, law enforcement, emergency response, aviation safety, public health logistics (e.g., COVID-19 vaccine distribution).</p>
-                </div>
-                <div id="foundryContent" class="platform-content hidden">
-                    <h3 class="subsection-title">Palantir Foundry</h3>
-                    <p class="content-text mb-2">Central enterprise data operations and decision-making platform. Functions as an organization's OS for data, enabling integration, transformation, AI model building, and deployment of operational applications.</p>
-                    <p class="content-text text-sm"><span class="font-semibold">Key Features:</span> Scalable data integration (200+ connectors), Ontology creation, data visualization, version control, data science tools (Python, Java, R, SQL), secure LLM utilization via AIP, bidirectional data flows.</p>
-                    <p class="content-text text-sm mt-1"><span class="font-semibold">Use Cases:</span> Supply chain optimization, manufacturing digital twins, predictive maintenance, financial crime detection (KYC, fraud), drug discovery, customer intelligence.</p>
-                </div>
-                <div id="aipContent" class="platform-content hidden">
-                    <h3 class="subsection-title">Palantir AIP (Artificial Intelligence Platform)</h3>
-                    <p class="content-text mb-2">Enables organizations to safely deploy, manage, and leverage AI, especially LLMs, by connecting them to operational workflows and proprietary data. Facilitates "AI teaming patterns" for human-AI collaboration.</p>
-                    <p class="content-text text-sm"><span class="font-semibold">Key Features:</span> Unified Language Model Service, AI model lifecycle management (train, bring-your-own, pre-trained), model evaluation tools, "AIP Assist" (AI co-pilot), "AIP Logic" (AI agent integration), industry-specific "AIP Baseplates."</p>
-                    <p class="content-text text-sm mt-1"><span class="font-semibold">Use Cases:</span> Supply chain optimization (inventory rebalancing, supplier management), AI-driven customer service assistants, automated insurance claims assessment, AI decision support across enterprise functions.</p>
-                </div>
-                <div id="apolloContent" class="platform-content hidden">
-                    <h3 class="subsection-title">Palantir Apollo</h3>
-                    <p class="content-text mb-2">Software-defined continuous delivery and deployment platform. Automates management, upgrades, and secure deployment of Palantir's platforms (and customer software) across diverse environments (public/private cloud, on-prem, air-gapped, edge).</p>
-                    <p class="content-text text-sm"><span class="font-semibold">Key Features:</span> "Write once, deploy anywhere," centralized control plane (Apollo Hub), "pull" model for release promotion, deployment constraints enforcement, compliance-aware change management, integration with observability tools. Manages reportedly "100,000 upgrades across that infrastructure a week."</p>
-                    <p class="content-text text-sm mt-1"><span class="font-semibold">Use Cases:</span> Manages Palantir's own software lifecycle globally. Enables customers to maintain critical accreditations (FedRAMP, IL5/IL6) through secure, compliant deployments. Potential standalone offering for complex software management.</p>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">U.S. Commercial Revenue Growth (Q1 2025)</p>
+                    <p class="kpi-value text-violet-600">68%</p>
+                    <p class="content-text text-sm mt-2">Represents the explosive growth in Palantir's key strategic focus area, driven by strong demand for its AI platform from American businesses.</p>
                 </div>
             </div>
         </section>
 
         <section id="segments" class="section-card scroll-mt-20">
-            <h2 class="section-title">Segment Performance: Government & Commercial</h2>
-            <p class="content-text mb-6">Palantir serves two main segments. The Government segment provides a stable, growing revenue base, while the Commercial segment, particularly in the U.S. driven by AIP, is experiencing explosive growth. Use the tabs to explore performance details.</p>
+            <h2 class="section-title">How Palantir Makes Money: Government and Commercial Segments</h2>
+            <p class="content-text mb-6">Palantir's business is organized into two primary segments, each leveraging its core software platforms—Gotham, Foundry, and AIP—to serve distinct customer bases. Revenue is generated through a mix of cloud-based subscription fees and on-premise software licenses, often involving multi-year contracts.</p>
 
-            <div class="flex justify-center space-x-4 mb-8">
-                <button id="govSegTab" class="tab-button active" onclick="showSegmentData('government')">Government Segment</button>
-                <button id="comSegTab" class="tab-button" onclick="showSegmentData('commercial')">Commercial Segment</button>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="kpi-card">
-                    <p class="kpi-label">FY2023 Total Revenue</p>
-                    <p class="kpi-value">$2.225 Billion</p>
-                </div>
-                <div class="kpi-card">
-                    <p class="kpi-label">Q1 FY25 Total Revenue YoY Growth</p>
-                    <p class="kpi-value">39%</p>
-                </div>
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="government">Government</button>
+                    <button class="segment-tab-button" data-target="commercial">Commercial</button>
+                </nav>
             </div>
 
-            <div id="governmentSegmentData">
-                <h3 class="subsection-title">Government Segment Insights</h3>
-                <p class="content-text mb-4">Historically Palantir's foundation, this segment shows consistent growth, driven by large, multi-year contracts with defense, intelligence, and civilian agencies. U.S. Government revenue grew <span class="highlight">45% YoY in Q1 FY2025</span> to $373M.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="chart-container h-72 md:h-80">
-                        <canvas id="govRevenueBreakdownChart"></canvas>
-                    </div>
-                    <div class="content-text">
-                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Key Characteristics:</h4>
-                        <ul class="list-disc list-inside space-y-1 pl-4">
-                            <li>FY2023 Revenue: $1.22 Billion (55% of total)</li>
-                            <li>Handles highly sensitive & classified data.</li>
-                            <li>Operates in secure, air-gapped environments.</li>
-                            <li>Focus on national security & public safety missions.</li>
-                            <li>Customer concentration gradually mitigating (Top 3 customers: 18% of total revenue in FY23, down from 25% in FY20).</li>
-                        </ul>
+            <div id="segmentDetails">
+                <div id="governmentContent" class="segment-content">
+                    <h3 class="subsection-title">Government (~54% of Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is Palantir's foundational business. It provides the <span class="highlight">Gotham</span> platform to government agencies, primarily in the U.S. and its allied nations, for defense and intelligence applications. Gotham excels at integrating and visualizing complex datasets to identify patterns and threats, supporting mission-critical operations.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Customers:</strong> U.S. Department of Defense, intelligence agencies, and other federal and international government bodies.</li>
+                                <li><strong>Characteristics:</strong> Long-term, large, and stable contracts that provide a durable revenue base.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div id="commercialSegmentData" class="hidden">
-                <h3 class="subsection-title">Commercial Segment Insights</h3>
-                <p class="content-text mb-4">The primary growth engine, especially in the U.S. market, fueled by AIP adoption. U.S. Commercial revenue surged <span class="highlight">71% YoY in Q1 FY2025</span> to $255M (>$1B annualized run rate). Full year 2025 U.S. Commercial growth guided to at least 68%.</p>
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="chart-container h-72 md:h-80">
-                        <canvas id="comRevenueBreakdownChart"></canvas>
+                <div id="commercialContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Commercial (~46% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This is the company's high-growth segment. It provides the <span class="highlight">Foundry</span> and <span class="highlight">AIP</span> platforms to large enterprises across various industries like manufacturing, energy, and healthcare. Foundry serves as a central operating system for a company's data, while AIP enables the deployment of AI on that data foundation.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Customers:</strong> Major corporations in sectors like aviation, automotive, and pharmaceuticals.</li>
+                                <li><strong>Growth Driver:</strong> The U.S. commercial business is the fastest-growing part of the company, driven by demand for AI solutions.</li>
+                             </ul>
+                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">U.S. Commercial Customer Count</p>
+                             <p class="kpi-value text-sky-600">262 Customers</p>
+                             <p class="content-text text-sm mt-2">Represents 79% year-over-year growth, highlighting the rapid expansion and success of the company's commercial sales strategy in its home market.</p>
+                         </div>
                     </div>
-                    <div class="content-text">
-                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Key Characteristics:</h4>
-                        <ul class="list-disc list-inside space-y-1 pl-4">
-                            <li>FY2023 Revenue: $1.00 Billion (45% of total)</li>
-                            <li>Rapid AIP adoption driving growth.</li>
-                            <li>Expanding across finance, healthcare, manufacturing, energy, retail.</li>
-                            <li>AIP Bootcamps accelerating customer onboarding.</li>
-                            <li>Strong U.S. Commercial TCV growth: $810M in Q1 FY25 (+183% YoY).</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                <div class="section-card !p-4 !mb-0">
-                    <h4 class="subsection-title !text-xl !mt-0 text-center">Customer Count Growth</h4>
-                    <div class="chart-container h-64">
-                        <canvas id="customerCountChart"></canvas>
-                    </div>
-                    <p class="content-text text-xs text-center mt-2">Total customers grew 39% YoY in Q1 FY25, reaching ~536.</p>
-                </div>
-                <div class="section-card !p-4 !mb-0">
-                    <h4 class="subsection-title !text-xl !mt-0 text-center">Avg. Revenue / Top 20 Customer</h4>
-                    <div class="chart-container h-64">
-                        <canvas id="avgRevenueTopCustomersChart"></canvas>
-                    </div>
-                     <p class="content-text text-xs text-center mt-2">Demonstrates "land and expand" success within key accounts.</p>
                 </div>
             </div>
         </section>
 
         <section id="financials" class="section-card scroll-mt-20">
             <h2 class="section-title">Financial Deep Dive</h2>
-            <p class="content-text mb-6">Palantir has achieved GAAP profitability and exhibits strong non-GAAP metrics. This section explores key financial trends. Select a metric from the dropdown to visualize its historical performance and recent data points.</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                 <div class="kpi-card">
-                    <p class="kpi-label">Q1 FY25 GAAP Op. Margin</p>
-                    <p class="kpi-value">20%</p>
-                </div>
-                <div class="kpi-card">
-                    <p class="kpi-label">Q1 FY25 Adj. Op. Margin</p>
-                    <p class="kpi-value">44%</p>
-                </div>
-                 <div class="kpi-card">
-                    <p class="kpi-label">Q1 FY25 "Rule of 40" Score</p>
-                    <p class="kpi-value">83%</p>
-                </div>
-            </div>
+            <p class="content-text mb-6">After years of investing heavily in growth, Palantir has recently turned a corner, achieving consistent GAAP profitability and inclusion in the S&P 500. The company's financial profile is now characterized by accelerating commercial growth, expanding margins, and a strengthening balance sheet, reflecting the operating leverage inherent in its software model.</p>
             
-            <div class="mb-6">
-                <label for="financialMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Financial Metric:</label>
-                <select id="financialMetricSelect" class="block w-full md:w-2/3 lg:w-1/2 p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <option value="totalRevenue" selected>Total Revenue ($M)</option>
-                    <option value="grossMargin">Gross Margin (%)</option>
-                    <option value="gaapOperatingIncome">GAAP Operating Income ($M)</option>
-                    <option value="adjOperatingIncome">Adjusted Operating Income ($M)</option>
-                    <option value="gaapNetIncome">GAAP Net Income ($M)</option>
-                    <option value="adjNetIncome">Adjusted Net Income ($M) (Q1 FY25)</option>
-                    <option value="sbcPercentRevenue">Stock-Based Comp. (% of Revenue)</option>
-                    <option value="ocf">Operating Cash Flow ($M)</option>
-                    <option value="adjFcf">Adjusted Free Cash Flow ($M) (Q1 FY25)</option>
-                </select>
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
 
-            <div id="selectedFinancialChartContainer" class="chart-container h-96 max-w-full">
-                <canvas id="selectedFinancialChart"></canvas>
-            </div>
-            <p id="selectedFinancialChartDescription" class="content-text text-sm mt-3 text-center">Detailed trend for the selected financial metric.</p>
-
-            <div class="mt-8 p-4 bg-orange-50 border border-orange-200 rounded-lg">
-                <h3 class="subsection-title !mt-0 text-orange-700">Stock-Based Compensation (SBC) Impact</h3>
-                <p class="content-text mb-2">SBC has historically been a major expense, significantly affecting GAAP profitability. While its impact as a percentage of revenue is decreasing (17.6% in Q1 FY25 vs. 116.3% in FY20), the absolute amounts remain substantial ($155.3M in Q1 FY25) and are a key factor in shareholder dilution concerns.</p>
-                <div class="chart-container h-72 max-w-lg">
-                    <canvas id="sbcTrendChart"></canvas>
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="operatingIncome">Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
                 </div>
             </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase steady top-line growth and a clear inflection point towards sustained operating profitability in recent quarters.</p>
         </section>
 
         <section id="competition" class="section-card scroll-mt-20">
-            <h2 class="section-title">Competitive Edge & Differentiation</h2>
-            <p class="content-text mb-6">Palantir operates in a complex landscape, competing with data analytics platforms, AI/ML providers, system integrators, and in-house solutions. Its differentiation lies in its end-to-end integrated platforms, ontology-driven architecture, security expertise, FDE model, and focus on operationalizing AI.</p>
+            <h2 class="section-title">Competitive Moat: The Data Integration Fortress</h2>
+            <p class="content-text mb-6">Palantir's competitive advantage is built on its ability to solve incredibly complex, large-scale data integration and analysis problems, a reputation forged in the most demanding government environments. This creates a deep technical and reputational moat.</p>
             
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title !mt-0">Key Differentiators</h3>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
                     <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-teal-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">End-to-End Integrated Platforms:</strong> Gotham, Foundry, AIP, managed by Apollo, cover the full data lifecycle.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Deeply Entrenched Government Relationships:</strong> Decades of successful, mission-critical deployments within the U.S. government and its allies create an incredibly sticky customer base and a powerful reputational advantage.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-teal-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Ontology-Driven Architecture:</strong> Semantic layer for contextual data understanding and human-AI collaboration.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Switching Costs:</strong> Palantir's platforms become the central "operating system" for its customers' data. Once an organization has built its workflows, models, and decision-making processes on top of Foundry or Gotham, the cost and operational risk of switching are prohibitive.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-teal-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Security & Governance Expertise:</strong> Proven in high-stakes government and regulated commercial environments.</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="text-teal-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Forward Deployed Engineer (FDE) Model:</strong> Deep client collaboration for tailored, high-impact solutions.</span>
-                        </li>
-                         <li class="flex items-start">
-                            <span class="text-teal-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Apollo for Complex Deployments:</strong> Manages software across diverse and secure environments.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Integrated Platform Advantage:</strong> Unlike a collection of disparate data tools, Palantir offers a single, unified platform that handles everything from data integration and modeling to operational applications and AI deployment.</span>
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0">Primary Competitor Categories</h3>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
                      <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Data Analytics & BI Platforms:</strong> Snowflake, Databricks, Tableau, AWS, Azure, GCP services.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Cloud Hyperscalers (AWS, Microsoft, Google):</strong> The major cloud providers offer a vast array of data and AI services that can be used to build custom solutions. They are the most significant competitive threat.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">AI/ML Platform Providers:</strong> C3.ai, Databricks, AWS SageMaker, Google Vertex AI, Azure ML.</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Large System Integrators:</strong> Accenture, Booz Allen Hamilton, Deloitte.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Data & Analytics Companies:</strong> Companies like Snowflake (for data warehousing) and Databricks (for data science) compete for parts of the data management and analytics workload.</span>
                         </li>
                          <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">In-House Developed Solutions:</strong> Custom builds by large organizations.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">In-house Platforms:</strong> Many large organizations attempt to build their own data platforms using a combination of open-source tools and services from various vendors.</span>
                         </li>
                     </ul>
                 </div>
             </div>
-            <p class="content-text mt-6">Palantir's "operating system" approach aims to provide a more integrated and rapidly deployable solution compared to assembling disparate cloud services or point solutions, especially for complex, mission-critical use cases. However, it faces challenges from the perceived "black box" nature and premium pricing by some market segments.</p>
         </section>
 
         <section id="outlook" class="section-card scroll-mt-20">
-            <h2 class="section-title">Strategic Outlook: Opportunities & Challenges</h2>
-            <p class="content-text mb-6">Palantir is at a pivotal point, with strong momentum in commercial AI adoption. Its future success depends on capitalizing on growth opportunities while managing inherent risks and scaling challenges.</p>
-            <div class="grid md:grid-cols-2 gap-8">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Palantir is a unique and often polarizing company that is emerging as a key player in the enterprise AI landscape. The investment thesis is centered on the explosive growth of its U.S. commercial business and the widespread adoption of its AI Platform (AIP). However, the company's premium valuation and historical reliance on large, lumpy government contracts present key risks.</p>
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title !mt-0 text-teal-600">Opportunities 🚀</h3>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li>Massive Total Addressable Market in Commercial AI.</li>
-                        <li>International expansion for both government and commercial.</li>
-                        <li>Leveraging Apollo as a potential standalone offering.</li>
-                        <li>Productization efforts (AIP Bootcamps, Foundry Marketplace) to improve scalability.</li>
-                        <li>Deepening partnerships within the AI ecosystem.</li>
+                        <li><strong>The AI Platform Catalyst:</strong> AIP is a significant growth driver, enabling Palantir to capitalize on the massive wave of enterprise investment in generative AI.</li>
+                        <li><strong>Explosive Commercial Growth:</strong> The rapid expansion of the U.S. commercial business demonstrates a large, untapped market and a successful go-to-market strategy.</li>
+                        <li><strong>Durable Government Foundation:</strong> A stable, high-margin government business provides a strong foundation of recurring revenue and cash flow.</li>
+                        <li><strong>Path to Sustained Profitability:</strong> Having achieved GAAP profitability, the company is demonstrating the scalability and operating leverage of its software model.</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0 text-orange-600">Threats & Challenges 📉</h3>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li>Intense competition from tech giants and specialized AI firms.</li>
-                        <li>Macroeconomic pressures impacting IT budgets.</li>
-                        <li>Evolving AI regulations and ethical considerations.</li>
-                        <li>Scaling the high-touch FDE model effectively.</li>
-                        <li>Maintaining technological edge with high R&D investment.</li>
-                        <li>Managing shareholder dilution from stock-based compensation.</li>
+                        <li><strong>High Valuation:</strong> Palantir's stock trades at a very high multiple of its sales and earnings, pricing in a significant amount of future growth and making it vulnerable to market sentiment shifts.</li>
+                        <li><strong>Competition from Big Tech:</strong> The largest and most well-funded technology companies in the world are also targeting the enterprise AI market, creating a formidable competitive landscape.</li>
+                        <li><strong>Lumpy Contracts & Sales Cycles:</strong> Historically, Palantir's revenue has been dependent on a small number of very large contracts, particularly in the government sector, which can lead to volatility.</li>
+                        <li><strong>Reputational & Political Risk:</strong> The company's work in sensitive areas of national security and its controversial co-founder can attract negative headlines and political scrutiny.</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <section id="conclusion" class="section-card scroll-mt-20">
-            <h2 class="section-title">Conclusion: The Path Forward</h2>
-            <p class="content-text mb-4">Palantir Technologies has carved a unique position by tackling complex data integration and AI operationalization challenges for high-stakes environments. Its transition to GAAP profitability and the explosive growth in its U.S. Commercial segment, driven by AIP, are significant milestones.</p>
-            <p class="content-text">The company's ability to sustain this commercial momentum, manage stock-based compensation, further diversify its customer base, and enhance sales efficiency will be critical. If Palantir successfully navigates the competitive and ethical landscape, its powerful platforms and deep client relationships position it as a potentially foundational "operating system for AI" in the modern enterprise. The journey involves balancing its bespoke, high-value solutions model with the imperative for broader market scalability and continued financial discipline.</p>
-        </section>
-    </main>
-
-    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
-        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Palantir Analysis. For informational purposes only.</p>
-        <p class="text-xs mt-1">Data synthesized from Palantir Technologies public filings and reports.</p>
-    </footer>
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Palantir Technologies Inc. public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
+        </footer>
 
     <script>
         document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
@@ -511,315 +337,156 @@
         const mobileMenuBtn = document.getElementById('mobile-menu-button');
         const mobileMenuEl = document.getElementById('mobile-menu');
         mobileMenuBtn.addEventListener('click', () => {
-            const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true' || false;
-            mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
             mobileMenuEl.classList.toggle('hidden');
             mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
         });
         
         // Smooth scroll and active nav link highlighting
         const navLinks = document.querySelectorAll('header nav a[href^="#"]');
-        const allSections = document.querySelectorAll('main section[id]');
-
-        const observerCallback = (entries) => {
-            entries.forEach(entry => {
-                const id = entry.target.getAttribute('id');
-                const navLink = document.querySelector(`header nav a[href="#${id}"]`);
-                if (entry.isIntersecting && entry.intersectionRatio > 0.1) { // Adjust ratio as needed
-                    navLinks.forEach(link => link.classList.remove('active'));
-                    if(navLink) navLink.classList.add('active');
-                }
-            });
-        };
-        const observerOptions = { root: null, rootMargin: "-100px 0px -50% 0px", threshold: 0.1 };
-        const sectionObserver = new IntersectionObserver(observerCallback, observerOptions);
-        allSections.forEach(section => sectionObserver.observe(section));
-
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                // e.preventDefault(); // Keep default anchor behavior for scrolling
-                if (!mobileMenuEl.classList.contains('hidden')) {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
                     mobileMenuBtn.click(); // Close mobile menu if open
                 }
-                // Active class will be handled by Intersection Observer
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
             });
         });
-
-
-        // Platform Tabs
-        const platformTabs = document.querySelectorAll('.platform-tab-button');
-        const platformContents = document.querySelectorAll('.platform-content');
-        platformTabs.forEach(tab => {
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                platformTabs.forEach(t => t.classList.remove('active'));
+                segmentTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 const targetId = tab.dataset.target + 'Content';
-                platformContents.forEach(content => {
+                segmentContents.forEach(content => {
                     content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
                 });
             });
         });
 
-        // Segment Data Tabs
-        const govSegTab = document.getElementById('govSegTab');
-        const comSegTab = document.getElementById('comSegTab');
-        const governmentSegmentDataEl = document.getElementById('governmentSegmentData');
-        const commercialSegmentDataEl = document.getElementById('commercialSegmentData');
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
-        function showSegmentData(segment) {
-            if (segment === 'government') {
-                governmentSegmentDataEl.classList.remove('hidden');
-                commercialSegmentDataEl.classList.add('hidden');
-                govSegTab.classList.add('active');
-                comSegTab.classList.remove('active');
-            } else {
-                commercialSegmentDataEl.classList.remove('hidden');
-                governmentSegmentDataEl.classList.add('hidden');
-                comSegTab.classList.add('active');
-                govSegTab.classList.remove('active');
-            }
-        }
-        // Initial call to show government segment
-        showSegmentData('government');
-
-
-        // Chart.js Global Config & Helper Functions
-        Chart.defaults.font.family = 'Inter, sans-serif';
-        Chart.defaults.color = '#4B5563'; // gray-600
-
-        function processChartLabels(labels) {
-            return labels.map(label => {
-                if (typeof label === 'string' && label.length > 16) {
-                    const words = label.split(' ');
-                    let newLabel = [];
-                    let currentLine = '';
-                    words.forEach(word => {
-                        if ((currentLine + word).length > 16 && currentLine.length > 0) {
-                            newLabel.push(currentLine.trim());
-                            currentLine = word + ' ';
-                        } else {
-                            currentLine += word + ' ';
-                        }
-                    });
-                    if (currentLine.trim().length > 0) newLabel.push(currentLine.trim());
-                    return newLabel.length > 0 ? newLabel : [label];
-                }
-                return label;
-            });
-        }
-
-        const commonTooltipCallbackConfig = {
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        title: function(tooltipItems) {
-                            const item = tooltipItems[0];
-                            let label = item.chart.data.labels[item.dataIndex];
-                            if (Array.isArray(label)) {
-                                return label.join(' ');
-                            }
-                            return label;
-                        }
-                    }
-                }
-            }
-        };
-        
         const CHART_COLORS = {
-            blue: '#60A5FA',    // blue-400
-            teal: '#5EEAD4',    // teal-300
-            orange: '#FDBA74',  // orange-300
-            stone: '#E7E5E4',   // stone-200
-            gray: '#4B5563',    // gray-600
-            darkBlue: '#2563EB', // blue-600
-            darkTeal: '#14B8A6', // teal-500
-            darkOrange: '#F97316' //orange-500
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
         };
 
-        // Segment Revenue Breakdown Charts (Donut)
-        // FY2023 Data for segment breakdown
-        const govRevenueBreakdownCtx = document.getElementById('govRevenueBreakdownChart').getContext('2d');
-        new Chart(govRevenueBreakdownCtx, {
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
             type: 'doughnut',
             data: {
-                labels: processChartLabels(['FY23 Government Revenue', 'FY23 Total Revenue']),
+                labels: ['Government', 'Commercial'],
                 datasets: [{
-                    data: [1222.2, 2225.0 - 1222.2], // Gov Revenue, Other Revenue
-                    backgroundColor: [CHART_COLORS.blue, CHART_COLORS.stone],
+                    data: [54, 46], // Approximate percentages for Q1 2025
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky],
                     hoverOffset: 4
                 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false }, title: { display: true, text: 'Gov. Revenue vs Total (FY23, $M)' }, tooltip: commonTooltipCallbackConfig.plugins.tooltip }
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment (Q1 2025)' } }
             }
         });
 
-        const comRevenueBreakdownCtx = document.getElementById('comRevenueBreakdownChart').getContext('2d');
-        new Chart(comRevenueBreakdownCtx, {
-            type: 'doughnut',
-            data: {
-                labels: processChartLabels(['FY23 Commercial Revenue', 'FY23 Total Revenue']),
-                datasets: [{
-                    data: [1002.8, 2225.0 - 1002.8], // Comm Revenue, Other Revenue
-                    backgroundColor: [CHART_COLORS.teal, CHART_COLORS.stone],
-                    hoverOffset: 4
-                }]
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Fiscal Year ends December 31
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [1.91, 2.23, 2.58], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
             },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false }, title: { display: true, text: 'Comm. Revenue vs Total (FY23, $M)' }, tooltip: commonTooltipCallbackConfig.plugins.tooltip }
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($M)', data: [-156, 116, 318], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Millions of USD'
             }
-        });
-
-
-        // Customer Count Chart
-        const customerCountCtx = document.getElementById('customerCountChart').getContext('2d');
-        new Chart(customerCountCtx, {
-            type: 'line',
-            data: {
-                labels: ['FY20', 'FY21', 'FY22', 'FY23', 'Q1 FY25'],
-                datasets: [{
-                    label: 'Total Customers',
-                    data: [139, 237, 367, 497, 536],
-                    borderColor: CHART_COLORS.blue,
-                    backgroundColor: CHART_COLORS.blue + '33', // transparent blue
-                    fill: true,
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: { y: { beginAtZero: false, title: { display: true, text: 'Number of Customers' } } },
-                plugins: { legend: { display: false }, tooltip: commonTooltipCallbackConfig.plugins.tooltip }
-            }
-        });
-
-        // Avg Revenue Per Top 20 Customer Chart
-        const avgRevenueTopCustomersCtx = document.getElementById('avgRevenueTopCustomersChart').getContext('2d');
-        new Chart(avgRevenueTopCustomersCtx, {
-            type: 'line',
-            data: {
-                labels: ['FY20', 'FY21', 'FY22', 'FY23'],
-                datasets: [{
-                    label: 'Avg. Revenue / Top 20 Customers ($M)',
-                    data: [33.2, 43.6, 49.4, 54.6],
-                    borderColor: CHART_COLORS.teal,
-                    backgroundColor: CHART_COLORS.teal + '33',
-                    fill: true,
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: { y: { beginAtZero: false, title: { display: true, text: 'Avg. Revenue ($M)' } } },
-                plugins: { legend: { display: false }, tooltip: commonTooltipCallbackConfig.plugins.tooltip }
-            }
-        });
-        
-        // Financial Chart Logic
-        const financialDataStore = {
-            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'Q1 FY25'],
-            totalRevenue: { data: [1092.7, 1541.9, 1905.9, 2225.0, 883.9], label: 'Total Revenue ($M)', yLabel: 'Revenue ($M)', color: CHART_COLORS.blue },
-            grossMargin: { data: [67.7, 77.9, 78.6, 80.6, 82.5], label: 'Gross Margin (%)', yLabel: 'Margin (%)', color: CHART_COLORS.teal },
-            gaapOperatingIncome: { data: [-1173.7, -411.0, -161.2, 120.0, 176.0], label: 'GAAP Operating Income ($M)', yLabel: 'Income ($M)', color: CHART_COLORS.orange },
-            adjOperatingIncome: { data: [189.9, 473.5, 420.8, null, 390.7], label: 'Adjusted Operating Income ($M)', yLabel: 'Income ($M)', color: CHART_COLORS.darkBlue, note: 'FY23 Adj. Op. Income not directly in source snippets for this chart.' }, // FY23 N/A from snippets
-            gaapNetIncome: { data: [-1166.4, -520.4, -373.7, 209.8, 214.0], label: 'GAAP Net Income ($M)', yLabel: 'Income ($M)', color: CHART_COLORS.darkTeal },
-            adjNetIncome: { data: [null, null, null, null, 334.4], label: 'Adjusted Net Income ($M) (Q1 FY25)', yLabel: 'Income ($M)', color: CHART_COLORS.darkOrange, note: 'Adjusted Net Income only available for Q1 FY25 in snippets.' },
-            sbcPercentRevenue: { data: [116.3, 50.5, 29.6, 21.4, 17.6], label: 'SBC as % of Revenue', yLabel: 'Percentage (%)', color: CHART_COLORS.red },
-            ocf: { data: [-296.6, 333.9, 223.7, 712.2, 310.3], label: 'Operating Cash Flow ($M)', yLabel: 'Cash Flow ($M)', color: CHART_COLORS.purple }, // Define purple or use an existing one
-            adjFcf: { data: [null, null, null, null, 370.4], label: 'Adjusted Free Cash Flow ($M) (Q1 FY25)', yLabel: 'Cash Flow ($M)', color: CHART_COLORS.pink, note: 'Adjusted FCF only available for Q1 FY25 in snippets.' } // Define pink or use an existing one
         };
-        CHART_COLORS.red = '#EF4444'; // Example red
-        CHART_COLORS.purple = '#8B5CF6'; // Example purple
-        CHART_COLORS.pink = '#EC4899'; // Example pink
 
-
-        const financialChartCanvas = document.getElementById('selectedFinancialChart').getContext('2d');
-        let currentSelectedFinancialChart = null;
-        const financialMetricSelectEl = document.getElementById('financialMetricSelect');
-        const selectedFinancialChartDescriptionEl = document.getElementById('selectedFinancialChartDescription');
-
-        function renderFinancialChart(metricKey) {
-            if (currentSelectedFinancialChart) {
-                currentSelectedFinancialChart.destroy();
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($M)', data: [533, 558, 608, 634, 642, 665, 712, 694], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Millions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($M)', data: [10, 4, 39, 81, 79, 72, 104, 106], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Millions of USD'
             }
-            const metricDetails = financialDataStore[metricKey];
-            const chartLabels = metricDetails.data.length === financialDataStore.labels.length ? financialDataStore.labels : financialDataStore.labels.slice(0, metricDetails.data.length);
+        };
 
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
 
-            currentSelectedFinancialChart = new Chart(financialChartCanvas, {
-                type: 'line',
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            const datasets = metricDetails.datasets.map(ds => {
+                 // Color bars red for negative values
+                return {
+                    ...ds,
+                    backgroundColor: ds.data.map(value => value >= 0 ? ds.backgroundColor : CHART_COLORS.orange + 'BF'),
+                    borderColor: ds.data.map(value => value >= 0 ? ds.borderColor : CHART_COLORS.orange),
+                };
+            });
+            
+            return new Chart(canvas, {
+                type: 'bar',
                 data: {
-                    labels: processChartLabels(chartLabels),
-                    datasets: [{
-                        label: metricDetails.label,
-                        data: metricDetails.data.map(d => d === null ? NaN : d), // Handle nulls for gaps
-                        borderColor: metricDetails.color,
-                        backgroundColor: metricDetails.color + '33', // Opacity for fill
-                        fill: true,
-                        tension: 0.1,
-                        spanGaps: true // Connect lines over NaN points if desired, or set to false
-                    }]
+                    labels: dataStore.labels,
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        y: { 
-                            beginAtZero: (metricKey === 'gaapOperatingIncome' || metricKey === 'gaapNetIncome' || metricKey === 'ocf') ? undefined : true, // Only allow negative for losses/neg cash flow
-                            title: { display: true, text: metricDetails.yLabel } 
+                    plugins: {
+                        legend: {
+                           display: false
                         }
                     },
-                    plugins: { 
-                        legend: { display: true, position: 'top' },
-                        tooltip: commonTooltipCallbackConfig.plugins.tooltip
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
                     }
                 }
             });
-            selectedFinancialChartDescriptionEl.textContent = metricDetails.note || `Trend for ${metricDetails.label}. Source: Palantir financial reports.`;
         }
-
-        financialMetricSelectEl.addEventListener('change', (event) => {
-            renderFinancialChart(event.target.value);
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
         });
-        renderFinancialChart('totalRevenue'); // Initial chart
 
-        // SBC Trend Chart
-        const sbcTrendCtx = document.getElementById('sbcTrendChart').getContext('2d');
-        new Chart(sbcTrendCtx, {
-            type: 'bar',
-            data: {
-                labels: processChartLabels(['FY20', 'FY21', 'FY22', 'FY23', 'Q1 FY25']),
-                datasets: [
-                    {
-                        label: 'Total SBC ($M)',
-                        data: [1270.7, 778.2, 564.8, 475.9, 155.3],
-                        backgroundColor: CHART_COLORS.orange,
-                        yAxisID: 'ySBC',
-                    },
-                    {
-                        label: 'SBC as % of Revenue',
-                        data: [116.3, 50.5, 29.6, 21.4, 17.6],
-                        backgroundColor: CHART_COLORS.teal,
-                        yAxisID: 'yPercent',
-                        type: 'line',
-                        borderColor: CHART_COLORS.darkTeal,
-                        tension: 0.1,
-                        fill: false
-                    }
-                ]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: {
-                    ySBC: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'SBC ($M)' } },
-                    yPercent: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'SBC as % of Revenue' }, grid: { drawOnChartArea: false } }
-                },
-                plugins: { legend: { position: 'top' }, tooltip: commonTooltipCallbackConfig.plugins.tooltip }
-            }
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
         });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
     </script>
 </body>
 </html>
+

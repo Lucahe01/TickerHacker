@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesla, Inc. (TSLA) - Interactive Analysis</title>
+    <title>Tesla, Inc. (TSLA) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px; 
+            height: 300px;
             max-height: 350px;
         }
         @media (min-width: 768px) { /* md */
@@ -45,7 +45,7 @@
         .section-title {
             font-size: 1.875rem; /* text-3xl */
             font-weight: 600; /* font-semibold */
-            color: #EF4444; /* red-500 */
+            color: #A78BFA; /* violet-400 */
             margin-bottom: 1.5rem; /* mb-6 */
             padding-bottom: 0.5rem; /* pb-2 */
             border-bottom: 2px solid #E7E5E4; /* stone-200 */
@@ -53,7 +53,7 @@
         .subsection-title {
             font-size: 1.5rem; /* text-2xl */
             font-weight: 600; /* font-semibold */
-            color: #F97316; /* orange-500 */
+            color: #7DD3FC; /* sky-400 */
             margin-top: 1.5rem; /* mt-6 */
             margin-bottom: 1rem; /* mb-4 */
         }
@@ -63,11 +63,11 @@
             font-size: 0.95rem;
         }
         .highlight {
-            color: #EF4444; /* red-500 */
+            color: #F97316; /* orange-500 */
             font-weight: 600;
         }
         .tab-button {
-            padding: 0.5rem 1rem; /* Smaller padding */
+            padding: 0.5rem 1rem;
             border-radius: 0.375rem; /* rounded-md */
             font-weight: 500;
             font-size: 0.875rem; /* text-sm */
@@ -78,9 +78,9 @@
             border: 1px solid transparent;
         }
         .tab-button.active {
-            background-color: #EF4444; /* red-500 */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
-            border-color: #DC2626; /* red-600 */
+            border-color: #8B5CF6; /* violet-500 */
         }
         .nav-link {
             padding: 0.5rem 1rem;
@@ -91,7 +91,7 @@
             white-space: nowrap;
         }
         .nav-link:hover, .nav-link.active {
-            background-color: #EF4444; /* red-500 */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
         }
         .kpi-card {
@@ -119,20 +119,19 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold" style="color: #EF4444;">Tesla (TSLA) Analysis</h1>
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Tesla (TSLA) Analysis</h1>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
                         <a href="#overview" class="nav-link">Overview</a>
-                        <a href="#pillars" class="nav-link">Pillars</a>
-                        <a href="#segments" class="nav-link">Segments</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
                         <a href="#financials" class="nav-link">Financials</a>
-                        <a href="#competition" class="nav-link">Competition</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
                         <a href="#outlook" class="nav-link">Outlook</a>
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                         <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -142,10 +141,9 @@
             <div class="md:hidden hidden" id="mobile-menu">
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                     <a href="#overview" class="nav-link block text-base">Overview</a>
-                    <a href="#pillars" class="nav-link block text-base">Pillars</a>
-                    <a href="#segments" class="nav-link block text-base">Segments</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
                     <a href="#financials" class="nav-link block text-base">Financials</a>
-                    <a href="#competition" class="nav-link block text-base">Competition</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
                     <a href="#outlook" class="nav-link block text-base">Outlook</a>
                 </div>
             </div>
@@ -156,277 +154,179 @@
 
         <section id="overview" class="section-card scroll-mt-20">
             <h2 class="section-title">Tesla: More Than a Car Company</h2>
-            <p class="content-text mb-6">Tesla's stated mission is to "accelerate the world's transition to sustainable energy." While best known for its electric vehicles (EVs), the company operates as a deeply integrated technology firm with core businesses in energy generation and storage, and artificial intelligence. By combining hardware, software, and large-scale manufacturing, Tesla aims to disrupt not just the automotive industry, but also the energy and robotics sectors. This interactive analysis explores Tesla's complex business model, its financial and operational performance, and its high-stakes strategic path forward.</p>
+            <p class="content-text mb-6">Tesla (NASDAQ: TSLA) is a vertically integrated sustainable energy company with a mission to accelerate the world's transition to sustainable energy. While best known for its high-performance electric vehicles, Tesla's ambitions extend far beyond the automotive industry. The company is making massive, long-term investments to become a leader in <span class="highlight">Artificial Intelligence, robotics, and real-world autonomy</span>. The investment case for Tesla is no longer just about selling cars; it's a bet on the company's ability to solve some of the hardest problems in technology, from creating a fully autonomous "robotaxi" network to developing a humanoid robot (Optimus) that could revolutionize manufacturing and labor.</p>
             
-            <div class="grid md:grid-cols-2 gap-6 items-start">
+            <div class="grid md-grid-cols-2 gap-6 items-start">
                 <div>
-                    <h3 class="subsection-title !mt-0">Core Value Proposition</h3>
-                    <p class="content-text mb-4">Tesla's value proposition is rooted in technological leadership and a direct-to-consumer approach to creating a comprehensive sustainable energy ecosystem. Key strengths include:</p>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Vertical Integration and Full-Stack Innovation</h3>
+                    <p class="content-text mb-4">Tesla's strategy is built on a foundation of first-principles engineering and a relentless drive to innovate:</p>
                     <ul class="list-disc list-inside content-text space-y-1 pl-4">
-                        <li>Designing desirable, high-performance electric vehicles.</li>
-                        <li>Building out a proprietary, vertically integrated ecosystem.</li>
-                        <li>Pioneering advancements in AI, autonomy, and robotics.</li>
-                        <li>Leading in battery technology and manufacturing scale.</li>
+                        <li><strong class="font-semibold text-gray-700">Solve Full Self-Driving (FSD):</strong> Aggressively invest in the data, compute, and AI talent needed to solve vision-based autonomous driving, which the company sees as the key to unlocking a multi-trillion-dollar robotaxi opportunity.</li>
+                        <li><strong class="font-semibold text-gray-700">Lead in Manufacturing:</strong> Revolutionize manufacturing processes with innovations like the "unboxed" manufacturing system and the deployment of Optimus robots to drive down costs and scale production.</li>
+                        <li><strong class="font-semibold text-gray-700">Expand the Energy Business:</strong> Grow the deployment of its energy storage solutions (Megapack and Powerwall) to support the global electrical grid's transition to renewables.</li>
+                        <li><strong class="font-semibold text-gray-700">Direct-to-Consumer Model:</strong> Maintain full control over its sales, service, and charging infrastructure to own the entire customer relationship and provide a superior experience.</li>
                     </ul>
                 </div>
-                <div>
-                    <h3 class="subsection-title !mt-0">The Tesla Way: Key Tenets</h3>
-                    <p class="content-text mb-4">Tesla's strategy is built on principles that challenge traditional industry norms:</p>
-                     <div class="space-y-3">
-                        <div class="p-3 bg-stone-50 rounded-md border border-stone-200">
-                            <h4 class="font-semibold text-red-500">Full Vertical Integration</h4>
-                            <p class="text-sm content-text">From raw materials and software development to manufacturing, sales (DTC), and servicing, Tesla controls the entire value chain to optimize for speed and innovation.</p>
-                        </div>
-                        <div class="p-3 bg-stone-50 rounded-md border border-stone-200">
-                            <h4 class="font-semibold text-orange-500">Manufacturing as a Product</h4>
-                            <p class="text-sm content-text">Viewing the factory itself as a product ("the machine that builds the machine"), focusing on automation and novel processes like giga-casting to drive down costs.</p>
-                        </div>
-                         <div class="p-3 bg-stone-50 rounded-md border border-stone-200">
-                            <h4 class="font-semibold" style="color: #4f46e5;">Data & AI-Driven Development</h4>
-                            <p class="text-sm content-text">Leveraging data from its millions of vehicles to train neural networks for Full Self-Driving (FSD) and other AI applications like the Optimus robot.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="pillars" class="section-card scroll-mt-20">
-            <h2 class="section-title">Core Business Pillars</h2>
-            <p class="content-text mb-6">To understand Tesla, one must look beyond cars. The company is built on three converging pillars: Automotive, Energy, and a future-defining bet on AI and Robotics. Explore each pillar by clicking the tabs below.</p>
-
-            <div class="mb-6 border-b border-stone-200">
-                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
-                    <button class="pillar-tab-button active" data-target="automotive">Automotive</button>
-                    <button class="pillar-tab-button" data-target="energy">Energy</button>
-                    <button class="pillar-tab-button" data-target="ai">AI & Robotics</button>
-                </nav>
-            </div>
-
-            <div id="pillarDetails">
-                <div id="automotiveContent" class="platform-content">
-                    <h3 class="subsection-title">Automotive: The Foundation</h3>
-                    <p class="content-text mb-2">The core of Tesla's current business. Tesla designs, develops, manufactures, and sells a range of high-performance fully electric vehicles. The automotive division also includes revenue from the sale of regulatory credits and services.</p>
-                    <p class="content-text text-sm"><span class="font-semibold">Key Products:</span> Model S, Model 3, Model X, Model Y, Cybertruck, and the upcoming next-generation vehicle. Supported by a global network of Superchargers, stores, and service centers.</p>
-                    <p class="content-text text-sm mt-1"><span class="font-semibold">Strategy:</span> Drive the adoption of EVs through superior product design, performance, and a seamless ownership experience, while relentlessly pursuing cost reductions through manufacturing innovation.</p>
-                </div>
-                <div id="energyContent" class="platform-content hidden">
-                    <h3 class="subsection-title">Energy Generation & Storage</h3>
-                    <p class="content-text mb-2">Tesla's rapidly growing energy division aims to create a distributed global utility. It designs, manufactures, and installs solar energy systems and battery energy storage products for residential, commercial, and utility-scale customers.</p>
-                    <p class="content-text text-sm"><span class="font-semibold">Key Products:</span> Solar Roof, Powerwall (home battery), and Megapack (utility-scale battery). Supported by software for energy management.</p>
-                    <p class="content-text text-sm mt-1"><span class="font-semibold">Strategy:</span> Leverage expertise in battery technology and large-scale manufacturing to provide solutions for a renewable energy grid, creating a business with the potential to one day rival the automotive segment.</p>
-                </div>
-                <div id="aiContent" class="platform-content hidden">
-                    <h3 class="subsection-title">AI & Robotics: The Future</h3>
-                    <p class="content-text mb-2">This is Tesla's biggest and most ambitious bet. It leverages expertise in artificial intelligence to solve real-world problems, from autonomous driving to humanoid robotics. The goal is to create a new paradigm of transportation and labor.</p>
-                    <p class="content-text text-sm"><span class="font-semibold">Key Projects:</span> Full Self-Driving (FSD) computer and software, Dojo supercomputer (for AI training), and Optimus (a general-purpose humanoid robot).</p>
-                    <p class="content-text text-sm mt-1"><span class="font-semibold">Strategy:</span> Solve real-world AI to unlock massive markets. FSD aims to create an autonomous ride-hailing (Robotaxi) network, while Optimus is designed to perform repetitive or dangerous tasks, potentially addressing labor shortages. Cheaper models are also planned for H1 2025.</p>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Cumulative Vehicles Produced</p>
+                    <p class="kpi-value text-violet-600">> 6 Million</p>
+                    <p class="content-text text-sm mt-2">Represents the massive scale of Tesla's global fleet, which provides a continuous stream of real-world driving data that is critical for training its FSD neural networks.</p>
                 </div>
             </div>
         </section>
 
         <section id="segments" class="section-card scroll-mt-20">
-            <h2 class="section-title">Segment Performance</h2>
-            <p class="content-text mb-6">Tesla reports its financials in two main segments. **Automotive** remains the primary source of revenue but has faced margin pressure amid price cuts and increased competition. **Energy Generation and Storage** is smaller but growing exponentially with improving profitability.</p>
+            <h2 class="section-title">How Tesla Makes Money: Automotive and Energy</h2>
+            <p class="content-text mb-6">Tesla's business is organized into two primary segments. The Automotive segment is the current engine of the company, generating the vast majority of revenue and all of the profits. The Energy Generation and Storage segment, while still relatively small, represents a significant long-term growth opportunity as the world's energy infrastructure is modernized.</p>
 
-            <div class="flex justify-center space-x-4 mb-8">
-                <button id="autoSegTab" class="tab-button active" onclick="showSegmentData('automotive')">Automotive Segment</button>
-                <button id="energySegTab" class="tab-button" onclick="showSegmentData('energy')">Energy Segment</button>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="kpi-card">
-                    <p class="kpi-label">FY2024 Total Revenue</p>
-                    <p class="kpi-value">$97.9B</p>
-                </div>
-                <div class="kpi-card">
-                    <p class="kpi-label">FY2024 Vehicle Deliveries</p>
-                    <p class="kpi-value">~1.7M</p>
-                </div>
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="automotive">Automotive</button>
+                    <button class="segment-tab-button" data-target="energy">Energy Generation & Storage</button>
+                </nav>
             </div>
 
-            <div id="automotiveSegmentData">
-                <h3 class="subsection-title">Automotive Segment Insights</h3>
-                <p class="content-text mb-4">The Automotive segment generated $77.1 billion in revenue in FY2024. Deliveries have grown massively but faced a year-over-year decline in Q1 2025 (336,681 vehicles), partly due to production line changes for the new Model Y. Profitability has been a key focus, with gross margins declining from highs due to price cuts and increased R&D spending on AI.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="chart-container h-72 md:h-80">
-                        <canvas id="automotiveRevenueBreakdownChart"></canvas>
-                    </div>
-                    <div class="content-text">
-                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Key Characteristics:</h4>
-                        <ul class="list-disc list-inside space-y-1 pl-4">
-                            <li>FY2024 Revenue: $77.1 Billion (79% of total)</li>
-                            <li>Driven by Model 3/Y volume.</li>
-                            <li>Facing intense competition from Chinese brands like BYD and legacy automakers.</li>
-                            <li>Future growth tied to next-gen vehicle and FSD adoption.</li>
-                        </ul>
+            <div id="segmentDetails">
+                <div id="automotiveContent" class="segment-content">
+                    <h3 class="subsection-title">Automotive (~90% of Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This segment includes the design, development, manufacturing, and sale of high-performance electric vehicles. It also includes revenue from the sale of Full Self-Driving (FSD) software, regulatory credits, and vehicle servicing. After a period of rapid growth, this segment is currently navigating a more challenging global EV market.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Model 3, Model Y, Model S, Model X, Cybertruck.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div id="energySegmentData" class="hidden">
-                <h3 class="subsection-title">Energy Segment Insights</h3>
-                <p class="content-text mb-4">Tesla's energy business is experiencing explosive growth. Revenue reached $10.1 billion in FY2024, a 67% increase YoY. In Q1 2025, energy storage deployments hit a near-record 10.4 GWh, a 156% increase YoY, showcasing the immense demand for Megapack and Powerwall products. This segment now boasts higher gross margins than the automotive division.</p>
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="chart-container h-72 md:h-80">
-                        <canvas id="energyRevenueBreakdownChart"></canvas>
+                <div id="energyContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Energy Generation & Storage (~7% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment focuses on the design, manufacturing, installation, and sale of solar energy generation and energy storage products. The key growth driver is the Megapack, a large-scale, utility-grade battery storage solution that is critical for stabilizing electrical grids that have a high penetration of intermittent renewables.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Megapack, Powerwall, Solar Roof.</li>
+                             </ul>
+                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Energy Storage Deployments</p>
+                             <p class="kpi-value text-sky-600">Rapid Growth</p>
+                             <p class="content-text text-sm mt-2">The energy storage business is growing at a much faster rate than the automotive business, positioning it to become a more significant part of the company in the future.</p>
+                         </div>
                     </div>
-                    <div class="content-text">
-                        <h4 class="font-semibold text-lg mb-2 text-gray-700">Key Characteristics:</h4>
-                        <ul class="list-disc list-inside space-y-1 pl-4">
-                            <li>FY2024 Revenue: $10.1 Billion (10% of total)</li>
-                            <li>Storage deployments grew 156% YoY in Q1 2025.</li>
-                            <li>Driven by Megafactory production ramp in Lathrop and Shanghai.</li>
-                            <li>Higher gross margins than Automotive.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                <div class="section-card !p-4 !mb-0">
-                    <h4 class="subsection-title !text-xl !mt-0 text-center">Quarterly Vehicle Deliveries</h4>
-                    <div class="chart-container h-64">
-                        <canvas id="quarterlyDeliveriesChart"></canvas>
-                    </div>
-                    <p class="content-text text-xs text-center mt-2">A key metric for Tesla's operational performance, showing recent headwinds.</p>
-                </div>
-                <div class="section-card !p-4 !mb-0">
-                    <h4 class="subsection-title !text-xl !mt-0 text-center">Quarterly Energy Deployed (MWh)</h4>
-                    <div class="chart-container h-64">
-                        <canvas id="energyDeployedChart"></canvas>
-                    </div>
-                     <p class="content-text text-xs text-center mt-2">Illustrates the exponential growth of the energy storage business.</p>
                 </div>
             </div>
         </section>
 
         <section id="financials" class="section-card scroll-mt-20">
             <h2 class="section-title">Financial Deep Dive</h2>
-            <p class="content-text mb-6">Tesla's financials reflect a company in transition. While historical growth has been astronomical, recent results show the impact of a strategic pivot towards affordability, AI investment, and managing a more competitive landscape. Select a metric to visualize its performance.</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                 <div class="kpi-card">
-                    <p class="kpi-label">FY24 Automotive Gross Margin</p>
-                    <p class="kpi-value">~19%</p>
-                </div>
-                <div class="kpi-card">
-                    <p class="kpi-label">FY24 Net Income (GAAP)</p>
-                    <p class="kpi-value">$8.4B</p>
-                </div>
-                 <div class="kpi-card">
-                    <p class="kpi-label">FY24 Free Cash Flow</p>
-                    <p class="kpi-value">$3.6B</p>
-                </div>
-            </div>
+            <p class="content-text mb-6">Tesla's financial performance has been characterized by explosive top-line growth and, until recently, expanding automotive gross margins. The company is currently navigating a period of significant investment in future growth (AI compute, new factories) and a more competitive EV market, which has put pressure on near-term profitability. Generating sustainable free cash flow remains a key priority.</p>
             
-            <div class="mb-6">
-                <label for="financialMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Financial Metric:</label>
-                <select id="financialMetricSelect" class="block w-full md:w-2/3 lg:w-1/2 p-2 border border-stone-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
-                    <option value="totalRevenue" selected>Total Revenue ($B)</option>
-                    <option value="autoGrossMargin">Automotive Gross Margin (%)</option>
-                    <option value="netIncome">Net Income (GAAP, $B)</option>
-                    <option value="freeCashFlow">Free Cash Flow ($B)</option>
-                </select>
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
 
-            <div id="selectedFinancialChartContainer" class="chart-container h-96 max-w-full">
-                <canvas id="selectedFinancialChart"></canvas>
-            </div>
-            <p id="selectedFinancialChartDescription" class="content-text text-sm mt-3 text-center">Detailed trend for the selected financial metric.</p>
-
-            <div class="mt-8 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <h3 class="subsection-title !mt-0 text-red-700">Annual Vehicle Delivery Growth</h3>
-                <p class="content-text mb-2">The foundation of Tesla's success has been its ability to exponentially scale vehicle production and deliveries. While facing short-term headwinds in 2024 and Q1 2025, the long-term ramp from ~500k vehicles in 2020 to ~1.7 million in 2024 demonstrates its manufacturing prowess. Future growth hinges on the successful launch of its next-generation, more affordable vehicles.</p>
-                <div class="chart-container h-72 max-w-lg">
-                    <canvas id="annualDeliveriesChart"></canvas>
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
                 </div>
             </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts show a period of rapid growth followed by a more recent moderation in revenue and a compression in operating margins due to price cuts and investments.</p>
         </section>
 
         <section id="competition" class="section-card scroll-mt-20">
-            <h2 class="section-title">Competitive Edge & Differentiation</h2>
-            <p class="content-text mb-6">Tesla's competitive moat is built on factors that traditional automakers have struggled to replicate. However, the competitive landscape is intensifying rapidly, particularly from Chinese EV makers and legacy auto giants pivoting to electric.</p>
+            <h2 class="section-title">Competitive Moat: A Multi-Faceted Fortress</h2>
+            <p class="content-text mb-6">Tesla has built a powerful and multi-layered competitive moat based on its brand, technology, manufacturing prowess, and proprietary infrastructure, which collectively create significant advantages over its rivals.</p>
             
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title !mt-0">Key Differentiators</h3>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
                     <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Proprietary Charging Network:</strong> The Supercharger network provides a seamless and reliable charging experience that is a significant advantage over competitors.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Brand & Demand Generation:</strong> Tesla has one of the most powerful brands in the world, enabling it to generate massive demand with a $0 advertising budget. This is a profound and durable cost advantage.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Software & Over-the-Air Updates:</strong> Tesla's ability to improve cars and add features via software creates a fundamentally different ownership experience.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technology & Data Lead in AI:</strong> With millions of vehicles on the road equipped with its hardware, Tesla has access to a vast and unparalleled dataset of real-world driving miles, which is a critical advantage in the race to solve autonomous driving.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Brand & Direct-to-Consumer Model:</strong> A powerful, aspirational brand combined with a no-haggle direct sales model creates strong customer relationships.</span>
-                        </li>
-                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Manufacturing Innovation:</strong> A focus on simplifying manufacturing with techniques like giga-casting aims to create a long-term cost advantage.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">The Supercharger Network:</strong> Tesla's proprietary global network of fast chargers is a significant competitive advantage, offering a seamless and reliable charging experience that competitors are now seeking to join, further solidifying its standard.</span>
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0">Primary Competitor Categories</h3>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
                      <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-red-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">EV Manufacturers:</strong> BYD (which surpassed Tesla in quarterly BEV sales and leads in PHEVs), Volkswagen Group, GM, Ford, Hyundai/Kia, and EV startups like Rivian and Lucid.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Chinese EV Makers (BYD, NIO, etc.):</strong> A host of innovative and highly competitive Chinese automakers represent the most significant challenge to Tesla's global market share.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-red-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Autonomous Driving:</strong> Google's Waymo, GM's Cruise, and numerous other tech companies and startups developing autonomous systems.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Legacy Automakers (Ford, GM, VW):</strong> Traditional auto giants are investing tens of billions to transition their fleets to electric, creating significant competition.</span>
                         </li>
-                        <li class="flex items-start">
-                            <span class="text-red-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Energy Storage:</strong> Companies like Fluence, Enphase Energy, and other major battery manufacturers and energy solution providers.</span>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Autonomous Driving Companies:</strong> Companies like Waymo (Google) and Cruise (GM) are also competing to solve autonomous driving, albeit with a different technological approach.</span>
                         </li>
                     </ul>
                 </div>
             </div>
-            <p class="content-text mt-6">In China and Europe, Tesla is no longer seen as the undisputed technology leader and faces intense competition, which has impacted its market share and brand perception.</p>
         </section>
 
         <section id="outlook" class="section-card scroll-mt-20">
-            <h2 class="section-title">Strategic Outlook: Opportunities & Challenges</h2>
-            <p class="content-text mb-6">Tesla stands at a crossroads, with a valuation that prices in massive success in future-facing technologies. Its path is defined by enormous opportunities and equally significant risks and challenges.</p>
-            <div class="grid md:grid-cols-2 gap-8">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Investing in Tesla is a bet on its visionary, and often controversial, CEO and the company's ability to execute on a series of ambitious, world-changing projects. The potential reward is immense, but the path is fraught with significant execution risk and intense competition.</p>
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title !mt-0" style="color: #16a34a;">Opportunities 🚀</h3>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Autonomy & Robotaxi:</strong> Successfully launching a fully autonomous Robotaxi network could unlock trillions in value and fundamentally change the company. A pilot is planned for Austin.</li>
-                        <li><strong>Optimus Humanoid Robot:</strong> If successful, the Optimus robot could address global labor needs and create a market larger than the auto industry. Tesla aims to build thousands of units in 2025.</li>
-                        <li><strong>Next-Generation Vehicle:</strong> A lower-cost, affordable EV planned for 2025 could dramatically expand Tesla's addressable market and reignite volume growth.</li>
-                        <li><strong>Energy Storage Growth:</strong> The Megapack business is supply-constrained and growing exponentially, with strong margins.</li>
+                        <li><strong>Solving Autonomy (FSD):</strong> A successful rollout of a truly autonomous robotaxi network would be a paradigm shift for transportation and could unlock trillions of dollars in market value.</li>
+                        <li><strong>The Optimus Humanoid Robot:</strong> A functional humanoid robot that can perform tasks in manufacturing and logistics could solve major labor shortages and be a larger market than the automotive business.</li>
+                        <li><strong>Energy Storage Growth:</strong> The Megapack business is growing exponentially and is positioned to be a major player in the multi-trillion dollar market for grid modernization and energy storage.</li>
+                        <li><strong>Manufacturing Innovation:</strong> Tesla's relentless focus on reducing the cost of manufacturing could provide a durable long-term margin advantage.</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0 text-orange-600">Threats & Challenges 📉</h3>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Intensifying Competition:</strong> Global and local competitors, especially from China (e.g., BYD), are catching up on EV technology and eroding Tesla's market share.</li>
-                        <li><strong>Execution Risk:</strong> Tesla's most ambitious projects (FSD, Optimus) are incredibly difficult and face uncertain timelines and technological hurdles.</li>
-                        <li><strong>Regulatory & Legal Scrutiny:</strong> The safety and marketing of Autopilot and FSD are under investigation by regulators worldwide.</li>
-                        <li><strong>Macroeconomic Pressure:</strong> High interest rates and economic uncertainty can dampen consumer demand for high-ticket items like vehicles.</li>
-                         <li><strong>Brand Volatility:</strong> The company's brand perception is closely tied to its CEO, which has led to sales declines in some regions like Europe.</li>
+                        <li><strong>Execution Risk on "Moonshot" Projects:</strong> The timelines for solving FSD and deploying a useful humanoid robot are highly uncertain. Failure to deliver on these ambitious goals could lead to a significant re-evaluation of the company's valuation.</li>
+                        <li><strong>Intense Competition:</strong> The global EV market is becoming increasingly crowded and competitive, which is putting pressure on Tesla's pricing power and market share.</li>
+                        <li><strong>Key Person Risk:</strong> The company's success and vision are deeply intertwined with its CEO, Elon Musk. His controversial nature and involvement in multiple other ventures create a unique and significant risk.</li>
+                        <li><strong>Regulatory & Legal Scrutiny:</strong> Tesla faces ongoing scrutiny and legal challenges regarding the safety and marketing of its Autopilot and FSD systems.</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <section id="conclusion" class="section-card scroll-mt-20">
-            <h2 class="section-title">Conclusion: The All-or-Nothing Bet on Autonomy</h2>
-            <p class="content-text mb-4">Tesla has fundamentally altered the automotive industry and proven that electric vehicles can be desirable, high-performance products. Its success in scaling manufacturing and building a powerful brand is undeniable. However, the company is now in a period of transition, shifting its narrative from pure EV growth to a future rooted in artificial intelligence, robotics, and autonomy.</p>
-            <p class="content-text">The path forward is fraught with challenges, including fierce competition, margin pressures, and immense execution risk on its most ambitious projects. Investors are no longer just buying a car company; they are underwriting a high-stakes bet on Tesla's ability to solve some of the most complex engineering problems of our time. Whether Tesla can successfully transition from a dominant EV maker to a true AI and robotics powerhouse will determine its legacy and future valuation.</p>
-        </section>
-    </main>
-
-    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
-        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Tesla Analysis. For informational purposes only.</p>
-        <p class="text-xs mt-1">Data synthesized from Tesla, Inc. public filings (10-K/Update Letters) and public news sources.</p>
-    </footer>
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Tesla, Inc. public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
+        </footer>
 
     <script>
         document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
@@ -441,219 +341,148 @@
         
         // Smooth scroll and active nav link highlighting
         const navLinks = document.querySelectorAll('header nav a[href^="#"]');
-        const allSections = document.querySelectorAll('main section[id]');
-
-        const observerCallback = (entries) => {
-            entries.forEach(entry => {
-                const id = entry.target.getAttribute('id');
-                const navLink = document.querySelector(`header nav a[href="#${id}"]`);
-                if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
-                    navLinks.forEach(link => link.classList.remove('active'));
-                    if(navLink) navLink.classList.add('active');
-                }
-            });
-        };
-        const observerOptions = { root: null, rootMargin: "-100px 0px -50% 0px", threshold: 0.1 };
-        const sectionObserver = new IntersectionObserver(observerCallback, observerOptions);
-        allSections.forEach(section => sectionObserver.observe(section));
-
         navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if (!mobileMenuEl.classList.contains('hidden')) {
-                    mobileMenuBtn.click();
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
                 }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
             });
         });
-
-        // Pillar Tabs
-        const pillarTabs = document.querySelectorAll('.pillar-tab-button');
-        const pillarContents = document.querySelectorAll('#pillarDetails .platform-content');
-        pillarTabs.forEach(tab => {
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                pillarTabs.forEach(t => t.classList.remove('active'));
+                segmentTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 const targetId = tab.dataset.target + 'Content';
-                pillarContents.forEach(content => {
+                segmentContents.forEach(content => {
                     content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
                 });
             });
         });
 
-        // Segment Data Tabs
-        const autoSegTab = document.getElementById('autoSegTab');
-        const energySegTab = document.getElementById('energySegTab');
-        const automotiveSegmentDataEl = document.getElementById('automotiveSegmentData');
-        const energySegmentDataEl = document.getElementById('energySegmentData');
-
-        function showSegmentData(segment) {
-            if (segment === 'automotive') {
-                automotiveSegmentDataEl.classList.remove('hidden');
-                energySegmentDataEl.classList.add('hidden');
-                autoSegTab.classList.add('active');
-                energySegTab.classList.remove('active');
-            } else {
-                energySegmentDataEl.classList.remove('hidden');
-                automotiveSegmentDataEl.classList.add('hidden');
-                energySegTab.classList.add('active');
-                autoSegTab.classList.remove('active');
-            }
-        }
-        showSegmentData('automotive');
-
-
         // Chart.js Global Config
-        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.font.family = "'Inter', sans-serif";
         Chart.defaults.color = '#4B5563';
 
         const CHART_COLORS = {
-            red: '#EF4444',
-            orange: '#F97316',
-            gray: '#6B7280',
-            stone: '#E7E5E4',
-            darkRed: '#B91C1C',
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
         };
 
-        // Segment Revenue Breakdown Charts (Donut) for FY2024
-        // Data: Automotive $77.1B, Energy $10.1B, Services & Other $10.7B. Total: ~$97.9B
-        const automotiveRevenueBreakdownCtx = document.getElementById('automotiveRevenueBreakdownChart').getContext('2d');
-        new Chart(automotiveRevenueBreakdownCtx, {
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Automotive Revenue', 'Other Revenue'],
+                labels: ['Automotive', 'Energy, Gen & Storage', 'Services & Other'],
                 datasets: [{
-                    data: [77.1, 10.1 + 10.7],
-                    backgroundColor: [CHART_COLORS.red, CHART_COLORS.stone],
+                    data: [81, 8, 11], // Approximate percentages for Q1 2025
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal],
                     hoverOffset: 4
                 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false }, title: { display: true, text: 'Automotive vs Total Revenue (FY24, $B)' } }
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment (Q1 2025)' } }
             }
         });
 
-        const energyRevenueBreakdownCtx = document.getElementById('energyRevenueBreakdownChart').getContext('2d');
-        new Chart(energyRevenueBreakdownCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Energy Revenue', 'Other Revenue'],
-                datasets: [{
-                    data: [10.1, 77.1 + 10.7],
-                    backgroundColor: [CHART_COLORS.orange, CHART_COLORS.stone],
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false }, title: { display: true, text: 'Energy vs Total Revenue (FY24, $B)' } }
-            }
-        });
+        // --- FINANCIAL CHARTS LOGIC ---
 
-        // Quarterly Deliveries Chart
-        const quarterlyDeliveriesCtx = document.getElementById('quarterlyDeliveriesChart').getContext('2d');
-        new Chart(quarterlyDeliveriesCtx, {
-            type: 'line',
-            data: {
-                labels: ['Q1 23', 'Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
-                datasets: [{
-                    label: 'Quarterly Vehicle Deliveries (in thousands)',
-                    data: [422, 466, 435, 484, 423, 445, 455, 495, 337],
-                    borderColor: CHART_COLORS.red,
-                    backgroundColor: CHART_COLORS.red + '33',
-                    fill: true,
-                    tension: 0.1
-                }]
+        // Fiscal Year ends December 31
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [81.46, 96.77, 94.75], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
             },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: { y: { beginAtZero: false, title: { display: true, text: 'Deliveries (k)' } } },
-                plugins: { legend: { display: false } }
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [13.66, 8.89, 6.78], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
             }
-        });
-        
-        // Energy Deployed Chart
-        const energyDeployedCtx = document.getElementById('energyDeployedChart').getContext('2d');
-        new Chart(energyDeployedCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Q1 23', 'Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
-                datasets: [{
-                    label: 'Energy Storage Deployed (MWh)',
-                    data: [3889, 3780, 4000, 3202, 3968, 4120, 4350, 5800, 10400],
-                    backgroundColor: CHART_COLORS.orange,
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true, title: { display: true, text: 'MWh Deployed' } } },
-                plugins: { legend: { display: false } }
-            }
-        });
-        
-        // Financial Chart Logic
-        const financialDataStore = {
-            labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'],
-            totalRevenue: { data: [31.5, 53.8, 81.5, 96.8, 97.9], label: 'Total Revenue ($B)', yLabel: 'Revenue ($B)', color: CHART_COLORS.red },
-            autoGrossMargin: { data: [25.6, 29.3, 28.5, 19.8, 19.0], label: 'Automotive Gross Margin (%)', yLabel: 'Margin (%)', color: CHART_COLORS.orange },
-            netIncome: { data: [0.72, 5.52, 12.56, 14.97, 8.4], label: 'Net Income (GAAP, $B)', yLabel: 'Income ($B)', color: CHART_COLORS.darkRed },
-            freeCashFlow: { data: [2.78, 5.01, 7.57, 4.43, 3.6], label: 'Free Cash Flow ($B)', yLabel: 'Cash Flow ($B)', color: CHART_COLORS.gray }
         };
 
-        const financialChartCanvas = document.getElementById('selectedFinancialChart').getContext('2d');
-        let currentSelectedFinancialChart = null;
-        const financialMetricSelectEl = document.getElementById('financialMetricSelect');
-        const selectedFinancialChartDescriptionEl = document.getElementById('selectedFinancialChartDescription');
-
-        function renderFinancialChart(metricKey) {
-            if (currentSelectedFinancialChart) {
-                currentSelectedFinancialChart.destroy();
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [24.93, 23.35, 25.17, 21.30, 22.10, 23.50, 25.80, 22.31], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [2.40, 1.76, 2.06, 1.17, 1.30, 1.60, 2.00, 1.15], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Billions of USD'
             }
-            const metricDetails = financialDataStore[metricKey];
-            currentSelectedFinancialChart = new Chart(financialChartCanvas, {
-                type: 'line',
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            const datasets = metricDetails.datasets.map(ds => {
+                 // Color bars red for negative values
+                return {
+                    ...ds,
+                    backgroundColor: ds.data.map(value => value >= 0 ? ds.backgroundColor : CHART_COLORS.orange + 'BF'),
+                    borderColor: ds.data.map(value => value >= 0 ? ds.borderColor : CHART_COLORS.orange),
+                };
+            });
+            
+            return new Chart(canvas, {
+                type: 'bar',
                 data: {
-                    labels: financialDataStore.labels,
-                    datasets: [{
-                        label: metricDetails.label,
-                        data: metricDetails.data,
-                        borderColor: metricDetails.color,
-                        backgroundColor: metricDetails.color + '33',
-                        fill: true,
-                        tension: 0.1,
-                    }]
+                    labels: dataStore.labels,
+                    datasets: datasets
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true, title: { display: true, text: metricDetails.yLabel } } },
-                    plugins: { legend: { display: true, position: 'top' } }
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
                 }
             });
-            selectedFinancialChartDescriptionEl.textContent = `Trend for ${metricDetails.label}. Source: Tesla, Inc. financial reports.`;
         }
-
-        financialMetricSelectEl.addEventListener('change', (event) => {
-            renderFinancialChart(event.target.value);
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
         });
-        renderFinancialChart('totalRevenue'); // Initial chart
 
-        // Annual Deliveries Chart
-        const annualDeliveriesCtx = document.getElementById('annualDeliveriesChart').getContext('2d');
-        new Chart(annualDeliveriesCtx, {
-            type: 'bar',
-            data: {
-                labels: ['2020', '2021', '2022', '2023', '2024'],
-                datasets: [{
-                    label: 'Annual Vehicle Deliveries (in thousands)',
-                    data: [499, 936, 1313, 1808, 1704],
-                    backgroundColor: CHART_COLORS.darkRed,
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false }, title: { display: true, text: 'Annual Deliveries (Thousands)' } },
-                scales: { y: { beginAtZero: true, title: { display: true, text: 'Vehicles (k)' } } }
-            }
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
         });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
     </script>
 </body>

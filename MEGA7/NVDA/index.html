@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NVIDIA Corp. (NVDA) - TickerHack Deep Research</title>
+    <title>NVIDIA Corporation (NVDA) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -45,7 +45,7 @@
         .section-title {
             font-size: 1.875rem; /* text-3xl */
             font-weight: 600; /* font-semibold */
-            color: #4ADE80; /* green-400 */
+            color: #A78BFA; /* violet-400 */
             margin-bottom: 1.5rem; /* mb-6 */
             padding-bottom: 0.5rem; /* pb-2 */
             border-bottom: 2px solid #E7E5E4; /* stone-200 */
@@ -53,7 +53,7 @@
         .subsection-title {
             font-size: 1.5rem; /* text-2xl */
             font-weight: 600; /* font-semibold */
-            color: #2DD4BF; /* teal-400 */
+            color: #7DD3FC; /* sky-400 */
             margin-top: 1.5rem; /* mt-6 */
             margin-bottom: 1rem; /* mb-4 */
         }
@@ -78,9 +78,9 @@
             border: 1px solid transparent;
         }
         .tab-button.active {
-            background-color: #4ADE80; /* green-400 */
-            color: #14532D; /* green-900 */
-            border-color: #22C55E; /* green-500 */
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
         }
         .nav-link {
             padding: 0.5rem 1rem;
@@ -91,12 +91,12 @@
             white-space: nowrap;
         }
         .nav-link:hover, .nav-link.active {
-            background-color: #4ADE80; /* green-400 */
-            color: #14532D; /* green-900 */
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
         }
         .kpi-card {
-            background-color: #F0FDF4; /* green-50 */
-            border: 1px solid #BBF7D0; /* green-200 */
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
             border-radius: 0.5rem; /* rounded-lg */
             padding: 1rem;
             text-align: center;
@@ -119,7 +119,7 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold" style="color: #22C55E;">NVIDIA (NVDA) Analysis</h1>
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">NVIDIA (NVDA) Analysis</h1>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
@@ -131,7 +131,7 @@
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                         <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -154,104 +154,71 @@
 
         <section id="overview" class="section-card scroll-mt-20">
             <h2 class="section-title">NVIDIA: The Engine of the AI Revolution</h2>
-            <p class="content-text mb-6">Once known primarily for its high-performance graphics processing units (GPUs) for the gaming market, NVIDIA has fundamentally transformed into the undisputed leader of the accelerated computing era. The company's full-stack platform—spanning chips (GPUs), systems (DGX, HGX), networking (InfiniBand), and a deep software ecosystem (CUDA)—has become the de facto standard for training and deploying artificial intelligence models. This strategic pivot has resulted in one of the most explosive growth stories in corporate history, positioning NVIDIA at the epicenter of a technological shift comparable to the internet.</p>
+            <p class="content-text mb-6">NVIDIA (NASDAQ: NVDA) is the undisputed leader in accelerated computing and the primary architect of the ongoing Artificial Intelligence revolution. The company designs and sells high-performance Graphics Processing Units (GPUs) and related software that have become the de facto standard for training and deploying AI models. NVIDIA has created a powerful, full-stack ecosystem—spanning from its <span class="highlight">CUDA software platform</span> to its advanced GPUs (like the Hopper and Blackwell architectures) and high-speed networking—that has solidified its dominant market position. This has resulted in one of the most explosive periods of growth in corporate history, transforming NVIDIA into one of the most valuable and consequential companies in the world.</p>
             
-            <div class="grid md:grid-cols-2 gap-6 items-start">
+            <div class="grid md-grid-cols-2 gap-6 items-start">
                 <div>
-                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
-                    <p class="content-text mb-4">NVIDIA's dominance is built on a multi-layered strategy:</p>
+                    <h3 class="subsection-title !mt-0">Core Strategy: A Full-Stack AI Platform</h3>
+                    <p class="content-text mb-4">NVIDIA's strategy is to provide an end-to-end, integrated platform for AI and accelerated computing:</p>
                     <ul class="list-disc list-inside content-text space-y-1 pl-4">
-                        <li><strong class="font-semibold text-gray-700">Full-Stack Innovation:</strong> Providing an end-to-end, integrated platform of hardware, software, and networking that simplifies and accelerates AI development for customers.</li>
-                        <li><strong class="font-semibold text-gray-700">The CUDA Moat:</strong> Nurturing its proprietary CUDA programming model for over 15 years, creating a vast ecosystem of developers and applications locked into NVIDIA's hardware.</li>
-                        <li><strong class="font-semibold text-gray-700">Relentless Pace of Innovation:</strong> Maintaining a rapid, multi-year cadence of architectural leaps (e.g., from Hopper to Blackwell) that consistently delivers order-of-magnitude performance gains, keeping competitors perpetually behind.</li>
-                        <li><strong class="font-semibold text-gray-700">Building New Markets:</strong> Expanding from cloud providers to enterprises, sovereign AI, automotive, and robotics, creating new vectors for growth.</li>
+                        <li><strong class="font-semibold text-gray-700">Innovate at a "One-Year Rhythm":</strong> Accelerate the pace of innovation, with plans to release new, more powerful data center architectures every year (e.g., Hopper, Blackwell, Rubin) to maintain its technological lead.</li>
+                        <li><strong class="font-semibold text-gray-700">Build the Entire Data Center:</strong> Expand beyond the GPU to provide all the essential components of an AI factory, including high-speed networking (InfiniBand), CPUs (Grace), and system-level designs (DGX).</li>
+                        <li><strong class="font-semibold text-gray-700">Leverage the CUDA Moat:</strong> Nurture and expand its proprietary CUDA software ecosystem, which locks in developers and creates extremely high switching costs.</li>
+                        <li><strong class="font-semibold text-gray-700">Expand Enterprise AI:</strong> Provide enterprise-grade software and AI models to help corporations build and deploy their own generative AI applications on the NVIDIA platform.</li>
                     </ul>
                 </div>
-                <div class="kpi-card bg-green-50 border-green-200">
-                    <p class="kpi-label">Data Center Revenue (FY 2025)</p>
-                    <p class="kpi-value text-green-700">$115.2 Billion</p>
-                    <p class="content-text text-sm mt-2">Represents a staggering <span class="highlight">142%</span> year-over-year growth, illustrating the insatiable demand for NVIDIA's AI infrastructure.</p>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Data Center Revenue (Q1 FY26)</p>
+                    <p class="kpi-value text-violet-600">$22.6 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents a staggering 427% year-over-year growth, highlighting the unprecedented demand for NVIDIA's AI accelerators from cloud providers and enterprises.</p>
                 </div>
             </div>
         </section>
 
         <section id="segments" class="section-card scroll-mt-20">
-            <h2 class="section-title">The Platforms Powering Growth</h2>
-            <p class="content-text mb-6">NVIDIA's business is dominated by its Data Center platform, which has become the company's primary economic engine. While Gaming remains a large and important segment, its growth and scale are dwarfed by the demand from AI. Professional Visualization and Automotive are smaller but represent strategic growth opportunities.</p>
+            <h2 class="section-title">How NVIDIA Makes Money: The Data Center Juggernaut</h2>
+            <p class="content-text mb-6">NVIDIA's business is organized into several segments, but it is now overwhelmingly dominated by its Data Center business. This segment, which includes the sales of its advanced AI GPUs and networking hardware, has become the primary engine of the company's explosive growth and profitability, completely reshaping the business in just a few years.</p>
 
-            <div class="mb-6 border-b border-stone-200">
-                <nav class="-mb-px flex space-x-2 sm:space-x-4" aria-label="Tabs">
-                    <button class="segment-tab-button active" data-target="dataCenter">Data Center</button>
-                    <button class="segment-tab-button" data-target="gaming">Gaming</button>
-                    <button class="segment-tab-button" data-target="other">Pro Viz & Auto</button>
-                </nav>
-            </div>
-
-            <div id="segmentDetails">
-                <div id="dataCenterContent" class="segment-content">
-                    <h3 class="subsection-title">Data Center: The AI Factory</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <p class="content-text mb-2">This segment is the heart of NVIDIA's growth story, providing the essential tools for the AI industry. It consists of platforms that bundle GPUs (like the H100 and new Blackwell architecture), high-speed networking, and software for cloud service providers and enterprises. In Q1 FY2026, this segment alone generated <span class="highlight">$39.1 billion</span> in revenue.</p>
-                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Compute:</strong> Hopper and Blackwell architecture GPUs, Grace CPU.</li>
-                                <li><strong>Networking:</strong> Quantum InfiniBand and Spectrum-X Ethernet platforms.</li>
-                                <li><strong>Software:</strong> NVIDIA AI Enterprise, Omniverse, and NIM microservices.</li>
-                            </ul>
-                        </div>
-                        <div class="chart-container h-72 md:h-80">
-                            <canvas id="segmentRevenueChart"></canvas>
-                        </div>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="chart-container h-80 md:h-96">
+                    <canvas id="revenueBreakdownChart"></canvas>
                 </div>
-                <div id="gamingContent" class="segment-content hidden">
-                    <h3 class="subsection-title">Gaming: The Original Core</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                         <div>
-                            <p class="content-text mb-2">NVIDIA's foundational business remains a significant contributor. The GeForce brand is synonymous with PC gaming, and its GPUs (e.g., the RTX series) power millions of gaming rigs worldwide. Key technologies like DLSS (Deep Learning Super Sampling) use AI to boost graphics performance, reinforcing the company's technical leadership. In Q1 FY2026, Gaming revenue was a record <span class="highlight">$3.8 billion</span>.</p>
-                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>GeForce GPUs:</strong> High-end graphics cards for desktops and laptops.</li>
-                                <li><strong>Gaming Platform Software:</strong> GeForce Experience, NVIDIA Ansel, and other tools.</li>
-                                <li><strong>Game Console SoCs:</strong> Provides the custom processor for the Nintendo Switch.</li>
-                            </ul>
-                        </div>
-                        <div class="chart-container h-72 md:h-80">
-                            <canvas id="gamingRevenueChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div id="otherContent" class="segment-content hidden">
-                    <h3 class="subsection-title">Pro Visualization & Automotive</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                         <div>
-                            <p class="content-text mb-2">These smaller segments represent key long-term growth areas by leveraging NVIDIA's core graphics and AI technology in specialized markets.</p>
-                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Professional Visualization:</strong> Revenue of <span class="highlight">$509 million</span> in Q1 FY2026. Powers workstations for creators, designers, and scientists using NVIDIA RTX™ and Omniverse platforms.</li>
-                                <li><strong>Automotive & Robotics:</strong> Revenue of <span class="highlight">$567 million</span> in Q1 FY2026. Provides the NVIDIA DRIVE™ platform, an end-to-end solution for developing autonomous vehicles.</li>
-                            </ul>
-                        </div>
-                         <div class="chart-container h-72 md:h-80">
-                            <canvas id="otherSegmentsChart"></canvas>
-                        </div>
-                    </div>
+                 <div>
+                    <h3 class="subsection-title !mt-0">Key Platforms</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Data Center:</strong> The largest segment, providing the GPUs (e.g., H100, B200), networking, and systems that power AI factories and cloud computing.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Gaming:</strong> NVIDIA's original core business, centered on its GeForce GPUs for PC gaming.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-teal-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Professional Visualization:</strong> GPUs and software for professional workstations used in design, engineering, and digital content creation.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Automotive:</strong> Provides system-on-a-chip (SoC) solutions for in-vehicle infotainment and autonomous driving.</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </section>
 
         <section id="financials" class="section-card scroll-mt-20">
             <h2 class="section-title">Financial Deep Dive</h2>
-            <p class="content-text mb-6">NVIDIA's financial performance has been nothing short of breathtaking, driven by the exponential growth of its Data Center business. The company exhibits extraordinary revenue growth, massive gross margins, and powerful operating leverage. Explore the key financial trends that define this unprecedented surge.</p>
+            <p class="content-text mb-6">NVIDIA's financial results over the past two years are unlike almost anything in corporate history. The exponential demand for its AI data center products has led to an explosive acceleration in revenue growth and a dramatic expansion of its already best-in-class gross and operating margins. The company is now one of the most profitable and fastest-growing companies in the world.</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title">Fiscal Year Trends (FY2021-FY2025)</h3>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY23-FY25)</h3>
                     <div class="mb-4">
                         <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
-                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
                             <option value="operatingIncome">Operating Income ($B)</option>
-                            <option value="netIncome">Net Income ($B)</option>
-                            <option value="grossMargin">Gross Margin (%)</option>
                         </select>
                     </div>
                     <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
@@ -263,10 +230,9 @@
                     <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
                      <div class="mb-4">
                         <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
-                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
-                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
-                            <option value="operatingIncome">Operating Income ($B)</option>
-                            <option value="netIncome">Net Income ($B)</option>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="operatingIncome">Operating Income ($B)</option>
                         </select>
                     </div>
                     <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
@@ -274,28 +240,28 @@
                     </div>
                 </div>
             </div>
-             <p class="content-text text-sm mt-6 text-center">Note: Q1 FY2026 financials include a one-time <span class="highlight">$4.5 billion</span> charge related to US export controls on sales to China, impacting reported margins and income for that quarter.</p>
+             <p class="content-text text-sm mt-6 text-center">The financial charts clearly illustrate the exponential growth inflection that began in mid-2024, driven by the insatiable demand for the company's data center products.</p>
         </section>
 
         <section id="competition" class="section-card scroll-mt-20">
-            <h2 class="section-title">Competitive Moat: The CUDA Ecosystem</h2>
-            <p class="content-text mb-6">NVIDIA's competitive advantage is arguably one of the strongest in the technology sector. It is a multi-faceted moat, but its foundation is the CUDA (Compute Unified Device Architecture) software platform, which creates incredibly high switching costs.</p>
+            <h2 class="section-title">Competitive Moat: The CUDA Fortress</h2>
+            <p class="content-text mb-6">NVIDIA has built one of the most powerful and durable competitive moats in the technology sector. It is a multi-faceted fortress built on its proprietary CUDA software, its relentless pace of innovation, and the powerful network effects of its ecosystem.</p>
             
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
                     <h3 class="subsection-title !mt-0">Key Moats</h3>
                     <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-green-600 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">CUDA Software & Ecosystem:</strong> The crown jewel. Over 15 years, millions of developers have learned to program on CUDA. This creates a massive library of AI applications, scientific models, and tools optimized exclusively for NVIDIA GPUs, making it extremely difficult and costly for customers to switch to a competitor.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">The CUDA Software Ecosystem:</strong> This is NVIDIA's crown jewel. CUDA is a parallel computing platform and programming model that allows developers to unlock the power of GPUs. With over 4 million developers and thousands of applications built on CUDA, the software ecosystem creates extremely high switching costs.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-green-600 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Pace of Innovation & R&D Scale:</strong> A relentless, "one-year-apart" product cycle (e.g., Blackwell following Hopper) consistently widens the performance gap. NVIDIA's enormous R&D budget is larger than the entire revenue of some competitors, creating a powerful scale advantage.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technological Leadership & Pace of Innovation:</strong> NVIDIA consistently out-innovates its competitors, delivering massive performance gains with each new generation of its architecture. Its new "one-year rhythm" for product releases aims to widen this technology gap further.</span>
                         </li>
-                         <li class="flex items-start">
-                            <span class="text-green-600 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Systems-Level Integration:</strong> NVIDIA doesn't just sell chips; it sells optimized systems. By controlling the GPU, CPU (Grace), and networking (NVLink, InfiniBand), it can deliver performance and efficiency that competitors selling individual components cannot match.</span>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Full-Stack Platform:</strong> By providing an integrated solution of hardware, software, and networking, NVIDIA offers a level of performance, efficiency, and ease of use that is very difficult for competitors offering piecemeal solutions to match.</span>
                         </li>
                     </ul>
                 </div>
@@ -303,17 +269,17 @@
                     <h3 class="subsection-title !mt-0">Primary Competitors</h3>
                      <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-teal-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Semiconductor Rivals:</strong> AMD is the most direct competitor, offering GPUs for both gaming and data center, though it remains a distant second in AI. Intel is also investing heavily in AI accelerators.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">AMD:</strong> The most direct competitor, which offers its own lineup of GPUs for both gaming and data centers.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-teal-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">In-House Cloud Silicon (Hyperscalers):</strong> Google (TPU), Amazon (Trainium/Inferentia), and Microsoft are developing their own custom AI chips to reduce reliance on NVIDIA and optimize for their specific workloads.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Cloud Service Providers (In-house chips):</strong> Major customers like Google (TPUs), Amazon (Trainium/Inferentia), and Microsoft (Maia) are developing their own custom AI chips.</span>
                         </li>
                          <li class="flex items-start">
-                            <span class="text-teal-500 mr-2 mt-1">●</span>
-                             <span class="content-text"><strong class="text-gray-700">AI Chip Startups:</strong> A host of well-funded startups are attempting to build novel architectures to challenge NVIDIA's dominance, though none have achieved significant market traction to date.</span>
-                        </li>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Semiconductor Companies:</strong> Companies like Intel, Broadcom, and Marvell are also developing custom AI accelerators.</span>
+                         </li>
                     </ul>
                 </div>
             </div>
@@ -321,24 +287,24 @@
 
         <section id="outlook" class="section-card scroll-mt-20">
             <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
-            <p class="content-text mb-6">NVIDIA's future appears exceptionally bright, but it is not without significant risks. The rewards are tied to the continued expansion of AI across the global economy, while the risks stem from geopolitics, competition, and sky-high market expectations.</p>
-            <div class="grid md:grid-cols-2 gap-8">
+            <p class="content-text mb-6">NVIDIA is the single most important company enabling the AI revolution, giving it an unprecedented growth trajectory. The investment thesis is centered on the continuation of the massive, multi-year investment cycle in AI infrastructure. However, the company faces significant risks from competition, geopolitical tensions, and the sustainability of its explosive growth.</p>
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title !mt-0 text-emerald-600">Rewards & Opportunities 🚀</h3>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Generative AI & LLMs:</strong> The primary driver. As AI models become larger and more pervasive, the demand for NVIDIA's compute infrastructure is expected to grow exponentially.</li>
-                        <li><strong>Sovereign AI:</strong> A new, multi-billion dollar market is emerging as nations worldwide seek to build their own AI infrastructure, a strategic imperative NVIDIA is uniquely positioned to fulfill.</li>
-                        <li><strong>Enterprise AI Adoption:</strong> The next wave of growth beyond cloud providers as traditional industries begin to deploy AI at scale.</li>
-                        <li><strong>Software Monetization:</strong> Growing revenue from high-margin software like NVIDIA AI Enterprise and Omniverse subscriptions.</li>
+                        <li><strong>The AI Supercycle:</strong> The build-out of generative AI is a multi-trillion dollar undertaking that is still in its early stages. As the primary enabler of this trend, NVIDIA has a massive runway for growth.</li>
+                        <li><strong>Durable Moat in CUDA:</strong> The deep and wide software moat provided by CUDA makes it incredibly difficult for competitors to displace NVIDIA, even with competitive hardware.</li>
+                        <li><strong>Exceptional Profitability:</strong> The company's dominant market position allows it to command premium pricing and generate industry-leading gross margins and profitability.</li>
+                        <li><strong>Visionary Leadership:</strong> CEO Jensen Huang is widely regarded as one of the most visionary leaders in the technology industry, with a proven track record of anticipating and capitalizing on major technological shifts.</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0 text-amber-600">Risks & Challenges 📉</h3>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Geopolitical Risk & Export Controls:</strong> Heavy reliance on TSMC in Taiwan for manufacturing creates supply chain vulnerability. U.S. export controls on sales to China have already impacted revenue and could be tightened further.</li>
-                        <li><strong>Customer Concentration:</strong> A significant portion of revenue comes from a small number of large cloud service providers. In-house chip development by these customers is a long-term threat.</li>
-                        <li><strong>Competition:</strong> While distant, a "good enough" competitor from AMD or a cloud provider could emerge, especially for AI inference workloads which are less technically demanding than training.</li>
-                         <li><strong>Valuation & High Expectations:</strong> NVIDIA's stock trades at a premium valuation, pricing in flawless execution and enormous future growth. Any stumble or slowdown could lead to a significant correction.</li>
+                        <li><strong>Geopolitical Risk:</strong> A significant portion of NVIDIA's manufacturing and supply chain is centered in Taiwan. An escalation of geopolitical tensions between the U.S. and China represents the single largest risk to the company.</li>
+                        <li><strong>Competition from "In-House" Chips:</strong> NVIDIA's largest customers are also its biggest potential competitors, as they are all investing billions in developing their own custom AI chips to reduce their reliance on NVIDIA.</li>
+                        <li><strong>Sustainability of Growth:</strong> The company's current rate of growth is unprecedented and cannot last forever. A slowdown in AI spending or a digestion period could lead to significant stock price volatility.</li>
+                        <li><strong>High Valuation:</strong> After a historic run, NVIDIA's stock trades at a premium valuation that prices in a significant amount of future growth and success.</li>
                     </ul>
                 </div>
             </div>
@@ -346,7 +312,7 @@
 
         <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
             <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
-            <p class="text-xs mt-1">Data synthesized from NVIDIA public filings and credible financial news sources as of May 2025.</p>
+            <p class="text-xs mt-1">Data synthesized from NVIDIA Corporation public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
         </footer>
 
     <script>
@@ -364,131 +330,70 @@
         const navLinks = document.querySelectorAll('header nav a[href^="#"]');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                if (!mobileMenuEl.classList.contains('hidden')) {
-                    mobileMenuBtn.click();
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
                 }
                 navLinks.forEach(l => l.classList.remove('active'));
                 e.currentTarget.classList.add('active');
             });
         });
         
-        // Segment Tabs
-        const segmentTabs = document.querySelectorAll('.segment-tab-button');
-        const segmentContents = document.querySelectorAll('.segment-content');
-        segmentTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                segmentTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                const targetId = tab.dataset.target + 'Content';
-                segmentContents.forEach(content => {
-                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
-                });
-            });
-        });
-
         // Chart.js Global Config
-        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.font.family = "'Inter', sans-serif";
         Chart.defaults.color = '#4B5563';
 
         const CHART_COLORS = {
-            green: '#4ADE80',
-            darkGreen: '#16A34A',
-            teal: '#2DD4BF',
-            lightGreen: '#BBF7D0',
-            orange: '#FB923C',
-            blue: '#60A5FA',
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4',
+            stone: '#E7E5E4'
         };
 
-        // Segment Revenue Breakdown Chart (Bar) - FY2023-FY2025 Data
-        const segmentRevenueCtx = document.getElementById('segmentRevenueChart').getContext('2d');
-        new Chart(segmentRevenueCtx, {
-            type: 'bar',
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
             data: {
-                labels: ['FY2023', 'FY2024', 'FY2025'],
+                labels: ['Data Center', 'Gaming', 'Professional Visualization', 'Automotive'],
                 datasets: [{
-                    label: 'Data Center',
-                    data: [15.01, 47.53, 115.19],
-                    backgroundColor: CHART_COLORS.darkGreen,
-                },{
-                    label: 'Gaming',
-                    data: [9.07, 10.45, 11.35],
-                    backgroundColor: CHART_COLORS.green,
-                },{
-                    label: 'Other',
-                    data: [2.89, 2.94, 3.96],
-                    backgroundColor: CHART_COLORS.teal,
+                    data: [87, 10, 2, 1], // Approximate percentages for Q1 FY26
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal, CHART_COLORS.orange],
+                    hoverOffset: 4
                 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                scales: { x: { stacked: true }, y: { stacked: true, title: { display: true, text: 'Revenue ($B)'} } },
-                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Segment Revenue Growth ($B)' } }
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Platform (Q1 FY26)' } }
             }
         });
-        
-        // Gaming Revenue Chart (Bar)
-        const gamingRevenueCtx = document.getElementById('gamingRevenueChart').getContext('2d');
-        new Chart(gamingRevenueCtx, {
-            type: 'line',
-            data: {
-                labels: ['Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25', 'Q4 25', 'Q1 26'],
-                datasets: [{
-                    label: 'Gaming Revenue ($B)',
-                    data: [2.49, 2.76, 2.91, 2.65, 2.55, 2.57, 3.8, 3.8],
-                    backgroundColor: CHART_COLORS.green,
-                    borderColor: CHART_COLORS.darkGreen,
-                    fill: true,
-                    tension: 0.2
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true, title: { display: true, text: 'Quarterly Revenue ($B)' } } },
-                plugins: { legend: { display: false }, title: { display: true, text: 'Gaming Segment Quarterly Revenue' } }
-            }
-        });
-
-        // Pro Viz & Auto Chart
-        const otherSegmentsCtx = document.getElementById('otherSegmentsChart').getContext('2d');
-        new Chart(otherSegmentsCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25', 'Q4 25', 'Q1 26'],
-                datasets: [{
-                    label: 'Pro Viz',
-                    data: [0.38, 0.44, 0.43, 0.46, 0.48, 0.51, 0.51],
-                    backgroundColor: CHART_COLORS.teal
-                }, {
-                    label: 'Automotive',
-                    data: [0.25, 0.28, 0.29, 0.32, 0.35, 0.57, 0.57],
-                    backgroundColor: CHART_COLORS.blue
-                }]
-            },
-             options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true, title: { display: true, text: 'Quarterly Revenue ($B)' } } },
-                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Pro Viz & Auto Quarterly Revenue' } }
-            }
-        });
-
 
         // --- FINANCIAL CHARTS LOGIC ---
 
-        // Yearly Data Store (GAAP, in Billions)
+        // Fiscal Year ends in January
         const yearlyDataStore = {
-            labels: ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'],
-            totalRevenue: { data: [16.68, 26.91, 26.97, 60.92, 130.50], label: 'Total Revenue ($B)', color: CHART_COLORS.darkGreen },
-            operatingIncome: { data: [4.53, 10.04, 4.22, 32.97, 81.45], label: 'Operating Income ($B)', color: CHART_COLORS.green },
-            netIncome: { data: [4.33, 9.75, 4.37, 29.76, 72.88], label: 'Net Income ($B)', color: CHART_COLORS.teal },
-            grossMargin: { data: [62.3, 64.9, 56.9, 72.7, 75.0], label: 'Gross Margin (%)', color: CHART_COLORS.darkGreen }
+            labels: ['FY23', 'FY24', 'FY25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [26.97, 26.91, 60.92], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [4.22, 5.58, 32.97], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            }
         };
 
-        // Quarterly Data Store (GAAP, in Billions)
+        // Quarters are fiscal quarters
         const quarterlyDataStore = {
-            labels: ['Q2 FY24', 'Q3 FY24', 'Q4 FY24', 'Q1 FY25', 'Q2 FY25', 'Q3 FY25', 'Q4 FY25', 'Q1 FY26'],
-            totalRevenue: { data: [13.51, 18.12, 22.10, 26.04, 30.5, 35.08, 39.33, 44.06], label: 'Total Revenue ($B)', color: CHART_COLORS.darkGreen },
-            operatingIncome: { data: [7.0, 10.4, 13.6, 16.9, 19.5, 21.87, 24.03, 21.64], label: 'Operating Income ($B)', color: CHART_COLORS.green },
-            netIncome: { data: [6.19, 9.24, 12.29, 14.88, 17.5, 19.31, 22.09, 18.78], label: 'Net Income ($B)', color: CHART_COLORS.teal },
+            labels: ['Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25', 'Q4 25', 'Q1 26'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [6.70, 7.10, 6.05, 7.19, 13.51, 18.12, 22.10, 26.04], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [1.26, 1.24, 0.65, 2.14, 7.78, 10.42, 13.59, 16.91], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Billions of USD'
+            }
         };
 
         let yearlyChart = null;
@@ -503,31 +408,31 @@
                 existingChart.destroy();
             }
             const metricDetails = dataStore[metricKey];
-            const isMargin = metricKey === 'grossMargin';
+            
             return new Chart(canvas, {
-                type: isMargin ? 'line' : 'bar',
+                type: 'bar',
                 data: {
                     labels: dataStore.labels,
-                    datasets: [{
-                        label: metricDetails.label,
-                        data: metricDetails.data,
-                        backgroundColor: metricDetails.color + 'BF', // with opacity
-                        borderColor: metricDetails.color,
-                        borderWidth: 1,
-                        fill: isMargin ? false : true,
-                        tension: 0.1
-                    }]
+                    datasets: metricDetails.datasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: { 
-                        y: { 
-                            beginAtZero: false, 
-                            title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} 
-                        } 
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
                     },
-                    plugins: { legend: { display: false } }
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
                 }
             });
         }

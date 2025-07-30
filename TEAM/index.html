@@ -1,449 +1,489 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Atlassian (TEAM) - Interactive Business Analysis</title>
-   <script src="https://cdn.tailwindcss.com"></script>
-   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-   <!-- Visualization & Content Choices: (Content from original TEAM file, styled like SRE/CRWD)
-       - Overview: KPI cards (blue-themed).
-       - Business Model: Donut chart for Revenue Streams, cards for Key Pillars (blue-themed).
-       - Products & Services: Grid of product cards (blue-themed borders/accents).
-       - Financial Performance: Line/Bar charts, styled with blue theme.
-       - Market & Competition: Competitor select and info cards (blue-themed).
-       - Strategy & Outlook: SWOT Accordion (blue-themed), cards for Growth Drivers.
-       CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-   <style>
-       html { scroll-behavior: smooth; scroll-padding-top: 70px; /* Consistent with SRE/CRWD sticky nav */ }
-       body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; } /* slate-50, slate-800 (SRE Style) */
-      
-       .main-container { max-width: 1200px; margin-left: auto; margin-right: auto; padding: 1rem; }
-
-
-       .page-header { text-align: center; padding-top: 2rem; padding-bottom: 1.5rem; }
-       .page-title { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; color: #0284c7; margin-bottom: 0.5rem; } /* sky-600 (Atlassian Blue) */
-       .page-subtitle { font-size: 1.25rem; color: #475569; } /* slate-600 */
-
-
-       .sticky-nav { /* Adapted from SRE/CRWD */
-           position: sticky;
-           top: 0;
-           z-index: 40;
-           background-color: rgba(248, 250, 252, 0.95); /* slate-50 with opacity for blur effect */
-           backdrop-filter: blur(8px);
-           padding-top: 0.5rem;
-           padding-bottom: 0.5rem;
-           box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-           overflow-x: auto; /* For mobile nav items */
-           white-space: nowrap; /* For mobile nav items */
-       }
-       .nav-link { /* Matched to SRE .nav-link style, Atlassian Blue */
-           padding: 0.65rem 1rem;
-           margin-right: 0.25rem;
-           margin-bottom: 0.25rem;
-           border-radius: 0.375rem;
-           font-weight: 500;
-           font-size: 0.875rem;
-           cursor: pointer;
-           transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
-           border: 1px solid transparent;
-           color: #0369a1; /* sky-700 */
-           display: inline-block;
-       }
-       .nav-link.active { /* Atlassian Blue */
-           background-color: #0284c7; /* sky-600 */
-           color: white;
-           border-color: #0284c7; /* sky-600 */
-           font-weight: 600;
-       }
-       .nav-link:not(.active):hover { /* Atlassian Blue hover */
-           background-color: #e0f2fe; /* sky-100 */
-           color: #075985; /* sky-800 */
-           transform: translateY(-1px);
-       }
-      
-       .content-section { /* From original TEAM file */
-           display: block;
-           animation: fadeIn 0.5s ease-out;
-           margin-bottom: 2.5rem; /* SRE Style card spacing */
-       }
-       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-
-       .section-title { /* Matched to SRE, Atlassian Blue */
-           font-size: 1.875rem;
-           line-height: 2.25rem;
-           font-weight: 700;
-           color: #0369a1; /* sky-700 (Atlassian Blue) */
-           margin-bottom: 1.5rem;
-           text-align: center;
-       }
-       .card { /* Matched to SRE */
-           background-color: white;
-           border-radius: 0.75rem;
-           box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-           padding: 1.5rem;
-           transition: transform 0.3s ease, box-shadow 0.3s ease;
-       }
-       .card:hover { /* Matched to SRE */
-           transform: translateY(-5px);
-           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-       }
-      
-       .kpi-card-item { /* New class for overview KPI cards, styled like SRE */
-           background-color: #f0f9ff; /* sky-50 */
-           padding: 1rem;
-           border-radius: 0.5rem;
-           box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
-           text-align: center;
-           border-left: 4px solid #0284c7; /* sky-600 accent */
-           transition: transform 0.2s ease, box-shadow 0.2s ease;
-       }
-       .kpi-card-item:hover { transform: translateY(-3px); box-shadow: 0 6px 12px -3px rgba(2,132,199,0.15); }
-       .kpi-card-title { font-size: 0.875rem; font-weight: 600; color: #075985; margin-bottom: 0.25rem;} /* sky-800 */
-       .kpi-card-value { font-size: 1.75rem; font-weight: 700; color: #0284c7; } /* sky-600 */
-
-
-       .chart-container { /* From original TEAM file, good standard size */
-           position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px;
-       }
-       @media (min-width: 768px) { .chart-container { height: 400px; } }
-      
-       .accordion-item { margin-bottom: 0.5rem; } /* SRE style */
-       .accordion-header { /* Matched to SRE accordion-header, Atlassian Blue */
-           cursor: pointer; padding: 0.75rem 1rem; background-color: #e0f2fe; /* sky-100 */ border: 1px solid #bae6fd; /* sky-200 */ border-radius: 0.375rem; font-weight: 600; color: #075985; /* sky-800 */ display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s ease; width: 100%; text-align: left;
-       }
-       .accordion-header:hover { background-color: #bae6fd; /* sky-200 */ }
-       .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out; padding: 0 1rem; background-color: white; border: 1px solid #bae6fd; border-top:none; border-radius: 0 0 0.375rem 0.375rem;}
-       .accordion-content.open { padding: 1rem; }
-       .accordion-header .icon { transform: rotate(0deg); transition: transform 0.3s ease-in-out; color: #0284c7; /* sky-600 */ font-size: 1.25rem; }
-       .accordion-header .icon.rotate-90 { transform: rotate(90deg); }
-
-
-       .product-card { /* Simple styling for product grid */
-           padding: 1rem; background-color: white; border: 1px solid #e2e8f0; /* slate-200 */ border-radius: 0.5rem; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); transition: box-shadow 0.2s ease, transform 0.2s ease;
-       }
-       .product-card:hover { box-shadow: 0 4px 8px -1px rgb(0 0 0 / 0.1); transform: translateY(-2px); }
-       .product-card-title { font-size: 1rem; font-weight: 600; color: #0369a1; margin-bottom: 0.25rem; } /* sky-700 */
-       .product-card-desc { font-size: 0.875rem; color: #475569; } /* slate-600 */
-
-
-       .competitor-info-card { /* For competitor details */
-            padding: 1rem; background-color: #f0f9ff; /* sky-50 */ border-radius: 0.5rem; box-shadow: 0 2px 4px rgb(0 0 0 / 0.05); margin-top: 1rem;
-       }
-       .competitor-select { /* For the dropdown */
-           padding: 0.5rem 0.75rem; border: 1px solid #cbd5e1; /* slate-300 */ border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); font-size: 0.875rem; width: 100%; md:w-1/2;
-       }
-      
-       .footer { /* Matched to SRE/CRWD */
-           background-color: #1e293b; /* slate-800 */
-           color: #cbd5e1; /* slate-300 */
-           padding: 2rem 0;
-           margin-top: 3rem;
-           text-align: center;
-       }
-       h1,h2,h3,h4 { font-weight: 600; } /* From original file, keep for consistency */
-   </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlassian (TEAM) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
 </head>
-<body class="antialiased">
+<body class="min-h-screen">
 
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Atlassian (TEAM) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
 
-   <header class="page-header">
-       <h1 class="page-title">Atlassian (TEAM)</h1>
-       <p class="page-subtitle">An Interactive Business Analysis</p>
-   </header>
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Atlassian: The Engine of Team Collaboration</h2>
+            <p class="content-text mb-6">Atlassian (NASDAQ: TEAM) is a leading provider of collaboration, development, and issue-tracking software for teams. Its iconic products, including Jira, Confluence, and Trello, have become the mission-critical backbone for millions of users, from software developers to project managers. The company has built its empire on a unique <span class="highlight">product-led growth (PLG) model</span>, eschewing a traditional sales force in favor of a low-friction, self-service purchasing motion. After a multi-year journey, Atlassian is now a cloud-first company, focused on migrating its massive customer base to its cloud platform to drive the next phase of durable, profitable growth.</p>
+            
+            <div class="grid md-grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Cloud, Enterprise, and Profitability</h3>
+                    <p class="content-text mb-4">Atlassian's strategy is focused on three key pillars:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Accelerate the Cloud Transition:</strong> Drive the migration of its on-premise customers to its higher-margin, more feature-rich cloud platform, which provides a more stable recurring revenue stream.</li>
+                        <li><strong class="font-semibold text-gray-700">Win the Enterprise:</strong> Deepen its penetration within large enterprise customers by expanding its capabilities in IT Service Management (ITSM) and offering advanced security and data governance features.</li>
+                        <li><strong class="font-semibold text-gray-700">Drive Profitable Growth:</strong> After a period of heavy investment, the company is now focused on balancing growth with operational discipline to drive margin expansion and significant free cash flow.</li>
+                        <li><strong class="font-semibold text-gray-700">Leverage AI:</strong> Integrate "Atlassian Intelligence," its generative AI capabilities, across its entire product suite to enhance user productivity and create new value for customers.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Cloud Revenue Growth (Q3 FY25)</p>
+                    <p class="kpi-value text-violet-600">32%</p>
+                    <p class="content-text text-sm mt-2">Highlights the strong momentum of the company's strategic cloud transition, which is the primary driver of overall growth and future profitability.</p>
+                </div>
+            </div>
+        </section>
 
-   <nav class="sticky-nav mb-6">
-       <div class="main-container flex flex-wrap justify-center">
-           <a href="#overview" class="nav-link active">Overview</a>
-           <a href="#businessModel" class="nav-link">Business Model</a>
-           <a href="#productsServices" class="nav-link">Products & Services</a>
-           <a href="#financials" class="nav-link">Financial Performance</a>
-           <a href="#marketCompetition" class="nav-link">Market & Competition</a>
-           <a href="#strategyOutlook" class="nav-link">Strategy & Outlook</a>
-       </div>
-   </nav>
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Atlassian Makes Money: A Subscription-Based Model</h2>
+            <p class="content-text mb-6">Atlassian's business model is almost entirely based on recurring subscriptions. The company has successfully transitioned its customers from legacy, on-premise "Server" licenses to either its hosted "Cloud" offerings or its self-managed "Data Center" subscriptions for large enterprises. This provides a highly predictable and scalable revenue stream.</p>
 
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="cloud">Cloud</button>
+                    <button class="segment-tab-button" data-target="datacenter">Data Center</button>
+                    <button class="segment-tab-button" data-target="marketplace">Marketplace & Other</button>
+                </nav>
+            </div>
 
-   <main class="main-container">
-       <section id="overview" class="content-section card">
-           <h2 class="section-title">Company Overview</h2>
-           <p class="mb-6 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Atlassian Corporation (NASDAQ: TEAM) is a global software company renowned for its suite of collaboration, development, and issue-tracking software for teams. Founded in 2002, Atlassian serves over 300,000 customers worldwide (FY24) with a mission to unleash the potential of every team. This application explores Atlassian's business, financials, and market position.</p>
-           <div class="grid md:grid-cols-3 gap-6 mb-6 text-center">
-               <div class="kpi-card-item">
-                   <h3 class="kpi-card-title">Customers (FY24)</h3>
-                   <p class="kpi-card-value">300,000+</p>
-               </div>
-               <div class="kpi-card-item">
-                   <h3 class="kpi-card-title">FY24 Revenue</h3>
-                   <p class="kpi-card-value">$4.36B</p>
-               </div>
-               <div class="kpi-card-item">
-                   <h3 class="kpi-card-title">Q3 FY25 Cloud Revenue Growth</h3>
-                   <p class="kpi-card-value">25% YoY</p>
-               </div>
-           </div>
-           <p class="text-slate-700 leading-relaxed text-center max-w-3xl mx-auto text-sm">Atlassian navigates a dynamic market by focusing on a cloud-first strategy, AI integration (Rovo), and enterprise expansion, maintaining its product-led growth model.</p>
-       </section>
+            <div id="segmentDetails">
+                <div id="cloudContent" class="segment-content">
+                    <h3 class="subsection-title">Cloud (~80% of Subscription Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The core of Atlassian's future. The cloud segment represents revenue from subscriptions to its cloud-based versions of Jira, Confluence, and other products. This is the fastest-growing and highest-margin part of the business, and the primary strategic focus of the company.</p>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="datacenterContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Data Center (~20% of Subscription Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Data Center is the company's self-managed, enterprise-grade offering for customers who require the control of an on-premise solution but with the flexibility and scale needed for a large organization. This segment provides a bridge for large, complex customers who are on their journey to the cloud.</p>
+                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Strategic Role</p>
+                             <p class="kpi-value text-sky-600">Enterprise Bridge to Cloud</p>
+                             <p class="content-text text-sm mt-2">Data Center serves the critical needs of Atlassian's largest customers, providing a stable revenue stream during their multi-year cloud migrations.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="marketplaceContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Marketplace & Other</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">A smaller but strategically important segment. The Atlassian Marketplace is a thriving ecosystem where third-party developers sell apps and integrations that extend the functionality of Atlassian's products. Atlassian takes a percentage of the revenue from each sale, creating a high-margin revenue stream.</p>
+                        </div>
+                        <div class="kpi-card bg-teal-50 border-teal-200">
+                            <p class="kpi-label">Ecosystem Strength</p>
+                            <p class="kpi-value text-teal-600">5,000+ Apps</p>
+                            <p class="content-text text-sm mt-2">The vast Marketplace ecosystem significantly enhances the value of the core platforms and deepens the competitive moat.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Atlassian's financial results showcase a company that has successfully balanced high growth with a recent, deliberate focus on profitability. The strong growth in high-margin cloud revenue is driving significant operating leverage, leading to expanding non-GAAP operating margins and robust free cash flow generation.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Non-GAAP Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
 
-       <section id="businessModel" class="content-section card">
-           <h2 class="section-title">Atlassian's Business Model</h2>
-           <p class="mb-6 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Atlassian's model hinges on product-led growth (PLG), attracting users with valuable tools and upselling to richer editions. Key pillars include a cloud-first approach, AI integration, and a "System of Work" vision.</p>
-           <div class="grid md:grid-cols-2 gap-6 mb-8">
-               <div>
-                   <h3 class="text-xl font-semibold text-slate-800 mb-3">Key Pillars</h3>
-                   <div class="space-y-3">
-                       <div class="p-4 bg-sky-50 rounded-lg shadow-sm border border-sky-200"><h4 class="font-semibold text-sky-700 text-sm">☁️ Cloud-First Strategy</h4><p class="text-xs text-slate-600 mt-1">Aggressive transition to Cloud, investing in infrastructure and specialized offerings.</p></div>
-                       <div class="p-4 bg-sky-50 rounded-lg shadow-sm border border-sky-200"><h4 class="font-semibold text-sky-700 text-sm">🤖 AI Integration (Rovo)</h4><p class="text-xs text-slate-600 mt-1">Embedding AI (search, chat, automation) across products via Rovo.</p></div>
-                       <div class="p-4 bg-sky-50 rounded-lg shadow-sm border border-sky-200"><h4 class="font-semibold text-sky-700 text-sm">🔗 System of Work</h4><p class="text-xs text-slate-600 mt-1">Connected platform for business & tech teams using "Teamwork Graph" and "Collections."</p></div>
-                       <div class="p-4 bg-sky-50 rounded-lg shadow-sm border border-sky-200"><h4 class="font-semibold text-sky-700 text-sm">🏢 Enterprise Focus</h4><p class="text-xs text-slate-600 mt-1">Targeting large enterprises while maintaining PLG roots.</p></div>
-                   </div>
-               </div>
-               <div>
-                   <h3 class="text-xl font-semibold text-slate-800 mb-3 text-center">FY24 Revenue Breakdown</h3>
-                   <p class="text-sm text-slate-600 mb-2 text-center">Dominance of subscriptions, declining maintenance post-Server EOL. 'Other' includes Marketplace.</p>
-                   <div class="chart-container"><canvas id="revenueStreamsChart"></canvas></div>
-               </div>
-           </div>
-       </section>
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="operatingIncome">Non-GAAP Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts illustrate the company's durable top-line growth and a clear inflection towards higher and more consistent profitability.</p>
+        </section>
 
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Land and Expand Fortress</h2>
+            <p class="content-text mb-6">Atlassian's competitive advantage is built on a powerful combination of its product-led growth model, high switching costs, and a thriving developer ecosystem that creates a deep and durable moat.</p>
+            
+            <div class="grid md-grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Switching Costs:</strong> Atlassian's products, particularly Jira, become deeply embedded in the core engineering and product development workflows of an organization. The cost, effort, and institutional knowledge required to migrate to a competing platform are immense.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Product-Led Growth & Network Effects:</strong> The low-friction, self-service model allows Atlassian's products to be adopted organically within a team or department. As usage grows, it creates an internal network effect, making it the de facto standard across the entire organization.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Marketplace Ecosystem:</strong> The Atlassian Marketplace, with thousands of third-party apps, significantly enhances the value and functionality of the core products. This vast ecosystem deepens customer lock-in and is very difficult for competitors to replicate.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Microsoft (MSFT):</strong> A formidable competitor with its GitHub, Azure DevOps, and Teams offerings, which can be bundled into its broader enterprise agreements.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">ServiceNow (NOW):</strong> A key competitor in the high-value IT Service Management (ITSM) market.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Asana, Monday.com, Smartsheet:</strong> Compete in the broader work management space, particularly for non-technical teams.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-       <section id="productsServices" class="content-section card">
-           <h2 class="section-title">Key Products & Services</h2>
-           <p class="mb-6 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Atlassian offers a diverse software portfolio for team collaboration, planning, building, and servicing, forming their "System of Work" vision.</p>
-           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-               <div class="product-card"><h3 class="product-card-title">Jira Software</h3><p class="product-card-desc">Agile project & issue tracking.</p></div>
-               <div class="product-card"><h3 class="product-card-title">Jira Service Management</h3><p class="product-card-desc">ITSM for IT and support teams.</p></div>
-               <div class="product-card"><h3 class="product-card-title">Confluence</h3><p class="product-card-desc">Team collaboration & knowledge base.</p></div>
-               <div class="product-card"><h3 class="product-card-title">Trello</h3><p class="product-card-desc">Visual Kanban-style project tool.</p></div>
-               <div class="product-card"><h3 class="product-card-title">Bitbucket</h3><p class="product-card-desc">Git source code hosting.</p></div>
-               <div class="product-card"><h3 class="product-card-title">Atlassian Rovo</h3><p class="product-card-desc">AI knowledge discovery & automation.</p></div>
-               <div class="product-card"><h3 class="product-card-title">Loom</h3><p class="product-card-desc">Video messaging for work (acquired).</p></div>
-               <div class="product-card"><h3 class="product-card-title">Jira Align</h3><p class="product-card-desc">Enterprise agile planning.</p></div>
-               <div class="product-card"><h3 class="product-card-title">Marketplace</h3><p class="product-card-desc">Third-party app ecosystem.</p></div>
-           </div>
-       </section>
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Atlassian is a high-quality software company with a portfolio of mission-critical products and a highly attractive business model. The investment thesis is centered on the continued successful migration of its customers to the cloud and its expansion into the enterprise ITSM market. However, the company faces a highly competitive environment and the challenge of sustaining growth as it matures.</p>
+            <div class="grid md-grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Durable Cloud Growth:</strong> The multi-year cloud migration provides a long runway for durable, high-margin revenue growth as the remaining on-premise customers make the switch.</li>
+                        <li><strong>Expanding Profitability:</strong> The company's new focus on disciplined spending is unlocking significant operating leverage, leading to a strong outlook for margin expansion and free cash flow growth.</li>
+                        <li><strong>Enterprise Expansion:</strong> The push into the large and lucrative ITSM market with Jira Service Management provides a significant new growth vector within its largest customers.</li>
+                        <li><strong>Sticky, Mission-Critical Products:</strong> Atlassian's products are deeply embedded in their customers' workflows, leading to a very resilient and predictable recurring revenue base.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Intense Competition:</strong> Atlassian competes against some of the largest and most well-funded software companies in the world, particularly Microsoft, which can leverage its massive distribution and bundling power.</li>
+                        <li><strong>Slowing Growth:</strong> As the business matures and the cloud migration progresses, the company's overall growth rate is naturally decelerating from its historical hyper-growth levels.</li>
+                        <li><strong>Execution of Cloud Migration:</strong> While successful so far, the migration of the largest, most complex enterprise customers to the cloud is a significant undertaking that carries execution risk.</li>
+                        <li><strong>Macroeconomic Sensitivity:</strong> As a provider of software primarily for technical and knowledge workers, a significant economic downturn could lead to slower seat expansion and reduced IT budgets.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Atlassian Corporation public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
+        </footer>
 
-       <section id="financials" class="content-section card">
-           <h2 class="section-title">Financial Performance & Trends</h2>
-           <p class="mb-6 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Exploring Atlassian's key financial metrics: revenue, profitability, and cash flow. Strong top-line growth is evident, though GAAP profitability is impacted by investments.</p>
-           <div class="grid md:grid-cols-2 gap-8">
-               <div><h3 class="text-lg font-semibold text-slate-700 mb-1 text-center">Total Revenue Growth (FY20-FY24)</h3><p class="text-xs text-slate-500 mb-2 text-center">Consistent YoY increases ($M).</p><div class="chart-container"><canvas id="totalRevenueChart"></canvas></div></div>
-               <div><h3 class="text-lg font-semibold text-slate-700 mb-1 text-center">Revenue by Type (FY20-FY24)</h3><p class="text-xs text-slate-500 mb-2 text-center">Shift towards subscription revenue ($M).</p><div class="chart-container"><canvas id="revenueByTypeChart"></canvas></div></div>
-               <div><h3 class="text-lg font-semibold text-slate-700 mb-1 text-center">Cloud vs. DC Revenue Growth (YoY %)</h3><p class="text-xs text-slate-500 mb-2 text-center">Recent Quarters. Q4'25 is guidance.</p><div class="chart-container"><canvas id="cloudDataCenterGrowthChart"></canvas></div></div>
-               <div><h3 class="text-lg font-semibold text-slate-700 mb-1 text-center">Op. Margin: GAAP vs. Non-GAAP (%)</h3><p class="text-xs text-slate-500 mb-2 text-center">Impact of stock-based compensation.</p><div class="chart-container"><canvas id="operatingMarginChart"></canvas></div></div>
-               <div class="md:col-span-2"><h3 class="text-lg font-semibold text-slate-700 mb-1 text-center">Operating & Free Cash Flow ($M)</h3><p class="text-xs text-slate-500 mb-2 text-center">Ability to generate cash from operations.</p><div class="chart-container"><canvas id="cashFlowChart"></canvas></div></div>
-           </div>
-       </section>
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
 
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
 
-       <section id="marketCompetition" class="content-section card">
-           <h2 class="section-title">Market Positioning & Competition</h2>
-           <p class="mb-6 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Atlassian operates in highly competitive markets but holds leadership positions. This section explores its standing, key competitors, and market trends.</p>
-           <div class="mb-8">
-               <h3 class="text-xl font-semibold text-slate-800 mb-3 text-center">Key Competitor Differentiators</h3>
-               <p class="text-sm text-slate-600 mb-3 text-center">Atlassian differentiates via an integrated platform, PLG, AI, and enterprise capabilities. Select a competitor:</p>
-               <div class="mb-4 max-w-md mx-auto"><select id="competitorSelect" class="competitor-select"><option value="microsoft">Microsoft</option><option value="servicenow">ServiceNow</option><option value="asana">Asana</option><option value="gitlab">GitLab</option><option value="notion">Notion</option></select></div>
-               <div id="competitorMicrosoft" class="competitor-info-card"><h4 class="font-semibold text-sky-700">vs. Microsoft</h4><p class="text-xs text-slate-600 mt-1">MS offers vast, Azure-integrated ecosystem. Atlassian focuses on open, best-of-suite team tools with strong PLG, versus MS's historically enterprise-sales driven approach.</p></div>
-               <div id="competitorServiceNow" class="competitor-info-card hidden"><h4 class="font-semibold text-sky-700">vs. ServiceNow</h4><p class="text-xs text-slate-600 mt-1">ServiceNow is a PaaS leader in ITSM for large enterprises. Atlassian's JSM targets a broader market with PLG and strong Jira integration.</p></div>
-               <div id="competitorAsana" class="competitor-info-card hidden"><h4 class="font-semibold text-sky-700">vs. Asana</h4><p class="text-xs text-slate-600 mt-1">Asana offers flexible work management. Jira is more specialized for dev. Trello competes with Asana boards. Atlassian has broader dev ecosystem.</p></div>
-               <div id="competitorGitLab" class="competitor-info-card hidden"><h4 class="font-semibold text-sky-700">vs. GitLab</h4><p class="text-xs text-slate-600 mt-1">GitLab is a single DevSecOps app. Atlassian provides a suite with broader focus (ITSM, work management). PLG on proprietary software.</p></div>
-               <div id="competitorNotion" class="competitor-info-card hidden"><h4 class="font-semibold text-sky-700">vs. Notion</h4><p class="text-xs text-slate-600 mt-1">Notion is a flexible "all-in-one workspace." Confluence competes for knowledge management. Atlassian products are more domain-specific.</p></div>
-           </div>
-           <div class="grid md:grid-cols-2 gap-6">
-               <div class="p-4 bg-sky-50 rounded-lg shadow-sm border border-sky-200"><h3 class="text-lg font-semibold text-sky-700 mb-2">Market Leadership</h3><ul class="list-disc list-inside space-y-1 text-xs text-slate-600"><li>Leader: Gartner DevOps, Forrester ESM, IDC ITSM, etc.</li><li>Jira: 42% IT/software dev PPM market (ElectroIQ 2024).</li></ul></div>
-               <div class="p-4 bg-sky-50 rounded-lg shadow-sm border border-sky-200"><h3 class="text-lg font-semibold text-sky-700 mb-2">Key Market Trends</h3><ul class="list-disc list-inside space-y-1 text-xs text-slate-600"><li>AI Integration (Rovo)</li><li>Cloud Migration (Cloud-First)</li><li>DevSecOps</li><li>Enterprise Collaboration (System of Work)</li><li>Platform Consolidation</li></ul></div>
-           </div>
-       </section>
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
 
-       <section id="strategyOutlook" class="content-section card">
-           <h2 class="section-title">Strategic Analysis & Future Outlook</h2>
-           <p class="mb-6 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Atlassian's strategy centers on cloud, AI, enterprise penetration, and its "System of Work." Analyst sentiment is generally positive, forecasting strong growth.</p>
-           <div class="mb-8">
-               <h3 class="text-xl font-semibold text-slate-800 mb-3 text-center">SWOT Analysis</h3>
-               <div id="swotAccordion" class="space-y-1">
-                   <div class="accordion-item"><div class="accordion-header"><span>Strengths</span><span class="icon"></span></div><div class="accordion-content"><ul class="list-disc list-inside text-sm text-slate-600 space-y-1 p-2"><li>Strong product suite, cloud growth, PLG model, non-GAAP profitability, AI investment.</li></ul></div></div>
-                   <div class="accordion-item"><div class="accordion-header"><span>Weaknesses</span><span class="icon"></span></div><div class="accordion-content"><ul class="list-disc list-inside text-sm text-slate-600 space-y-1 p-2"><li>Seat-based pricing, leadership changes, enterprise GTM execution risk.</li></ul></div></div>
-                   <div class="accordion-item"><div class="accordion-header"><span>Opportunities</span><span class="icon"></span></div><div class="accordion-content"><ul class="list-disc list-inside text-sm text-slate-600 space-y-1 p-2"><li>AI monetization, enterprise growth, cross-selling, cloud migration, remote work tools.</li></ul></div></div>
-                   <div class="accordion-item"><div class="accordion-header"><span>Threats</span><span class="icon"></span></div><div class="accordion-content"><ul class="list-disc list-inside text-sm text-slate-600 space-y-1 p-2"><li>Intense competition, economic downturn, tech changes, cybersecurity risks.</li></ul></div></div>
-               </div>
-           </div>
-           <div class="grid md:grid-cols-2 gap-6">
-               <div class="p-4 bg-blue-50 rounded-lg shadow-sm border border-blue-200"><h3 class="text-lg font-semibold text-blue-700 mb-2">Key Growth Drivers</h3><ul class="list-disc list-inside space-y-1 text-xs text-slate-600"><li>Cloud migration & revenue uplift</li><li>New customer acquisition (PLG)</li><li>Seat expansion & upgrades</li><li>Cross-selling portfolio</li><li>AI monetization (Rovo)</li><li>Enterprise penetration</li></ul></div>
-               <div class="p-4 bg-blue-50 rounded-lg shadow-sm border border-blue-200"><h3 class="text-lg font-semibold text-blue-700 mb-2">Strategic Imperatives</h3><ul class="list-disc list-inside space-y-1 text-xs text-slate-600"><li>Aggressive Cloud Transition</li><li>Ubiquitous AI Integration (Rovo)</li><li>Strengthen Enterprise GTM</li><li>Evolve "System of Work" Platform</li></ul></div>
-           </div>
-       </section>
-   </main>
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Cloud', 'Data Center', 'Marketplace & Other'],
+                datasets: [{
+                    data: [73, 17, 10], // Approximate percentages for Q3 FY25
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Source (Q3 FY25)' } }
+            }
+        });
 
+        // --- FINANCIAL CHARTS LOGIC ---
 
-   <footer class="footer">
-       <p class="text-sm">Atlassian (TEAM) Interactive Analysis. Data from provided report (Q3 FY25).</p>
-       <p class="text-xs mt-1">&copy; <span id="currentYear"></span> Interactive Report. For informational purposes only.</p>
-   </footer>
+        // Fiscal Year ends June 30
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [2.80, 3.51, 4.17], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Non-GAAP Operating Income ($M)', data: [614, 764, 951], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Millions of USD'
+            }
+        };
 
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($M)', data: [939, 1016, 1065, 1128, 1148, 1175, 1201, 1258], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Millions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Non-GAAP Operating Income ($M)', data: [213, 224, 233, 281, 273, 285, 290, 319], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Millions of USD'
+            }
+        };
 
-   <script>
-       document.getElementById('currentYear').textContent = new Date().getFullYear();
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
 
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
 
-       const mainNavEl = document.querySelector('.sticky-nav'); /* Changed from #main-nav for SRE/CRWD consistency */
-       const navLinks = document.querySelectorAll('.sticky-nav .nav-link'); /* Changed selector */
-       const contentSections = document.querySelectorAll('.content-section');
-       let navHeight = mainNavEl ? mainNavEl.offsetHeight + 20 : 70;
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
 
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
-       function changeActiveLink() {
-           let index = contentSections.length;
-           while(--index && window.scrollY + navHeight < contentSections[index].offsetTop) {}
-           navLinks.forEach((link) => link.classList.remove('active'));
-           if(navLinks[index]) navLinks[index].classList.add('active');
-       }
-      
-       navLinks.forEach(anchor => { /* This logic assumes nav-links are <a> tags */
-           anchor.addEventListener('click', function (e) {
-               e.preventDefault();
-               const targetId = this.getAttribute('href'); /* Works for <a> */
-               const targetElement = document.querySelector(targetId);
-               if (targetElement) {
-                   const targetPosition = targetElement.offsetTop - (mainNavEl ? mainNavEl.offsetHeight : 50) + 5;
-                   window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-                   if (targetId === '#overview' || targetId === '#financials' || targetId === '#businessModel') {
-                        setTimeout(renderAllCharts, 50);
-                   }
-               }
-           });
-       });
-      
-       window.addEventListener('scroll', changeActiveLink);
-
-
-       function setupAccordionListeners(selector) { /* Adapted for SRE/CRWD style icon rotation */
-           document.querySelectorAll(selector).forEach(button => {
-               button.addEventListener('click', () => {
-                   const content = button.nextElementSibling;
-                   const icon = button.querySelector('.icon'); // SRE/CRWD use .icon for +, -
-                   const item = button.parentElement.classList.contains('accordion-item') ? button.parentElement : button.closest('.accordion-item'); // Ensure we get the .accordion-item
-                  
-                   if (!item) return;
-
-
-                   const isOpen = item.classList.contains('active');
-
-
-                   if (isOpen) {
-                       content.style.maxHeight = '0px';
-                       if(icon) icon.classList.remove('rotate-90'); // SRE style
-                       item.classList.remove('active');
-                       content.classList.remove('open');
-                   } else {
-                       content.style.maxHeight = content.scrollHeight + 'px';
-                       if(icon) icon.classList.add('rotate-90'); // SRE style
-                       item.classList.add('active');
-                       setTimeout(() => { content.classList.add('open'); }, 50);
-                   }
-               });
-           });
-       }
-      
-       const competitorSelect = document.getElementById('competitorSelect');
-       const competitorInfos = document.querySelectorAll('.competitor-info-card'); /* Updated selector */
-       if (competitorSelect) {
-           competitorSelect.addEventListener('change', function() {
-               const selectedValue = this.value;
-               competitorInfos.forEach(info => {
-                   info.classList.toggle('hidden', info.id !== `competitor${selectedValue.charAt(0).toUpperCase() + selectedValue.slice(1)}`);
-               });
-           });
-       }
-
-
-       const defaultChartOptions = { /* Adapted to Atlassian Blue theme like SRE/CRWD */
-           responsive: true, maintainAspectRatio: false,
-           scales: {
-               y: { beginAtZero: false, ticks: { color: '#475569', font:{size:10} }, grid: { color: '#e2e8f0' } },
-               x: { ticks: { color: '#475569', font:{size:10} }, grid: { display: false } }
-           },
-           plugins: {
-               legend: { position: 'bottom', labels: { color: '#1e293b', font: {size:11}, boxWidth: 12, padding: 10 } },
-               tooltip: {
-                   backgroundColor: 'rgba(30, 41, 59, 0.9)', titleColor: '#ffffff', bodyColor: '#ffffff', titleFont: { weight: '600', size:12 }, bodyFont: {size:10}, padding: 8, cornerRadius: 4,
-                   callbacks: {
-                       label: function(context) {
-                           let label = context.dataset.label || '';
-                           if (label) label += ': ';
-                           if (context.parsed.y !== null) {
-                               const isPercentage = context.dataset.yAxisID === 'yPercentage' || (context.dataset.label && context.dataset.label.includes('%'));
-                               label += context.parsed.y.toLocaleString() + (isPercentage ? '%' : (context.dataset.unit || 'M'));
-                           }
-                           return label;
-                       }
-                   }
-               },
-               title: { display: false } // Titles are in HTML H3s now
-           },
-           animation: { duration: 800, easing: 'easeOutQuart' }
-       };
-      
-       let charts = {};
-       function createOrUpdateChart(chartId, chartConfig) {
-           const canvas = document.getElementById(chartId); if (!canvas) return;
-           const ctx = canvas.getContext('2d');
-           if (charts[chartId]) charts[chartId].destroy();
-           charts[chartId] = new Chart(ctx, chartConfig);
-       }
-
-
-       function renderAllCharts(){
-           // Revenue Streams Chart (Doughnut) - Data from original file
-           createOrUpdateChart('revenueStreamsChart', {
-               type: 'doughnut',
-               data: {
-                   labels: ['Subscription', 'Maintenance', 'Other'],
-                   datasets: [{ label: 'FY24 Revenue ($M)', data: [3964.1, 177.2, 217.7], backgroundColor: ['#0ea5e9', '#38bdf8', '#7dd3fc'], borderColor: '#ffffff', borderWidth: 2 }] /* sky-500, sky-400, sky-300 */
-               },
-               options: {...defaultChartOptions, plugins: {...defaultChartOptions.plugins, legend: {position:'right', labels:{...defaultChartOptions.plugins.legend.labels, boxWidth:10}}}}
-           });
-
-
-           const fiscalYears = ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'];
-           // Total Revenue Chart
-           createOrUpdateChart('totalRevenueChart', { type: 'line', data: { labels: fiscalYears, datasets: [{ label: 'Total Revenue', data: [1614.2, 2089.1, 2802.7, 3534.9, 4359.0], borderColor: '#0284c7', backgroundColor:'rgba(2,132,199,0.1)', tension: 0.2, fill: true, pointBackgroundColor: '#0284c7' }] }, options: defaultChartOptions });
-           // Revenue by Type Chart
-           createOrUpdateChart('revenueByTypeChart', { type: 'bar', data: { labels: fiscalYears, datasets: [ { label: 'Subscription', data: [931.5, 1324.1, 2096.7, 2898.7, 3964.1], backgroundColor: '#0ea5e9' }, { label: 'Maintenance', data: [469.3, 523.0, 495.1, 333.7, 177.2], backgroundColor: '#60a5fa' }, { label: 'Other', data: [118.2, 157.3, 210.9, 302.1, 217.7], backgroundColor: '#93c5fd' } ] }, options: {...defaultChartOptions, scales: {...defaultChartOptions.scales, x: {...defaultChartOptions.scales.x, stacked: true}, y: {...defaultChartOptions.scales.y, stacked: true, beginAtZero:true }}} });
-           // Cloud vs Data Center Growth
-           createOrUpdateChart('cloudDataCenterGrowthChart', { type: 'bar', data: { labels: ["Q3'25 Actual", "Q4'25 Guide"], datasets: [ { label: 'Cloud Growth YoY', data: [25.0, 23.0], backgroundColor: '#0284c7', yAxisID: 'yPercentage' }, { label: 'Data Center Growth YoY', data: [7.0, 16.5], backgroundColor: '#38bdf8', yAxisID: 'yPercentage' } ] }, options: {...defaultChartOptions, scales: {...defaultChartOptions.scales, yPercentage: {ticks:{callback: function(v) {return v + '%';}}, title:{display:true, text:'Growth YoY (%)',color:'#0369a1'}}}}});
-           // Operating Margin Chart
-           createOrUpdateChart('operatingMarginChart', { type: 'line', data: { labels: fiscalYears, datasets: [ { label: 'GAAP Op. Margin', data: [0.9, 4.9, 2.5, -9.8, -2.7], borderColor: '#fb923c', backgroundColor:'rgba(251,146,60,0.1)', tension:0.2, fill:false, pointBackgroundColor:'#fb923c', yAxisID: 'yPercentage'}, { label: 'Non-GAAP Op. Margin', data: [22.9, 24.9, 22.4, 20.4, 23.3], borderColor: '#0284c7', backgroundColor:'rgba(2,132,199,0.1)', tension:0.2, fill:false, pointBackgroundColor:'#0284c7', yAxisID: 'yPercentage'}] }, options: {...defaultChartOptions, scales: {...defaultChartOptions.scales, yPercentage: {ticks:{callback: function(v) {return v + '%';}}, title:{display:true, text:'Op. Margin (%)',color:'#0369a1'}}}}});
-           // Cash Flow Chart
-           createOrUpdateChart('cashFlowChart', { type: 'line', data: { labels: fiscalYears, datasets: [ { label: 'Operating Cash Flow', data: [574.2, 841.3, 821.0, 868.0, 1415.2], borderColor: '#10b981', backgroundColor:'rgba(16,185,129,0.1)', tension:0.2, fill:true, pointBackgroundColor:'#10b981'}, { label: 'Free Cash Flow', data: [null, null, null, 842.0, 1415.2], borderColor: '#2563eb',backgroundColor:'rgba(37,99,219,0.1)', tension:0.2, fill:true, pointBackgroundColor:'#2563eb', spanGaps: true}] }, options: defaultChartOptions });
-       }
-
-
-       document.addEventListener('DOMContentLoaded', () => {
-           if (mainNavEl) navHeight = mainNavEl.offsetHeight + 20;
-           changeActiveLink();
-           setupAccordionListeners('.accordion-header'); /* Use .accordion-header for SRE style */
-           setTimeout(renderAllCharts,50); // Initial render after layout settles
-
-
-           // Set initial active nav link based on URL hash or default to overview
-           const currentHash = window.location.hash || '#overview';
-           navLinks.forEach(link => {
-               link.classList.toggle('active', link.getAttribute('href') === currentHash);
-           });
-           const initialSection = document.querySelector(currentHash);
-           if(initialSection) {
-                const targetPosition = initialSection.offsetTop - (mainNavEl ? mainNavEl.offsetHeight : 50) + 5;
-                window.scrollTo({ top: targetPosition, behavior: 'instant' }); // Use instant scroll on load
-           }
-       });
-   </script>
+    </script>
 </body>
 </html>
 

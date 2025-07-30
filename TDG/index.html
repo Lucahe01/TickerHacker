@@ -3,779 +3,497 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TransDigm Group (TDG) - Interactive Analysis</title>
+    <title>TransDigm Group (TDG) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Visualization & Content Choices:
-        - Report Info: Overall TDG summary (Exec Summary) -> Goal: Inform -> Viz: Key stats cards, intro text -> Interaction: Static -> Justification: Quick overview.
-        - Report Info: Business Model tenets (Section III.A) -> Goal: Organize/Inform -> Viz: Styled HTML list/cards with icons -> Interaction: Static -> Justification: Clear presentation of core strategy.
-        - Report Info: Financial Trends (Revenue, OpInc, EBITDA, NetInc, OCF FY20-FY24 - Section V.A, Table 3) -> Goal: Change/Compare -> Viz: Multiple Line Charts (Chart.js) -> Interaction: Tooltips -> Justification: Visualize trends effectively. Library: Chart.js.
-        - Report Info: Profit Margins (Op, EBITDA, Net FY20-FY24 - Calculated from Section V.A, Table 3) -> Goal: Change/Compare -> Viz: Line Charts (Chart.js) -> Interaction: Tooltips -> Justification: Show profitability evolution. Library: Chart.js.
-        - Report Info: ROCI Trend (FY21-FY24 - Table 2) -> Goal: Change -> Viz: Line Chart (Chart.js) -> Interaction: Tooltips -> Justification: Highlight capital efficiency. Library: Chart.js.
-        - Report Info: Segment Revenue & EBITDA (FY20-FY24 - Table 1) -> Goal: Compare/Change -> Viz: Grouped Bar Charts (Chart.js) for Revenue and EBITDA -> Interaction: Tooltips -> Justification: Detailed segment performance. Library: Chart.js.
-        - Report Info: Revenue Mix (Comm OEM, Comm AM, Defense - FY24 - Section IV.D) -> Goal: Inform/Compare -> Viz: Donut Chart (Chart.js) -> Interaction: Tooltips -> Justification: Show revenue composition. Library: Chart.js.
-        - Report Info: Competitor Data (Tables 4 & 5) -> Goal: Compare/Organize -> Viz: Interactive HTML Table -> Interaction: Static (sorting could be added) -> Justification: Easy comparison of competitors. Method: HTML/Tailwind.
-        - Report Info: Growth Drivers/Risks (Section VIII.A, VIII.B) -> Goal: Inform -> Viz: Styled lists/cards -> Interaction: Static -> Justification: Clear presentation of outlook.
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
         }
         .chart-container {
             position: relative;
-            background-color: white; /* Always white background for charts */
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            padding: 1rem;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
         }
-        .nav-link {
-            transition: all 0.3s ease-in-out;
-            padding: 0.75rem 0.5rem; /* Adjusted padding for nav links */
-            border-bottom: 4px solid transparent;
-            white-space: nowrap;
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
         }
-        .nav-link.active {
-            border-bottom-color: #0284C7; /* sky-600 */
-            color: #0369A1; /* sky-700 */
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
             font-weight: 600;
         }
-        .nav-link:hover {
-            color: #0369A1; /* sky-700 */
-            background-color: #F0F9FF; /* sky-50 */
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
         }
-        .chart-container canvas {
-            max-width: 100%;
-            max-height: 100%;
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
         }
-        section[id] {
-            scroll-margin-top: 70px; 
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
         }
-         @media (min-width: 768px) { /* md */
-            section[id] {
-                scroll-margin-top: 60px; 
-            }
-             .nav-link {
-                padding: 0.75rem 1rem;
-            }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
         }
-
-        /* Default Light Mode Table Styles */
-        section#competitiveLandscape table thead {
-            background-color: #334155; /* slate-700 */
-            color: white;
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
         }
-        section#competitiveLandscape table tbody tr:nth-child(odd) {
-            background-color: #ffffff; /* white */
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
         }
-        section#competitiveLandscape table tbody tr:nth-child(even) {
-            background-color: #f8fafc; /* slate-50 */
-        }
-        section#competitiveLandscape table tbody tr td {
-            color: #374151; /* slate-700 text */
-        }
-
-
-        @media (prefers-color-scheme: dark) {
-          body { background-color: #1a202c; color: #e2e8f0; }
-          .nav-link { color: #cbd5e0; }
-          .nav-link.active { border-bottom-color: #38BDF8; color: #E0F2FE; } 
-          .nav-link:hover { color: #E0F2FE; background-color: #0C4A6E; } 
-          .bg-slate-100 { background-color: #1e293b; } 
-          .text-slate-800 { color: #e2e8f0; } 
-          .text-slate-600 { color: #94a3b8; } 
-          .text-slate-700 { color: #cbd5e1; } 
-          .text-slate-500 { color: #64748b; } 
-          .bg-white { background-color: #334155; } 
-          .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.15); }
-          .border-slate-300 { border-color: #475569; } 
-          .border-sky-600 { border-color: #38BDF8; } 
-          
-          /* General table header in dark mode (already good) */
-          th { background-color: #075985; color: white; } 
-          
-          /* General table body rows in dark mode (these were causing the issue for the specific table) */
-          /* We will override these for the competitor table specifically */
-          tbody tr:nth-child(odd) { background-color: #334155; } 
-          tbody tr:nth-child(even) { background-color: #1e293b; } 
-
-          /* Specific overrides for Competitor Snapshot table in dark mode */
-          section#competitiveLandscape table thead {
-            background-color: #075985; /* Ensure header matches other dark mode headers */
-            color: white;
-          }
-          section#competitiveLandscape table tbody tr:nth-child(odd) {
-            background-color: #ffffff !important; /* White background */
-          }
-          section#competitiveLandscape table tbody tr:nth-child(even) {
-            background-color: #f8fafc !important; /* Very light gray background (slate-50) */
-          }
-          section#competitiveLandscape table tbody tr td {
-            color: #1f293b !important; /* Dark text (slate-800) */
-          }
-
-          .text-sky-700 { color: #7DD3FC; } 
-          .text-sky-100 { color: #E0F2FE; } 
-          .bg-sky-700 { background-color: #0369A1; } 
-          .hover\:bg-sky-50:hover { background-color: #0C4A6E; } 
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased">
+<body class="min-h-screen">
 
-    <header class="bg-sky-700 text-white shadow-lg">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <h1 class="text-3xl font-bold">TransDigm Group (TDG) - Interactive Analysis</h1>
-            <p class="text-sky-100 mt-1">An interactive exploration of TDG's business model, financials, and competitive landscape.</p>
-        </div>
-    </header>
-
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="hidden md:flex flex-grow justify-center items-baseline space-x-1 lg:space-x-2 overflow-x-auto">
-                    <a href="#overview" class="nav-link active text-sm sm:text-base font-medium text-sky-700">Overview</a>
-                    <a href="#businessModel" class="nav-link text-sm sm:text-base font-medium text-slate-600">Business Model</a>
-                    <a href="#financialPerformance" class="nav-link text-sm sm:text-base font-medium text-slate-600">Financials</a>
-                    <a href="#segmentAnalysis" class="nav-link text-sm sm:text-base font-medium text-slate-600">Segments</a>
-                    <a href="#competitiveLandscape" class="nav-link text-sm sm:text-base font-medium text-slate-600">Competition</a>
-                    <a href="#strategicOutlook" class="nav-link text-sm sm:text-base font-medium text-slate-600">Outlook</a>
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">TransDigm Group (TDG) Analysis</h1>
                 </div>
-                <div class="md:hidden flex-grow flex justify-end">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-500 hover:text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500" aria-controls="mobile-menu" aria-expanded="false">
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                         <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
             </div>
-        </div>
-        <div class="md:hidden hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#overview" class="nav-link block text-base font-medium text-sky-700 active">Overview</a>
-                <a href="#businessModel" class="nav-link block text-base font-medium text-slate-600">Business Model</a>
-                <a href="#financialPerformance" class="nav-link block text-base font-medium text-slate-600">Financials</a>
-                <a href="#segmentAnalysis" class="nav-link block text-base font-medium text-slate-600">Segments</a>
-                <a href="#competitiveLandscape" class="nav-link block text-base font-medium text-slate-600">Competition</a>
-                <a href="#strategicOutlook" class="nav-link block text-base font-medium text-slate-600">Outlook</a>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8 space-y-12">
-        
-        <section id="overview" class="space-y-6">
-            <h2 class="text-2xl font-semibold text-slate-700 border-b-2 border-sky-600 pb-2">Overview & Executive Summary</h2>
-            <p class="text-slate-600 leading-relaxed">
-                This section provides a high-level overview of TransDigm Group (TDG), summarizing its unique position in the aerospace and defense sector. TDG is distinguished by its focus on highly engineered, proprietary aircraft components with significant aftermarket content, a disciplined acquisition strategy, and a value-based operating philosophy. This approach has historically enabled robust financial performance, including high profit margins and strong cash flow, akin to a private equity model within a public market.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold text-sky-700 mb-2">Core Strategy</h3>
-                    <p class="text-slate-600">Proprietary products, strong aftermarket presence, and value-driven operations.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold text-sky-700 mb-2">Financial Strength</h3>
-                    <p class="text-slate-600">Consistently high profit margins (EBITDA often >50%) and robust cash flow.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold text-sky-700 mb-2">Growth Engine</h3>
-                    <p class="text-slate-600">Disciplined M&A strategy, acquiring ~90 businesses since 1993.</p>
-                </div>
-            </div>
-             <div class="bg-white p-6 rounded-lg shadow-lg mt-6">
-                <h3 class="text-xl font-semibold text-slate-700 mb-3">At a Glance (FY2024)</h3>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-                    <div>
-                        <p class="text-2xl font-bold text-sky-700">$7.94B</p>
-                        <p class="text-sm text-slate-500">Net Sales</p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-sky-700">52.6%</p>
-                        <p class="text-sm text-slate-500">EBITDA Margin</p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-sky-700">20.54%</p>
-                        <p class="text-sm text-slate-500">ROCI</p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-sky-700">~78%</p>
-                        <p class="text-sm text-slate-500">Revenue from Proprietary Products (2023)</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
-        <section id="businessModel" class="space-y-6">
-            <h2 class="text-2xl font-semibold text-slate-700 border-b-2 border-sky-600 pb-2">TransDigm's Business Model</h2>
-            <p class="text-slate-600 leading-relaxed">
-                TransDigm's success is rooted in a distinctive and consistently applied business model. This section explores the core tenets that define its strategy, how it creates value for customers and shareholders, and its production and delivery mechanisms. The model emphasizes proprietary products, a strong aftermarket, value-based operations, disciplined acquisitions, and a decentralized organizational structure with centralized financial control.
-            </p>
-            <div class="space-y-4">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold text-sky-700 mb-1">1. Proprietary Aerospace Products & Significant Aftermarket</h3>
-                    <p class="text-slate-600 text-sm">~78% of 2023 revenue from proprietary lines, ~80% historically from sole-source. Aftermarket is key (Q1 FY25: 72% of revenue), driven by long aircraft life (25-30+ years).</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold text-sky-700 mb-1">2. Value-Based Operating Strategy</h3>
-                    <p class="text-slate-600 text-sm">Focus on: (i) profitable new business, (ii) productivity/cost improvements, (iii) value-based pricing for highly engineered products.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold text-sky-700 mb-1">3. Focused and Disciplined Acquisition Strategy</h3>
-                    <p class="text-slate-600 text-sm">Targets proprietary commercial aerospace businesses with strong aftermarket. ~90 acquisitions since 1993.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold text-sky-700 mb-1">4. Decentralized Organization Aligned with Shareholders</h3>
-                    <p class="text-slate-600 text-sm">51 independently operated business units, fostering agility, under central financial discipline and strategic oversight. Goal: "Private Equity-Like Growth in Value".</p>
-                </div>
-            </div>
-            <div class="mt-6 bg-white p-6 rounded-lg shadow-lg">
-                <h3 class="text-xl font-semibold text-slate-700 mb-3">Value Creation & Delivery</h3>
-                 <p class="text-slate-600 mb-2"><strong>For Customers:</strong> Critical, highly engineered, often sole-source components ensuring aircraft safety, reliability, and performance, backed by strong service.</p>
-                 <p class="text-slate-600"><strong>For Shareholders:</strong> Robust financial returns via high margins, strong cash flow, and accretive acquisitions.</p>
-                 <p class="text-slate-600 mt-3"><strong>Production & Delivery:</strong> World-class engineering, ~120 global manufacturing sites emphasizing efficiency and quality, and decentralized supply chain management with corporate oversight.</p>
-            </div>
-        </section>
-
-        <section id="financialPerformance" class="space-y-8">
-            <h2 class="text-2xl font-semibold text-slate-700 border-b-2 border-sky-600 pb-2">Financial Performance Analysis</h2>
-            <p class="text-slate-600 leading-relaxed">
-                This section delves into TransDigm's financial track record, characterized by strong growth, industry-leading profitability, and robust cash flow. We examine trends in key metrics like revenue, operating income, EBITDA, net income, and return on invested capital (ROCI) over recent fiscal years. The charts below illustrate the company's financial trajectory and margin strength.
-            </p>
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">TransDigm: The Aerospace Aftermarket Powerhouse</h2>
+            <p class="content-text mb-6">TransDigm Group (NYSE: TDG) is a leading global designer, producer, and supplier of highly engineered, proprietary aerospace components for commercial and military aircraft. The company has built an unparalleled competitive moat by focusing on niche products where it is often the sole-source supplier. Its unique business model, which aims to provide <span class="highlight">"private equity-like returns with the liquidity of a public market,"</span> is driven by a disciplined strategy of acquiring businesses with significant aftermarket content, relentless cost control, and value-based pricing. This has resulted in a resilient, high-margin business that consistently generates strong cash flow throughout all phases of the aerospace industry cycle.</p>
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="chart-container w-full max-w-3xl mx-auto h-[350px] sm:h-[400px] max-h-[450px]">
-                    <canvas id="revenueChart"></canvas>
-                </div>
-                <div class="chart-container w-full max-w-3xl mx-auto h-[350px] sm:h-[400px] max-h-[450px]">
-                    <canvas id="operatingIncomeChart"></canvas>
-                </div>
-                <div class="chart-container w-full max-w-3xl mx-auto h-[350px] sm:h-[400px] max-h-[450px]">
-                    <canvas id="ebitdaChart"></canvas>
-                </div>
-                <div class="chart-container w-full max-w-3xl mx-auto h-[350px] sm:h-[400px] max-h-[450px]">
-                    <canvas id="netIncomeChart"></canvas>
-                </div>
-                <div class="chart-container w-full max-w-3xl mx-auto h-[350px] sm:h-[400px] max-h-[450px]">
-                    <canvas id="ocfChart"></canvas>
-                </div>
-                <div class="chart-container w-full max-w-3xl mx-auto h-[350px] sm:h-[400px] max-h-[450px]">
-                    <canvas id="rociChart"></canvas>
-                </div>
-                 <div class="chart-container w-full max-w-3xl mx-auto h-[350px] sm:h-[400px] max-h-[450px] lg:col-span-2">
-                    <canvas id="profitMarginsChart"></canvas>
-                </div>
-            </div>
-             <div class="bg-white p-6 rounded-lg shadow-lg mt-6">
-                <h3 class="text-xl font-semibold text-slate-700 mb-3">Recent Performance & Outlook (FY25)</h3>
-                <p class="text-slate-600 mb-2">Q2 FY25 showed continued momentum: Net Sales +12.0% YoY, EBITDA As Defined Margin at 54.0%.</p>
-                <p class="text-slate-600"><strong>FY25 Guidance:</strong> Net Sales $8.75B - $8.95B; EBITDA As Defined $4.615B - $4.755B.</p>
-                <p class="text-slate-600 mt-2"><strong>Capital Structure:</strong> Significant debt ($24.88B as of Sep 2024) used to fund acquisitions, balanced by strong cash reserves ($6.26B). Returns via special dividends & buybacks.</p>
-            </div>
-        </section>
-
-        <section id="segmentAnalysis" class="space-y-8">
-            <h2 class="text-2xl font-semibold text-slate-700 border-b-2 border-sky-600 pb-2">Segment Analysis</h2>
-            <p class="text-slate-600 leading-relaxed">
-                TransDigm operates through three primary business segments: Power & Control, Airframe, and a smaller Non-aviation segment. This section breaks down their product offerings, financial contributions, and target markets. The charts visualize revenue and EBITDA performance by segment, highlighting their respective strengths and growth. A significant portion of revenue comes from the high-margin aftermarket.
-            </p>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold text-sky-700 mb-1">Power & Control (FY24)</h3>
-                    <p class="text-slate-600 text-sm"><strong>Products:</strong> Actuators, ignition systems, pumps, valves, power conditioning, motors, generators.</p>
-                    <p class="text-slate-600 text-sm mt-1"><strong>Sales:</strong> $3.94B | <strong>EBITDA Margin:</strong> 55.0%</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold text-sky-700 mb-1">Airframe (FY24)</h3>
-                    <p class="text-slate-600 text-sm"><strong>Products:</strong> Latches, rods, hoists, cargo systems, lighting, interior surfaces, seatbelts.</p>
-                    <p class="text-slate-600 text-sm mt-1"><strong>Sales:</strong> $3.81B | <strong>EBITDA Margin:</strong> 54.3%</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-semibold text-sky-700 mb-1">Non-aviation (FY24)</h3>
-                    <p class="text-slate-600 text-sm"><strong>Products:</strong> Components for ground defense, industrial applications.</p>
-                    <p class="text-slate-600 text-sm mt-1"><strong>Sales:</strong> $190M | <strong>EBITDA Margin:</strong> 36.8%</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="chart-container w-full max-w-3xl mx-auto h-[400px] sm:h-[450px] max-h-[500px]">
-                    <canvas id="segmentRevenueChart"></canvas>
-                </div>
-                <div class="chart-container w-full max-w-3xl mx-auto h-[400px] sm:h-[450px] max-h-[500px]">
-                    <canvas id="segmentEbitdaChart"></canvas>
-                </div>
-            </div>
-             <div class="chart-container w-full max-w-xl mx-auto h-[350px] sm:h-[400px] max-h-[450px] mt-8">
-                <canvas id="revenueMixChart"></canvas>
-            </div>
-            <p class="text-center text-slate-600 text-sm mt-2">FY2024 Revenue Mix by Market Channel</p>
-        </section>
-
-        <section id="competitiveLandscape" class="space-y-6">
-            <h2 class="text-2xl font-semibold text-slate-700 border-b-2 border-sky-600 pb-2">Competitive Landscape</h2>
-            <p class="text-slate-600 leading-relaxed">
-                The aerospace components industry is relatively fragmented, with competition from large public corporations and smaller private entities. High barriers to entry, such as stringent regulations, R&D costs, and established supplier relationships, characterize the market. This section profiles key competitors and highlights TransDigm's unique market positioning and differentiators. TDG controls an estimated 22% of the specialized aerospace component market.
-            </p>
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <h3 class="text-xl font-semibold text-slate-700 mb-3">Key Differentiators for TransDigm</h3>
-                <ul class="list-disc list-inside space-y-2 text-slate-600">
-                    <li>Extreme focus on proprietary technology and sole-source status (~78-90% of sales).</li>
-                    <li>Dominant aftermarket revenue with superior profitability (~70-75% of revenue).</li>
-                    <li>Aggressive, disciplined M&A with a proven value creation playbook.</li>
-                    <li>Decentralized operations with centralized financial discipline.</li>
-                    <li>Exceptional operating margins (EBITDA >50%) and cash flow.</li>
-                    <li>"Private Equity" approach in public markets (leveraged, focus on cash-on-cash returns).</li>
-                </ul>
-            </div>
-
-            <div class="overflow-x-auto bg-white shadow-lg rounded-lg p-1">
-                <h3 class="text-xl font-semibold text-slate-700 m-4">Competitor Snapshot</h3>
-                <table class="min-w-full divide-y divide-slate-200">
-                    <thead class="bg-slate-700 text-white">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Company</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Primary Focus</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Approx. Aerospace Revenue (M USD)</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Op./Seg. Margin (%)</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Key Model Difference vs. TDG</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-slate-200 text-slate-700">
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">TransDigm (TDG)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">Proprietary sole-source components, high aftermarket</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">7,750 (FY24, excl. Non-Av)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">52.6% (EBITDA As Defined)</td>
-                            <td class="px-4 py-3 text-sm">-</td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">HEICO (HEI)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">PMA parts, niche markets, M&A</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">~2,640 (FSG FY24)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">~21.4% (Cons. Op.)</td>
-                            <td class="px-4 py-3 text-sm">PMA focus vs. OEM sole-source acquisition; lower margins.</td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">Moog (MOG-A)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">Precision motion control systems, R&D focus</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">~2,121 (Aero/Def FY22)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">~10-12% (Seg. Op.)</td>
-                            <td class="px-4 py-3 text-sm">Traditional R&D/systems supplier; more diversified (industrial).</td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">Honeywell (HON)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">Broad aerospace portfolio, integrated systems</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">15,458 (Aero FY24)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">25.8% (Aero Seg.)</td>
-                            <td class="px-4 py-3 text-sm">Large diversified industrial; broader systems; lower margins than TDG.</td>
-                        </tr>
-                         <tr>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">Parker Hannifin (PH)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">Motion & control, diversified industrial</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">~6,800 (Aero FY23)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">~21-23% (Aero Seg.)</td>
-                            <td class="px-4 py-3 text-sm">Diversified industrial; broader tech; lower margins.</td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">Eaton (ETN)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">Power management, diversified industrial</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">~3,800 (Aero FY23)</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm">~20-22% (Aero Seg.)</td>
-                            <td class="px-4 py-3 text-sm">Diversified power mgmt; broader tech; lower margins.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="strategicOutlook" class="space-y-6">
-            <h2 class="text-2xl font-semibold text-slate-700 border-b-2 border-sky-600 pb-2">Strategic Outlook</h2>
-            <p class="text-slate-600 leading-relaxed">
-                TransDigm's future prospects are shaped by various growth drivers and potential challenges. This section outlines these factors, providing insight into the company's strategic direction and the environment in which it operates. The overall outlook appears favorable, supported by aerospace market recovery and defense spending, though M&A execution and macroeconomic factors remain critical.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold text-sky-700 mb-3">Growth Drivers & Opportunities</h3>
-                    <ul class="list-disc list-inside space-y-2 text-slate-600">
-                        <li>Continued recovery/growth in commercial aerospace (RPKs > pre-pandemic).</li>
-                        <li>Stable to growing defense budgets globally.</li>
-                        <li>Accretive acquisitions (central to strategy).</li>
-                        <li>New product development and internal innovation.</li>
-                        <li>Value-based pricing and ongoing margin expansion focus.</li>
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: A Three-Pronged Approach to Value Creation</h3>
+                    <p class="content-text mb-4">TransDigm's success is built on a simple yet powerful three-pillar strategy:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Acquire Proprietary Businesses:</strong> A disciplined M&A strategy focused on acquiring companies that produce highly engineered, sole-source aerospace components with significant, high-margin aftermarket revenue streams.</li>
+                        <li><strong class="font-semibold text-gray-700">Drive Productivity & Cost Improvements:</strong> Each of its 51 operating units runs autonomously but shares a common dedication to continuous improvement and operational efficiency to maximize profitability.</li>
+                        <li><strong class="font-semibold text-gray-700">Value-Based Pricing:</strong> Leverage its strong proprietary positions and the critical nature of its parts to command premium pricing, especially in the aftermarket where its components are essential for aircraft operation and safety.</li>
                     </ul>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold text-red-600 mb-3">Potential Risks & Challenges</h3>
-                    <ul class="list-disc list-inside space-y-2 text-slate-600">
-                        <li>Macroeconomic sensitivity (recessions, global events).</li>
-                        <li>Acquisition integration risk and diminishing pool of ideal targets.</li>
-                        <li>High debt load and interest rate sensitivity.</li>
-                        <li>Reliance on key customers and aircraft platforms.</li>
-                        <li>Government contracting complexities and budget changes.</li>
-                        <li>Supply chain disruptions and cost inflation.</li>
-                        <li>Ongoing competition, though moats are strong.</li>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">EBITDA As Defined Margin (FY 2024)</p>
+                    <p class="kpi-value text-violet-600">52.6%</p>
+                    <p class="content-text text-sm mt-2">Represents industry-leading profitability, a direct result of its focus on high-margin proprietary aftermarket parts and disciplined operational management.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How TransDigm Makes Money: A Diversified Aerospace Portfolio</h2>
+            <p class="content-text mb-6">TransDigm's products are found on nearly every commercial and military aircraft in service today. The business is organized into three segments, with a strong emphasis on the commercial and defense aerospace markets. A key characteristic is the revenue mix, with the aftermarket accounting for the majority of profits due to its higher margins.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="power">Power & Control</button>
+                    <button class="segment-tab-button" data-target="airframe">Airframe</button>
+                    <button class="segment-tab-button" data-target="nonAero">Non-aerospace</button>
+                </nav>
+            </div>
+
+            <div id="segmentDetails">
+                <div id="powerContent" class="segment-content">
+                    <h3 class="subsection-title">Power & Control (~51% of Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">This is TransDigm's largest segment, providing a wide range of components critical for controlling and powering aircraft systems. These products are highly engineered and often have long-term sole-source positions on specific aircraft platforms.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Mechanical/electro-mechanical actuators and controls, ignition systems, engine technology, specialized pumps and valves, and power conditioning devices.</li>
+                                <li><strong>Customers:</strong> Engine and power system OEMs, airlines, third-party maintenance providers, and military depots.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="revenueBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="airframeContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Airframe (~47% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">The Airframe segment focuses on components that are integral to the aircraft's structure, cabin, and safety systems. Many of these products are also proprietary and have a strong, recurring revenue stream from maintenance, repair, and overhaul (MRO) activities.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Engineered latching and locking devices, cockpit security systems, seat belts and safety restraints, and specialized lavatory components.</li>
+                                <li><strong>Customers:</strong> Airframe manufacturers, cabin system suppliers, airlines, and MRO providers.</li>
+                             </ul>
+                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Aftermarket Dominance</p>
+                             <p class="kpi-value text-sky-600">~75-80% of Profits</p>
+                             <p class="content-text text-sm mt-2">While aftermarket sales are around 55-60% of revenue, they contribute the vast majority of profits due to significantly higher margins compared to OEM sales.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="nonAeroContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Non-aerospace (~2% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">A smaller segment that leverages TransDigm's engineering and manufacturing expertise for applications outside of aerospace. This includes components for off-road vehicles, child restraint systems, and satellite and space systems.</p>
+                        </div>
+                         <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">Strategic Focus</p>
+                             <p class="kpi-value text-teal-600">Niche Applications</p>
+                             <p class="content-text text-sm mt-2">This segment allows TransDigm to capitalize on its core competencies in markets with similar characteristics of proprietary, highly engineered products.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">TransDigm's financial performance is a direct reflection of its powerful business model. The company consistently delivers robust revenue growth, best-in-class EBITDA margins, and substantial free cash flow, which it strategically deploys for acquisitions and returning capital to shareholders.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                            <option value="operatingCashFlow">Operating Cash Flow ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="operatingIncome">Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase TransDigm's consistent growth trajectory and high profitability, underscoring the resilience of its aftermarket-driven business model.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: A Near-Monopoly in Niche Markets</h2>
+            <p class="content-text mb-6">TransDigm has one of the most durable competitive moats in the industrial sector. This is not due to a single advantage, but a powerful combination of factors that make it extremely difficult for competitors to challenge its position.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Proprietary Products & Sole-Source Status:</strong> Approximately 90% of revenue comes from proprietary products, and for about 80% of these, TransDigm is the sole supplier. This creates a powerful pricing advantage.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Switching Costs & FAA Certification:</strong> Once a part is certified by the FAA for a specific aircraft, the cost, time, and risk for an airline to switch to a different supplier are prohibitive. This locks in decades of aftermarket revenue.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Recurring Aftermarket Revenue:</strong> The large installed base of aircraft with TransDigm parts creates a stable, predictable, and high-margin stream of revenue from repairs and replacements that grows with global flight hours.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Honeywell (HON) & RTX Corporation (RTX):</strong> Large, diversified aerospace and defense conglomerates that compete with TransDigm in certain product areas.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Parker-Hannifin (PH) & Eaton (ETN):</strong> Diversified industrial manufacturers with significant aerospace divisions that offer competing systems and components.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">HEICO (HEI):</strong> Another successful company in the aerospace aftermarket, though it often focuses on FAA-approved replacement parts rather than being the original OEM.</span>
+                        </li>
                     </ul>
                 </div>
             </div>
-             <div class="bg-white p-6 rounded-lg shadow-lg mt-6">
-                <h3 class="text-xl font-semibold text-slate-700 mb-3">Concluding Remarks</h3>
-                <p class="text-slate-600 leading-relaxed">
-                    TransDigm has a highly differentiated and profitable business model. Its focus on proprietary, sole-source components with high aftermarket content, coupled with disciplined M&A and operational efficiency, drives industry-leading margins and cash flow. The "private equity" approach in public markets sets it apart. While risks exist (M&A execution, leverage, market cyclicality), the outlook is favorable, supported by market recovery and defense demand. Sustained success hinges on continued disciplined execution and navigating a dynamic aerospace landscape.
-                </p>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">TransDigm is a high-quality compounder positioned to benefit from the long-term growth in global air travel. The primary risks relate to its aggressive use of leverage and its reliance on a continued pipeline of suitable acquisitions to fuel growth.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Durable Aftermarket Growth:</strong> The business directly benefits from the secular growth in global revenue passenger miles (RPMs), which drives demand for high-margin repairs and replacements.</li>
+                        <li><strong>Disciplined Capital Allocation:</strong> A proven ability to successfully acquire and integrate niche businesses, creating significant shareholder value over time.</li>
+                        <li><strong>Exceptional Profitability and Cash Flow:</strong> Industry-leading margins and robust cash generation provide the firepower for future acquisitions and shareholder returns (e.g., special dividends).</li>
+                        <li><strong>Pricing Power:</strong> The proprietary nature of its products gives it a unique ability to pass through price increases, protecting margins in an inflationary environment.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>High Financial Leverage:</strong> The company operates with a significant amount of debt. A sharp rise in interest rates or a severe market downturn could increase financial risk.</li>
+                        <li><strong>Acquisition Integration Risk:</strong> The growth strategy is heavily dependent on M&A. Overpaying for an acquisition or failing to successfully integrate it could harm returns.</li>
+                        <li><strong>Regulatory & Political Scrutiny:</strong> TransDigm's high margins and pricing practices have attracted scrutiny from the government and regulators in the past, posing a potential headline risk.</li>
+                        <li><strong>Cyclicality of Aerospace:</strong> While the aftermarket provides stability, a prolonged and severe downturn in the aerospace industry could eventually impact results.</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
-    </main>
-
-    <footer class="bg-slate-700 text-slate-300 py-8 mt-12 text-center">
-        <div class="container mx-auto px-4">
-            <p>&copy; <span id="currentYear"></span> Interactive Report. Information based on TransDigm Group analysis.</p>
-            <p class="text-xs mt-1">For informational purposes only.</p>
-        </div>
-    </footer>
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from TransDigm Group Inc. public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
+        </footer>
 
     <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
 
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mainNavLinks = document.querySelectorAll('nav .hidden.md\\:flex a.nav-link');
-        const mobileNavLinks = document.querySelectorAll('#mobile-menu a.nav-link');
-        const allNavLinks = [...mainNavLinks, ...mobileNavLinks];
-        const contentSections = document.querySelectorAll('main section[id]');
-
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', () => {
-                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
-                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
-                mobileMenu.classList.toggle('hidden');
-                mobileMenuButton.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
-            });
-        }
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
         
-        allNavLinks.forEach(link => {
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                   if (mobileMenuButton.getAttribute('aria-expanded') === 'true') {
-                        mobileMenuButton.click();
-                   }
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
                 }
-                allNavLinks.forEach(navLink => navLink.classList.remove('active', 'text-sky-700', 'border-sky-600'));
-                allNavLinks.forEach(navLink => {
-                     if(navLink.getAttribute('href') === link.getAttribute('href')) {
-                        navLink.classList.add('active', 'text-sky-700', 'border-sky-600');
-                     } else {
-                        navLink.classList.remove('text-sky-700', 'border-sky-600');
-                        navLink.classList.add('text-slate-600');
-                     }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
                 });
             });
         });
 
-        const observerCallback = (entries) => {
-            entries.forEach(entry => {
-                const id = entry.target.getAttribute('id');
-                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) { 
-                    allNavLinks.forEach(navLink => {
-                        navLink.classList.remove('active', 'text-sky-700', 'border-sky-600');
-                        navLink.classList.add('text-slate-600');
-                        if (navLink.getAttribute('href') === `#${id}`) {
-                            navLink.classList.add('active', 'text-sky-700', 'border-sky-600');
-                            navLink.classList.remove('text-slate-600');
-                        }
-                    });
-                }
-            });
-        };
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
-        const observerOptions = {
-            root: null, 
-            rootMargin: '0px 0px -75% 0px', 
-            threshold: 0.1 
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
         };
         
-        const sectionObserver = new IntersectionObserver(observerCallback, observerOptions);
-        contentSections.forEach(section => {
-            if (section) sectionObserver.observe(section);
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Power & Control', 'Airframe', 'Non-aerospace'],
+                datasets: [{
+                    data: [51.5, 46.6, 1.9], // Approximate percentages
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment (Approx. %)' } }
+            }
         });
 
+        // --- FINANCIAL CHARTS LOGIC ---
 
-        const chartColors = ['#2563EB', '#475569', '#0EA5E9', '#F59E0B', '#10B981', '#6D28D9'];
+        // Fiscal Year ends September 30
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [5.43, 6.59, 7.94], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [2.22, 2.92, 3.53], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingCashFlow: {
+                datasets: [ { label: 'Operating Cash Flow ($B)', data: [0.95, 1.38, 2.05], backgroundColor: CHART_COLORS.orange + 'BF', borderColor: CHART_COLORS.orange } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
 
-        function createChart(ctx, type, labels, datasets, title, yLabel = 'Value (M USD)') {
-            if (!ctx) return null; 
-            const modifiedDatasets = datasets.map(ds => ({
-                ...ds,
-                fill: false 
-            }));
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($M)', data: [1744, 1852, 1918, 1920, 2046, 2185, 2028, 2150], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Millions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($M)', data: [783, 855, 787, 867, 934, 943, 974, 991], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Millions of USD'
+            }
+        };
 
-            return new Chart(ctx, {
-                type: type,
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+
+            return new Chart(canvas, {
+                type: 'bar',
                 data: {
-                    labels: labels,
-                    datasets: (type === 'line') ? modifiedDatasets : datasets 
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        title: {
-                            display: true,
-                            text: title,
-                            font: { size: 16, weight: 'bold' },
-                            color: '#334155' // Always dark for white chart background
-                        },
                         legend: {
-                            position: 'top',
-                            labels: { color: '#475569' } // Always dark for white chart background
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            titleFont: { weight: 'bold'},
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += context.parsed.y.toLocaleString() + (context.dataset.isPercentage ? '%' : ' M USD');
-                                    }
-                                    return label;
-                                }
-                            }
+                            display: false
                         }
                     },
                     scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: { 
-                                color: '#475569', // Always dark for white chart background
-                                callback: function(value) {
-                                    const label = this.getLabelForValue(value);
-                                    return label.length > 10 ? label.substring(0,10) + '...' : label;
-                                }
-                            }
-                        },
+                        x: {},
                         y: {
-                            grid: { color: '#E2E8F0' }, // Light grid lines for white background
-                            ticks: { 
-                                color: '#475569', // Always dark for white chart background
-                                callback: function(value) { return value.toLocaleString() + (datasets[0]?.isPercentage ? '%' : ''); }
-                            },
+                            beginAtZero: true,
                             title: {
                                 display: true,
-                                text: yLabel,
-                                color: '#475569' // Always dark for white chart background
-                            }
+                                text: metricDetails.yAxisLabel
+                            },
                         }
-                    },
-                    interaction: {
-                        mode: 'nearest',
-                        axis: 'x',
-                        intersect: false
                     }
                 }
             });
         }
         
-        const fiscalYears = ['FY2020', 'FY2021', 'FY2022', 'FY2023', 'FY2024'];
-
-        if (document.getElementById('revenueChart')) {
-            createChart(
-                document.getElementById('revenueChart').getContext('2d'),
-                'line',
-                fiscalYears,
-                [{
-                    label: 'Net Sales',
-                    data: [5103, 4798, 5429, 6585, 7940],
-                    borderColor: chartColors[0],
-                    backgroundColor: chartColors[0] + '33', 
-                    tension: 0.1
-                }],
-                'Net Sales Trend (FY2020-FY2024)'
-            );
-        }
-        
-        if (document.getElementById('operatingIncomeChart')) {
-            createChart(
-                document.getElementById('operatingIncomeChart').getContext('2d'),
-                'line',
-                fiscalYears,
-                [{
-                    label: 'Operating Income',
-                    data: [1751, 1691, 2215, 2923, 3531],
-                    borderColor: chartColors[1],
-                    backgroundColor: chartColors[1] + '33',
-                    tension: 0.1
-                }],
-                'Operating Income Trend (FY2020-FY2024)'
-            );
-        }
-
-        if (document.getElementById('ebitdaChart')) {
-            createChart(
-                document.getElementById('ebitdaChart').getContext('2d'),
-                'line',
-                fiscalYears,
-                [{
-                    label: 'EBITDA As Defined',
-                    data: [2278, 2189, 2646, 3395, 4173],
-                    borderColor: chartColors[2],
-                    backgroundColor: chartColors[2] + '33',
-                    tension: 0.1
-                }],
-                'EBITDA As Defined Trend (FY2020-FY2024)'
-            );
-        }
-        
-        if (document.getElementById('netIncomeChart')) {
-            createChart(
-                document.getElementById('netIncomeChart').getContext('2d'),
-                'line',
-                fiscalYears,
-                [{
-                    label: 'Net Income',
-                    data: [699, 680, 866, 1298, 1714],
-                    borderColor: chartColors[3],
-                    backgroundColor: chartColors[3] + '33',
-                    tension: 0.1
-                }],
-                'Net Income Trend (FY2020-FY2024)'
-            );
-        }
-
-        if (document.getElementById('ocfChart')) {
-            createChart(
-                document.getElementById('ocfChart').getContext('2d'),
-                'line',
-                fiscalYears,
-                [{
-                    label: 'Operating Cash Flow',
-                    data: [1213, 913, 948, 1375, 2045],
-                    borderColor: chartColors[4],
-                    backgroundColor: chartColors[4] + '33',
-                    tension: 0.1
-                }],
-                'Operating Cash Flow Trend (FY2020-FY2024)'
-            );
-        }
-        
-        const rociYears = ['FY2021', 'FY2022', 'FY2023', 'FY2024'];
-        if (document.getElementById('rociChart')) {
-            createChart(
-                document.getElementById('rociChart').getContext('2d'),
-                'line',
-                rociYears,
-                [{
-                    label: 'ROCI',
-                    data: [13.67, 14.21, 16.20, 20.54],
-                    borderColor: chartColors[5],
-                    backgroundColor: chartColors[5] + '33',
-                    tension: 0.1,
-                    isPercentage: true
-                }],
-                'Return on Invested Capital (ROCI) Trend',
-                'ROCI (%)'
-            );
-        }
-
-        if (document.getElementById('profitMarginsChart')) {
-            const operatingMargins = [34.3, 35.2, 40.8, 44.4, 44.5];
-            const ebitdaMargins = [44.6, 45.6, 48.7, 51.6, 52.6];
-            const netProfitMargins = [13.7, 14.2, 16.0, 19.7, 21.6];
-            createChart(
-                document.getElementById('profitMarginsChart').getContext('2d'),
-                'line',
-                fiscalYears,
-                [
-                    { label: 'Operating Margin (%)', data: operatingMargins, borderColor: chartColors[0], tension: 0.1, isPercentage: true },
-                    { label: 'EBITDA Margin (%)', data: ebitdaMargins, borderColor: chartColors[1], tension: 0.1, isPercentage: true },
-                    { label: 'Net Profit Margin (%)', data: netProfitMargins, borderColor: chartColors[2], tension: 0.1, isPercentage: true }
-                ],
-                'Profitability Margins Trend (FY2020-FY2024)',
-                'Margin (%)'
-            );
-        }
-        
-        const segmentYears = ['FY2020', 'FY2021', 'FY2022', 'FY2023', 'FY2024'];
-        const segmentRevenueData = {
-            labels: segmentYears,
-            datasets: [
-                { label: 'Power & Control', data: [2695, 2550, 2873, 3316, 3941], backgroundColor: chartColors[0] },
-                { label: 'Airframe', data: [2253, 2083, 2391, 3094, 3809], backgroundColor: chartColors[1] },
-                { label: 'Non-aviation', data: [155, 165, 165, 175, 190], backgroundColor: chartColors[2] }
-            ]
-        };
-        if (document.getElementById('segmentRevenueChart')) {
-            createChart(document.getElementById('segmentRevenueChart').getContext('2d'), 'bar', segmentRevenueData.labels, segmentRevenueData.datasets, 'Segment Net Sales (FY2020-FY2024)');
-        }
-
-        const segmentEbitdaData = {
-            labels: segmentYears,
-            datasets: [
-                { label: 'Power & Control', data: [1319, 1319, 1531, 1774, 2167], backgroundColor: chartColors[0] },
-                { label: 'Airframe', data: [878, 878, 1121, 1541, 2068], backgroundColor: chartColors[1] },
-                { label: 'Non-aviation', data: [64, 62, 65, 70, 70], backgroundColor: chartColors[2] }
-            ]
-        };
-         if (document.getElementById('segmentEbitdaChart')) {
-            createChart(document.getElementById('segmentEbitdaChart').getContext('2d'), 'bar', segmentEbitdaData.labels, segmentEbitdaData.datasets, 'Segment EBITDA As Defined (FY2020-FY2024)');
-        }
-
-        if (document.getElementById('revenueMixChart')) {
-            const revenueMixData = {
-                labels: ['Commercial OEM (26%)', 'Commercial Aftermarket (39.1%)', 'Defense (35%)'],
-                datasets: [{
-                    data: [26, 39.1, 35],
-                    backgroundColor: [chartColors[0], chartColors[1], chartColors[2]],
-                    hoverOffset: 4
-                }]
-            };
-            const revenueMixCtx = document.getElementById('revenueMixChart') ? document.getElementById('revenueMixChart').getContext('2d') : null;
-            if (revenueMixCtx) {
-                 new Chart(revenueMixCtx, {
-                    type: 'doughnut',
-                    data: revenueMixData,
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            title: { display: true, text: 'FY2024 Revenue Mix by Market Channel', font: { size: 16, weight: 'bold' }, color: '#334155' }, // Always dark
-                            legend: { position: 'bottom', labels: { color: '#475569'} }, // Always dark
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        if (label) { label += ': '; }
-                                        if (context.parsed !== null) { label += context.parsed.toFixed(1) + '%'; }
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-        
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.body.classList.add('dark'); 
-        }
-
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            document.body.classList.toggle('dark', event.matches);
-            Chart.defaults.color = event.matches ? '#94a3b8' : '#475569'; 
-            Chart.defaults.borderColor = event.matches ? '#475569' : '#E2E8F0'; 
-
-            Object.values(Chart.instances).forEach(instance => {
-                 if (instance && instance.options) {
-                    instance.update(); 
-                 }
-            });
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
         });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
     </script>
 </body>

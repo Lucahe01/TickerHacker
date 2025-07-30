@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amazon (AMZN) - TickerHack Deep Research</title>
+    <title>Amazon.com, Inc. (AMZN) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -35,10 +35,17 @@
             padding: 1.5rem; /* p-6 */
             margin-bottom: 2rem; /* mb-8 */
         }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
         .section-title {
             font-size: 1.875rem; /* text-3xl */
             font-weight: 600; /* font-semibold */
-            color: #FF9900; /* Amazon Orange */
+            color: #A78BFA; /* violet-400 */
             margin-bottom: 1.5rem; /* mb-6 */
             padding-bottom: 0.5rem; /* pb-2 */
             border-bottom: 2px solid #E7E5E4; /* stone-200 */
@@ -46,7 +53,7 @@
         .subsection-title {
             font-size: 1.5rem; /* text-2xl */
             font-weight: 600; /* font-semibold */
-            color: #232F3E; /* Amazon Dark Blue */
+            color: #7DD3FC; /* sky-400 */
             margin-top: 1.5rem; /* mt-6 */
             margin-bottom: 1rem; /* mb-4 */
         }
@@ -56,7 +63,7 @@
             font-size: 0.95rem;
         }
         .highlight {
-            color: #0073bb; /* A secondary blue */
+            color: #F97316; /* orange-500 */
             font-weight: 600;
         }
         .tab-button {
@@ -71,9 +78,9 @@
             border: 1px solid transparent;
         }
         .tab-button.active {
-            background-color: #FF9900; /* Amazon Orange */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
-            border-color: #e48800;
+            border-color: #8B5CF6; /* violet-500 */
         }
         .nav-link {
             padding: 0.5rem 1rem;
@@ -84,7 +91,7 @@
             white-space: nowrap;
         }
         .nav-link:hover, .nav-link.active {
-            background-color: #FF9900; /* Amazon Orange */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
         }
         .kpi-card {
@@ -112,19 +119,19 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold" style="color: #232F3E;">Amazon (AMZN) Analysis</h1>
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Amazon (AMZN) Analysis</h1>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
                         <a href="#overview" class="nav-link">Overview</a>
                         <a href="#segments" class="nav-link">Business Segments</a>
                         <a href="#financials" class="nav-link">Financials</a>
-                        <a href="#competition" class="nav-link">Moat & Risks</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
                         <a href="#outlook" class="nav-link">Outlook</a>
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                         <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -136,7 +143,7 @@
                     <a href="#overview" class="nav-link block text-base">Overview</a>
                     <a href="#segments" class="nav-link block text-base">Business Segments</a>
                     <a href="#financials" class="nav-link block text-base">Financials</a>
-                    <a href="#competition" class="nav-link block text-base">Moat & Risks</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
                     <a href="#outlook" class="nav-link block text-base">Outlook</a>
                 </div>
             </div>
@@ -146,154 +153,115 @@
     <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
         <section id="overview" class="section-card scroll-mt-20">
-            <h2 class="section-title">Amazon: The Everything Store & The Cloud King</h2>
-            <p class="content-text mb-6">Amazon.com, Inc. has grown from an online bookseller into a global behemoth in e-commerce, cloud computing, advertising, and streaming. Guided by a relentless "Customer Obsession," the company has built an intricate ecosystem designed to serve consumers and businesses in nearly every aspect of their digital lives. Its famous "Flywheel" strategy—using lower prices and better selection to attract customers, which in turn attracts more sellers—has created powerful network effects. Today, Amazon's business is a tale of two companies: a massive, low-margin retail operation and the highly profitable cloud computing leader, AWS, that financially powers the entire enterprise.</p>
+            <h2 class="section-title">Amazon: The Everything Company</h2>
+            <p class="content-text mb-6">Amazon.com, Inc. (NASDAQ: AMZN) is a global technology behemoth whose operations span e-commerce, cloud computing, digital advertising, and artificial intelligence. The company's business is a powerful, self-reinforcing "flywheel" built on three pillars: its massive retail marketplace, its dominant cloud platform (Amazon Web Services), and its rapidly growing advertising business. After a period of massive investment, Amazon has entered a new phase of disciplined execution, focusing on driving profitability and free cash flow from its retail operations while simultaneously leading the next wave of innovation in <span class="highlight">generative AI</span> through its AWS platform. This makes Amazon one of the most consequential and diversified companies in the world.</p>
             
-            <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="grid md-grid-cols-2 gap-6 items-start">
                 <div>
-                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
-                    <p class="content-text mb-4">Amazon's strategy revolves around four key pillars:</p>
+                    <h3 class="subsection-title !mt-0">Core Strategy: The Flywheel of Growth</h3>
+                    <p class="content-text mb-4">Amazon's strategy is centered on leveraging its scale and innovation across its core businesses:</p>
                     <ul class="list-disc list-inside content-text space-y-1 pl-4">
-                        <li><strong class="font-semibold text-gray-700">Customer Obsession:</strong> Starting with the customer and working backwards to invent on their behalf, leading to innovations like Prime and AWS.</li>
-                        <li><strong class="font-semibold text-gray-700">The Flywheel Effect:</strong> Creating a self-reinforcing cycle where customer experience improvements fuel growth, which in turn allows for further improvements.</li>
-                        <li><strong class="font-semibold text-gray-700">Operational Excellence:</strong> A deep focus on building a world-class, cost-efficient logistics and delivery network to enable fast and cheap shipping.</li>
-                        <li><strong class="font-semibold text-gray-700">Expanding into High-Margin Adjacencies:</strong> Leveraging its scale and expertise to build new, profitable businesses, most notably AWS and Advertising.</li>
+                        <li><strong class="font-semibold text-gray-700">Lead in AI and Cloud Computing:</strong> Continue to invest heavily in AWS to maintain its leadership in the cloud and capitalize on the massive demand for generative AI training and inference.</li>
+                        <li><strong class="font-semibold text-gray-700">Drive Retail Profitability:</strong> Focus on cost-to-serve and operational efficiencies in its fulfillment network to significantly improve the profitability of its e-commerce business.</li>
+                        <li><strong class="font-semibold text-gray-700">Scale the Advertising Business:</strong> Leverage the vast prime real estate of its retail marketplace to grow its high-margin advertising revenue stream.</li>
+                        <li><strong class="font-semibold text-gray-700">Enhance the Prime Value Proposition:</strong> Continuously add value to the Prime membership program (e.g., faster shipping, exclusive content) to drive customer loyalty and engagement.</li>
                     </ul>
                 </div>
-                <div class="kpi-card bg-orange-50 border-orange-200">
-                    <p class="kpi-label">AWS Operating Income (Q1 2025)</p>
-                    <p class="kpi-value" style="color: #FF9900;">$9.8 Billion</p>
-                    <p class="content-text text-sm mt-2">Despite being only 18% of total revenue, AWS generated <span class="highlight">73% of Amazon's total operating income</span> in the quarter, highlighting its critical role.</p>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">AWS Annualized Revenue Run-Rate</p>
+                    <p class="kpi-value text-violet-600">$100 Billion</p>
+                    <p class="content-text text-sm mt-2">Highlights the massive scale and re-accelerating growth of Amazon's cloud computing arm, which is the primary driver of the company's overall profitability.</p>
                 </div>
             </div>
         </section>
 
         <section id="segments" class="section-card scroll-mt-20">
-            <h2 class="section-title">Business Segments: Retail, International, and AWS</h2>
-            <p class="content-text mb-6">Amazon's operations are reported in three segments. North America and International represent its vast retail and advertising businesses, while Amazon Web Services (AWS) is its cloud computing platform and primary profit engine. Understanding the distinct profitability profile of each segment is crucial to understanding the company as a whole.</p>
+            <h2 class="section-title">How Amazon Makes Money: Three Powerful Engines</h2>
+            <p class="content-text mb-6">Amazon's business is organized into three primary segments. While the North America and International e-commerce segments generate the majority of the revenue, the high-margin Amazon Web Services (AWS) segment is the undisputed engine of the company's profitability, funding innovation and expansion across the entire enterprise.</p>
 
-            <div class="mb-6 border-b border-stone-200">
-                <nav class="-mb-px flex space-x-2 md:space-x-4" aria-label="Tabs">
-                    <button class="segment-tab-button active" data-target="na">North America</button>
-                    <button class="segment-tab-button" data-target="intl">International</button>
-                    <button class="segment-tab-button" data-target="aws">Amazon Web Services</button>
-                </nav>
-            </div>
-
-            <div id="segmentDetails">
-                <div id="naContent" class="segment-content">
-                    <h3 class="subsection-title">North America (61% of Q1 2025 Revenue)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
-                        <div>
-                            <p class="content-text mb-2">The company's largest segment, generating <span class="highlight">$87.9 billion</span> in revenue. It includes sales from online and physical stores, seller services, advertising, and subscriptions in the US, Canada, and Mexico. A recent focus on efficiency has dramatically improved profitability, posting <span class="highlight">$5.2 billion</span> in operating income.</p>
-                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Key Revenue Streams:</strong> Online stores, third-party seller services, advertising, Prime subscriptions.</li>
-                            </ul>
-                        </div>
-                        <div class="chart-container h-72 md:h-80">
-                            <canvas id="revenueBreakdownChart"></canvas>
-                        </div>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="chart-container h-80 md:h-96">
+                    <canvas id="revenueBreakdownChart"></canvas>
                 </div>
-                <div id="intlContent" class="segment-content hidden">
-                    <h3 class="subsection-title">International (28% of Q1 2025 Revenue)</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
-                         <div>
-                            <p class="content-text mb-2">This segment mirrors the North America business for the rest of the world, generating <span class="highlight">$30.5 billion</span> in revenue. Historically a loss-leader due to heavy investment in new markets, it is now approaching breakeven, with an operating loss of only <span class="highlight">$400 million</span> in Q1 2025.</p>
-                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Key Revenue Streams:</strong> Online stores, third-party seller services, advertising, Prime subscriptions.</li>
-                            </ul>
-                        </div>
-                        <div class="chart-container h-72 md:h-80">
-                             <canvas id="revenueBreakdownChart2"></canvas>
-                        </div>
-                    </div>
-                </div>
-                 <div id="awsContent" class="segment-content hidden">
-                    <h3 class="subsection-title">Amazon Web Services (AWS) (11% of Q1 2025 Revenue)</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
-                         <div>
-                            <p class="content-text mb-2">The clear leader in the cloud computing market and Amazon's profit center. AWS generated <span class="highlight">$25.4 billion</span> in revenue and a massive <span class="highlight">$9.8 billion</span> in operating income in Q1 2025.</p>
-                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Key Services:</strong> Provides on-demand cloud computing platforms and APIs, including compute (EC2), storage (S3), databases, and generative AI services (Bedrock).</li>
-                                <li><strong>Strategy:</strong> To be the low-cost, reliable, and innovative infrastructure backbone for startups, enterprises, and governments.</li>
-                            </ul>
-                        </div>
-                        <div class="chart-container h-72 md:h-80">
-                            <canvas id="revenueBreakdownChart3"></canvas>
-                        </div>
-                    </div>
+                 <div class="chart-container h-80 md:h-96">
+                    <canvas id="profitBreakdownChart"></canvas>
                 </div>
             </div>
+             <p class="content-text text-sm mt-6 text-center">The charts reveal the core of the Amazon investment thesis: the massive, low-margin retail business (North America & International) is the flywheel for customer engagement and advertising, while the AWS cloud business generates the majority of the high-margin operating income.</p>
         </section>
 
         <section id="financials" class="section-card scroll-mt-20">
-            <h2 class="section-title">Financial Deep Dive: The AWS Profit Engine</h2>
-            <p class="content-text mb-6">Amazon's financial story is one of scale and profitability powered by the cloud. While the massive retail operations generate the majority of revenue, AWS consistently delivers nearly all of the company's operating income. This dynamic allows Amazon to invest heavily in its retail business (e.g., faster shipping) while still reporting strong overall profits. The charts below illustrate this critical relationship.</p>
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Amazon's financial profile reflects its immense scale and the power of its diversified business model. The company is demonstrating a significant inflection in profitability and free cash flow, driven by cost efficiencies in its retail business and re-accelerating growth in its highly profitable AWS segment. This financial strength provides enormous capacity for continued investment in long-term growth initiatives like AI.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title">Total Annual Revenue (Fiscal Year)</h3>
-                    <p class="content-text text-sm mb-4">Amazon's revenue growth reflects its dominance in e-commerce and the rapid expansion of the cloud computing market, now well over half a trillion dollars annually.</p>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
                     <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
                         <canvas id="yearlyFinancialChart"></canvas>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="subsection-title">Operating Income by Segment (Q1 2025)</h3>
-                     <p class="content-text text-sm mb-4">This chart clearly visualizes the core of Amazon's business model: the high-margin AWS segment funds the entire enterprise.</p>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
                     <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
                         <canvas id="quarterlyFinancialChart"></canvas>
                     </div>
                 </div>
             </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase steady and massive top-line growth, with a clear and significant acceleration in operating profitability over the past several quarters.</p>
         </section>
 
         <section id="competition" class="section-card scroll-mt-20">
-            <h2 class="section-title">The Flywheel Moat & Competitive Pressures</h2>
-            <p class="content-text mb-6">Amazon has constructed several powerful and overlapping economic moats that protect its various lines of business. However, its scale and success also attract intense competition and regulatory scrutiny across the globe.</p>
+            <h2 class="section-title">Competitive Moat: An Unrivaled Trifecta</h2>
+            <p class="content-text mb-6">Amazon has constructed one of the most formidable competitive moats in modern business, built on three pillars: its vast logistics network, the scale of AWS, and its deeply entrenched Prime ecosystem.</p>
             
-            <div class="grid md:grid-cols-2 gap-8 items-start">
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
                     <h3 class="subsection-title !mt-0">Key Moats</h3>
                     <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-amber-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Logistics & Fulfillment Network:</strong> Amazon's vast, integrated network of fulfillment centers and delivery infrastructure is a massive barrier to entry that is prohibitively expensive for competitors to replicate at scale.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Logistics & Fulfillment Network:</strong> Amazon has invested hundreds of billions of dollars to build an unparalleled global logistics network. The speed, cost, and convenience of its delivery capabilities (including same-day delivery) are nearly impossible for competitors to replicate at scale.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-amber-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Marketplace Network Effects:</strong> Millions of buyers attract millions of third-party sellers, whose vast product selection in turn attracts more buyers. This is the classic Amazon Flywheel.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">AWS Scale & Leadership:</strong> As the first-mover and dominant leader in cloud computing, AWS benefits from immense economies of scale and a significant technology lead. The high switching costs of moving cloud infrastructure make its customer base incredibly sticky.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-amber-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Prime Ecosystem:</strong> The Prime subscription service creates powerful customer lock-in, bundling fast shipping with video, music, and other services, making Amazon the default choice for members.</span>
-                        </li>
-                         <li class="flex items-start">
-                            <span class="text-amber-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">AWS Scale & Leadership:</strong> As the first-mover and dominant leader in cloud computing, AWS benefits from significant economies of scale, a deep feature set, and high switching costs for enterprise customers.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">The Prime Ecosystem Flywheel:</strong> The Prime membership program creates a powerful, self-reinforcing flywheel. Benefits like fast shipping, video streaming, and exclusive deals drive membership growth, which in turn attracts more third-party sellers to the marketplace, increasing selection and further enhancing the value for customers.</span>
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0">Primary Risks & Competitors</h3>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
                      <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Regulatory & Antitrust:</strong> Amazon faces intense scrutiny from regulators in North America and Europe over its market power, its dual role as a retailer and marketplace operator, and its labor practices. This is arguably its greatest risk.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">In Cloud (AWS):</strong> Microsoft Azure and Google Cloud are the primary competitors in the cloud computing market.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Retail Competition:</strong> Faces fierce competition from large brick-and-mortar retailers like Walmart and Target, as well as e-commerce platforms like Shopify that empower independent sellers.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">In E-Commerce:</strong> Walmart, Target, and other traditional retailers, as well as specialized online retailers like Shopify and Etsy.</span>
                         </li>
                          <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">●</span>
-                             <span class="content-text"><strong class="text-gray-700">Cloud Competition:</strong> Microsoft Azure is a formidable competitor in the cloud space, particularly within the enterprise, and Google Cloud is also investing heavily to gain market share.</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Macroeconomic Factors:</strong> The consumer-facing retail segments are sensitive to shifts in discretionary spending and overall economic health.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">In Advertising:</strong> Google and Meta are the leaders in digital advertising, but Amazon is rapidly gaining market share.</span>
                         </li>
                     </ul>
                 </div>
@@ -302,24 +270,24 @@
 
         <section id="outlook" class="section-card scroll-mt-20">
             <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
-            <p class="content-text mb-6">Amazon's future growth will be driven by the continued expansion of AWS, particularly in AI, and the growth of its high-margin advertising business. The company's success will depend on its ability to continue innovating for customers while navigating significant regulatory and competitive challenges.</p>
-            <div class="grid md:grid-cols-2 gap-8 items-start">
+            <p class="content-text mb-6">Amazon is a blue-chip technology giant that is a core driver of three of the most important trends in the economy: e-commerce, cloud computing, and AI. The investment thesis is centered on the continued hyper-growth of AWS and the company's ability to drive significant margin expansion in its massive retail business. However, its very success makes it a target for intense competition and regulatory scrutiny.</p>
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title !mt-0" style="color: #0073bb;">Rewards & Opportunities 🚀</h3>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Generative AI on AWS:</strong> A massive opportunity to be the foundational platform for the AI revolution by providing the tools (e.g., Amazon Bedrock) and infrastructure for companies to build AI applications.</li>
-                        <li><strong>Advertising Growth:</strong> The advertising business is still growing rapidly and carries very high profit margins, providing a third profit center alongside AWS and North American retail.</li>
-                        <li><strong>Improving Retail Margins:</strong> A continued focus on cost discipline and logistics efficiency could further improve the profitability of the North America and International retail segments.</li>
-                        <li><strong>New Ventures (Healthcare & Satellite):</strong> Long-term bets on new industries like healthcare (Amazon Pharmacy) and internet connectivity (Project Kuiper) could provide future growth engines.</li>
+                        <li><strong>The AI Supercycle in the Cloud:</strong> The explosion in generative AI is a massive tailwind for AWS, which provides the essential compute, storage, and services needed to train and deploy AI models at scale.</li>
+                        <li><strong>Retail Margin Expansion:</strong> The renewed focus on cost discipline and efficiency in the fulfillment network presents a significant opportunity to drive a multi-year expansion of profitability in the retail segment.</li>
+                        <li><strong>High-Growth Advertising:</strong> The advertising business is a high-margin, rapidly growing third pillar that leverages the massive traffic of the e-commerce site.</li>
+                        <li><strong>Unmatched Scale and Diversification:</strong> A uniquely diversified business model with multiple powerful, durable moats provides a level of resilience that is difficult to match.</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0" style="color: #e47911;">Risks & Challenges 📉</h3>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Adverse Regulatory Outcomes:</strong> Potential government action could force structural changes, such as separating AWS or restricting how it operates its third-party marketplace.</li>
-                        <li><strong>Slowing Cloud Growth:</strong> As the cloud market matures, growth rates could naturally slow. Increased competition from Microsoft and Google could also pressure margins.</li>
-                        <li><strong>International Profitability:</strong> While improving, the International segment has historically struggled to achieve sustained profitability, representing a continued drag on resources.</li>
-                        <li><strong>Labor and Reputational Risks:</strong> Ongoing scrutiny of labor practices and warehouse conditions could lead to increased costs and damage to the company's brand.</li>
+                        <li><strong>Regulatory Scrutiny:</strong> Amazon faces significant and growing antitrust pressure globally, which could lead to fines, restrictions on its business practices, or even calls for a breakup of the company.</li>
+                        <li><strong>Intense Competition:</strong> The company faces formidable, well-funded competition on all fronts—from Microsoft and Google in the cloud to Walmart and global e-commerce players in retail.</li>
+                        <li><strong>Capital Intensity:</strong> Maintaining its leadership in logistics and cloud computing requires a staggering level of ongoing capital expenditure, which can pressure free cash flow.</li>
+                        <li><strong>Macroeconomic Sensitivity:</strong> The retail business is sensitive to consumer spending, which can be negatively impacted by an economic downturn.</li>
                     </ul>
                 </div>
             </div>
@@ -327,7 +295,7 @@
 
         <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
             <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
-            <p class="text-xs mt-1">Data synthesized from Amazon.com, Inc. public filings and credible financial news sources as of June 2025.</p>
+            <p class="text-xs mt-1">Data synthesized from Amazon.com, Inc. public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
         </footer>
 
     <script>
@@ -341,107 +309,155 @@
             mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
         });
         
-        // Active nav link highlighting
+        // Smooth scroll and active nav link highlighting
         const navLinks = document.querySelectorAll('header nav a[href^="#"]');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                if (!mobileMenuEl.classList.contains('hidden')) { mobileMenuBtn.click(); }
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
                 navLinks.forEach(l => l.classList.remove('active'));
                 e.currentTarget.classList.add('active');
             });
         });
         
-        // Segment Tabs
-        const segmentTabs = document.querySelectorAll('.segment-tab-button');
-        const segmentContents = document.querySelectorAll('.segment-content');
-        const chartsToRender = ['revenueBreakdownChart', 'revenueBreakdownChart2', 'revenueBreakdownChart3'];
-        let renderedCharts = {};
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
-        function createBreakdownChart(canvasId) {
-             if (renderedCharts[canvasId]) return;
-             const ctx = document.getElementById(canvasId).getContext('2d');
-             renderedCharts[canvasId] = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['North America', 'International', 'AWS'],
-                    datasets: [{
-                        data: [87.9, 30.5, 25.4], // Q1 2025 Revenue Data in $B
-                        backgroundColor: ['#232F3E', '#9CA3AF', '#FF9900'],
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue Contribution (Q1 2025)' } }
-                }
-            });
-        }
-        
-        segmentTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                segmentTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                const targetId = tab.dataset.target + 'Content';
-                segmentContents.forEach(content => {
-                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
-                });
-                // Lazy render charts on tab click
-                chartsToRender.forEach(id => {
-                    const canvas = document.getElementById(id);
-                    if (canvas && !canvas.closest('.hidden')) {
-                         createBreakdownChart(id);
-                    }
-                });
-            });
-        });
-        
-        // Initial render for the active tab's chart
-        createBreakdownChart('revenueBreakdownChart');
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4',
+            stone: '#E7E5E4'
+        };
 
-
-        // --- FINANCIAL CHARTS LOGIC ---
-        const CHART_COLORS = { orange: '#FF9900', darkBlue: '#232F3E', gray: '#9CA3AF' };
-
-        // Yearly Revenue Chart
-        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
-        new Chart(yearlyCanvas, {
-            type: 'bar',
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
             data: {
-                labels: ['FY22', 'FY23', 'FY24'],
+                labels: ['North America', 'AWS', 'International'],
                 datasets: [{
-                    label: 'Total Annual Revenue ($B)',
-                    data: [514.0, 574.8, 609.3], // Illustrative data reflecting growth
-                    backgroundColor: CHART_COLORS.darkBlue,
+                    data: [61, 20, 19], // Approximate percentages for Q1 2025
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal],
+                    hoverOffset: 4
                 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: false, title: { display: true, text: 'USD ($ Billions)' } } }
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment (Q1 2025)' } }
             }
         });
 
-        // Quarterly Operating Income Chart
-        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
-        new Chart(quarterlyCanvas, {
-            type: 'bar',
+        // Profit Breakdown Chart
+        const profitBreakdownCtx = document.getElementById('profitBreakdownChart').getContext('2d');
+        new Chart(profitBreakdownCtx, {
+            type: 'pie',
             data: {
                 labels: ['AWS', 'North America', 'International'],
                 datasets: [{
-                    label: 'Operating Income ($B)',
-                    data: [9.8, 5.2, -0.4], // Q1 2025 Operating Income Data
-                    backgroundColor: [CHART_COLORS.orange, CHART_COLORS.darkBlue, CHART_COLORS.gray],
+                    data: [62, 34, 4], // Approximate percentages for Q1 2025
+                    backgroundColor: [CHART_COLORS.sky, CHART_COLORS.violet, CHART_COLORS.teal],
+                    hoverOffset: 4
                 }]
             },
-             options: {
+            options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    x: { grid: { display: false } },
-                    y: { beginAtZero: false, title: { display: true, text: 'USD ($ Billions)' } }
-                 }
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Operating Income by Segment (Q1 2025)' } }
             }
         });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Fiscal Year ends December 31
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [513.98, 574.78, 612.33], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [12.25, 36.85, 52.87], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [134.38, 143.08, 169.96, 143.31, 148.50, 155.20, 185.32, 149.20], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [7.68, 11.19, 13.21, 12.86, 13.50, 14.10, 15.01, 15.31], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            const datasets = metricDetails.datasets.map(ds => {
+                 // Color bars red for negative values
+                return {
+                    ...ds,
+                    backgroundColor: ds.data.map(value => value >= 0 ? ds.backgroundColor : CHART_COLORS.orange + 'BF'),
+                    borderColor: ds.data.map(value => value >= 0 ? ds.borderColor : CHART_COLORS.orange),
+                };
+            });
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
     </script>
 </body>

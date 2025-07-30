@@ -1,619 +1,481 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Spotify Business Analysis (Scrollable)</title>
+    <title>Spotify Technology S.A. (SPOT) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Visualization & Content Choices: 
-        - Overview: Text. Goal: Inform.
-        - Business Model Canvas: Interactive HTML Grid/Cards (click to expand). Goal: Organize/Inform. Justification: Digestible breakdown.
-        - Revenue Streams %: Pie Chart (Chart.js). Goal: Inform/Compare. Justification: Clear proportion visualization.
-        - Production/Delivery: Text sections, structured lists. Goal: Inform/Organize. Justification: Sequential process explanation.
-        - Financial Trends: Line/Bar Charts (Chart.js). Goal: Show Change/Compare. Justification: Visualizes trends.
-        - Competitor Features: HTML Table. Goal: Compare/Organize. Justification: Easy feature comparison.
-        - Strategic Outlook: Text, Bullet Lists/Cards. Goal: Inform. Justification: Summarizes future.
-        - All charts use Chart.js (Canvas). Interactions: tooltips, click-to-expand for BMC.
-    -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', sans-serif; background-color: #f5f5f4; /* stone-100 */ }
-        
-        .main-nav {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background-color: #f5f5f4; /* stone-100 */
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .nav-link {
-            padding: 0.6rem 1rem; /* Adjusted padding */
-            margin: 0.25rem;
-            border-radius: 0.375rem; /* rounded-md */
-            font-weight: 500; /* medium */
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            border: 1px solid transparent;
-            color: #404040; /* neutral-700 */
-            display: inline-block;
-        }
-        .nav-link.active {
-            background-color: #059669; /* emerald-600 */
-            color: white;
-            border-color: #059669; /* emerald-600 */
-        }
-        .nav-link:not(.active):hover {
-            background-color: #d1fae5; /* emerald-100 */
-            color: #059669; /* emerald-600 */
-        }
-        .mobile-nav-link {
-             display: block;
-             padding: 0.75rem 1rem;
-             color: #d4d4d4; /* neutral-300 */
-             font-weight: 500;
-        }
-        .mobile-nav-link:hover {
-            background-color: #3f3f46; /* neutral-700 */
-            color: white;
-        }
-        .mobile-nav-link.active { /* For mobile, if we implement scroll-based active state later */
-            background-color: #059669; /* emerald-600 */
-            color: white;
-        }
-
-        .section-card {
-            background-color: white; 
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.04); 
-            padding: 1.5rem; /* p-6 */
-            margin-bottom: 2.5rem; /* mb-10 */
-            scroll-margin-top: 5rem; /* scroll-mt-20, adjusted for sticky nav */
-        }
-        .page-title {
-            font-size: 2.25rem; /* text-4xl */
-            line-height: 2.5rem;
-            font-weight: 700; /* bold */
-            color: #047857; /* emerald-700 */
-            margin-bottom: 0.5rem; /* mb-2 */
-        }
-        .page-subtitle {
-            font-size: 1.25rem; /* text-xl */
-            color: #525252; /* neutral-600 */
-            margin-bottom: 2rem; /* mb-8 */
-        }
-        .section-title {
-            font-size: 1.875rem; /* text-3xl */
-            line-height: 2.25rem;
-            font-weight: 700; /* bold */
-            color: #047857; /* emerald-700 */
-            margin-bottom: 1.5rem; /* mb-6 */
-            text-align: center;
-            padding-bottom: 0.5rem; /* pb-2 */
-            border-bottom: 2px solid #6ee7b7; /* emerald-300 */
-        }
-         .sub-section-title {
-            font-size: 1.5rem; /* text-2xl */
-            font-weight: 600; /* semibold */
-            color: #1f2937; /* neutral-800 */
-            margin-bottom: 1rem; /* mb-4 */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 650px; /* Adjusted for better chart readability */
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 320px; 
-            max-height: 400px;
+            height: 300px;
+            max-height: 350px;
         }
         @media (min-width: 768px) { /* md */
             .chart-container {
-                height: 380px;
+                height: 350px;
+                max-height: 400px;
             }
         }
-        .bmc-card { 
-            background-color: #f9fafb; /* neutral-50 */
-            border: 1px solid #e5e7eb; /* neutral-200 */
-            padding: 1rem; /* p-4 */
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
             border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
-            cursor: pointer; 
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; 
+            padding: 1rem;
+            text-align: center;
         }
-        .bmc-card:hover { 
-            transform: translateY(-4px); 
-            box-shadow: 0 6px 12px -2px rgb(0 0 0 / 0.08); 
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
         }
-        .bmc-card-title {
-            font-size: 1.125rem; /* text-lg */
-            font-weight: 600; /* semibold */
-            color: #10b981; /* emerald-500 */
-            margin-bottom: 0.5rem; /* mb-2 */
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
         }
-        .bmc-details { 
-            max-height: 0; 
-            overflow: hidden; 
-            transition: max-height 0.4s ease-in-out; 
-            margin-top: 0.75rem; /* mt-3 */
-            padding-top: 0.75rem; /* pt-3 */
-            border-top: 1px solid #e5e7eb; /* border-stone-200 */
-        }
-        .bmc-details.expanded { max-height: 1000px; }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #e5e7eb; /* neutral-200 */ border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #9ca3af; /* neutral-400 */ border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6b7280; /* neutral-500 */ }
-
-        .info-card { /* For competitor overview and outlook blocks */
-            background-color: #f9fafb; /* neutral-50 */
-            padding: 1rem; /* p-4 */
-            border-radius: 0.5rem; /* rounded-lg */
-            border: 1px solid #e5e7eb; /* neutral-200 */
-            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
-        }
-        .info-card-title {
-            font-weight: 600; /* semibold */
-            font-size: 1.125rem; /* text-lg */
-            margin-bottom: 0.5rem; /* mb-2 */
-        }
-
     </style>
 </head>
-<body>
+<body class="min-h-screen">
 
-    <header class="text-center py-8 bg-white shadow-sm">
-        <h1 class="page-title">Spotify Interactive Analysis</h1>
-        <p class="page-subtitle">Exploring the Business, Operations, and Financials of the Audio Giant</p>
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Spotify (SPOT) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
     </header>
 
-    <nav id="mainNav" class="main-nav mb-6">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-center">
-            <a href="#overview" class="nav-link">Overview</a>
-            <a href="#businessModel" class="nav-link">Business Model</a>
-            <a href="#operations" class="nav-link">Operations</a>
-            <a href="#financials" class="nav-link">Financials</a>
-            <a href="#competition" class="nav-link">Competition</a>
-            <a href="#outlook" class="nav-link">Outlook</a>
-             <div class="md:hidden ml-auto">
-                <button id="mobileMenuButton" class="p-2 rounded-md text-neutral-500 hover:text-emerald-600 hover:bg-emerald-100 focus:outline-none">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-         <div id="mobileMenu" class="md:hidden hidden bg-neutral-800 border-t border-neutral-700">
-            <a href="#overview" onclick="toggleMobileMenu();" class="mobile-nav-link">Overview</a>
-            <a href="#businessModel" onclick="toggleMobileMenu();" class="mobile-nav-link">Business Model</a>
-            <a href="#operations" onclick="toggleMobileMenu();" class="mobile-nav-link">Operations</a>
-            <a href="#financials" onclick="toggleMobileMenu();" class="mobile-nav-link">Financials</a>
-            <a href="#competition" onclick="toggleMobileMenu();" class="mobile-nav-link">Competition</a>
-            <a href="#outlook" onclick="toggleMobileMenu();" class="mobile-nav-link">Outlook</a>
-        </div>
-    </nav>
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
-    <main class="container mx-auto p-4 sm:p-6 lg:px-8">
-        <section id="overview" class="section-card">
-            <h2 class="section-title">Overview</h2>
-            <p class="mb-4 text-lg text-neutral-700 leading-relaxed">Welcome to the interactive analysis of Spotify Technology S.A. This application explores Spotify's journey from a music-centric service to a global audio network, as detailed in the "Spotify Business Model Deep Dive" report. Spotify's mission is to unlock human creativity by enabling artists to live off their art and billions of fans to enjoy it.</p>
-            <p class="text-md text-neutral-600 leading-relaxed">Discover how Spotify orchestrates the audio experience, connecting creators with a worldwide audience, and how it has fundamentally reshaped audio consumption. Use the navigation above to explore different facets of Spotify's business.</p>
-        </section>
-
-        <section id="businessModel" class="section-card">
-            <h2 class="section-title">Deconstructing the Business Model</h2>
-            <div class="bg-emerald-50 p-4 rounded-lg mb-6 border border-emerald-200">
-                <p class="mb-2 text-md text-emerald-800 leading-relaxed">This section breaks down Spotify's core business framework using the Business Model Canvas, providing insights into how it creates, delivers, and captures value. We also examine its primary revenue streams: Premium Subscriptions and Ad-Supported Services.</p>
-            </div>
-
-            <h3 class="sub-section-title text-center">Interactive Business Model Canvas</h3>
-            <p class="mb-6 text-sm text-neutral-600 leading-relaxed text-center">Click on each component of the Business Model Canvas below to reveal more detailed information sourced from the report. This interactive representation helps in understanding the interconnected elements that define Spotify's operations.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                <div class="bmc-card" onclick="toggleBMCCard(this)">
-                    <h4 class="bmc-card-title">Key Partners 🤝</h4>
-                    <p class="text-xs text-neutral-500">Content providers, distributors, hardware/platform partners, advertisers, strategic alliances.</p>
-                    <div class="bmc-details"><ul class="list-disc list-inside text-xs space-y-1 text-neutral-600"><li><strong>Content Providers:</strong> Major labels (Sony, Universal, Warner, Merlin), indie labels, podcast creators (Gimlet, Parcast), audiobook publishers.</li><li><strong>Distribution Partners:</strong> DistroKid, CD Baby for artists.</li><li><strong>Hardware & Platform Partners:</strong> Integration with >2,000 devices & platforms.</li><li><strong>Advertisers & Brands:</strong> Key for monetizing free users.</li><li><strong>Strategic Alliances:</strong> BMW, Reebok (awareness); ESPN, Netflix (content).</li></ul></div>
-                </div>
-                <div class="bmc-card" onclick="toggleBMCCard(this)">
-                    <h4 class="bmc-card-title">Key Activities ⚙️</h4>
-                    <p class="text-xs text-neutral-500">Content licensing, platform development, personalization, marketing, creator tool development, ad sales.</p>
-                    <div class="bmc-details"><ul class="list-disc list-inside text-xs space-y-1 text-neutral-600"><li><strong>Content Licensing & Acquisition:</strong> Music, podcasts, audiobooks, video.</li><li><strong>Platform Development & Maintenance:</strong> Service, UI, algorithms; R&D.</li><li><strong>Personalization & Discovery:</strong> Refining algorithms.</li><li><strong>Marketing & User Acquisition:</strong> Campaigns, partnerships.</li><li><strong>Creator Tool Development:</strong> Spotify for Artists/Podcasters.</li><li><strong>Ad Sales & Operations:</strong> Managing ad inventory.</li></ul></div>
-                </div>
-                 <div class="bmc-card" onclick="toggleBMCCard(this)">
-                    <h4 class="bmc-card-title">Value Propositions 🎁</h4>
-                    <p class="text-xs text-neutral-500">For Users (accessibility, personalization, freemium, UX) & Creators (reach, monetization, analytics).</p>
-                    <div class="bmc-details"><p class="text-xs font-medium text-neutral-600 mb-1">For Users:</p><ul class="list-disc list-inside text-xs space-y-1 text-neutral-600 pl-3"><li><strong>Accessibility:</strong> >100M tracks, ~7M podcasts, 350k audiobooks.</li><li><strong>Personalization:</strong> Tailored recommendations.</li><li><strong>Pricing (Freemium):</strong> Free & Premium tiers.</li><li><strong>Performance & UX:</strong> Seamless UI, offline listening (Premium).</li><li><strong>Brand & Community:</strong> Strong identity, social sharing.</li></ul><p class="text-xs font-medium text-neutral-600 mt-2 mb-1">For Creators:</p><ul class="list-disc list-inside text-xs space-y-1 text-neutral-600 pl-3"><li><strong>Reach & Discovery:</strong> Access to >678M users.</li><li><strong>Monetization:</strong> Royalties, tools, fan support.</li><li><strong>Data & Analytics:</strong> Spotify for Artists insights.</li><li><strong>Creative Control:</strong> Empowerment tools.</li></ul></div>
-                </div>
-                <div class="bmc-card" onclick="toggleBMCCard(this)">
-                    <h4 class="bmc-card-title">Customer Relationships ❤️</h4>
-                    <p class="text-xs text-neutral-500">Self-service, personalization, community building, support channels.</p>
-                    <div class="bmc-details"><ul class="list-disc list-inside text-xs space-y-1 text-neutral-600"><li><strong>Self-Service:</strong> Direct platform interaction.</li><li><strong>Personalization:</strong> Algorithm-driven engagement.</li><li><strong>Community Building:</strong> Social sharing, artist-fan connections.</li><li><strong>Support:</strong> Customer service, creator support.</li></ul></div>
-                </div>
-                <div class="bmc-card" onclick="toggleBMCCard(this)">
-                    <h4 class="bmc-card-title">Customer Segments 🎯</h4>
-                    <p class="text-xs text-neutral-500">Listeners (Free & Premium), Creators (artists, podcasters), Advertisers.</p>
-                    <div class="bmc-details"><p class="text-xs font-medium text-neutral-600 mb-1">Listeners:</p><ul class="list-disc list-inside text-xs space-y-1 text-neutral-600 pl-3"><li><strong>Free Users:</strong> Tolerate ads.</li><li><strong>Premium Subscribers:</strong> Pay for enhanced experience.</li><li><strong>Demographics:</strong> Millennials & Gen Z, global, urban.</li><li><strong>Psychographics:</strong> Music/podcast lovers, value personalization.</li></ul><p class="text-xs font-medium text-neutral-600 mt-2 mb-1">Creators:</p><p class="text-xs text-neutral-600 pl-3">Artists, podcasters, publishers seeking distribution, audience, monetization.</p><p class="text-xs font-medium text-neutral-600 mt-2 mb-1">Advertisers:</p><p class="text-xs text-neutral-600 pl-3">Businesses reaching users via targeted ads.</p></div>
-                </div>
-                <div class="bmc-card" onclick="toggleBMCCard(this)">
-                    <h4 class="bmc-card-title">Key Resources 🔑</h4>
-                    <p class="text-xs text-neutral-500">Content library, tech platform, brand, user base, creator relationships, data, human capital.</p>
-                    <div class="bmc-details"><ul class="list-disc list-inside text-xs space-y-1 text-neutral-600"><li><strong>Content Library:</strong> Music, podcasts, audiobooks.</li><li><strong>Technology Platform:</strong> Streaming infra, algorithms.</li><li><strong>Brand & Reputation:</strong> Global recognition.</li><li><strong>User Base:</strong> Large, engaged community.</li><li><strong>Creator Relationships:</strong> Partnerships.</li><li><strong>Data:</strong> User data for personalization & ads.</li><li><strong>Human Capital:</strong> Skilled teams.</li></ul></div>
-                </div>
-                <div class="bmc-card" onclick="toggleBMCCard(this)">
-                    <h4 class="bmc-card-title">Channels 📢</h4>
-                    <p class="text-xs text-neutral-500">Spotify app, website, partnerships, social media, app stores.</p>
-                    <div class="bmc-details"><ul class="list-disc list-inside text-xs space-y-1 text-neutral-600"><li><strong>Spotify Application:</strong> Primary (mobile, desktop, web, smart devices).</li><li><strong>Website:</strong> Info, subscriptions, support.</li><li><strong>Partnerships:</strong> Pre-installations, integrations.</li><li><strong>Social Media & Digital Marketing:</strong> Brand building.</li><li><strong>App Stores:</strong> Distribution.</li></ul></div>
-                </div>
-                <div class="bmc-card" onclick="toggleBMCCard(this)">
-                    <h4 class="bmc-card-title">Cost Structure 💸</h4>
-                    <p class="text-xs text-neutral-500">Royalties/content (largest), R&D, S&M, G&A, infrastructure.</p>
-                     <div class="bmc-details"><ul class="list-disc list-inside text-xs space-y-1 text-neutral-600"><li><strong>Royalties & Content Costs:</strong> Largest expense.</li><li><strong>Research & Development (R&D):</strong> Tech, platform.</li><li><strong>Sales & Marketing:</strong> User acquisition.</li><li><strong>General & Administrative:</strong> Operational overhead.</li><li><strong>Infrastructure Costs:</strong> Server hosting, bandwidth.</li></ul></div>
-                </div>
-                <div class="bmc-card" onclick="toggleBMCCard(this)">
-                    <h4 class="bmc-card-title">Revenue Streams 💰</h4>
-                    <p class="text-xs text-neutral-500">Premium subscriptions (87-90%), Advertising (10-13%).</p>
-                    <div class="bmc-details"><ul class="list-disc list-inside text-xs space-y-1 text-neutral-600"><li><strong>Premium Subscriptions:</strong> Primary source (87-90%).</li><li><strong>Advertising:</strong> Targeting free users (10-13%).</li></ul></div>
-                </div>
-            </div>
-
-            <h3 class="sub-section-title text-center">Revenue Streams Breakdown</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                <div class="md:col-span-1 p-4 rounded-lg">
-                    <h4 class="text-lg font-semibold text-emerald-600 mb-3 text-center">Revenue Split (2023)</h4>
-                    <div class="chart-container h-56 sm:h-64 md:h-72">
-                        <canvas id="revenueSplitChart"></canvas>
-                    </div>
-                     <p class="mt-3 text-xs text-neutral-500 text-center">Illustrative split based on 2023 data.</p>
-                </div>
-                <div class="md:col-span-2 p-4 rounded-lg">
-                     <h4 class="text-lg font-semibold text-emerald-600 mb-3">Dual Revenue Model</h4>
-                    <p class="mb-3 text-sm text-neutral-700 leading-relaxed">Spotify's financial engine is powered by a dual revenue stream model, designed to maximize user acquisition and monetization:</p>
-                    <div class="mb-4 p-3 bg-stone-50 rounded-md border border-stone-200">
-                        <h5 class="font-semibold text-md text-neutral-700">1. Premium Subscriptions</h5>
-                        <p class="text-xs text-neutral-600 leading-relaxed">Dominant revenue generator (87.32% in 2023). Users pay for ad-free listening, offline playback, on-demand control, higher audio quality, and bundled audiobook hours. Various plans cater to diverse needs. Strategy: attract with free tier, upsell to premium.</p>
-                    </div>
-                    <div class="p-3 bg-stone-50 rounded-md border border-stone-200">
-                        <h5 class="font-semibold text-md text-neutral-700">2. Ad-Supported Services</h5>
-                        <p class="text-xs text-neutral-600 leading-relaxed">Provides free access with ads and limitations (12.68% in 2023). Revenue from audio/video ads. Strategic role: user acquisition funnel, monetizes non-subscribers, enhances brand visibility. Ongoing investment in ad tech.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="operations" class="section-card">
-            <h2 class="section-title">The Audio Supply Chain: Production & Delivery</h2>
-             <div class="bg-emerald-50 p-4 rounded-lg mb-6 border border-emerald-200">
-                <p class="mb-2 text-md text-emerald-800 leading-relaxed">This section details how Spotify acquires its vast library of audio content, the technology that underpins its platform, and how it delivers a personalized and seamless experience to millions of users worldwide. </p>
-            </div>
-            <div class="space-y-6">
-                <div>
-                    <h3 class="sub-section-title">4.1 Content Acquisition and Curation</h3>
-                    <div class="p-4 bg-stone-50 rounded-md border border-stone-200">
-                        <p class="mb-3 text-sm text-neutral-700 leading-relaxed">The foundation of Spotify is its extensive content library:</p>
-                        <ul class="space-y-2 text-xs">
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2 mt-0.5">🎵</span><div><strong class="text-neutral-700">Music:</strong> Licenses from major/indie labels, artists. "Spotify for Artists" tools.</div></li>
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2 mt-0.5">🎙️</span><div><strong class="text-neutral-700">Podcasts:</strong> Acquisitions (Gimlet, Parcast), original/exclusive content (Joe Rogan). Video creator focus.</div></li>
-                            <li class="flex items-start"><span class="text-emerald-500 mr-2 mt-0.5">📚</span><div><strong class="text-neutral-700">Audiobooks:</strong> >350,000 titles, bundled hours in Premium.</div></li>
-                             <li class="flex items-start"><span class="text-emerald-500 mr-2 mt-0.5">🎧</span><div><strong class="text-neutral-700">Curation:</strong> Algorithmic (Discover Weekly) & human (Today's Top Hits) for engagement.</div></li>
-                        </ul>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="sub-section-title">4.2 Platform & Technology</h3>
-                     <div class="p-4 bg-stone-50 rounded-md border border-stone-200">
-                        <p class="mb-3 text-sm text-neutral-700 leading-relaxed">Spotify's service is powered by robust technology:</p>
-                        <ul class="space-y-2 text-xs">
-                            <li class="flex items-start"><span class="text-sky-500 mr-2 mt-0.5">☁️</span><div><strong class="text-neutral-700">Streaming Infrastructure:</strong> Global system for audio ingestion, storage, encoding, streaming.</div></li>
-                            <li class="flex items-start"><span class="text-sky-500 mr-2 mt-0.5">🧠</span><div><strong class="text-neutral-700">Algorithms & Personalization:</strong> ML for recommendations, search, playlists.</div></li>
-                             <li class="flex items-start"><span class="text-sky-500 mr-2 mt-0.5">📊</span><div><strong class="text-neutral-700">Data Analytics:</strong> User data informs strategy, product dev, ad targeting.</div></li>
-                            <li class="flex items-start"><span class="text-sky-500 mr-2 mt-0.5">🛠️</span><div><strong class="text-neutral-700">Creator Platforms:</strong> Analytics, promotional tools, monetization.</div></li>
-                        </ul>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="sub-section-title">4.3 Product Delivery & User Experience</h3>
-                    <div class="p-4 bg-stone-50 rounded-md border border-stone-200">
-                        <p class="mb-3 text-sm text-neutral-700 leading-relaxed">Delivery focuses on ubiquity and seamless UX:</p>
-                        <ul class="space-y-2 text-xs">
-                            <li class="flex items-start"><span class="text-purple-500 mr-2 mt-0.5">📱</span><div><strong class="text-neutral-700">Application Ecosystem:</strong> App on iOS, Android, desktop, smart devices, cars.</div></li>
-                            <li class="flex items-start"><span class="text-purple-500 mr-2 mt-0.5">📡</span><div><strong class="text-neutral-700">Streaming Technology:</strong> Real-time compression, offline downloads, buffering.</div></li>
-                            <li class="flex items-start"><span class="text-purple-500 mr-2 mt-0.5">🎨</span><div><strong class="text-neutral-700">UI/UX:</strong> Intuitive, engaging UI; personalized feeds, social integrations.</div></li>
-                            <li class="flex items-start"><span class="text-purple-500 mr-2 mt-0.5">📤</span><div><strong class="text-neutral-700">Creator Content Delivery:</strong> Via distributors or Spotify platforms (Anchor). APIs for partners.</div></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="financials" class="section-card">
-            <h2 class="section-title">Financial Performance Insights</h2>
-            <div class="bg-emerald-50 p-4 rounded-lg mb-6 border border-emerald-200">
-                <p class="mb-2 text-md text-emerald-800 leading-relaxed">This section provides an interactive overview of Spotify's financial health and growth trajectory. Explore key metrics such as revenue trends, profitability, cash flow, and user growth through dynamic charts.</p>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="p-4 rounded-lg bg-white border border-stone-200 shadow-sm">
-                    <h3 class="text-md font-semibold text-neutral-700 mb-2 text-center">Total Revenue Trend (€ billions)</h3>
-                    <div class="chart-container !h-64 sm:!h-72">
-                        <canvas id="totalRevenueChart"></canvas>
-                    </div>
-                    <p class="mt-2 text-xs text-neutral-500 text-center">Shows consistent Y/Y growth.</p>
-                </div>
-                <div class="p-4 rounded-lg bg-white border border-stone-200 shadow-sm">
-                    <h3 class="text-md font-semibold text-neutral-700 mb-2 text-center">Revenue by Segment (€ billions)</h3>
-                    <div class="chart-container !h-64 sm:!h-72">
-                        <canvas id="segmentRevenueChart"></canvas>
-                    </div>
-                    <p class="mt-2 text-xs text-neutral-500 text-center">Premium dominant, Ad-Supported growing.</p>
-                </div>
-                <div class="p-4 rounded-lg bg-white border border-stone-200 shadow-sm">
-                    <h3 class="text-md font-semibold text-neutral-700 mb-2 text-center">Gross Profit & Margin</h3>
-                    <div class="chart-container !h-64 sm:!h-72">
-                        <canvas id="grossProfitChart"></canvas>
-                    </div>
-                    <p class="mt-2 text-xs text-neutral-500 text-center">Improving gross margin.</p>
-                </div>
-                 <div class="p-4 rounded-lg bg-white border border-stone-200 shadow-sm">
-                    <h3 class="text-md font-semibold text-neutral-700 mb-2 text-center">Operating Income/(Loss) (€M)</h3>
-                    <div class="chart-container !h-64 sm:!h-72">
-                        <canvas id="operatingIncomeChart"></canvas>
-                    </div>
-                    <p class="mt-2 text-xs text-neutral-500 text-center">Recent shift to profitability.</p>
-                </div>
-                 <div class="p-4 rounded-lg bg-white border border-stone-200 shadow-sm">
-                    <h3 class="text-md font-semibold text-neutral-700 mb-2 text-center">Net Income/(Loss) (€M)</h3>
-                    <div class="chart-container !h-64 sm:!h-72">
-                        <canvas id="netIncomeChart"></canvas>
-                    </div>
-                    <p class="mt-2 text-xs text-neutral-500 text-center">Overall profitability trend.</p>
-                </div>
-                <div class="p-4 rounded-lg bg-white border border-stone-200 shadow-sm">
-                    <h3 class="text-md font-semibold text-neutral-700 mb-2 text-center">Operating Cash Flow (€M)</h3>
-                    <div class="chart-container !h-64 sm:!h-72">
-                        <canvas id="cashFlowChart"></canvas>
-                    </div>
-                    <p class="mt-2 text-xs text-neutral-500 text-center">Strong cash generation.</p>
-                </div>
-                <div class="p-4 rounded-lg bg-white border border-stone-200 shadow-sm">
-                    <h3 class="text-md font-semibold text-neutral-700 mb-2 text-center">Monthly Active Users (MAUs, M)</h3>
-                    <div class="chart-container !h-64 sm:!h-72">
-                        <canvas id="mauChart"></canvas>
-                    </div>
-                    <p class="mt-2 text-xs text-neutral-500 text-center">Global user base growth.</p>
-                </div>
-                <div class="p-4 rounded-lg bg-white border border-stone-200 shadow-sm">
-                    <h3 class="text-md font-semibold text-neutral-700 mb-2 text-center">Premium Subscribers (M)</h3>
-                    <div class="chart-container !h-64 sm:!h-72">
-                        <canvas id="premiumSubsChart"></canvas>
-                    </div>
-                    <p class="mt-2 text-xs text-neutral-500 text-center">Increase in paying subscribers.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="competition" class="section-card">
-            <h2 class="section-title">Navigating the Competitive Arena</h2>
-            <div class="bg-emerald-50 p-4 rounded-lg mb-6 border border-emerald-200">
-                <p class="mb-2 text-md text-emerald-800 leading-relaxed">Spotify operates in a fiercely competitive global market. This section explores key players, market dynamics, and Spotify's model compared to rivals. Spotify holds ~32% global music subscriber market share.</p>
-            </div>
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Spotify: The Global Audio Streaming Behemoth</h2>
+            <p class="content-text mb-6">Spotify (NYSE: SPOT) is the world's most popular audio streaming subscription service, offering a vast library of music, podcasts, and other spoken-word content. The company's ubiquitous platform has fundamentally changed how people discover and consume audio. After years of prioritizing user growth at all costs, Spotify has entered a new era of <span class="highlight">disciplined, profitable growth</span>. This strategic pivot, marked by price increases, a focus on operational efficiency, and the scaling of its advertising business, is reshaping the company's financial profile. As the clear leader in a massive and growing market, Spotify is focused on leveraging its scale to improve monetization and solidify its position as the definitive global platform for audio.</p>
             
-            <h3 class="sub-section-title text-center">Key Competitors Overview</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="info-card"><h4 class="info-card-title text-sky-600">Apple Music</h4><p class="text-xs text-neutral-600">Subscription-only, Apple ecosystem leverage, exclusives & sound quality focus.</p></div>
-                <div class="info-card"><h4 class="info-card-title text-orange-500">Amazon Music</h4><p class="text-xs text-neutral-600">Prime & Alexa integration, HD/Ultra HD audio, various tiers.</p></div>
-                <div class="info-card"><h4 class="info-card-title text-red-600">YouTube Music</h4><p class="text-xs text-neutral-600">Audio/video blend, YouTube user base, YouTube Premium bundle.</p></div>
-                <div class="info-card"><h4 class="info-card-title text-teal-600">Tencent Music (TME)</h4><p class="text-xs text-neutral-600">Dominant in China, social entertainment focus (live streaming, K-song).</p></div>
-            </div>
-
-            <h3 class="sub-section-title text-center">Comparative Business Model Snapshot</h3>
-            <div class="overflow-x-auto bg-white p-3 rounded-lg border border-stone-200 shadow-sm">
-                <table class="min-w-full divide-y divide-stone-200">
-                    <thead class="bg-stone-50">
-                        <tr>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Feature</th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Spotify</th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Apple Music</th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Amazon Music</th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">YouTube Music</th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Tencent Music</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-stone-100 text-xs text-neutral-700">
-                        <tr><td class="px-3 py-2 font-medium">Freemium Tier</td><td class="px-3 py-2">Yes</td><td class="px-3 py-2">No</td><td class="px-3 py-2">Yes (Limited)</td><td class="px-3 py-2">Yes</td><td class="px-3 py-2">Yes</td></tr>
-                        <tr><td class="px-3 py-2 font-medium">Primary Revenue</td><td class="px-3 py-2">Subs, Ads</td><td class="px-3 py-2">Subs Only</td><td class="px-3 py-2">Subs, Ads</td><td class="px-3 py-2">YT Premium, Ads</td><td class="px-3 py-2">Social, Subs, Ads</td></tr>
-                        <tr><td class="px-3 py-2 font-medium">Content Focus</td><td class="px-3 py-2">Music, Podcasts, Audiobooks</td><td class="px-3 py-2">Music, Radio</td><td class="px-3 py-2">Music, Podcasts</td><td class="px-3 py-2">Music, Videos, UGC</td><td class="px-3 py-2">Music, Social Ent.</td></tr>
-                        <tr><td class="px-3 py-2 font-medium">Sound Quality</td><td class="px-3 py-2">~320 kbps</td><td class="px-3 py-2">Lossless</td><td class="px-3 py-2">HD/Ultra HD</td><td class="px-3 py-2">~256 kbps</td><td class="px-3 py-2">Varies</td></tr>
-                        <tr><td class="px-3 py-2 font-medium">Ecosystem Tie-in</td><td class="px-3 py-2">Broad</td><td class="px-3 py-2">Strong (Apple)</td><td class="px-3 py-2">Strong (Prime)</td><td class="px-3 py-2">Strong (YouTube)</td><td class="px-3 py-2">Very Strong (Tencent)</td></tr>
-                    </tbody>
-                </table>
+            <div class="grid md-grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: From Growth to Profitable Growth</h3>
+                    <p class="content-text mb-4">Spotify's strategy is focused on enhancing its value proposition while driving profitability:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Improve Premium Monetization:</strong> Implement price increases across key markets and offer a variety of subscription tiers (e.g., Duo, Family, Student) to maximize revenue per user.</li>
+                        <li><strong class="font-semibold text-gray-700">Scale the Advertising Business:</strong> Grow the ad-supported free tier as a major revenue stream, particularly by leveraging the highly engaged podcast audience.</li>
+                        <li><strong class="font-semibold text-gray-700">Drive Efficiency and Profitability:</strong> Focus on cost discipline and operational excellence to drive sustainable gross margin expansion and operating profit.</li>
+                        <li><strong class="font-semibold text-gray-700">Build a Two-Sided Marketplace:</strong> Develop tools and services that provide value to artists and creators, deepening their engagement with the platform and creating new revenue opportunities.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Monthly Active Users (MAUs) - Q1 2025</p>
+                    <p class="kpi-value text-violet-600">618 Million</p>
+                    <p class="content-text text-sm mt-2">Represents Spotify's massive global reach and a 19% year-over-year increase, providing an unparalleled audience for its subscription and advertising businesses.</p>
+                </div>
             </div>
         </section>
 
-        <section id="outlook" class="section-card">
-            <h2 class="section-title">Strategic Outlook & Future</h2>
-            <div class="bg-emerald-50 p-4 rounded-lg mb-6 border border-emerald-200">
-                 <p class="mb-2 text-md text-emerald-800 leading-relaxed">Spotify is at a pivotal point, leading global audio streaming while navigating intense competition. Its future hinges on capitalizing on growth opportunities while adeptly managing risks.</p>
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Spotify Makes Money: The Freemium Model</h2>
+            <p class="content-text mb-6">Spotify's business model is a classic "freemium" strategy. It leverages a free, ad-supported service as a massive user acquisition funnel to convert listeners into high-margin, recurring premium subscribers. This creates two distinct but complementary revenue streams.</p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="premium">Premium</button>
+                    <button class="segment-tab-button" data-target="adsupported">Ad-Supported</button>
+                </nav>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="info-card">
-                    <h3 class="info-card-title text-emerald-600">Key Growth Drivers & Opportunities</h3>
-                    <ul class="list-disc list-inside space-y-1 text-xs text-neutral-600">
-                        <li>New Audio Verticals (Podcasts, Audiobooks).</li>
-                        <li>Emerging Markets Expansion.</li>
-                        <li>Price Optimization & ARPU Uplift.</li>
-                        <li>Enhanced Ad Monetization.</li>
-                        <li>Creator Economy Tools & Marketplace.</li>
-                        <li>Technological Innovation (AI DJ, Video Podcasts).</li>
-                    </ul>
+
+            <div id="segmentDetails">
+                <div id="premiumContent" class="segment-content">
+                    <h3 class="subsection-title">Premium (~87% of Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">The core of Spotify's business is its Premium subscription service. Users pay a monthly fee for an ad-free, on-demand listening experience with features like offline downloads and high-quality audio. This segment generates the vast majority of the company's revenue and gross profit.</p>
+                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Premium Subscribers (Q1 2025)</p>
+                             <p class="kpi-value text-sky-600">242 Million</p>
+                             <p class="content-text text-sm mt-2">Represents a 14% year-over-year increase, highlighting the company's continued success in converting free users to paying customers.</p>
+                         </div>
+                    </div>
                 </div>
-                 <div class="info-card">
-                    <h3 class="info-card-title text-red-600">Potential Challenges & Risks</h3>
-                    <ul class="list-disc list-inside space-y-1 text-xs text-neutral-600">
-                        <li>Intense Competition (Tech Giants).</li>
-                        <li>Content Costs & Licensing complexities.</li>
-                        <li>Profitability Sustainability pressure.</li>
-                        <li>Regulatory Scrutiny.</li>
-                        <li>Global Economic Conditions.</li>
-                        <li>Conversion of Free Users effectively.</li>
-                    </ul>
+                <div id="adsupportedContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Ad-Supported (~13% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">Spotify's free tier allows users to access its vast music and podcast library at no cost, supported by audio and display advertising. While it has historically been a low-margin business, the growth of podcast advertising is making this segment a more significant contributor to profitability. Its primary strategic role is to serve as a funnel for the Premium service.</p>
+                        </div>
+                         <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">Ad-Supported MAUs</p>
+                             <p class="kpi-value text-teal-600">388 Million</p>
+                             <p class="content-text text-sm mt-2">This massive user base provides a huge audience for advertisers and serves as the primary source of new Premium subscribers.</p>
+                         </div>
+                    </div>
                 </div>
-            </div>
-             <div class="p-4 bg-stone-50 rounded-md border border-stone-200">
-                <h3 class="sub-section-title !text-lg !mb-2">Concluding Assessment</h3>
-                <p class="text-sm text-neutral-700 leading-relaxed mb-2">Spotify's freemium model has achieved global scale. Expansion into podcasts and audiobooks is crucial for diversification and stickiness. Navigating competition requires continuous innovation.</p>
-                <p class="text-xs text-neutral-600 leading-relaxed">The "Year of Accelerated Execution," focus on efficiency, price increases, and new monetization avenues suggest a path to improved financials. Spotify is well-positioned but needs ongoing innovation and effective monetization to solidify its leadership and deliver consistent profitability.</p>
             </div>
         </section>
-    </main>
 
-    <footer class="bg-neutral-800 text-neutral-300 text-center p-6 mt-12">
-        <p class="text-sm">&copy; <span id="currentYear"></span> Interactive Spotify Analysis. Data sourced from "Spotify Business Model Deep Dive" report.</p>
-        <p class="text-xs mt-1">This is a conceptual application for illustrative purposes.</p>
-    </footer>
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Spotify's financial trajectory shows a company at an inflection point. After years of heavy investment in growth and content, the company is now demonstrating a clear ability to generate operating profit and positive cash flow. The key metrics to watch are the growth in Premium subscribers, the expansion of gross margins, and the path to sustained profitability.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue (€B)</option>
+                            <option value="operatingIncome">Operating Income/Loss (€M)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Revenue by Source (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="revenueBySource" selected>Revenue by Source (€M)</option>
+                             <option value="operatingIncome">Operating Income/Loss (€M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase steady revenue growth and a significant inflection towards operating profitability in recent quarters.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Power of Scale and Data</h2>
+            <p class="content-text mb-6">Spotify's competitive advantage is built on its unparalleled global scale, its powerful brand, and the vast trove of user data that fuels its best-in-class personalization and discovery engine.</p>
+            
+            <div class="grid md-grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Global Scale & Brand Leadership:</strong> With over 600 million users, Spotify is the largest audio streaming service in the world. Its brand is synonymous with music streaming, creating a powerful default choice for consumers.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Data & Personalization:</strong> Years of listening data from hundreds of millions of users power a sophisticated recommendation algorithm. This ability to surface new and relevant content (e.g., Discover Weekly playlists) is a key differentiator that keeps users engaged and reduces churn.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Network Effects:</strong> As more users and creators join the platform, it becomes more valuable for everyone. User-generated playlists, shared content, and a growing podcast library create a self-reinforcing ecosystem.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Big Tech Streamers:</strong> Apple Music and YouTube Music are the most significant competitors. These tech giants have deep pockets and can bundle their music services with their vast hardware and software ecosystems.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Amazon Music:</strong> Included with Amazon Prime memberships, making it a major player in the market.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Audio Entertainment:</strong> In the broader sense, Spotify competes for users' "share of ear" with everything from terrestrial radio and satellite radio (SiriusXM) to other forms of digital entertainment.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Spotify has successfully established itself as the global leader in audio streaming and is now at a pivotal moment, shifting its focus to sustained profitability. The investment thesis is centered on its ability to leverage its scale to improve monetization and expand margins. However, it operates in a highly competitive industry with structurally challenging economics.</p>
+            <div class="grid md-grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Improving Profitability:</strong> The company's new focus on efficiency, combined with price increases, is unlocking significant operating leverage and driving a clear path to sustained profitability.</li>
+                        <li><strong>Advertising Growth:</strong> The ad-supported tier, particularly in podcasts, represents a significant and under-monetized opportunity that could become a major driver of future profit growth.</li>
+                        <li><strong>Unmatched Scale:</strong> As the clear market leader, Spotify is best positioned to benefit from the ongoing global shift from traditional radio to streaming audio.</li>
+                        <li><strong>Pricing Power:</strong> As an essential service for music lovers, Spotify has demonstrated an ability to raise prices without significant customer churn, which is a key lever for future margin expansion.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>High Content Costs:</strong> A very large portion of Spotify's revenue must be paid out to music rights holders (record labels, publishers) as royalties, which structurally limits the company's gross margins.</li>
+                        <li><strong>Intense Competition:</strong> Spotify competes against some of the largest and most well-funded companies in the world (Apple, Google, Amazon), which can afford to run their music services as loss-leaders to support their broader ecosystems.</li>
+                        <li><strong>Converting Free Users:</strong> The ability to continue converting its large base of free users into paying subscribers is critical for long-term growth, and this may become more challenging over time.</li>
+                        <li><strong>Dependence on Music Labels:</strong> Spotify's business is highly dependent on its licensing agreements with a small number of major music labels, who hold significant negotiating power.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Spotify Technology S.A. public filings, press releases, and credible financial data providers as of July 2025. All financials in Euros (€).</p>
+        </footer>
 
     <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-        let currentChartObjects = {};
-        const mainNav = document.getElementById('mainNav');
-        let navHeight = 70; // Default nav height
-        if (mainNav) navHeight = mainNav.offsetHeight + 20;
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
 
-
-        const financialData = {
-            labels: ["2022", "2023", "2024", "Q1 2025"],
-            totalRevenue: [11.73, 13.25, 15.67, 4.19],
-            premiumRevenue: [10.25, 11.57, 13.82, 3.77],
-            adSupportedRevenue: [1.48, 1.68, 1.85, 0.419],
-            grossProfit: [2.93, 3.40, 4.72, 1.33],
-            grossMargin: [25.0, 25.6, 30.1, 31.6],
-            operatingIncome: [-659, -446, 1365, 509],
-            netIncome: [-430, -532, 1138, 225],
-            operatingCashFlow: [46, 680, 2301, 539],
-            mau: [489, 602, 675, 678],
-            premiumSubs: [205, 236, 263, 268]
-        };
-
-        function createChart(chartId, type, data, options, titleText) {
-            const chartElement = document.getElementById(chartId);
-            if (!chartElement) {
-                console.warn("Chart element not found:", chartId);
-                return;
-            }
-            if (currentChartObjects[chartId]) {
-                currentChartObjects[chartId].destroy();
-            }
-            const ctx = chartElement.getContext('2d');
-            const defaultOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'top', labels: { font: { size: 9 }, padding: 8, color: '#404040'}},
-                    tooltip: {
-                        mode: 'index', intersect: false, backgroundColor: 'rgba(0,0,0,0.7)', titleFont: { weight: '600', size:11 }, bodyFont: { size: 10 },
-                        callbacks: {
-                             label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) label += ': ';
-                                if (context.parsed.y !== null) {
-                                    let val = context.parsed.y;
-                                    if (chartId === 'grossProfitChart' && context.dataset.yAxisID === 'y1') label += val.toFixed(1) + '%';
-                                    else if (['operatingIncomeChart', 'netIncomeChart', 'cashFlowChart', 'mauChart', 'premiumSubsChart'].includes(chartId)) label += val + 'M';
-                                    else if (chartId !== 'revenueSplitChart' && !context.dataset.label.includes('Margin')) label += val.toFixed(2) + 'B';
-                                    else if (context.dataset.label.includes('Margin') && chartId !== 'grossProfitChart') label += val.toFixed(1) + '%';
-                                    else label += val;
-                                }
-                                return label;
-                            }
-                        }
-                    },
-                    title: { display: !!titleText, text: titleText, font: { size: 12, weight: '500' }, color: '#1f2937', padding: { top: 5, bottom: 8 } }
-                },
-                scales: {
-                    x: { grid: { display: false }, ticks: { font: { size: 9 }, color: '#525252', maxRotation: 0, minRotation: 0, autoSkip: true }},
-                    y: { beginAtZero: false, grid: { color: '#e5e7eb' }, ticks: { font: { size: 9 }, color: '#525252',
-                            callback: function(value) {
-                                if (chartId === 'grossProfitChart' && this.axis === 'y1') return value + '%';
-                                if (Math.abs(value) >= 1000000000 && !['operatingIncomeChart', 'netIncomeChart', 'cashFlowChart','mauChart', 'premiumSubsChart'].includes(chartId)) return (value / 1000000000) + 'B';
-                                if (Math.abs(value) >= 1000000) return (value / 1000000) + 'M';
-                                if (Math.abs(value) >= 1000 && !['operatingIncomeChart', 'netIncomeChart', 'cashFlowChart','mauChart', 'premiumSubsChart'].includes(chartId)) return (value/1000) + 'k';
-                                return value;
-                            }
-                        }
-                    }
-                },
-                animation: { duration: 700, easing: 'easeOutCubic' }
-            };
-            currentChartObjects[chartId] = new Chart(ctx, { type, data, options: { ...defaultOptions, ...options } });
-        }
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
         
-        function initializeBusinessModelCharts() {
-             createChart('revenueSplitChart', 'pie', {
-                labels: ['Premium (87.3%)', 'Ad-Supported (12.7%)'],
-                datasets: [{ data: [87.3, 12.7], backgroundColor: ['#10b981', '#38bdf8'], borderColor: '#ffffff', hoverOffset: 4 }]
-            }, { plugins: { legend: { position: 'bottom', labels: { font: {size: 9}, padding:10 }}, title: { display: false } } });
-        }
-
-        function initializeFinancialCharts() {
-            const baseChartOptions = { scales: { y: { beginAtZero: false } } };
-            const baseChartOptionsZero = { scales: { y: { beginAtZero: true } } };
-
-            createChart('totalRevenueChart', 'line', { labels: financialData.labels, datasets: [{ label: 'Total Revenue', data: financialData.totalRevenue, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', tension: 0.3, fill: true, pointBackgroundColor: '#10b981'}] }, baseChartOptionsZero);
-            createChart('segmentRevenueChart', 'bar', { labels: financialData.labels, datasets: [{ label: 'Premium Revenue', data: financialData.premiumRevenue, backgroundColor: '#22c55e' }, { label: 'Ad-Supported Revenue', data: financialData.adSupportedRevenue, backgroundColor: '#60a5fa' }] }, { ...baseChartOptionsZero, scales: { x: { stacked: false }, y: { stacked: false, ...baseChartOptionsZero.scales.y } } });
-            createChart('grossProfitChart', 'line', { labels: financialData.labels, datasets: [{ label: 'Gross Profit (€B)', data: financialData.grossProfit, borderColor: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.1)', tension: 0.3, fill: true, yAxisID: 'y', pointBackgroundColor: '#8b5cf6' }, { label: 'Gross Margin (%)', data: financialData.grossMargin, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', tension: 0.3, fill: false, yAxisID: 'y1', pointBackgroundColor: '#f97316'}] }, { scales: { y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Gross Profit (€B)', font:{size:9}, color:'#404040' }, beginAtZero: true }, y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Gross Margin (%)', font:{size:9}, color:'#404040' }, grid: { drawOnChartArea: false }, beginAtZero: true } } });
-            createChart('operatingIncomeChart', 'bar', { labels: financialData.labels, datasets: [{ label: 'Operating Income/(Loss)', data: financialData.operatingIncome, backgroundColor: financialData.operatingIncome.map(v => v >= 0 ? '#22c55e' : '#ef4444') }] }, baseChartOptions);
-            createChart('netIncomeChart', 'line', { labels: financialData.labels, datasets: [{ label: 'Net Income/(Loss)', data: financialData.netIncome, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true, pointBackgroundColor: '#3b82f6'}] }, baseChartOptions);
-            createChart('cashFlowChart', 'line', { labels: financialData.labels, datasets: [{ label: 'Operating Cash Flow', data: financialData.operatingCashFlow, borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)', tension: 0.3, fill: true, pointBackgroundColor: '#ec4899' }] }, baseChartOptionsZero);
-            createChart('mauChart', 'bar', { labels: financialData.labels, datasets: [{ label: 'MAUs', data: financialData.mau, backgroundColor: '#f59e0b' }] }, baseChartOptionsZero);
-            createChart('premiumSubsChart', 'bar', { labels: financialData.labels, datasets: [{ label: 'Premium Subscribers', data: financialData.premiumSubs, backgroundColor: '#84cc16' }] }, baseChartOptionsZero);
-        }
-
-        function toggleBMCCard(cardElement) {
-            const details = cardElement.querySelector('.bmc-details');
-            details.classList.toggle('expanded');
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
-            // Update navHeight if mobile menu changes layout significantly (might not be needed if it overlays)
-            if (mainNav) navHeight = mainNav.offsetHeight + 20;
-        }
-
-        const navLinks = document.querySelectorAll('.nav-link');
-        const sections = document.querySelectorAll('section[id]');
-
-        function changeActiveLink() {
-            let index = sections.length;
-            while(--index && window.scrollY + navHeight < sections[index].offsetTop) {}
-            
-            navLinks.forEach((link) => link.classList.remove('active'));
-            // Check if a corresponding link exists
-            if(navLinks[index]) {
-                 navLinks[index].classList.add('active');
-            }
-             // For mobile menu, could add similar logic if scroll-based active state is desired.
-        }
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
         
-        document.addEventListener('DOMContentLoaded', function() {
-            if (mainNav) navHeight = mainNav.offsetHeight + 20;
-
-            navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    // Forcing recalculation for potentially dynamic content changes before scroll
-                    setTimeout(() => { if (mainNav) navHeight = mainNav.offsetHeight + 20; }, 0);
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
                 });
             });
-            
-            changeActiveLink(); // Set active link on initial load
-            window.addEventListener('scroll', changeActiveLink);
-            
-            document.getElementById('mobileMenuButton').addEventListener('click', toggleMobileMenu);
-            initializeBusinessModelCharts();
-            initializeFinancialCharts();
         });
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Fiscal Year ends December 31
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue (€B)', data: [11.73, 13.25, 15.04], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of Euros'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income/Loss (€M)', data: [-620, -446, 219], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Millions of Euros'
+            }
+        };
+
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            revenueBySource: {
+                datasets: [
+                    { label: 'Premium Revenue (€M)', data: [2863, 2910, 3170, 3247, 3360, 3420, 3600, 3392], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet, stack: 'Stack 0' },
+                    { label: 'Ad-Supported Revenue (€M)', data: [440, 475, 501, 389, 460, 520, 550, 489], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky, stack: 'Stack 0' }
+                ],
+                yAxisLabel: 'Millions of Euros'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income/Loss (€M)', data: [-112, 32, -75, 168, 148, 180, -91, 197], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Millions of Euros'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            const isStacked = metricKey === 'revenueBySource';
+            
+            const datasets = metricDetails.datasets.map(ds => {
+                 if (metricKey === 'operatingIncome') {
+                    return {
+                        ...ds,
+                        backgroundColor: ds.data.map(value => value >= 0 ? CHART_COLORS.teal + 'BF' : CHART_COLORS.orange + 'BF'),
+                        borderColor: ds.data.map(value => value >= 0 ? CHART_COLORS.teal : CHART_COLORS.orange),
+                    };
+                }
+                return ds;
+            });
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            display: isStacked
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                    },
+                    scales: {
+                        x: {
+                            stacked: isStacked,
+                        },
+                        y: {
+                            stacked: isStacked,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'revenueBySource');
+
     </script>
 </body>
 </html>

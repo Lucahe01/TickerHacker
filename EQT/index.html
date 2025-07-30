@@ -1,744 +1,433 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>EQT Corporation: Interactive Business Analysis</title>
-   <script src="https://cdn.tailwindcss.com"></script>
-   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-   <style>
-       body {
-           font-family: 'Inter', sans-serif;
-           background-color: #F5F5F4; /* stone-100 */
-           color: #374151; /* gray-700 */
-       }
-       .chart-container {
-           position: relative;
-           width: 100%;
-           max-width: 600px; /* Aligned with Apple example */
-           margin-left: auto;
-           margin-right: auto;
-           height: 320px;
-           max-height: 350px;
-       }
-       @media (min-width: 768px) { /* md */
-           .chart-container {
-               height: 350px;
-               max-height: 400px;
-           }
-       }
-       .section-card { /* This will be the main wrapper for each <section> */
-           background-color: #FFFFFF;
-           border-radius: 0.75rem; /* rounded-xl */
-           box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-           padding: 1.5rem; /* p-6 */
-           margin-bottom: 2rem; /* mb-8 */
-       }
-       .main-title-header { /* For the main page title, similar to Apple's style */
-           font-size: 2.25rem; /* text-4xl */
-           font-weight: 700; /* font-bold */
-           color: #1F2937; /* gray-800 */
-           text-align: center;
-       }
-       .section-title { /* For titles of main sections like "Overview", "Business Model" */
-           font-size: 1.875rem; /* text-3xl */
-           font-weight: 600; /* font-semibold */
-           color: #60A5FA; /* blue-400 - Apple style */
-           margin-bottom: 1.5rem; /* mb-6 */
-           padding-bottom: 0.5rem; /* pb-2 */
-           border-bottom: 2px solid #E7E5E4; /* stone-200 - Apple style */
-       }
-       .subsection-title { /* For H3 level titles within sections */
-           font-size: 1.5rem; /* text-2xl */
-           font-weight: 600; /* font-semibold */
-           color: #2DD4BF; /* teal-400 - Apple style */
-           margin-top: 1.5rem; /* mt-6 */
-           margin-bottom: 1rem; /* mb-4 */
-       }
-        .tertiary-title { /* For H4 level titles or important sub-headings */
-           font-size: 1.25rem; /* text-xl */
-           font-weight: 600;
-           color: #2563EB; /* blue-600 - Stronger blue for emphasis */
-           margin-top: 1.25rem;
-           margin-bottom: 0.75rem;
-       }
-       .content-text, .content-text li {
-           line-height: 1.75;
-           color: #4B5563; /* gray-600 */
-           font-size: 0.95rem;
-           margin-bottom: 1rem;
-       }
-       .styled-list { /* For custom styled lists if needed, otherwise Tailwind classes are fine */
-           list-style-type: none;
-           padding-left: 0;
-       }
-       .styled-list li {
-           padding-left: 1.75rem;
-           position: relative;
-           margin-bottom: 0.5rem;
-       }
-       .styled-list li::before {
-           content: '➔';
-           position: absolute;
-           left: 0;
-           color: #60A5FA; /* blue-400 */
-           font-weight: bold;
-       }
-      
-       .nav-link {
-           padding: 0.5rem 1rem;
-           border-radius: 0.375rem; /* rounded-md */
-           font-weight: 500; /* Apple style */
-           color: #374151; /* gray-700 - Apple style */
-           transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; /* Apple style */
-           white-space: nowrap;
-       }
-       .nav-link.active, .nav-link:hover {
-           background-color: #60A5FA; /* blue-400 - Apple active/hover */
-           color: #FFFFFF; /* Apple active/hover */
-       }
-       .tab-button {
-           padding: 0.5rem 1rem; /* Apple style */
-           border-radius: 0.375rem; /* rounded-md - Apple style */
-           font-weight: 500; /* Apple style */
-           font-size: 0.875rem; /* text-sm - Apple style */
-           cursor: pointer;
-           transition: background-color 0.3s, color 0.3s;
-           border: 1px solid transparent;
-       }
-       .tab-button.active {
-           background-color: #60A5FA; /* blue-400 - Apple active */
-           color: #FFFFFF;
-           border-color: #3B82F6; /* blue-500 - Apple active */
-       }
-       .tab-button:not(.active) {
-           background-color: #E7E5E4; /* stone-200 - Apple inactive */
-           color: #374151; /* gray-700 - Apple inactive */
-       }
-       .tab-button:not(.active):hover { /* Subtle hover for inactive tabs */
-            background-color: #d1d5db; /* gray-300 */
-            color: #1f2937; /* gray-800 */
-       }
-
-
-       /* Table Styles - Retaining EQT's specific table styling as it's well-defined */
-       .table-responsive {
-           display: block;
-           width: 100%;
-           overflow-x: auto;
-       }
-       .table-responsive table {
-           width: 100%;
-           border-collapse: collapse; /* Ensures borders are clean */
-       }
-       .table-responsive th {
-           padding: 0.75rem 1rem; /* Consistent padding */
-           text-align: left;
-           font-size: 0.75rem; /* text-xs */
-           font-weight: 600; /* font-semibold */
-           color: #4B5563; /* gray-600 */
-           text-transform: uppercase;
-           letter-spacing: 0.05em;
-           background-color: #F3F4F6; /* gray-100 */
-           border-bottom: 2px solid #D1D5DB; /* gray-300 */
-       }
-       .table-responsive td {
-           padding: 0.75rem 1rem; /* Consistent padding */
-           font-size: 0.875rem; /* text-sm */
-           color: #374151; /* gray-700 */
-           border-bottom: 1px solid #E5E7EB; /* gray-200 */
-       }
-       .table-responsive tbody tr:nth-child(odd) {
-           background-color: #FFFFFF; /* white */
-       }
-       .table-responsive tbody tr:nth-child(even) {
-           background-color: #F9FAFB; /* gray-50 */
-       }
-       .table-responsive tbody tr:hover {
-           background-color: #EFF6FF; /* blue-50 */
-       }
-       .table-responsive tbody tr:last-child td {
-           border-bottom: 0;
-       }
-       /* General card style for inner content blocks if not full section cards */
-       .content-card {
-            background-color: white;
-            border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-            padding: 1rem;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQT Corporation (EQT) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
             margin-bottom: 1rem;
-       }
-       /* Info boxes in overview, styled to be softer and consistent */
-       .info-box {
-           background-color: #F0F9FF; /* sky-50 or similar light blue */
-           border: 1px solid #BAE6FD; /* sky-200 */
-           color: #0369A1; /* sky-700 */
-           padding: 1rem;
-           border-radius: 0.5rem; /* rounded-lg */
-           text-align: center;
-           box-shadow: 0 1px 2px 0 rgba(0,0,0,0.03);
-       }
-       .info-box h4 { /* Custom style for info-box titles */
-           font-size: 1.125rem; /* text-lg */
-           font-weight: 600;
-           color: #075985; /* sky-800 */
-           margin-bottom: 0.5rem;
-            margin-top: 0; /* Reset margin for h4 inside info-box */
-       }
-        .info-box p {
-           font-size: 0.875rem; /* text-sm */
-           color: #0369A1; /* sky-700 */
-           line-height: 1.5;
-           margin-bottom: 0;
-       }
-
-
-   </style>
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
 </head>
-<body class="bg-stone-100 text-neutral-800 antialiased">
+<body class="min-h-screen">
 
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">EQT Corporation (EQT) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
 
-   <header class="bg-white shadow-md sticky top-0 z-50">
-       <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
-           <div class="flex items-center justify-between h-16">
-               <div class="flex items-center">
-                   <span class="font-bold text-xl" style="color: #60A5FA;">EQT Corp. Analysis</span> </div>
-               <div class="hidden md:block">
-                   <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2"> <a href="#overview" class="nav-link active">Overview</a>
-                       <a href="#business-model" class="nav-link">Business Model</a>
-                       <a href="#financials" class="nav-link">Financials</a>
-                       <a href="#competition" class="nav-link">Competition</a>
-                       <a href="#risks" class="nav-link">Risks</a>
-                       <a href="#outlook" class="nav-link">Outlook</a>
-                   </div>
-               </div>
-               <div class="-mr-2 flex md:hidden">
-                   <button type="button" id="mobile-menu-button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
-                       <span class="sr-only">Open main menu</span>
-                       <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-                       <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                   </button>
-               </div>
-           </div>
-       </nav>
-       <div class="md:hidden hidden" id="mobile-menu">
-           <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-               <a href="#overview" class="nav-link block active">Overview</a>
-               <a href="#business-model" class="nav-link block">Business Model</a>
-               <a href="#financials" class="nav-link block">Financials</a>
-               <a href="#competition" class="nav-link block">Competition</a>
-               <a href="#risks" class="nav-link block">Risks</a>
-               <a href="#outlook" class="nav-link block">Outlook</a>
-           </div>
-       </div>
-   </header>
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">EQT: America's Natural Gas Leader</h2>
+            <p class="content-text mb-6">EQT Corporation (NYSE: EQT) is the largest producer of natural gas in the United States, with its operations primarily focused on the prolific Appalachian Basin. The company's business model is centered on leveraging its massive, low-cost, and contiguous asset base to drive best-in-class operational efficiency and maximize free cash flow. EQT is currently undergoing a strategic transformation with its pending <span class="highlight">all-stock merger with Equitrans Midstream (ETRN)</span>, a move designed to create a vertically integrated natural gas leader with enhanced control over its midstream operations and a more resilient financial profile. This positions EQT to be a key supplier of reliable, lower-carbon energy for decades to come.</p>
+            
+            <div class="grid md-grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Scale, Efficiency, and Integration</h3>
+                    <p class="content-text mb-4">EQT's strategy is focused on maximizing the value of its premier asset base:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Operational Excellence:</strong> Utilize advanced techniques like "combo-development" and long-lateral drilling to lower costs, improve well productivity, and reduce its environmental footprint.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Capital Allocation:</strong> Maintain a strong balance sheet by prioritizing debt reduction, hedging to protect cash flows, and returning capital to shareholders through dividends and buybacks.</li>
+                        <li><strong class="font-semibold text-gray-700">Vertical Integration:</strong> The merger with Equitrans Midstream aims to lower operating costs, improve free cash flow resilience, and gain greater control over the transportation of its gas to market.</li>
+                        <li><strong class="font-semibold text-gray-700">Advocate for Natural Gas:</strong> Position natural gas as a critical and reliable fuel for the energy transition, both domestically and as a key U.S. export in the form of LNG.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Net Production (Q1 2025)</p>
+                    <p class="kpi-value text-violet-600">548 Bcf</p>
+                    <p class="content-text text-sm mt-2">Represents EQT's massive scale as the largest natural gas producer in the United States, equivalent to approximately 6.0 Bcf per day.</p>
+                </div>
+            </div>
+        </section>
 
-   <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-       <div class="text-center mb-10">
-           <h1 class="main-title-header">EQT Corporation: Interactive Analysis</h1>
-           <p class="content-text text-lg mt-2">Exploring America's largest natural gas producer and its integrated operations.</p>
-       </div>
-      
-       <section id="overview" class="section-card scroll-mt-20">
-           <h2 class="section-title">EQT Corporation Overview</h2>
-           <p class="content-text">An introduction to EQT Corporation, its scale, market position, and strategic direction as the largest natural gas producer in the United States, with a core focus on the Appalachian Basin. This interactive application allows exploration of EQT's operational and financial landscape.</p>
-          
-           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 my-6">
-               <div class="info-box"> <h4>Largest US Natural Gas Producer</h4> <p>EQT Corporation is the largest producer of natural gas in the United States.</p> </div>
-               <div class="info-box"> <h4>Appalachian Basin Focus</h4> <p>Operations concentrated in the Appalachian Basin, vital to U.S. natural gas supply.</p> </div>
-               <div class="info-box"> <h4>Vertical Integration</h4> <p>Transformed via Equitrans Midstream acquisition for enhanced value chain control.</p> </div>
-               <div class="info-box"> <h4>Net Zero Achievement</h4> <p>Achieved Net Zero Scope 1 & 2 GHG emissions ahead of its 2025 target.</p> </div>
-               <div class="info-box"> <h4>Operational Scale</h4> <p>~2.1M gross acres, 26.3 Tcfe proved reserves (Dec 31, 2024).</p> </div>
-               <div class="info-box"> <h4>Market Reach</h4> <p>~44% sales volume outside Appalachia by end 2024 via transmission assets.</p> </div>
-           </div>
-           <div class="content-card">
-               <h3 class="subsection-title !mt-0 text-center">Executive Summary Insights</h3>
-               <p class="content-text">EQT Corporation has undergone a significant transformation, evolving from a predominantly upstream entity into a vertically integrated natural gas enterprise through the strategic acquisition of Equitrans Midstream. This integration is reshaping its operational structure, cost profile, and market engagement, with early indications of success reflected in strong first-quarter 2025 financial and operational results. EQT's business model now encompasses production, gathering, and transmission, aiming to leverage its extensive asset base for enhanced efficiency and value capture across the natural gas value chain. Amidst a dynamic energy market, EQT is navigating commodity price volatility and an evolving regulatory landscape by emphasizing operational excellence, synergy realization from its integrated assets, and strategic growth initiatives. The company's scale, low-cost production capabilities, and commitment to sustainable practices are central to its strategy for delivering shareholder value and contributing to energy security.</p>
-           </div>
-       </section>
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How EQT Makes Money: Pure-Play Natural Gas Production</h2>
+            <p class="content-text mb-6">EQT's business model is straightforward: it is a pure-play exploration and production (E&P) company focused on finding and producing natural gas. Its revenue is primarily derived from the sale of natural gas and, to a lesser extent, natural gas liquids (NGLs) and crude oil. The profitability of the business is directly tied to the price of natural gas, operational efficiency, and the company's ability to control costs.</p>
 
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                 <div class="kpi-card bg-sky-50 border-sky-200 p-6">
+                    <h3 class="subsection-title !mt-0 !text-sky-600">Revenue Streams</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 text-left pl-4">
+                       <li><strong class="font-semibold text-gray-700">Natural Gas Sales:</strong> The vast majority of revenue comes from selling natural gas to a diverse customer base, including utilities, marketers, and industrial users.</li>
+                       <li><strong class="font-semibold text-gray-700">Natural Gas Liquids (NGLs):</strong> A secondary revenue stream from the sale of liquids like ethane, propane, and butane that are extracted during the gas production process.</li>
+                       <li><strong class="font-semibold text-gray-700">Oil & Other:</strong> A minor contributor to revenue from crude oil and other residual products.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-teal-50 border-teal-200 p-6">
+                    <h3 class="subsection-title !mt-0 !text-teal-600">The Equitrans Midstream Merger</h3>
+                     <p class="content-text">The pending acquisition of Equitrans Midstream (ETRN) will add a new dimension to the business model. Post-merger, EQT will become a major midstream operator, owning a significant portfolio of natural gas gathering systems and long-haul pipelines, including a stake in the Mountain Valley Pipeline (MVP). This will provide a new stream of regulated, fee-based revenue and better control over EQT's path to market.</p>
+                </div>
+            </div>
+        </section>
 
-       <section id="business-model" class="section-card scroll-mt-20">
-           <h2 class="section-title">Business Model Structure</h2>
-           <p class="content-text text-center">EQT's vertically integrated model spans the natural gas value chain. Explore its core operational segments below.</p>
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">EQT's financial results are inherently tied to the volatile price of natural gas. However, the company's strategy of hedging a significant portion of its production helps to smooth out cash flows and provide a degree of predictability. The company is focused on generating sustainable free cash flow through the commodity cycle to fund its capital return program and maintain a strong balance sheet.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
 
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="operatingIncome">Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts illustrate the impact of natural gas price fluctuations on revenue, while the company's operational efficiency efforts aim to protect profitability.</p>
+        </section>
 
-           <div id="business-model-tabs" class="mb-6 flex flex-wrap justify-center gap-2 md:space-x-3">
-               <button data-tab="bm-integration" class="tab-button active">🏛️ Integration</button>
-               <button data-tab="bm-production" class="tab-button">⛏️ Production</button>
-               <button data-tab="bm-gathering" class="tab-button">🔗 Gathering</button>
-               <button data-tab="bm-transmission" class="tab-button">➡️ Transmission</button>
-               <button data-tab="bm-revenue-costs" class="tab-button">💰 Revenue & Costs</button>
-           </div>
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Power of Scale and Low Cost</h2>
+            <p class="content-text mb-6">EQT's competitive advantage is built on its unparalleled scale as the nation's largest natural gas producer and its ownership of a premier, low-cost asset base in the heart of the Appalachian Basin.</p>
+            
+            <div class="grid md-grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Unmatched Scale:</strong> As the largest producer of natural gas in the U.S., EQT benefits from significant economies of scale in procurement, services, and G&A costs, giving it a durable cost advantage over smaller competitors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Low-Cost Asset Base:</strong> EQT's core acreage is located in the Marcellus and Utica shales, which are among the lowest-cost and most productive natural gas plays in North America. This allows the company to remain profitable even in low price environments.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Contiguous Acreage Position:</strong> Owning large, continuous blocks of land allows for highly efficient "combo-development" and the drilling of extremely long laterals, which significantly lowers the cost per unit of production.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Appalachian Producers:</strong> Companies like Coterra Energy (CTRA) and Chesapeake Energy (CHK) that also operate in the Marcellus and Haynesville shales.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Major Integrated Energy Companies:</strong> Large, diversified energy companies like ExxonMobil and Chevron that have significant natural gas production arms.</span>
+                         </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Alternative Energy Sources:</strong> In the long term, natural gas competes with other energy sources like renewables (wind, solar) and coal for electricity generation market share.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">EQT represents a compelling investment case for those bullish on the long-term role of U.S. natural gas. The investment thesis is centered on the company's low-cost production, its disciplined financial strategy, and the potential synergies from its transformative merger with Equitrans. However, the business is undeniably exposed to the volatility of commodity prices.</p>
+            <div class="grid md-grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Structural Demand for Natural Gas:</strong> Growing demand from LNG exports, domestic power generation, and industrial use provides a strong long-term tailwind for the commodity.</li>
+                        <li><strong>Equitrans Merger Synergies:</strong> The vertical integration with Equitrans is expected to generate significant cost savings, improve free cash flow stability, and create a more resilient business model.</li>
+                        <li><strong>Low-Cost Leader:</strong> EQT's position on the low end of the cost curve allows it to generate free cash flow and thrive in a "lower for longer" natural gas price environment.</li>
+                        <li><strong>Shareholder Return Framework:</strong> A clear commitment to deleveraging and returning a significant portion of free cash flow to shareholders through dividends and buybacks.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Commodity Price Volatility:</strong> EQT's revenue and profitability are directly exposed to the highly volatile price of natural gas. A sustained period of low prices would negatively impact financial results.</li>
+                        <li><strong>Merger Integration Risk:</strong> Successfully integrating a large company like Equitrans and realizing the projected synergies carries significant execution risk.</li>
+                        <li><strong>Regulatory and Environmental Risk:</strong> The oil and gas industry faces increasing scrutiny and regulation regarding environmental impact, particularly concerning methane emissions and hydraulic fracturing.</li>
+                        <li><strong>Pipeline Constraints:</strong> The ability to grow production in the Appalachian Basin is dependent on the construction of new pipeline capacity to bring gas to market, which can face significant regulatory and legal challenges.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-           <div id="bm-content-area">
-               <div id="bm-integration-content" class="segment-pane active content-card" data-pane="bm-integration">
-                   <h3 class="subsection-title !mt-0">The Shift to Vertical Integration</h3>
-                   <p class="content-text">The acquisition of Equitrans Midstream Corporation in July 2024 marked a pivotal shift, transforming EQT from a primarily upstream-focused entity into a vertically integrated natural gas powerhouse. This structure includes three core business segments: Production (upstream), Gathering (midstream), and Transmission (midstream). This model is designed to enhance operational control, capture additional value across the midstream portion of the value chain, improve capital efficiency, and reduce operational friction. Early results in 2025 suggest optimized flow assurance and operational resiliency.</p>
-               </div>
-               <div id="bm-production-content" class="segment-pane hidden content-card" data-pane="bm-production">
-                   <h3 class="subsection-title !mt-0">Production Segment (Upstream)</h3>
-                   <p class="content-text">The bedrock of EQT's operations, responsible for exploration, development, and extraction of natural gas, NGLs, and crude oil. Primarily focused on the Marcellus Shale (92% of total proved reserves). Employs "combo-development projects" for efficiency, utilizing advanced drilling and completion, including electric hydraulic fracturing fleets.</p>
-                   <ul class="styled-list">
-                       <li><strong>Proved Reserves (12/31/2024):</strong> 26.3 Tcfe</li>
-                       <li><strong>Acreage:</strong> ~2.1 million gross acres (PA, WV, OH)</li>
-                       <li><strong>Wells (12/31/2024):</strong> 4,142 net productive wells; 254 net wells in process.</li>
-                       <li><strong>2024 Completions:</strong> 122 net productive development wells.</li>
-                   </ul>
-               </div>
-               <div id="bm-gathering-content" class="segment-pane hidden content-card" data-pane="bm-gathering">
-                   <h3 class="subsection-title !mt-0">Gathering Segment (Midstream)</h3>
-                   <p class="content-text">Transports produced natural gas from wellhead to processing or transmission lines. Revenue from pipeline service fees. Significant internal utilization (71% of throughput, 80% of operating revenues from EQT Production in 2024).</p>
-                   <ul class="styled-list">
-                       <li><strong>Infrastructure (12/31/2024):</strong> ~1,975 miles of gathering lines, 179 compression units.</li>
-                       <li><strong>Processing:</strong> Owns a 0.2 Bcf/day processing facility.</li>
-                       <li><strong>Contract Terms:</strong> Long-term; ~10 years (3rd party), ~14 years (EQT Production).</li>
-                   </ul>
-               </div>
-               <div id="bm-transmission-content" class="segment-pane hidden content-card" data-pane="bm-transmission">
-                   <h3 class="subsection-title !mt-0">Transmission Segment (Midstream)</h3>
-                   <p class="content-text">Operates FERC-regulated interstate pipelines and storage. Revenue from pipeline and storage service fees. Serves EQT Production and third parties. Key asset: Mountain Valley Pipeline (MVP).</p>
-                   <ul class="styled-list">
-                       <li><strong>Pipelines (12/31/2024):</strong> ~950 miles, 5.0 Bcf/day capacity.</li>
-                       <li><strong>Storage:</strong> 18 reservoirs, ~43 Bcf working gas capacity.</li>
-                       <li><strong>Contract Terms:</strong> Long-term; ~11 years (3rd party), ~13 years (EQT Production).</li>
-                       <li><strong>MVP:</strong> 303-mile, 2.0 Bcf/day pipeline to Mid-Atlantic/Southeastern U.S.</li>
-                   </ul>
-               </div>
-               <div id="bm-revenue-costs-content" class="segment-pane hidden content-card" data-pane="bm-revenue-costs">
-                   <h3 class="subsection-title !mt-0">How EQT Makes Money: Revenue Streams and Cost Structure</h3>
-                   <p class="content-text">EQT's primary revenue comes from sales of natural gas, NGLs, and oil (Production segment). The Equitrans integration diversified revenues with fees from Gathering and Transmission services (internal and third-party). Derivative hedging activities also impact reported revenues (cash-settled and non-cash mark-to-market gains/losses).</p>
-                   <h4 class="tertiary-title">Key Cost Categories:</h4>
-                   <ul class="styled-list">
-                       <li><strong>Production:</strong> Transportation & processing, lease operating expenses (LOE), production taxes, exploration.</li>
-                       <li><strong>Midstream:</strong> Operating & maintenance (O&M).</li>
-                       <li><strong>All Segments:</strong> Selling, general & administrative (SG&A), depletion, depreciation & amortization (DD&A).</li>
-                   </ul>
-                   <p class="content-text">The Equitrans integration reduced per-unit gathering expenses (internalized) but increased O&M and SG&A due to expanded operations.</p>
-               </div>
-           </div>
-       </section>
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from EQT Corporation public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
+        </footer>
 
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
 
-       <section id="financials" class="section-card scroll-mt-20">
-           <h2 class="section-title">Financial Performance & Trends</h2>
-           <p class="content-text text-center">Explore EQT's financial journey, including revenue dynamics, profitability metrics, and cash flow generation. Interactive charts and detailed tables provide insights into the company's performance.</p>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
 
-           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-               <div class="content-card">
-                   <p class="text-center font-medium text-gray-700 mb-2">Revenue Analysis ($M)</p>
-                   <div class="chart-container"><canvas id="revenueChart"></canvas></div>
-                   <p class="mt-2 text-sm text-gray-600 text-center content-text">Total operating revenues show volatility from commodity prices and hedging. Q1 2025 rebounded strongly.</p>
-               </div>
-               <div class="content-card">
-                   <p class="text-center font-medium text-gray-700 mb-2">FY 2024 Revenue Contribution by Segment</p>
-                   <div class="chart-container"><canvas id="revenueSegmentChartFY24"></canvas></div>
-                   <p class="mt-2 text-sm text-gray-600 text-center content-text">Integration of midstream segments significantly diversified revenue streams in FY2024.</p>
-               </div>
-               <div class="content-card">
-                   <p class="text-center font-medium text-gray-700 mb-2">Profitability Analysis ($M)</p>
-                   <div class="chart-container"><canvas id="profitabilityChart"></canvas></div>
-                   <p class="mt-2 text-sm text-gray-600 text-center content-text">Operating and net income have varied; Adj. EBITDA shows underlying operational earnings strength.</p>
-               </div>
-               <div class="content-card">
-                   <p class="text-center font-medium text-gray-700 mb-2">Adjusted EBITDA ($M)</p>
-                   <div class="chart-container"><canvas id="adjustedEbitdaChart"></canvas></div>
-                   <p class="mt-2 text-sm text-gray-600 text-center content-text">Adjusted EBITDA grew in 2024 and was robust in Q1 2025, highlighting improved earnings quality.</p>
-               </div>
-               <div class="content-card lg:col-span-2"> <p class="text-center font-medium text-gray-700 mb-2">Cash Flow Analysis ($M)</p>
-                   <div class="chart-container max-w-2xl"> <canvas id="cashFlowChart"></canvas>
-                   </div>
-                   <p class="mt-2 text-sm text-gray-600 text-center content-text">Operating cash flow and FCF decreased in 2024, but Q1 2025 saw exceptionally strong cash flow generation.</p>
-               </div>
-           </div>
+        // --- FINANCIAL CHARTS LOGIC ---
 
+        // Fiscal Year ends December 31
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [11.39, 7.51, 5.09], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [2.58, 2.76, -0.62], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
 
-           <h3 class="subsection-title text-center">Detailed Financial Tables</h3>
-           <div class="content-card mb-8">
-               <h4 class="tertiary-title">Table 1: EQT Historical Revenue and Segment Breakdown (Millions USD)</h4>
-               <div class="table-responsive">
-                   <table>
-                       <thead><tr><th>Period</th><th>Production Segment Revenue</th><th>Gathering Segment Revenue</th><th>Transmission Segment Revenue</th><th>(Loss)/Gain on Derivatives</th><th>Pipeline, Net Marketing & Other Revenue</th><th>Intersegment Eliminations</th><th>Total Operating Revenues</th></tr></thead>
-                       <tbody>
-                           <tr><td>FY 2022</td><td>$7,484.1</td><td>$96.9</td><td>$—</td><td>Included in Production</td><td>(see note)</td><td>$(83.3)</td><td>$7,497.7</td></tr>
-                           <tr><td>FY 2023</td><td>$6,896.4</td><td>$161.4</td><td>$—</td><td>Included in Production</td><td>(see note)</td><td>$(148.8)</td><td>$6,908.9</td></tr>
-                           <tr><td>FY 2024</td><td>$5,009.8</td><td>$749.7</td><td>$218.3</td><td>$51.1 (Cons.)</td><td>$287.8 (Cons.)</td><td>$(704.5)</td><td>$5,273.3</td></tr>
-                           <tr><td>Q1 2024</td><td>$1,303.9 (Sales)</td><td>$1.9 (Pipeline, etc.)</td><td>-</td><td>$106.5</td><td>-</td><td>-</td><td>$1,412.3</td></tr>
-                           <tr><td>Q1 2025</td><td>$2,244.7 (Sales)</td><td>$174.0 (Pipeline, etc.)</td><td>-</td><td>$(678.9)</td><td>-</td><td>-</td><td>$1,739.9</td></tr>
-                       </tbody>
-                   </table>
-               </div>
-               <p class="text-xs mt-2 text-neutral-500">Note for FY2022 & FY2023: Derivative gains/losses and other revenues not fully attributed to segments in the same way as 2024. Q1 data per consolidated statements.</p>
-           </div>
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($M)', data: [1598, 1968, 1421, 1074, 1178, 1260, 1576, 1145], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Millions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($M)', data: [769, 1021, -69, -471, -120, 240, -270, -255], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Millions of USD'
+            }
+        };
 
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
 
-           <div class="content-card mb-8">
-               <h4 class="tertiary-title">Table 2: EQT Historical Profitability Metrics (Millions USD, except per share)</h4>
-               <div class="table-responsive">
-                   <table>
-                       <thead><tr><th>Period</th><th>Total Op. Revenues</th><th>Operating Income</th><th>Op. Margin (%)</th><th>Net Income (to EQT)</th><th>Net Margin (%)</th><th>Adjusted EBITDA</th><th>Adj. EBITDA Margin (%)</th></tr></thead>
-                       <tbody>
-                           <tr><td>FY 2022</td><td>$7,497.7</td><td>$2,075.9</td><td>27.7%</td><td>$1,735.0</td><td>N/A</td><td>$3,016.0</td><td>N/A</td></tr>
-                           <tr><td>FY 2023</td><td>$6,908.9</td><td>$2,551.4</td><td>36.9%</td><td>$1,735.0</td><td>25.1%</td><td>$3,016.0</td><td>43.7%</td></tr>
-                           <tr><td>FY 2024</td><td>$5,273.3</td><td>$685.3</td><td>13.0%</td><td>$231.0</td><td>4.4%</td><td>$3,729.0</td><td>70.7%</td></tr>
-                           <tr><td>Q1 2024</td><td>$1,412.3</td><td>$103.0 (Net Inc.)</td><td>N/A</td><td>$103.0</td><td>7.3%</td><td>$1,015.0</td><td>71.9%</td></tr>
-                           <tr><td>Q1 2025</td><td>$1,739.9</td><td>$315.0 (Net Inc.)</td><td>N/A</td><td>$242.0</td><td>13.9%</td><td>$1,644.0 (to EQT)</td><td>94.5% (to EQT)</td></tr>
-                       </tbody>
-                   </table>
-               </div>
-               <p class="text-xs mt-2 text-neutral-500">Note: FY2022 Net Income/Adj. EBITDA values are from comparative data. Q1 Operating Income not directly provided, Net Income used. Adj. EBITDA FY24 high relative to revenue suggests significant positive adjustments.</p>
-           </div>
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            const datasets = metricDetails.datasets.map(ds => {
+                 // Color bars red for negative values
+                return {
+                    ...ds,
+                    backgroundColor: ds.data.map(value => value >= 0 ? ds.backgroundColor : CHART_COLORS.orange + 'BF'),
+                    borderColor: ds.data.map(value => value >= 0 ? ds.borderColor : CHART_COLORS.orange),
+                };
+            });
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
 
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
 
-           <div class="content-card">
-               <h4 class="tertiary-title">Table 3: EQT Historical Cash Flow Metrics (Millions USD)</h4>
-               <div class="table-responsive">
-                   <table>
-                       <thead><tr><th>Period</th><th>Net Cash from Operations</th><th>Capital Expenditures</th><th>FCF (Calculated)</th><th>FCF Attributable to EQT (Reported)</th></tr></thead>
-                       <tbody>
-                           <tr><td>FY 2022</td><td>N/A</td><td>$1,925 (for 2023)</td><td>N/A</td><td>N/A</td></tr>
-                           <tr><td>FY 2023</td><td>$3,179</td><td>$1,925</td><td>$1,254</td><td>$860</td></tr>
-                           <tr><td>FY 2024</td><td>$2,827</td><td>$2,266</td><td>$561</td><td>$684</td></tr>
-                           <tr><td>Q1 2024</td><td>$1,156</td><td>$549</td><td>$607</td><td>$404</td></tr>
-                           <tr><td>Q1 2025</td><td>$1,741</td><td>$497</td><td>$1,244</td><td>$1,036</td></tr>
-                       </tbody>
-                   </table>
-               </div>
-           </div>
-       </section>
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
-
-       <section id="competition" class="section-card scroll-mt-20">
-           <h2 class="section-title">Competitive Landscape</h2>
-           <p class="content-text text-center">EQT operates in the highly competitive Appalachian Basin. This section outlines market dynamics, key competitors, and EQT's unique advantages.</p>
-          
-           <div class="content-card mb-8">
-               <h3 class="subsection-title !mt-0">Appalachian Basin Natural Gas Market</h3>
-               <p class="content-text">The Appalachian Basin is the most significant U.S. natural gas-producing region (approx. 1/3 of U.S. output). Historically faced pipeline takeaway constraints leading to regional price discounts. Access to diverse markets via pipelines is a critical differentiator.</p>
-           </div>
-
-
-           <div class="content-card mb-8">
-               <h3 class="subsection-title !mt-0">Key Competitors & Comparative Overview</h3>
-               <p class="content-text">Prominent players include Antero Resources (AR), CNX Resources (CNX), Range Resources (RRC), Coterra Energy, and Southwestern Energy. They vary in commodity mix, integration, hedging, and geographic focus.</p>
-               <div class="table-responsive mt-4">
-                   <table>
-                       <thead>
-                           <tr><th>Feature</th><th>EQT Corporation</th><th>Antero Resources (AR)</th><th>CNX Resources (CNX)</th><th>Range Resources (RRC)</th></tr>
-                       </thead>
-                       <tbody>
-                           <tr><td><strong>Primary Focus</strong></td><td>Natural Gas (largest U.S. producer)</td><td>Natural Gas & NGLs</td><td>Natural Gas, Midstream, CMM/New Technologies</td><td>Natural Gas & NGLs</td></tr>
-                           <tr><td><strong>Reported Production</strong></td><td>~6.1 Bcfe/d (2,228 Bcfe total in 2024)</td><td>~3.39 Bcfe/d (1,238 Bcfe total in 2023)</td><td>~1.51 Bcfe/d (550.8 Bcfe total in 2024)</td><td>~2.12-2.16 Bcfe/d (target for 2024)</td></tr>
-                           <tr><td><strong>Core Acreage Focus</strong></td><td>Marcellus & Utica Shales (Appalachia)</td><td>Marcellus & Utica Shales (Appalachia)</td><td>Marcellus & Utica Shales, CBM (Appalachia)</td><td>Marcellus Shale (SW Appalachia)</td></tr>
-                           <tr><td><strong>Midstream Integration</strong></td><td>Fully Owned & Operated (Production, Gathering, Transmission Segments)</td><td>Significant interest (29%) in Antero Midstream (publicly traded MLP)</td><td>Owned & Operated Gathering; some third-party reliance</td><td>Owns some gathering; mix with third-party services</td></tr>
-                           <tr><td><strong>Key Strategic Differentiators</strong></td><td>Scale of vertical integration; Lowest cost producer claim; Net Zero Scope 1&2</td><td>High liquids exposure; Integrated water handling; Long-term FT portfolio</td><td>CMM & environmental attribute monetization; Programmatic hedging</td><td>Leading NGL producer in Appalachia; Focus on returns</td></tr>
-                       </tbody>
-                   </table>
-               </div>
-           </div>
-          
-           <div class="grid md:grid-cols-2 gap-6">
-               <div class="content-card">
-                   <h3 class="subsection-title !mt-0">EQT's Competitive Advantages</h3>
-                   <ul class="styled-list">
-                       <li><strong>Scale:</strong> Largest U.S. natural gas producer with operational leverage.</li>
-                       <li><strong>Vertical Integration:</strong> Enhanced control over midstream post-Equitrans acquisition. Claimed "lowest cost and only domestic, large-scale vertically integrated natural gas producer."</li>
-                       <li><strong>Operational Efficiency:</strong> "Combo-development" strategy and technology.</li>
-                       <li><strong>ESG Leadership:</strong> Net Zero Scope 1 & 2 GHG emissions achieved.</li>
-                   </ul>
-               </div>
-               <div class="content-card">
-                   <h3 class="subsection-title !mt-0">How EQT's Business Model Differs</h3>
-                   <p class="content-text">EQT's model is distinct due to the scale and breadth of its vertical integration. Many competitors rely more on third-party midstream or have less comprehensive systems. EQT aims to internalize more of the value chain, offering potential for higher margins and control, but also increasing capital intensity and operational scope.</p>
-               </div>
-           </div>
-       </section>
-
-
-       <section id="risks" class="section-card scroll-mt-20">
-           <h2 class="section-title">Key Risk Factors</h2>
-           <p class="content-text text-center">EQT faces various risks inherent in the oil and gas sector and specific to its operations. Understanding these is crucial to assessing its overall profile.</p>
-           <div class="space-y-4"> <div class="content-card"><h4 class="tertiary-title !mt-0">Commodity Price Volatility</h4><p class="content-text">Prices of natural gas and NGLs are highly volatile, impacting revenues, profitability, and cash flows. Hedging mitigates some but not all risk.</p></div>
-               <div class="content-card"><h4 class="tertiary-title !mt-0">Operational Risks</h4><p class="content-text">Inherent risks in E&P and midstream operations (equipment failures, accidents) can lead to interruptions and liabilities.</p></div>
-               <div class="content-card"><h4 class="tertiary-title !mt-0">Regulatory and Environmental Risks</h4><p class="content-text">Complex laws on environmental protection, hydraulic fracturing, pipeline safety, and climate change. Compliance costs can be substantial.</p></div>
-               <div class="content-card"><h4 class="tertiary-title !mt-0">Integration Risk</h4><p class="content-text">Significant risk with integrating large acquisitions (Equitrans, pending Olympus). Successfully realizing synergies is critical.</p></div>
-           </div>
-       </section>
-
-
-       <section id="outlook" class="section-card scroll-mt-20">
-           <h2 class="section-title">Conclusion and Strategic Outlook</h2>
-           <p class="content-text">EQT has transformed into a vertically integrated natural gas leader. Its future hinges on maximizing its integrated assets, disciplined development, balance sheet strength, and sustainability, amidst market volatility and regulatory changes.</p>
-              
-           <h3 class="subsection-title">Strategic Priorities</h3>
-           <ul class="styled-list">
-               <li><strong>Maximizing Value from Integrated Assets:</strong> Realizing synergies from Equitrans and integrating Olympus Energy.</li>
-               <li><strong>Disciplined Resource Development:</strong> Leveraging low-cost Appalachian gas reserves via "combo-development."</li>
-               <li><strong>Balance Sheet Fortification:</strong> Actively reducing debt using strong free cash flow.</li>
-               <li><strong>Commitment to Sustainability:</strong> Maintaining ESG leadership (Net Zero Scope 1 & 2).</li>
-           </ul>
-
-
-           <h3 class="subsection-title">Opportunities and Challenges</h3>
-           <p class="content-text"><strong>Challenges:</strong> Commodity price volatility, stringent environmental regulations (methane), execution risks of large integrations.</p>
-           <p class="content-text"><strong>Opportunities (Tailwinds):</strong> Growing demand for U.S. LNG exports (Appalachian gas is key supply). Increased natural gas demand for power generation (data centers, AI). EQT is strategically positioned as the largest U.S. producer with enhanced integrated infrastructure.</p>
-           <p class="content-text mt-4"><strong>Future Success Factors:</strong> Sustained executional excellence in managing complex integrated operations, maintaining capital discipline, and adapting to evolving global energy dynamics.</p>
-       </section>
-
-
-   </main>
-
-
-   <footer class="bg-stone-800 text-stone-300 py-8 mt-12 text-center"> <p class="text-sm">&copy; <span id="currentYear"></span> EQT Interactive Analysis. For informational purposes only.</p>
-       <p class="text-xs mt-1">Content derived from EQT Corporation public disclosures and analysis.</p>
-   </footer>
-
-
-   <script>
-       document.addEventListener('DOMContentLoaded', function () {
-           const navLinks = document.querySelectorAll('header nav a.nav-link'); // Adjusted selector for header nav links
-           const mobileMenuButton = document.getElementById('mobile-menu-button');
-           const mobileMenu = document.getElementById('mobile-menu');
-           const sections = document.querySelectorAll('main section[id]');
-           const businessModelTabs = document.querySelectorAll('#business-model-tabs .tab-button');
-           const businessModelContents = document.querySelectorAll('#bm-content-area .segment-pane');
-
-
-           function updateActiveLink() {
-               let currentSectionId = 'overview'; // Default to overview
-                // Find the section that is most visible, prioritizing those whose top is above the viewport center
-               let highestVisibleSectionTop = -Infinity;
-
-
-               sections.forEach(section => {
-                   const rect = section.getBoundingClientRect();
-                   // Check if section is at all visible
-                   if (rect.top < window.innerHeight && rect.bottom >= 0) {
-                        // Prioritize section whose top is closest to or above a certain point (e.g., 100px from viewport top)
-                       if (rect.top <= 100 && rect.top > highestVisibleSectionTop) {
-                           highestVisibleSectionTop = rect.top;
-                           currentSectionId = section.id;
-                       } else if (rect.top > 100 && currentSectionId === 'overview' && highestVisibleSectionTop === -Infinity) {
-                           // Fallback for sections below the initial preferred view, if no other section met the criteria
-                            currentSectionId = section.id; // This helps if overview is scrolled past and first section is lower
-                       }
-                   }
-               });
-                if (window.scrollY === 0) currentSectionId = 'overview'; // Ensure overview is active at the very top
-
-
-
-
-               navLinks.forEach(link => {
-                   link.classList.remove('active');
-                   const linkHref = link.getAttribute('href');
-                   if (linkHref && linkHref.substring(1) === currentSectionId) {
-                       link.classList.add('active');
-                   }
-               });
-           }
-          
-           window.addEventListener('scroll', updateActiveLink);
-           updateActiveLink(); // Initial call
-
-
-           navLinks.forEach(link => {
-               link.addEventListener('click', function (e) {
-                   if (mobileMenu && mobileMenuButton && !mobileMenu.classList.contains('hidden')) {
-                       mobileMenuButton.click(); // Simulate click to toggle menu
-                   }
-               });
-           });
-          
-           if (mobileMenuButton && mobileMenu) {
-               mobileMenuButton.addEventListener('click', function () {
-                   const isExpanded = this.getAttribute('aria-expanded') === 'true' || false;
-                   this.setAttribute('aria-expanded', !isExpanded);
-                   mobileMenu.classList.toggle('hidden');
-                   // mobileMenu.classList.toggle('block'); // 'block' might be redundant if hidden handles display
-                   const icons = this.querySelectorAll('svg');
-                   icons[0].classList.toggle('hidden');
-                   // icons[0].classList.toggle('block');
-                   icons[1].classList.toggle('hidden');
-                   // icons[1].classList.toggle('block');
-               });
-           }
-
-
-           businessModelTabs.forEach(tab => {
-               tab.addEventListener('click', function() {
-                   businessModelTabs.forEach(t => t.classList.remove('active'));
-                   this.classList.add('active');
-                   const targetPaneId = this.dataset.tab;
-                   businessModelContents.forEach(content => {
-                       content.classList.add('hidden'); // Hide all
-                       content.classList.remove('active');
-                       if (content.dataset.pane === targetPaneId) {
-                           content.classList.remove('hidden');
-                           content.classList.add('active');
-                       }
-                   });
-               });
-           });
-          
-           document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-
-           // Chart.js Global Config (Apple Style)
-           Chart.defaults.font.family = 'Inter, sans-serif';
-           Chart.defaults.color = '#4B5563'; // gray-600
-
-
-           const CHART_COLORS = { // Apple-style palette
-               blue: '#60A5FA',    // blue-400
-               teal: '#5EEAD4',    // teal-300
-               orange: '#FDBA74',  // orange-300
-               stone: '#E7E5E4',   // stone-200
-               gray: '#4B5563',    // gray-600
-               darkBlue: '#2563EB', // blue-600
-               darkTeal: '#14B8A6', // teal-500
-               sky: '#38BDF8',     // sky-400 (added for variety)
-               indigo: '#818CF8', // indigo-400 (added for variety)
-               purple: '#A78BFA',  // purple-400 (added for variety)
-           };
-
-
-           const commonChartOptions = {
-               responsive: true,
-               maintainAspectRatio: false,
-               scales: {
-                   y: {
-                       beginAtZero: false,
-                       ticks: { color: CHART_COLORS.gray, font: {size: 11}, callback: (val) => '$' + new Intl.NumberFormat('en-US', { notation: 'compact', compactDisplay: 'short', minimumFractionDigits: 1, maximumFractionDigits:1 }).format(val * 1000000) }, // To format as $XM or $XB
-                       grid: { color: CHART_COLORS.stone, drawBorder: false }
-                   },
-                   x: {
-                       ticks: { color: CHART_COLORS.gray, font: {size: 11}},
-                       grid: { display: false }
-                   }
-               },
-               plugins: {
-                   legend: {
-                       position: 'top',
-                       align: 'end', // Apple style
-                       labels: { color: CHART_COLORS.gray, font: { size: 12, weight: '500'}, padding: 15, boxWidth: 12, usePointStyle: true } // Apple style
-                   },
-                   tooltip: { // Apple style tooltip
-                       enabled: true, backgroundColor: '#1F2937', titleColor: '#F3F4F6', titleFont: { weight: '600', size: 13 },
-                       bodyColor: '#D1D5DB', bodyFont: { size: 12 }, padding: 10, cornerRadius: 4, displayColors: true,
-                       borderColor: '#4B5563', borderWidth: 1,
-                       callbacks: {
-                           label: function(context) {
-                               let label = context.dataset.label || '';
-                               if (label) { label += ': '; }
-                               if (context.parsed.y !== null) {
-                                   const val = context.parsed.y;
-                                    // Simplified check for pie chart data formatting
-                                   if (context.chart.config.type === 'pie' || context.chart.config.type === 'doughnut') {
-                                      label += '$' + val.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1}) + 'M';
-                                   } else {
-                                      label += '$' + val.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1}) + 'M';
-                                   }
-                               }
-                               return label;
-                           }
-                       }
-                   }
-               },
-               animation: { duration: 700, easing: 'easeOutCubic' } // Apple style animation
-           };
-          
-           // Revenue Chart (Bar)
-           new Chart(document.getElementById('revenueChart').getContext('2d'), {
-               type: 'bar',
-               data: {
-                   labels: ['FY 2022', 'FY 2023', 'FY 2024', 'Q1 2024', 'Q1 2025'],
-                   datasets: [{
-                       label: 'Total Operating Revenues ($M)',
-                       data: [7497.7, 6908.9, 5273.3, 1412.3, 1739.9],
-                       backgroundColor: [CHART_COLORS.blue, CHART_COLORS.blue, CHART_COLORS.blue, CHART_COLORS.teal, CHART_COLORS.teal],
-                       borderColor: [CHART_COLORS.darkBlue, CHART_COLORS.darkBlue, CHART_COLORS.darkBlue, CHART_COLORS.darkTeal, CHART_COLORS.darkTeal],
-                       borderWidth: 1
-                   }]
-               },
-               options: {...commonChartOptions, plugins: {...commonChartOptions.plugins, legend: {display:false} }} // Hide legend if title is enough
-           });
-          
-           // Revenue Segment Chart (Pie)
-           new Chart(document.getElementById('revenueSegmentChartFY24').getContext('2d'), {
-               type: 'pie',
-               data: {
-                   labels: ['Production', 'Gathering', 'Transmission', 'Derivatives & Other (Net)'],
-                   datasets: [{
-                       label: 'FY 2024 Revenue Contribution ($M)',
-                       data: [5009.8, 749.7, 218.3, (51.1 + 287.8 - 704.5)], // Values from table
-                       backgroundColor: [CHART_COLORS.blue, CHART_COLORS.teal, CHART_COLORS.sky, CHART_COLORS.orange],
-                       hoverOffset: 8 // Apple style
-                   }]
-               },
-               options: { ...commonChartOptions, plugins: { ...commonChartOptions.plugins, legend: { position: 'bottom', align:'center'}}} // Pie charts often have bottom legend
-           });
-
-
-           // Profitability Chart (Line)
-           new Chart(document.getElementById('profitabilityChart').getContext('2d'), {
-               type: 'line',
-               data: {
-                   labels: ['FY 2022', 'FY 2023', 'FY 2024'],
-                   datasets: [
-                       {
-                           label: 'Operating Income ($M)', data: [2075.9, 2551.4, 685.3],
-                           borderColor: CHART_COLORS.blue, backgroundColor: CHART_COLORS.blue+'33', tension: 0.2, fill: true
-                       },
-                       {
-                           label: 'Net Income to EQT ($M)', data: [1735.0, 1735.0, 231.0],
-                           borderColor: CHART_COLORS.teal, backgroundColor: CHART_COLORS.teal+'33', tension: 0.2, fill: true
-                       }
-                   ]
-               },
-               options: commonChartOptions
-           });
-          
-           // Adjusted EBITDA Chart (Bar)
-           new Chart(document.getElementById('adjustedEbitdaChart').getContext('2d'), {
-               type: 'bar',
-               data: {
-                   labels: ['FY 2022', 'FY 2023', 'FY 2024', 'Q1 2024', 'Q1 2025'],
-                   datasets: [{
-                       label: 'Adjusted EBITDA (to EQT) ($M)',
-                       data: [3016.0, 3016.0, 3729.0, 1015.0, 1644.0],
-                       backgroundColor: [CHART_COLORS.indigo, CHART_COLORS.indigo, CHART_COLORS.indigo, CHART_COLORS.purple, CHART_COLORS.purple],
-                        borderColor: [CHART_COLORS.indigo.replace('0.7','1'), CHART_COLORS.indigo.replace('0.7','1'), CHART_COLORS.indigo.replace('0.7','1'), CHART_COLORS.purple.replace('0.7','1'), CHART_COLORS.purple.replace('0.7','1')],
-                       borderWidth: 1
-                   }]
-               },
-               options: {...commonChartOptions, plugins: {...commonChartOptions.plugins, legend: {display:false} }}
-           });
-          
-           // Cash Flow Chart (Line)
-           new Chart(document.getElementById('cashFlowChart').getContext('2d'), {
-               type: 'line',
-               data: {
-                   labels: ['FY 2023', 'FY 2024', 'Q1 2024', 'Q1 2025'],
-                   datasets: [
-                       {
-                           label: 'Net Cash from Operations ($M)', data: [3179, 2827, 1156, 1741],
-                           borderColor: CHART_COLORS.blue, backgroundColor: CHART_COLORS.blue+'33', tension: 0.2, fill: true
-                       },
-                       {
-                           label: 'FCF Attributable to EQT ($M)', data: [860, 684, 404, 1036],
-                           borderColor: CHART_COLORS.sky, backgroundColor: CHART_COLORS.sky+'33', tension: 0.2, fill: true
-                       }
-                   ]
-               },
-               options: commonChartOptions
-           });
-       });
-   </script>
+    </script>
 </body>
 </html>
 

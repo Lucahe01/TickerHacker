@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qualcomm (QCOM) - TickerHack Deep Research</title>
+    <title>Qualcomm Inc. (QCOM) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -35,10 +35,17 @@
             padding: 1.5rem; /* p-6 */
             margin-bottom: 2rem; /* mb-8 */
         }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
         .section-title {
             font-size: 1.875rem; /* text-3xl */
             font-weight: 600; /* font-semibold */
-            color: #3B82F6; /* Qualcomm Blue */
+            color: #A78BFA; /* violet-400 */
             margin-bottom: 1.5rem; /* mb-6 */
             padding-bottom: 0.5rem; /* pb-2 */
             border-bottom: 2px solid #E7E5E4; /* stone-200 */
@@ -46,7 +53,7 @@
         .subsection-title {
             font-size: 1.5rem; /* text-2xl */
             font-weight: 600; /* font-semibold */
-            color: #1D4ED8; /* Qualcomm Darker Blue */
+            color: #7DD3FC; /* sky-400 */
             margin-top: 1.5rem; /* mt-6 */
             margin-bottom: 1rem; /* mb-4 */
         }
@@ -56,7 +63,7 @@
             font-size: 0.95rem;
         }
         .highlight {
-            color: #F97316; /* Orange for general highlights */
+            color: #F97316; /* orange-500 */
             font-weight: 600;
         }
         .tab-button {
@@ -71,9 +78,9 @@
             border: 1px solid transparent;
         }
         .tab-button.active {
-            background-color: #3B82F6; /* Qualcomm Blue */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
-            border-color: #1D4ED8;
+            border-color: #8B5CF6; /* violet-500 */
         }
         .nav-link {
             padding: 0.5rem 1rem;
@@ -84,12 +91,12 @@
             white-space: nowrap;
         }
         .nav-link:hover, .nav-link.active {
-            background-color: #3B82F6; /* Qualcomm Blue */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
         }
         .kpi-card {
-            background-color: #EFF6FF; /* Qualcomm Blue-50 */
-            border: 1px solid #BFDBFE; /* Qualcomm Blue-200 */
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
             border-radius: 0.5rem; /* rounded-lg */
             padding: 1rem;
             text-align: center;
@@ -102,7 +109,7 @@
         .kpi-value {
             font-size: 1.75rem; /* text-2xl or 3xl */
             font-weight: 600;
-            color: #1E40AF; /* Qualcomm Blue-700 */
+            color: #1F2937; /* gray-800 */
         }
     </style>
 </head>
@@ -112,19 +119,19 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold" style="color: #1D4ED8;">Qualcomm (QCOM) Analysis</h1>
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Qualcomm (QCOM) Analysis</h1>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
                         <a href="#overview" class="nav-link">Overview</a>
                         <a href="#segments" class="nav-link">Business Segments</a>
                         <a href="#financials" class="nav-link">Financials</a>
-                        <a href="#competition" class="nav-link">Moat & Risks</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
                         <a href="#outlook" class="nav-link">Outlook</a>
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                         <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -136,7 +143,7 @@
                     <a href="#overview" class="nav-link block text-base">Overview</a>
                     <a href="#segments" class="nav-link block text-base">Business Segments</a>
                     <a href="#financials" class="nav-link block text-base">Financials</a>
-                    <a href="#competition" class="nav-link block text-base">Moat & Risks</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
                     <a href="#outlook" class="nav-link block text-base">Outlook</a>
                 </div>
             </div>
@@ -146,86 +153,84 @@
     <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
         <section id="overview" class="section-card scroll-mt-20">
-            <h2 class="section-title">Qualcomm: Powering the Connected Intelligent Edge</h2>
-            <p class="content-text mb-6">Qualcomm Incorporated is a global leader in the development and commercialization of foundational wireless technologies. Its innovations in 3G, 4G, and 5G have powered the mobile revolution, and the company is now focused on extending its leadership to the "connected intelligent edge." This strategy involves leveraging its Snapdragon processor platforms and its vast patent portfolio to drive growth beyond handsets into automotive, the Internet of Things (IoT), and next-generation computing. Qualcomm operates a unique dual business model: QCT (chips and software) and QTL (high-margin technology licensing). This analysis explores this model, its financial structure, and its strategic push towards diversification.</p>
+            <h2 class="section-title">Qualcomm: The Architect of the Connected Intelligent Edge</h2>
+            <p class="content-text mb-6">Qualcomm (NASDAQ: QCOM) is a global leader in the development and commercialization of foundational technologies for the wireless industry. The company's innovations in 3G, 4G, and 5G have been instrumental in powering the smartphone revolution. Qualcomm operates a powerful and synergistic business model, designing and selling advanced wireless semiconductors (QCT) while also licensing its vast and essential patent portfolio (QTL). As the world moves towards an era of ubiquitous connectivity and on-device AI, Qualcomm is leveraging its leadership in mobile technology to expand into high-growth adjacent markets, including <span class="highlight">Automotive, the Internet of Things (IoT), and next-generation AI PCs</span>.</p>
             
-            <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="grid md-grid-cols-2 gap-6 items-start">
                 <div>
-                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
-                    <p class="content-text mb-4">Qualcomm's strategy is built on several key pillars:</p>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Diversification and On-Device AI</h3>
+                    <p class="content-text mb-4">Qualcomm's strategy is focused on extending its mobile leadership into new growth vectors:</p>
                     <ul class="list-disc list-inside content-text space-y-1 pl-4">
-                        <li><strong class="font-semibold text-gray-700">Wireless Technology Leadership:</strong> Maintaining its lead in cellular modem-RF systems and advancing 5G technology while investing in 6G and beyond.</li>
-                        <li><strong class="font-semibold text-gray-700">Diversification Beyond Handsets:</strong> Aggressively expanding its QCT business into Automotive (Snapdragon Digital Chassis) and IoT (industrial, consumer, networking) to reduce reliance on the mature smartphone market.</li>
-                        <li><strong class="font-semibold text-gray-700">On-Device AI Innovation:</strong> Integrating powerful AI processing capabilities into its Snapdragon platforms to enable new experiences across all device categories.</li>
-                        <li><strong class="font-semibold text-gray-700">Monetizing Intellectual Property:</strong> Leveraging its extensive patent portfolio through the QTL segment to generate high-margin licensing revenues from the global wireless industry.</li>
+                        <li><strong class="font-semibold text-gray-700">Maintain Leadership in Mobile:</strong> Continue to supply the world's leading smartphone manufacturers with its best-in-class Snapdragon mobile platforms.</li>
+                        <li><strong class="font-semibold text-gray-700">Diversify Revenue Streams:</strong> Aggressively grow its Automotive and IoT businesses to reduce its historical reliance on the mature handset market.</li>
+                        <li><strong class="font-semibold text-gray-700">Win the AI PC Market:</strong> Lead the transition to AI-powered PCs with its new Snapdragon X Elite and X Plus platforms, designed to deliver superior performance and battery life for next-generation AI workloads.</li>
+                        <li><strong class="font-semibold text-gray-700">Leverage the Patent Portfolio:</strong> Continue to license its foundational intellectual property across the entire wireless industry, providing a stable, high-margin stream of cash flow.</li>
                     </ul>
                 </div>
-                <div class="kpi-card">
-                    <p class="kpi-label">Automotive Revenue (Q2 FY25)</p>
-                    <p class="kpi-value">$605 Million</p>
-                    <p class="content-text text-sm mt-2">Up <span class="highlight">18% year-over-year</span>, this segment highlights Qualcomm's successful diversification and its growing design-win pipeline in connected cars.</p>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">QCT Automotive Revenue (Q2 FY25)</p>
+                    <p class="kpi-value text-violet-600">$603 Million</p>
+                    <p class="content-text text-sm mt-2">Represents 13% year-over-year growth, highlighting the strong momentum in one of Qualcomm's key diversification areas, driven by demand for its Snapdragon Digital Chassis.</p>
                 </div>
             </div>
         </section>
 
         <section id="segments" class="section-card scroll-mt-20">
-            <h2 class="section-title">Business Segments: Chips and Licensing</h2>
-            <p class="content-text mb-6">Qualcomm's business is clearly divided into two synergistic segments: Qualcomm CDMA Technologies (QCT), which designs and sells semiconductor chips and software, and Qualcomm Technology Licensing (QTL), which generates high-margin revenue by licensing its vast portfolio of wireless patents. QCT drives the majority of revenue, while QTL significantly contributes to profitability.</p>
+            <h2 class="section-title">How Qualcomm Makes Money: Chips and Licensing</h2>
+            <p class="content-text mb-6">Qualcomm's business is organized into two powerful, synergistic segments. The QCT (chipmaking) division drives the adoption of its technology at scale, which in turn strengthens the value of its QTL (licensing) patent portfolio. This creates a virtuous cycle of innovation and monetization.</p>
 
             <div class="mb-6 border-b border-stone-200">
-                <nav class="-mb-px flex space-x-2 md:space-x-4" aria-label="Tabs">
-                    <button class="segment-tab-button active" data-target="qct">QCT (Chips & Software)</button>
-                    <button class="segment-tab-button" data-target="qtl">QTL (Technology Licensing)</button>
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="qct">QCT (Chipmaking)</button>
+                    <button class="segment-tab-button" data-target="qtl">QTL (Licensing)</button>
                 </nav>
             </div>
 
             <div id="segmentDetails">
                 <div id="qctContent" class="segment-content">
-                    <h3 class="subsection-title">QCT (Snapdragon Chips & Software) (84% of Q2 FY25 Revenue)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                    <h3 class="subsection-title">QCT (Qualcomm CDMA Technologies)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <p class="content-text mb-2">This segment is responsible for the development and sale of integrated circuits and system software. In Q2 FY25, QCT revenue was <span class="highlight">$8.7 billion</span> with EBT of <span class="highlight">$1.9 billion</span>.</p>
+                            <p class="content-text mb-2">This is the largest segment by revenue. It develops and sells integrated circuits and system software based on its foundational technologies for use in wireless voice and data communications, networking, and multimedia. It's further broken down into three key end markets.</p>
                              <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Handsets:</strong> The largest contributor, providing Snapdragon mobile platforms and modem-RF systems to smartphone OEMs. Q2 FY25 revenue was $6.8 billion.</li>
-                                <li><strong>Automotive:</strong> A key growth vector, offering the Snapdragon Digital Chassis for infotainment, connectivity, and ADAS.</li>
-                                <li><strong>IoT:</strong> Serving diverse markets including consumer electronics (wearables, XR), industrial applications, and networking.</li>
-                            </ul>
+                                <li><strong>Handsets (~66% of QCT):</strong> The core business, providing Snapdragon processors for smartphones.</li>
+                                <li><strong>Automotive (~22% of QCT):</strong> A high-growth area, providing the Snapdragon Digital Chassis for connectivity and infotainment.</li>
+                                 <li><strong>IoT (~12% of QCT):</strong> Chips for a wide range of connected devices.</li>
+                             </ul>
                         </div>
                         <div class="chart-container h-72 md:h-80">
-                            <canvas id="qctRevenueBreakdownChart"></canvas>
+                            <canvas id="qctBreakdownChart"></canvas>
                         </div>
                     </div>
                 </div>
                 <div id="qtlContent" class="segment-content hidden">
-                    <h3 class="subsection-title">QTL (Technology Licensing) (15% of Q2 FY25 Revenue)</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                    <h3 class="subsection-title">QTL (Qualcomm Technology Licensing)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div>
-                            <p class="content-text mb-2">QTL grants licenses to use Qualcomm's extensive portfolio of foundational wireless patents (3G, 4G, 5G). This is a high-margin business, generating <span class="highlight">$1.5 billion</span> in revenue and <span class="highlight">$1.1 billion</span> in EBT in Q2 FY25.</p>
-                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Business Model:</strong> Royalties are typically based on a percentage of the selling price of licensed devices.</li>
-                                <li><strong>Importance:</strong> QTL's profitability helps fund QCT's R&D, creating a virtuous cycle that fuels further innovation.</li>
-                            </ul>
+                            <p class="content-text mb-2">The QTL segment is the highly profitable licensing arm of the company. It grants licenses to its vast and foundational portfolio of intellectual property, which includes patents essential for manufacturing and selling virtually all modern wireless products (e.g., 3G, 4G, 5G devices). Revenue is generated through royalty payments from device manufacturers.</p>
                         </div>
-                         <div class="chart-container h-72 md:h-80">
-                            <canvas id="segmentRevenueChart"></canvas>
-                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Segment Profitability</p>
+                             <p class="kpi-value text-sky-600">Extremely High Margins</p>
+                             <p class="content-text text-sm mt-2">The licensing business carries very high operating margins (typically >70%), making it a massive contributor to Qualcomm's overall profitability and cash flow.</p>
+                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="financials" class="section-card scroll-mt-20">
-            <h2 class="section-title">Financial Deep Dive: The QCT/QTL Dynamic</h2>
-            <p class="content-text mb-6">Qualcomm's financial story is unique due to its two distinct segments. QCT drives the bulk of the revenue through chip sales, while QTL contributes a significant portion of the company's profits through high-margin patent licensing. Understanding this interplay is key to analyzing Qualcomm's overall financial health and strategy. The charts below explore these trends.</p>
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Qualcomm's financial performance is closely tied to the cycles of the smartphone industry. However, the company's successful diversification into the more stable Automotive and IoT markets is helping to smooth out revenue and provide a more durable growth profile. The high-margin QTL business provides a strong and stable foundation of profitability and cash flow.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title">Company Fiscal Year Trends</h3>
-                     <div class="mb-4">
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
                         <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
-                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
-                            <option value="totalEBT">Total EBT ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
                         </select>
                     </div>
                     <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
@@ -234,55 +239,58 @@
                 </div>
 
                 <div>
-                    <h3 class="subsection-title">Segment EBT (Q2 FY25)</h3>
-                     <p class="content-text text-sm mb-4">This chart highlights the significant earnings contribution of the high-margin QTL segment relative to the QCT segment.</p>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
                     <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
                         <canvas id="quarterlyFinancialChart"></canvas>
                     </div>
                 </div>
             </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase the cyclicality of the handset market, with a trough in 2024 followed by a recovery, as well as the company's consistent profitability.</p>
         </section>
 
         <section id="competition" class="section-card scroll-mt-20">
-            <h2 class="section-title">Wireless Moats & Competitive Headwinds</h2>
-            <p class="content-text mb-6">Qualcomm's most significant competitive advantage lies in its vast and fundamental patent portfolio in wireless technologies, which fuels its QTL segment. In the QCT chip business, it leverages its modem leadership but faces intense competition and the trend of major customers developing their own silicon.</p>
+            <h2 class="section-title">Competitive Moat: The Patent Fortress</h2>
+            <p class="content-text mb-6">Qualcomm's competitive advantage is built on a powerful and deep moat rooted in its massive portfolio of foundational patents, its leadership in wireless technology, and its deep integration with the entire mobile ecosystem.</p>
             
-            <div class="grid md:grid-cols-2 gap-8 items-start">
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
                     <h3 class="subsection-title !mt-0">Key Moats</h3>
                     <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Foundational Patent Portfolio (QTL):</strong> Decades of R&D have resulted in an industry-leading portfolio of patents essential to 3G, 4G, and 5G standards, making its licenses indispensable for device manufacturers. This generates high-margin, recurring revenue.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Foundational Patent Portfolio:</strong> This is Qualcomm's crown jewel. The company holds a vast portfolio of patents that are essential to 3G, 4G, and 5G wireless standards. Any company that makes or sells a cellular device must take a license from Qualcomm, creating a high-margin, recurring royalty stream.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Modem & RF Leadership (QCT):</strong> Qualcomm has long been the gold standard for cellular modem performance and RF front-end solutions, providing superior connectivity, power efficiency, and global band support.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technology Leadership & Integration:</strong> Qualcomm's Snapdragon platforms are widely regarded as the best-in-class integrated solutions for mobile devices. The deep integration of its CPU, GPU, modem, and AI engine provides a level of performance and power efficiency that is difficult for competitors to match.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Snapdragon Platform Integration:</strong> The ability to offer integrated solutions combining the application processor, modem, Wi-Fi, Bluetooth, AI, and security provides an optimized platform for device makers.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Deep Ecosystem Relationships:</strong> Qualcomm has deep, long-standing relationships with virtually every smartphone manufacturer (OEM) in the world, making it an indispensable partner in the mobile ecosystem.</span>
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0">Primary Risks & Competitors</h3>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
                      <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Customer In-Sourcing:</strong> Major customers, notably Apple, are increasingly developing their own custom silicon (including modems), reducing their reliance on Qualcomm and creating significant revenue headwinds.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">MediaTek:</strong> A major competitor in the market for mobile phone chipsets, particularly in the mid- and low-tiers.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Competition in Handset SoCs:</strong> MediaTek is a strong competitor, particularly in mid-tier and entry-level smartphones, pressuring pricing and market share.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Apple (In-house design):</strong> Apple designs its own A-series processors for the iPhone, though it still relies on Qualcomm for its 5G modems (for now).</span>
                         </li>
                          <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                             <span class="content-text"><strong class="text-gray-700">QTL Regulatory & Legal Challenges:</strong> Qualcomm's licensing business model has faced numerous antitrust challenges and disputes globally, which, while often settled, pose ongoing risk and potential for changes to its model.</span>
-                        </li>
-                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                             <span class="content-text"><strong class="text-gray-700">Geopolitical Risks:</strong> Reliance on global supply chains (especially TSMC for manufacturing) and significant business in China expose Qualcomm to geopolitical tensions and trade policy shifts.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Samsung (In-house design):</strong> Samsung uses a mix of its own Exynos processors and Qualcomm's Snapdragon processors in its Galaxy smartphones.</span>
                         </li>
                     </ul>
                 </div>
@@ -291,24 +299,24 @@
 
         <section id="outlook" class="section-card scroll-mt-20">
             <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
-            <p class="content-text mb-6">Qualcomm is navigating a period of significant transition. Its future success depends on executing its diversification strategy into automotive and IoT, maintaining its technology leadership in the face of growing competition, and successfully defending its highly profitable licensing model.</p>
-            <div class="grid md:grid-cols-2 gap-8 items-start">
+            <p class="content-text mb-6">Qualcomm is a premier technology company that is successfully navigating a transition from a mobile-centric business to a more diversified "connected intelligent edge" company. The investment thesis is centered on its durable, high-margin licensing business and its significant growth opportunities in Automotive and AI PCs. However, the company faces risks related to customer concentration and the ever-present threat of litigation against its licensing model.</p>
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title !mt-0 text-sky-600">Rewards & Opportunities 🚀</h3>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Automotive Growth:</strong> The Snapdragon Digital Chassis has a strong design-win pipeline, positioning Qualcomm to be a major player in the rapidly growing connected and autonomous vehicle market.</li>
-                        <li><strong>IoT Expansion:</strong> The proliferation of connected devices across consumer, industrial, and enterprise sectors presents a large and diverse growth opportunity.</li>
-                        <li><strong>On-Device AI Leadership:</strong> Integrating AI capabilities into its chips could create new demand and differentiate its products in an increasingly competitive market.</li>
-                        <li><strong>Windows on Snapdragon:</strong> The development of powerful, efficient Arm-based Snapdragon chips for Windows PCs (with Oryon CPUs) could disrupt the traditional x86 dominance in that market.</li>
+                        <li><strong>The AI PC Revolution:</strong> The launch of the Snapdragon X Elite platform positions Qualcomm to be a major player in the emerging market for AI-powered PCs, a significant new growth vector.</li>
+                        <li><strong>Durable Diversification:</strong> The Automotive and IoT segments are providing strong, secular growth that is making the company less dependent on the cyclical handset market.</li>
+                        <li><strong>High-Margin Licensing Fortress:</strong> The QTL business is a cash-flow machine with a very deep and durable moat, providing a stable foundation to fund R&D and significant capital returns.</li>
+                        <li><strong>5G and On-Device AI:</strong> The ongoing global rollout of 5G and the increasing demand for powerful, efficient on-device AI processing play directly to Qualcomm's core technological strengths.</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0 text-amber-600">Risks & Challenges 📉</h3>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Loss of Apple Modem Business:</strong> The complete transition of Apple to its in-house modems will continue to be a headwind for QCT handset revenues.</li>
-                        <li><strong>Intense Competition in QCT:</strong> Strong rivals in mobile (MediaTek), and emerging competition in automotive and IoT could pressure margins and market share.</li>
-                        <li><strong>Evolution of Licensing Landscape:</strong> Any significant adverse regulatory changes or successful challenges to its QTL model could impact its most profitable segment.</li>
-                        <li><strong>Execution in New Markets:</strong> Successfully penetrating and scaling in diverse new markets like automotive and IoT requires different skill sets and go-to-market strategies than the handset business.</li>
+                        <li><strong>Customer Concentration Risk:</strong> A very large portion of Qualcomm's revenue is dependent on a few key customers, particularly Apple and Samsung. The potential loss of Apple's modem business to an in-house solution remains a significant long-term risk.</li>
+                        <li><strong>Regulatory & Legal Risk:</strong> Qualcomm's highly profitable licensing model has been the subject of numerous antitrust lawsuits and regulatory challenges around the world. While it has successfully defended its model, this remains a persistent headline risk.</li>
+                        <li><strong>Handset Market Cyclicality:</strong> Despite its diversification efforts, the company's largest business is still tied to the cyclical and highly competitive global smartphone market.</li>
+                        <li><strong>Intense Competition:</strong> The semiconductor industry is fiercely competitive, and Qualcomm faces pressure from both established rivals and the trend of major customers bringing chip design in-house.</li>
                     </ul>
                 </div>
             </div>
@@ -316,7 +324,7 @@
 
         <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
             <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
-            <p class="text-xs mt-1">Data synthesized from Qualcomm Incorporated public filings and credible financial news sources as of June 2025.</p>
+            <p class="text-xs mt-1">Data synthesized from Qualcomm Incorporated public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
         </footer>
 
     <script>
@@ -330,11 +338,13 @@
             mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
         });
         
-        // Active nav link highlighting
+        // Smooth scroll and active nav link highlighting
         const navLinks = document.querySelectorAll('header nav a[href^="#"]');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                if (!mobileMenuEl.classList.contains('hidden')) { mobileMenuBtn.click(); }
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
                 navLinks.forEach(l => l.classList.remove('active'));
                 e.currentTarget.classList.add('active');
             });
@@ -343,7 +353,6 @@
         // Segment Tabs
         const segmentTabs = document.querySelectorAll('.segment-tab-button');
         const segmentContents = document.querySelectorAll('.segment-content');
-        
         segmentTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 segmentTabs.forEach(t => t.classList.remove('active'));
@@ -352,134 +361,119 @@
                 segmentContents.forEach(content => {
                     content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
                 });
-                 // Re-initialize charts if they are in the now-active tab
-                if (targetId === 'qctContent') {
-                    initializeQCTChart();
-                } else if (targetId === 'qtlContent') {
-                    initializeSegmentRevenueChart();
-                }
             });
         });
-        
-        // --- CHARTS ---
-        const CHART_COLORS_QCOM = { 
-            blue: '#3B82F6', 
-            darkBlue: '#1D4ED8', 
-            lightBlue: '#60A5FA', 
-            sky: '#0EA5E9', // For Automotive
-            teal: '#14B8A6', // For IoT
-            gray: '#6B7280' 
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
+
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4',
+            stone: '#E7E5E4'
         };
 
-        let segmentRevenueChartInstance = null;
-        function initializeSegmentRevenueChart() {
-            const segmentRevenueCtx = document.getElementById('segmentRevenueChart').getContext('2d');
-            if(segmentRevenueChartInstance) segmentRevenueChartInstance.destroy();
-            segmentRevenueChartInstance = new Chart(segmentRevenueCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['QCT (Chips)', 'QTL (Licensing)'],
-                    datasets: [{
-                        data: [8.7, 1.5], // Q2 FY25 Revenue Data in $B
-                        backgroundColor: [CHART_COLORS_QCOM.blue, CHART_COLORS_QCOM.lightBlue],
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue Contribution by Segment (Q2 FY25)' } }
-                }
-            });
-        }
-
-        let qctRevenueChartInstance = null;
-        function initializeQCTChart() {
-            const qctRevenueCtx = document.getElementById('qctRevenueBreakdownChart').getContext('2d');
-             if(qctRevenueChartInstance) qctRevenueChartInstance.destroy();
-            qctRevenueChartInstance = new Chart(qctRevenueCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Handsets', 'Automotive', 'IoT'],
-                    datasets: [{
-                        data: [6.8, 0.605, 1.2], // Q2 FY25 QCT Revenue Data in $B
-                        backgroundColor: [CHART_COLORS_QCOM.darkBlue, CHART_COLORS_QCOM.sky, CHART_COLORS_QCOM.teal],
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'QCT Revenue Breakdown (Q2 FY25)' } }
-                }
-            });
-        }
-        
-        // Initial chart renders for the active tab
-        initializeQCTChart(); // QCT tab is active by default
-
-
-        // Yearly Data Store (QCOM)
-        const yearlyDataStoreQCOM = {
-            labels: ['FY22', 'FY23', 'FY24'],
-            totalRevenue: { data: [44.2, 35.8, 38.5], label: 'Total Revenue ($B)', color: CHART_COLORS_QCOM.blue }, // FY24 illustrative based on trends
-            totalEBT: { data: [15.8, 9.9, 11.5], label: 'Total EBT ($B)', color: CHART_COLORS_QCOM.darkBlue } // FY24 illustrative
-        };
-
-        let yearlyChartQCOM = null;
-        const yearlySelectQCOM = document.getElementById('yearlyMetricSelect');
-        const yearlyCanvasQCOM = document.getElementById('yearlyFinancialChart').getContext('2d');
-
-        function createYearlyChartQCOM(metricKey) {
-            if (yearlyChartQCOM) {
-                yearlyChartQCOM.destroy();
-            }
-            const metricDetails = yearlyDataStoreQCOM[metricKey];
-            yearlyChartQCOM = new Chart(yearlyCanvasQCOM, {
-                type: 'bar',
-                data: {
-                    labels: yearlyDataStoreQCOM.labels,
-                    datasets: [{
-                        label: metricDetails.label,
-                        data: metricDetails.data,
-                        backgroundColor: metricDetails.color + 'BF', 
-                        borderColor: metricDetails.color,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: false, title: { display: true, text: metricDetails.label.split('(')[1].replace(')','')} } },
-                    plugins: { legend: { display: false } }
-                }
-            });
-        }
-        
-        yearlySelectQCOM.addEventListener('change', (event) => {
-            createYearlyChartQCOM(event.target.value);
-        });
-        createYearlyChartQCOM('totalRevenue'); // Initial render
-
-
-        // Quarterly Segment EBT Chart
-        const quarterlyCanvasQCOM = document.getElementById('quarterlyFinancialChart').getContext('2d');
-        new Chart(quarterlyCanvasQCOM, {
-            type: 'bar',
+        // QCT Breakdown Chart
+        const qctBreakdownCtx = document.getElementById('qctBreakdownChart').getContext('2d');
+        new Chart(qctBreakdownCtx, {
+            type: 'doughnut',
             data: {
-                labels: ['QCT EBT', 'QTL EBT'],
+                labels: ['Handsets', 'Automotive', 'IoT'],
                 datasets: [{
-                    label: 'Earnings Before Tax ($B)',
-                    data: [1.9, 1.1], // Q2 FY25 EBT Data
-                    backgroundColor: [CHART_COLORS_QCOM.blue, CHART_COLORS_QCOM.darkBlue],
+                    data: [66, 22, 12], // Approximate percentages for Q2 FY25 QCT Revenue
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal],
+                    hoverOffset: 4
                 }]
             },
-             options: {
+            options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    x: { grid: { display: false } },
-                    y: { beginAtZero: true, title: { display: true, text: 'USD ($ Billions)' } }
-                 }
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'QCT Revenue by End Market (Q2 FY25)' } }
             }
         });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Fiscal Year ends in September
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [44.20, 35.83, 36.41], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [15.82, 9.80, 9.61], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [8.45, 8.63, 9.94, 9.28, 8.54, 8.87, 9.39, 9.55], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [1.82, 1.69, 3.01, 2.33, 2.01, 1.95, 2.45, 2.76], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
     </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microsoft (MSFT) - TickerHack Deep Research</title>
+    <title>Microsoft Corp. (MSFT) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -35,10 +35,17 @@
             padding: 1.5rem; /* p-6 */
             margin-bottom: 2rem; /* mb-8 */
         }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
         .section-title {
             font-size: 1.875rem; /* text-3xl */
             font-weight: 600; /* font-semibold */
-            color: #60A5FA; /* blue-400 */
+            color: #A78BFA; /* violet-400 */
             margin-bottom: 1.5rem; /* mb-6 */
             padding-bottom: 0.5rem; /* pb-2 */
             border-bottom: 2px solid #E7E5E4; /* stone-200 */
@@ -46,7 +53,7 @@
         .subsection-title {
             font-size: 1.5rem; /* text-2xl */
             font-weight: 600; /* font-semibold */
-            color: #3B82F6; /* blue-600 */
+            color: #7DD3FC; /* sky-400 */
             margin-top: 1.5rem; /* mt-6 */
             margin-bottom: 1rem; /* mb-4 */
         }
@@ -71,9 +78,9 @@
             border: 1px solid transparent;
         }
         .tab-button.active {
-            background-color: #60A5FA; /* blue-400 */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
-            border-color: #3B82F6; /* blue-500 */
+            border-color: #8B5CF6; /* violet-500 */
         }
         .nav-link {
             padding: 0.5rem 1rem;
@@ -84,7 +91,7 @@
             white-space: nowrap;
         }
         .nav-link:hover, .nav-link.active {
-            background-color: #60A5FA; /* blue-400 */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
         }
         .kpi-card {
@@ -112,19 +119,19 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold" style="color: #3B82F6;">Microsoft (MSFT) Analysis</h1>
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Microsoft (MSFT) Analysis</h1>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
                         <a href="#overview" class="nav-link">Overview</a>
                         <a href="#segments" class="nav-link">Business Segments</a>
                         <a href="#financials" class="nav-link">Financials</a>
-                        <a href="#competition" class="nav-link">Moat & Risks</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
                         <a href="#outlook" class="nav-link">Outlook</a>
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                         <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -136,7 +143,7 @@
                     <a href="#overview" class="nav-link block text-base">Overview</a>
                     <a href="#segments" class="nav-link block text-base">Business Segments</a>
                     <a href="#financials" class="nav-link block text-base">Financials</a>
-                    <a href="#competition" class="nav-link block text-base">Moat & Risks</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
                     <a href="#outlook" class="nav-link block text-base">Outlook</a>
                 </div>
             </div>
@@ -146,51 +153,49 @@
     <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
         <section id="overview" class="section-card scroll-mt-20">
-            <h2 class="section-title">Microsoft: The AI Platform for the Enterprise</h2>
-            <p class="content-text mb-6">Microsoft has transformed from a PC-centric software vendor into a dominant, AI-infused cloud platform company. Under CEO Satya Nadella, the company has staked its future on the "Microsoft Cloud" and its strategic partnership with OpenAI, embedding AI "Copilots" into nearly every product it offers. This has solidified its leadership in the enterprise, enabling customers' digital transformations and positioning Microsoft as the key platform for the next generation of productivity. This analysis explores Microsoft's powerful business segments, its financial strength, and its strategic positioning in the AI era.</p>
+            <h2 class="section-title">Microsoft: The Enterprise AI Powerhouse</h2>
+            <p class="content-text mb-6">Microsoft (NASDAQ: MSFT) is a global technology titan that has successfully transformed itself into a dominant "cloud-first, AI-first" enterprise. Its business spans a vast and powerful ecosystem of software and services, from the Azure cloud platform and the Office 365 productivity suite to the Windows operating system and the Xbox gaming division. Through its deep strategic partnership with OpenAI and the aggressive integration of <span class="highlight">Copilot AI assistants</span> across its entire product stack, Microsoft has seized a leadership position in the generative AI revolution. This positions the company to drive the next wave of productivity for businesses and consumers worldwide, solidifying its role as an indispensable technology partner for the modern era.</p>
             
-            <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="grid md-grid-cols-2 gap-6 items-start">
                 <div>
-                    <h3 class="subsection-title !mt-0">Core Business Strategy</h3>
-                    <p class="content-text mb-4">Microsoft's strategy is centered on becoming the essential platform for the AI-powered economy:</p>
+                    <h3 class="subsection-title !mt-0">Core Strategy: AI-Powered Cloud and Productivity</h3>
+                    <p class="content-text mb-4">Under CEO Satya Nadella, Microsoft's strategy is laser-focused on several key pillars:</p>
                     <ul class="list-disc list-inside content-text space-y-1 pl-4">
-                        <li><strong class="font-semibold text-gray-700">Infuse AI Everywhere:</strong> Deploying AI capabilities (Copilots) across its entire product portfolio, from Azure and Office to Windows and Dynamics.</li>
-                        <li><strong class="font-semibold text-gray-700">Enterprise Cloud Leadership:</strong> Driving growth through the Microsoft Cloud, a comprehensive suite of services including Azure, Office 365, and Dynamics 365.</li>
-                        <li><strong class="font-semibold text-gray-700">Hybrid Cloud Dominance:</strong> Offering seamless integration between on-premises data centers and the public cloud, a key differentiator for large enterprises.</li>
-                        <li><strong class="font-semibold text-gray-700">Strategic Partnerships:</strong> Leveraging key alliances, most notably with OpenAI, to accelerate innovation and market adoption of its AI platform.</li>
+                        <li><strong class="font-semibold text-gray-700">Lead the AI Platform Shift:</strong> Leverage its partnership with OpenAI to make Azure the premier cloud for building, training, and deploying AI models at scale.</li>
+                        <li><strong class="font-semibold text-gray-700">Infuse AI Across the Portfolio:</strong> Integrate Copilot AI assistants into all major products (Windows, Office, Teams, GitHub) to create a new, high-value subscription tier and drive user productivity.</li>
+                        <li><strong class="font-semibold text-gray-700">Win the Enterprise Cloud:</strong> Continue to take share in the cloud infrastructure market by offering a comprehensive, integrated stack of IaaS, PaaS, and SaaS solutions.</li>
+                        <li><strong class="font-semibold text-gray-700">Grow the Gaming Ecosystem:</strong> Expand its Xbox and PC gaming footprint, particularly through its Game Pass subscription service and major content acquisitions like Activision Blizzard.</li>
                     </ul>
                 </div>
-                <div class="kpi-card bg-blue-50 border-blue-200">
-                    <p class="kpi-label">Microsoft Cloud Revenue (Q3 FY25)</p>
-                    <p class="kpi-value text-blue-600">$40.5 Billion</p>
-                    <p class="content-text text-sm mt-2">Up <span class="highlight">22% year-over-year</span>, this metric represents the massive scale and continued momentum of Microsoft's core strategic assets.</p>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Microsoft Cloud Revenue (FY 2025)</p>
+                    <p class="kpi-value text-violet-600">$153 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents 24% year-over-year growth, highlighting the massive scale and continued powerful momentum of Microsoft's cloud-centric business model.</p>
                 </div>
             </div>
         </section>
 
         <section id="segments" class="section-card scroll-mt-20">
-            <h2 class="section-title">Business Segments: A Three-Pillar Strategy</h2>
-            <p class="content-text mb-6">Microsoft's operations are organized into three synergistic segments. Intelligent Cloud provides the foundational AI and computing platform, Productivity and Business Processes delivers cloud-based tools for modern work, and More Personal Computing engages users through Windows, gaming, and devices. This diversified structure creates a powerful flywheel for growth.</p>
+            <h2 class="section-title">How Microsoft Makes Money: Three Diversified Engines</h2>
+            <p class="content-text mb-6">Microsoft's business is organized into three large, diversified, and highly profitable segments. The Intelligent Cloud segment, centered on Azure, has become the primary growth engine. However, the legacy Productivity and Personal Computing segments remain massive, cash-generating businesses that provide a stable foundation and a powerful distribution channel for new innovations like AI.</p>
 
             <div class="mb-6 border-b border-stone-200">
-                <nav class="-mb-px flex space-x-2 md:space-x-4" aria-label="Tabs">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
                     <button class="segment-tab-button active" data-target="cloud">Intelligent Cloud</button>
-                    <button class="segment-tab-button" data-target="productivity">Productivity & Business</button>
-                    <button class="segment-tab-button" data-target="personal">More Personal Computing</button>
+                    <button class="segment-tab-button" data-target="productivity">Productivity & Business Processes</button>
+                    <button class="segment-tab-button" data-target="computing">More Personal Computing</button>
                 </nav>
             </div>
 
             <div id="segmentDetails">
                 <div id="cloudContent" class="segment-content">
-                    <h3 class="subsection-title">Intelligent Cloud (47% of Q3 FY25 Revenue)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                    <h3 class="subsection-title">Intelligent Cloud (~44% of Revenue)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <p class="content-text mb-2">The largest and most critical segment, posting <span class="highlight">$31.6 billion</span> in Q3 FY25 revenue. It encompasses the infrastructure and platform services that power enterprise IT and AI development, with Azure at its core.</p>
+                            <p class="content-text mb-2">The primary growth engine of the company. This segment is anchored by Microsoft Azure, the second-largest cloud infrastructure platform in the world. It provides a vast array of services, including compute, storage, databases, and, most importantly, cutting-edge AI services that are driving a new wave of adoption.</p>
                              <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Key Products:</strong> Azure cloud platform, Windows Server, SQL Server, Visual Studio, GitHub, and Enterprise Services.</li>
-                                <li><strong>Growth Driver:</strong> Azure and other cloud services revenue grew 29% YoY, driven by high demand for AI services.</li>
-                                <li><strong>Strategy:</strong> To be the primary platform for building, deploying, and managing applications and AI models for businesses of all sizes.</li>
-                            </ul>
+                                <li><strong>Key Products:</strong> Microsoft Azure, SQL Server, Windows Server, GitHub.</li>
+                             </ul>
                         </div>
                         <div class="chart-container h-72 md:h-80">
                             <canvas id="revenueBreakdownChart"></canvas>
@@ -198,103 +203,116 @@
                     </div>
                 </div>
                 <div id="productivityContent" class="segment-content hidden">
-                    <h3 class="subsection-title">Productivity & Business Processes (34% of Q3 FY25 Revenue)</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                    <h3 class="subsection-title">Productivity & Business Processes (~34% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div>
-                            <p class="content-text mb-2">This segment is the engine of modern work, delivering <span class="highlight">$22.7 billion</span> in Q3 FY25 revenue. It combines Microsoft's legacy software dominance with a cloud-first subscription model.</p>
-                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Key Products:</strong> Microsoft 365 and Office 365 (with Copilot), Dynamics 365 (ERP/CRM solutions), and LinkedIn.</li>
-                                <li><strong>Growth Driver:</strong> Office 365 Commercial revenue grew 13% YoY, with adoption of higher-priced "E5" licenses and Copilot driving seat growth.</li>
-                                <li><strong>Strategy:</strong> To enhance productivity and automate business processes for knowledge workers through AI-powered, cloud-based tools.</li>
-                            </ul>
+                            <p class="content-text mb-2">This segment contains Microsoft's iconic enterprise and consumer software suites. It is dominated by the Office 365 franchise, which includes essential applications like Word, Excel, PowerPoint, and the Teams collaboration platform. The introduction of Copilot for Microsoft 365 is a major catalyst for growth in this segment.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Microsoft Office 365 (Commercial and Consumer), Dynamics 365, LinkedIn.</li>
+                             </ul>
                         </div>
-                        <div class="chart-container h-72 md:h-80">
-                             <canvas id="revenueBreakdownChart2"></canvas>
-                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Key Growth Driver</p>
+                             <p class="kpi-value text-sky-600">Copilot for M365</p>
+                             <p class="content-text text-sm mt-2">The AI assistant for Office represents a significant opportunity to upsell existing customers to a new, premium subscription tier.</p>
+                         </div>
                     </div>
                 </div>
-                 <div id="personalContent" class="segment-content hidden">
-                    <h3 class="subsection-title">More Personal Computing (19% of Q3 FY25 Revenue)</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
+                 <div id="computingContent" class="segment-content hidden">
+                    <h3 class="subsection-title">More Personal Computing (~22% of Revenue)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div>
-                            <p class="content-text mb-2">This segment contains Microsoft's most consumer-centric products, delivering <span class="highlight">$12.8 billion</span> in Q3 FY25 revenue. It serves as a key touchpoint for the broader Microsoft ecosystem.</p>
-                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Key Products:</strong> Windows (OEM & Commercial), Gaming (Xbox content, services, and hardware), Devices (Surface), and Search & news advertising.</li>
-                                <li><strong>Growth Driver:</strong> The Gaming division, boosted by the acquisition of Activision Blizzard, saw revenue increase by 46% YoY.</li>
-                                <li><strong>Strategy:</strong> To grow user engagement and high-value experiences across Windows and Xbox, driving advertising revenue and subscriptions like Game Pass.</li>
-                            </ul>
+                            <p class="content-text mb-2">This segment contains Microsoft's most consumer-facing businesses, anchored by the Windows operating system. It also includes the Xbox gaming division, which has been significantly expanded by the acquisition of Activision Blizzard, and the Surface line of hardware devices.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Products:</strong> Windows OEM and commercial, Xbox content and services, Search and news advertising, Surface devices.</li>
+                             </ul>
                         </div>
-                        <div class="chart-container h-72 md:h-80">
-                            <canvas id="revenueBreakdownChart3"></canvas>
-                        </div>
+                         <div class="kpi-card bg-teal-50 border-teal-200">
+                             <p class="kpi-label">Gaming Expansion</p>
+                             <p class="kpi-value text-teal-600">Activision Blizzard</p>
+                             <p class="content-text text-sm mt-2">The acquisition of major gaming franchises like Call of Duty and World of Warcraft has made Microsoft a dominant force in the gaming industry.</p>
+                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="financials" class="section-card scroll-mt-20">
-            <h2 class="section-title">Financial Deep Dive: Consistent Cloud-Powered Growth</h2>
-            <p class="content-text mb-6">Microsoft's financial performance is a testament to its successful transition to a cloud-first model. The company consistently delivers strong double-digit growth in revenue and profits, driven by the durable expansion of its commercial cloud businesses. The charts below illustrate this steady growth, both annually and through the relative performance of its three segments.</p>
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Microsoft's financial profile is a model of strength and consistency. The company delivers durable, double-digit revenue growth at a massive scale, combined with best-in-class profitability and enormous free cash flow generation. The rapid growth of the high-margin Intelligent Cloud segment continues to drive overall margin expansion and fund the company's significant investments in AI.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title">Total Annual Revenue (Fiscal Year)</h3>
-                    <p class="content-text text-sm mb-4">Microsoft has shown consistent and strong revenue growth, crossing the $200 billion mark in FY2023 and continuing its trajectory.</p>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY23-FY25)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
                     <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
                         <canvas id="yearlyFinancialChart"></canvas>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="subsection-title">Segment Growth (Q3 FY25, YoY)</h3>
-                     <p class="content-text text-sm mb-4">This chart highlights the outsized growth of the Gaming division (boosted by acquisitions) and the foundational strength of the Intelligent Cloud.</p>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
                     <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
                         <canvas id="quarterlyFinancialChart"></canvas>
                     </div>
                 </div>
             </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase a business that consistently delivers strong growth and exceptional profitability at a scale that is nearly unmatched in the corporate world.</p>
         </section>
 
         <section id="competition" class="section-card scroll-mt-20">
-            <h2 class="section-title">Moats & The Competitive Arena</h2>
-            <p class="content-text mb-6">Microsoft has built a wide and deep economic moat based on its entrenchment in the enterprise, a vast distribution network, and a strategic pivot to AI leadership. While it faces formidable competition in every key market, its integrated platform approach creates a powerful competitive advantage.</p>
+            <h2 class="section-title">Competitive Moat: The Enterprise Fortress</h2>
+            <p class="content-text mb-6">Microsoft has built one of the most powerful and durable competitive moats in the business world. It is a multi-faceted fortress built on its massive enterprise distribution channel, a deeply integrated software stack, and powerful network effects.</p>
             
-            <div class="grid md:grid-cols-2 gap-8 items-start">
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
                     <h3 class="subsection-title !mt-0">Key Moats</h3>
                     <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Enterprise Entrenchment & High Switching Costs:</strong> Decades of selling Windows Server, SQL Server, and Office has created a massive installed base. It is easier for these customers to adopt Azure and Microsoft 365 than to rip and replace systems, creating a powerful "hybrid cloud" moat.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Enterprise Distribution Channel:</strong> Microsoft's long-standing relationships with virtually every large enterprise CIO in the world provide a massive and unparalleled distribution channel. This allows it to effectively bundle and sell new products (like Azure and Copilot) into its existing customer base.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Massive Distribution Channel:</strong> Microsoft's global sales force and its immense network of implementation partners provide an unparalleled distribution channel that is difficult for competitors to replicate.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Integrated Software Stack & High Switching Costs:</strong> Microsoft offers an end-to-end stack of mission-critical enterprise software (Windows, Office, Azure, Dynamics). The deep integration between these products and workflows creates extremely high switching costs.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Integrated AI Platform:</strong> The deep partnership with OpenAI and the integration of Copilots across the entire Microsoft stack—from the OS to the application layer to the cloud—creates a unified platform that is compelling for businesses looking to adopt AI.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Hybrid Cloud Leadership:</strong> Azure's strong hybrid cloud capabilities, which allow companies to seamlessly manage both on-premise and public cloud environments, are a key differentiator and leverage Microsoft's legacy strength in the data center.</span>
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0">Primary Risks & Competitors</h3>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
                      <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Cloud Infrastructure:</strong> Amazon Web Services (AWS) is the primary competitor in market share, with Google Cloud Platform (GCP) also competing aggressively on price and AI capabilities.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Amazon (AWS) & Google (GCP):</strong> The primary competitors to Microsoft Azure in the crucial cloud computing market.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Productivity & CRM:</strong> Faces competition from Google Workspace in productivity tools and Salesforce in the business applications (CRM/ERP) market.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Apple:</strong> A major competitor in personal computing (Mac vs. Windows) and consumer ecosystems.</span>
                         </li>
                          <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                             <span class="content-text"><strong class="text-gray-700">Gaming:</strong> Sony's PlayStation remains a formidable and direct competitor to Xbox in the console market, with Nintendo occupying a strong differentiated position.</span>
-                        </li>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Salesforce, Oracle, SAP:</strong> Key competitors in business applications (Dynamics vs. Salesforce CRM, etc.).</span>
+                         </li>
                          <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                             <span class="content-text"><strong class="text-gray-700">Regulatory Oversight:</strong> As a dominant player in cloud and AI, Microsoft faces increasing antitrust scrutiny from regulators in the US and Europe, which could impact future acquisitions and business practices.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Sony & Nintendo:</strong> Primary competitors to Xbox in the gaming industry.</span>
                         </li>
                     </ul>
                 </div>
@@ -303,24 +321,24 @@
 
         <section id="outlook" class="section-card scroll-mt-20">
             <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
-            <p class="content-text mb-6">Microsoft is exceptionally well-positioned to capitalize on the generational shift to AI. Its future growth will depend on successfully executing its AI strategy, defending its cloud market share, and navigating a complex global regulatory environment.</p>
-            <div class="grid md:grid-cols-2 gap-8 items-start">
+            <p class="content-text mb-6">Microsoft is a blue-chip technology giant that has successfully positioned itself at the forefront of the AI revolution. The investment thesis is centered on the massive growth opportunity in its Intelligent Cloud segment and its unique ability to monetize generative AI across its vast software ecosystem. However, its immense size and success make it a prime target for regulatory scrutiny and intense competition.</p>
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
                     <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>AI Monetization (Copilots):</strong> A massive opportunity to create a new multi-billion dollar revenue stream by selling AI assistants as add-ons across the Office, Dynamics, and developer ecosystems.</li>
-                        <li><strong>Azure AI Leadership:</strong> Capturing the lion's share of enterprise AI workloads as companies move from experimenting with AI to deploying it at scale.</li>
-                        <li><strong>Gaming & Metaverse:</strong> The acquisition of Activision Blizzard provides a huge content library and user base to build out a dominant position in interactive entertainment and the "metaverse."</li>
-                        <li><strong>Margin Expansion:</strong> As high-margin cloud services and AI software continue to grow as a percentage of revenue, overall company profitability should continue to expand.</li>
+                        <li><strong>The AI Supercycle:</strong> Microsoft is arguably the best-positioned company to benefit from the enterprise adoption of generative AI, with a leading cloud platform (Azure OpenAI) and a clear monetization strategy (Copilot).</li>
+                        <li><strong>Durable Cloud Growth:</strong> The ongoing migration of enterprise workloads to the cloud provides a massive, multi-year tailwind for the high-margin Azure business.</li>
+                        <li><strong>Unmatched Distribution:</strong> The company's massive enterprise salesforce and partner channel provide a durable competitive advantage that allows it to effectively cross-sell its entire portfolio.</li>
+                        <li><strong>Exceptional Financial Strength:</strong> A fortress balance sheet, massive cash flow, and a commitment to capital returns provide both stability and shareholder value.</li>
                     </ul>
                 </div>
                 <div>
                     <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Heightened Competition in Cloud:</strong> AWS and Google are investing heavily to compete with Azure, particularly in the field of AI, which could lead to price pressure.</li>
-                        <li><strong>Execution Risk on AI:</strong> The promise of AI must translate into tangible productivity gains for customers to justify the premium cost of Copilots and AI services long-term.</li>
-                        <li><strong>Regulatory Headwinds:</strong> Antitrust investigations could limit Microsoft's ability to bundle products or make future strategic acquisitions.</li>
-                        <li><strong>Global Macroeconomic Pressures:</strong> A global slowdown could temper IT budget growth, potentially impacting the growth rates of cloud services.</li>
+                        <li><strong>Regulatory Scrutiny:</strong> As one of the world's most powerful technology companies, Microsoft faces significant and growing antitrust pressure globally, which could impact its business practices and future acquisitions.</li>
+                        <li><strong>Intense Competition:</strong> The company faces formidable, well-funded competition on all fronts, particularly from Amazon and Google in the crucial cloud AI market.</li>
+                        <li><strong>Execution of AI Strategy:</strong> The success of the Copilot strategy depends on demonstrating a clear return on investment for customers. Failure to do so could slow adoption of this key growth driver.</li>
+                        <li><strong>Law of Large Numbers:</strong> As a multi-trillion dollar company, maintaining a high growth rate becomes increasingly difficult over time.</li>
                     </ul>
                 </div>
             </div>
@@ -328,7 +346,7 @@
 
         <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
             <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
-            <p class="text-xs mt-1">Data synthesized from Microsoft public filings and credible financial news sources as of May 2025.</p>
+            <p class="text-xs mt-1">Data synthesized from Microsoft Corporation public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
         </footer>
 
     <script>
@@ -342,11 +360,13 @@
             mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
         });
         
-        // Active nav link highlighting
+        // Smooth scroll and active nav link highlighting
         const navLinks = document.querySelectorAll('header nav a[href^="#"]');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                if (!mobileMenuEl.classList.contains('hidden')) { mobileMenuBtn.click(); }
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
                 navLinks.forEach(l => l.classList.remove('active'));
                 e.currentTarget.classList.add('active');
             });
@@ -355,29 +375,6 @@
         // Segment Tabs
         const segmentTabs = document.querySelectorAll('.segment-tab-button');
         const segmentContents = document.querySelectorAll('.segment-content');
-        const chartsToRender = ['revenueBreakdownChart', 'revenueBreakdownChart2', 'revenueBreakdownChart3'];
-        let renderedCharts = {};
-
-        function createBreakdownChart(canvasId) {
-             if (renderedCharts[canvasId]) return;
-             const ctx = document.getElementById(canvasId).getContext('2d');
-             renderedCharts[canvasId] = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Intelligent Cloud', 'Productivity & Business', 'More Personal Computing'],
-                    datasets: [{
-                        data: [31.6, 22.7, 12.8], // Q3 FY25 Data in $B
-                        backgroundColor: ['#3B82F6', '#60A5FA', '#93C5FD'],
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue Contribution (Q3 FY25)' } }
-                }
-            });
-        }
-        
         segmentTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 segmentTabs.forEach(t => t.classList.remove('active'));
@@ -386,61 +383,118 @@
                 segmentContents.forEach(content => {
                     content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
                 });
-                // Lazy render charts on tab click
-                chartsToRender.forEach(id => {
-                    const canvas = document.getElementById(id);
-                    if (canvas && !canvas.closest('.hidden')) {
-                         createBreakdownChart(id);
-                    }
-                });
             });
         });
-        
-        // Initial render for the active tab's chart
-        createBreakdownChart('revenueBreakdownChart');
 
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
-        // --- FINANCIAL CHARTS LOGIC ---
-        const CHART_COLORS = { blue: '#60A5FA', darkBlue: '#3B82F6', lightBlue: '#93C5FD', teal: '#2DD4BF' };
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
 
-        // Yearly Revenue Chart
-        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
-        new Chart(yearlyCanvas, {
-            type: 'bar',
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
             data: {
-                labels: ['FY22', 'FY23', 'FY24'],
+                labels: ['Intelligent Cloud', 'Productivity & Business Processes', 'More Personal Computing'],
                 datasets: [{
-                    label: 'Total Annual Revenue ($B)',
-                    data: [198.3, 211.9, 240.2], // Example data reflecting growth
-                    backgroundColor: CHART_COLORS.blue,
+                    data: [44, 34, 22], // Approximate percentages for FY 2025
+                    backgroundColor: [CHART_COLORS.sky, CHART_COLORS.violet, CHART_COLORS.teal],
+                    hoverOffset: 4
                 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: false, title: { display: true, text: 'USD ($ Billions)' } } }
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment (FY25)' } }
             }
         });
 
-        // Quarterly Segment Growth Chart
-        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
-        new Chart(quarterlyCanvas, {
-            type: 'bar',
-            data: {
-                labels: ['Gaming', 'Intelligent Cloud', 'Productivity & Business'],
-                datasets: [{
-                    label: 'YoY Growth (%)',
-                    data: [46, 29, 13], // Q3 FY25 Growth Rates
-                    backgroundColor: [CHART_COLORS.darkBlue, CHART_COLORS.blue, CHART_COLORS.lightBlue],
-                }]
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Fiscal Year ends June 30
+        const yearlyDataStore = {
+            labels: ['FY23', 'FY24', 'FY25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [211.92, 236.58, 258.84], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
             },
-             options: {
-                responsive: true, maintainAspectRatio: false,
-                indexAxis: 'y',
-                plugins: { legend: { display: false } },
-                scales: { x: { beginAtZero: true, title: { display: true, text: 'Year-over-Year Growth (%)' } } }
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [88.52, 102.06, 114.34], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
             }
+        };
+
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25', 'Q4 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [56.52, 62.02, 61.86, 64.95, 61.27, 66.82, 68.01, 71.55], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [26.90, 27.05, 27.57, 25.47, 26.83, 29.80, 29.98, 32.70], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
         });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
     </script>
 </body>

@@ -1,820 +1,427 @@
-
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netflix: Interactive Business Analysis</title>
+    <title>Netflix, Inc. (NFLX) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Visualization & Content Choices:
-        - Overview: Interactive timeline within a card.
-        - Monetization: Clickable cards for details (modal), bar chart for ad revenue.
-        - Content: Text cards, KPI display.
-        - Competition: Donut chart, clickable competitor modals.
-        - Financials: Tabbed navigation for sub-sections (Revenue, Profitability, etc.), each with relevant Chart.js charts.
-        - Future: Icon-like representation of growth levers in a card.
-        - All interactive elements and charts styled for consistency with the new theme.
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f5f5f4; /* stone-100, similar to Atlassian SPA */
-            color: #262626; /* neutral-800 */
-        }
-        .main-container {
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-            padding: 1rem; /* sm:p-6 lg:p-8 */
-        }
-        .sticky-nav {
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            background-color: #f5f5f4; /* stone-100 */
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            overflow-x: auto; /* For mobile nav items */
-            white-space: nowrap; /* For mobile nav items */
-        }
-        .nav-link {
-            padding: 0.65rem 1rem; /* Adjusted padding */
-            margin-right: 0.25rem;
-            margin-bottom: 0.25rem;
-            border-radius: 0.375rem;
-            font-weight: 500;
-            font-size: 0.875rem; /* text-sm */
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            border: 1px solid transparent;
-            color: #713f12; /* amber-800 */
-            display: inline-block;
-        }
-        .nav-link.active {
-            background-color: #b45309; /* amber-700 */
-            color: white;
-            border-color: #b45309; /* amber-700 */
-        }
-        .nav-link:not(.active):hover {
-            background-color: #fef3c7; /* amber-100 */
-            color: #92400e; /* amber-700 */
-        }
-        .page-title {
-            font-size: 2.25rem; /* text-4xl */
-            line-height: 2.5rem;
-            font-weight: 700;
-            color: #92400e; /* amber-700 - Netflix Primary */
-            margin-bottom: 0.5rem;
-        }
-        .page-subtitle {
-            font-size: 1.25rem; /* text-xl */
-            color: #525252; /* neutral-600 */
-        }
-        .content-section {
-            scroll-margin-top: 70px; /* Adjust based on sticky nav height */
-        }
-        .section-title {
-            font-size: 1.875rem; /* text-3xl */
-            line-height: 2.25rem;
-            font-weight: 700;
-            color: #92400e; /* amber-700 */
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            padding: 1.5rem; /* p-6 */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 2.5rem; /* mb-10 */
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px; /* Consistent with Atlassian SPA */
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 350px; /* Consistent with Atlassian SPA */
-            max-height: 400px; /* Consistent with Atlassian SPA */
+            height: 300px;
+            max-height: 350px;
         }
-        @media (min-width: 768px) { /* md breakpoint */
+        @media (min-width: 768px) { /* md */
             .chart-container {
-                height: 400px; /* Consistent with Atlassian SPA */
+                height: 350px;
+                max-height: 400px;
             }
         }
-        .tab-button { /* For Financials section tabs */
-            padding: 0.5rem 1rem;
-            margin-right: 0.25rem;
-            margin-bottom: 0.5rem;
-            border-radius: 0.375rem;
-            font-weight: 500;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            border: 1px solid #d97706; /* amber-600 */
-            color: #92400e; /* amber-700 */
-        }
-        .tab-button.active {
-            background-color: #b45309; /* amber-700 */
-            color: white;
-        }
-        .tab-button:not(.active):hover {
-            background-color: #fef3c7; /* amber-100 */
-        }
-        .modal {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            z-index: 50;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background-color: white;
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
             padding: 1.5rem; /* p-6 */
-            border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
-            max-width: 600px; /* max-w-2xl */
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
+            margin-bottom: 2rem; /* mb-8 */
         }
-        .modal-close-btn {
-            background-color: #b45309; /* amber-700 */
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            transition: background-color 0.3s ease;
-        }
-        .modal-close-btn:hover {
-            background-color: #92400e; /* amber-800 */
-        }
-        .timeline-item {
-            position: relative;
-            padding-left: 2rem; /* pl-8 */
-            padding-bottom: 1.5rem; /* py-3-ish */
-            border-left: 2px solid #fcd34d; /* amber-300 */
-        }
-        .timeline-item:last-child {
-            border-left: none;
-            padding-left: calc(2rem + 2px); /* to align text */
-        }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -0.5625rem; /* -(w-4/2 + border-left/2) */
-            top: 0.125rem; /* top-0.5 */
-            width: 1rem; /* w-4 */
-            height: 1rem; /* h-4 */
-            background-color: #b45309; /* amber-600 */
-            border-radius: 9999px; /* rounded-full */
-            z-index: 10;
-        }
-        .kpi-card {
-            background-color: #fffbeb; /* amber-50 */
-            padding: 1rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
             text-align: center;
         }
-        .kpi-value {
+        .section-title {
             font-size: 1.875rem; /* text-3xl */
-            font-weight: 700;
-            color: #92400e; /* amber-700 */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
         }
         .kpi-label {
             font-size: 0.875rem; /* text-sm */
-            color: #78716c; /* stone-500 */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
         }
-        .footer {
-            background-color: #262626; /* neutral-800 */
-            color: #d4d4d4; /* neutral-300 */
-            padding: 2rem 0; /* py-8 */
-            margin-top: 3rem; /* mt-12 */
-            text-align: center;
-        }
-        /* For mobile nav menu button (if header structure were different) */
-        .mobile-menu-button svg {
-            height: 1.5rem; /* h-6 */
-            width: 1.5rem; /* w-6 */
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="antialiased">
+<body class="min-h-screen">
 
-    <header class="text-center py-8">
-        <h1 class="page-title">Netflix</h1>
-        <p class="page-subtitle">An Interactive Business Analysis</p>
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Netflix (NFLX) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Model</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Model</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
     </header>
 
-    <nav class="sticky-nav mb-6">
-        <div class="main-container flex justify-center">
-            <a href="#overview" class="nav-link active">Overview</a>
-            <a href="#monetization" class="nav-link">Monetization</a>
-            <a href="#content" class="nav-link">Content</a>
-            <a href="#competition" class="nav-link">Competition</a>
-            <a href="#financials" class="nav-link">Financials</a>
-            <a href="#future" class="nav-link">Future</a>
-        </div>
-    </nav>
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
-    <main class="main-container">
-
-        <section id="overview" class="content-section card">
-            <h2 class="section-title">Overview & Evolution</h2>
-            <p class="mb-6 text-neutral-700 leading-relaxed">This section traces Netflix's remarkable journey from a DVD-by-mail pioneer to a global streaming and content production powerhouse. Explore key milestones that defined its trajectory and understand the core adaptability that continues to drive its evolution in the dynamic media landscape.</p>
-            <div> <h3 class="text-xl font-semibold text-amber-600 mb-4">Key Milestones</h3>
-                <div class="relative">
-                    <div class="timeline-item">
-                        <h4 class="font-semibold text-neutral-800">1997: The Beginning</h4>
-                        <p class="text-sm text-neutral-600">Netflix founded, disrupting home entertainment with DVD-by-mail, no late fees.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <h4 class="font-semibold text-neutral-800">2007: Streaming Era Dawns</h4>
-                        <p class="text-sm text-neutral-600">Launch of streaming service, marking a pivotal shift towards online media.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <h4 class="font-semibold text-neutral-800">2013: Original Content Takes Center Stage</h4>
-                        <p class="text-sm text-neutral-600">"House of Cards" released, signaling Netflix's transformation into a major content creator.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <h4 class="font-semibold text-neutral-800">Late 2022: Advertising Tier Introduced</h4>
-                        <p class="text-sm text-neutral-600">Ad-supported plan launched to broaden market appeal and open new revenue streams.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <h4 class="font-semibold text-neutral-800">Ongoing: Diversification</h4>
-                        <p class="text-sm text-neutral-600">Expansion into gaming, live events, and merchandising to build a richer entertainment ecosystem.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-8 bg-amber-50 p-4 rounded-lg shadow"> <h3 class="text-xl font-semibold text-amber-700 mb-2">Core DNA: Proactive Adaptation</h3>
-                <p class="text-neutral-700 leading-relaxed">Netflix's history is defined by a profound capacity for proactive adaptation and continuous reinvention. This inherent agility and willingness to undertake transformative risks are crucial intangible assets.</p>
-            </div>
-        </section>
-
-        <section id="monetization" class="content-section card">
-            <h2 class="section-title">How Netflix Makes Money</h2>
-            <p class="text-center text-neutral-700 mb-10 max-w-3xl mx-auto">Netflix's financial engine is multifaceted. While subscription fees remain the cornerstone, the company has strategically diversified its revenue streams. This section explores the key components of its monetization strategy.</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white p-4 rounded-lg shadow border border-amber-200 hover:shadow-md transition-shadow cursor-pointer" onclick="showMonetizationDetail('subscriptions')">
-                    <h3 class="text-lg font-semibold text-amber-700 mb-1">📈 Subscriptions</h3>
-                    <p class="text-sm text-neutral-600">Tiered plans (Basic, Standard, Premium) adapted globally.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow border border-amber-200 hover:shadow-md transition-shadow cursor-pointer" onclick="showMonetizationDetail('advertising')">
-                    <h3 class="text-lg font-semibold text-amber-700 mb-1">📺 Advertising</h3>
-                    <p class="text-sm text-neutral-600">Ad-supported tier attracting cost-sensitive users.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow border border-amber-200 hover:shadow-md transition-shadow cursor-pointer" onclick="showMonetizationDetail('licensing')">
-                    <h3 class="text-lg font-semibold text-amber-700 mb-1">🌍 Content Licensing</h3>
-                    <p class="text-sm text-neutral-600">Monetizing original IP on other platforms.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow border border-amber-200 hover:shadow-md transition-shadow cursor-pointer" onclick="showMonetizationDetail('gaming')">
-                    <h3 class="text-lg font-semibold text-amber-700 mb-1">🎮 Gaming</h3>
-                    <p class="text-sm text-neutral-600">Mobile games to enhance subscriber engagement.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow border border-amber-200 hover:shadow-md transition-shadow cursor-pointer" onclick="showMonetizationDetail('live_events')">
-                    <h3 class="text-lg font-semibold text-amber-700 mb-1">🎤 Live Events</h3>
-                    <p class="text-sm text-neutral-600">Streaming sports and comedy for appointment viewing.</p>
-                </div>
-                 <div class="bg-white p-4 rounded-lg shadow border border-amber-200 hover:shadow-md transition-shadow cursor-pointer" onclick="showMonetizationDetail('merchandising')">
-                    <h3 class="text-lg font-semibold text-amber-700 mb-1">🛍️ Merchandising</h3>
-                    <p class="text-sm text-neutral-600">Merchandise related to popular original series.</p>
-                </div>
-            </div>
-            <div> <h3 class="text-xl font-semibold text-neutral-700 mb-2 text-center">Advertising Revenue Growth</h3>
-                 <p class="text-sm text-neutral-600 mb-4 text-center">Netflix's ad-supported tier is a significant growth driver. Investment in its own ad-tech platform aims to further enhance this stream.</p>
-                <div class="chart-container">
-                    <canvas id="adRevenueChart"></canvas>
-                </div>
-            </div>
-        </section>
-        
-        <div id="monetizationModal" class="modal">
-            <div class="modal-content">
-                <h3 id="modalTitle" class="text-2xl font-bold text-amber-700 mb-4"></h3>
-                <p id="modalDescription" class="text-neutral-700 leading-relaxed"></p>
-                <button onclick="closeModal('monetizationModal')" class="modal-close-btn mt-6">Close</button>
-            </div>
-        </div>
-
-        <section id="content" class="content-section card">
-            <h2 class="section-title">The Content Universe</h2>
-            <p class="text-center text-neutral-700 mb-10 max-w-3xl mx-auto">Content is the heart of Netflix. This section delves into Netflix's sophisticated approach, blending data-driven insights with creative execution, its global production network, and the technology powering personalized experiences.</p>
-            <div class="grid md:grid-cols-2 gap-6 mb-8">
-                <div class="p-4 bg-amber-50 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold text-amber-700 mb-2">Content Philosophy</h3>
-                    <p class="text-sm text-neutral-600 leading-relaxed">"Data-Informed, Creatively Driven." User analytics inform investments, creative talent drives storytelling, catering to global "taste clusters."</p>
-                </div>
-                <div class="p-4 bg-amber-50 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold text-amber-700 mb-2">Global Production Network</h3>
-                    <p class="text-sm text-neutral-600 leading-relaxed">Heavy investment in "Netflix Originals" (est. $18B/2025) reduces reliance on licensed content, builds IP. Content in 40+ languages.</p>
-                </div>
-            </div>
-            <div class="p-4 bg-white border border-amber-200 rounded-lg shadow mb-8">
-                <h3 class="text-lg font-semibold text-amber-700 mb-2">Delivering the Experience</h3>
-                <p class="text-sm text-neutral-600 leading-relaxed mb-2">Seamless UX, powerful content discovery across devices. Algorithms personalize recommendations, combat decision fatigue, optimize engagement via A/B testing.</p>
-                <div>
-                    <h4 class="font-semibold text-neutral-700 mt-3 mb-1">Key Production Regions & Example Hits:</h4>
-                    <ul class="list-disc list-inside text-neutral-600 text-xs space-y-1">
-                        <li><strong>UCAN:</strong> "Stranger Things", "Ozark"</li>
-                        <li><strong>EMEA:</strong> "The Crown" (UK), "Lupin" (France)</li>
-                        <li><strong>LATAM:</strong> "Narcos" (Colombia/Mexico), "3%" (Brazil)</li>
-                        <li><strong>APAC:</strong> "Squid Game" (South Korea), "Sacred Games" (India)</li>
-                    </ul>
-                </div>
-            </div>
-             <div class="kpi-card mx-auto max-w-sm">
-                <h3 class="text-lg font-semibold text-amber-700 mb-1">Annual Content Investment</h3>
-                <div class="kpi-value" id="contentSpendStat">$18 Billion</div>
-                <div class="kpi-label">(Estimated for 2025)</div>
-            </div>
-        </section>
-
-        <section id="competition" class="content-section card">
-            <h2 class="section-title">Navigating the Streaming Wars</h2>
-            <p class="text-center text-neutral-700 mb-10 max-w-3xl mx-auto">The global streaming market is fiercely contested. This section examines the competitive landscape, profiling key rivals and highlighting Netflix's unique strengths, vulnerabilities, and differentiated model.</p>
-            <div class="grid md:grid-cols-2 gap-8 mb-8 items-start">
-                <div>
-                    <h3 class="text-xl font-semibold text-neutral-700 mb-2 text-center">US Streaming Market Share (2025 est.)</h3>
-                     <p class="text-xs text-neutral-500 mt-0 mb-2 text-center">Source: Statista. Illustrates a fragmented market.</p>
-                    <div class="chart-container h-72 md:h-80">
-                        <canvas id="marketShareChart"></canvas>
-                    </div>
-                </div>
-                <div class="p-4 bg-amber-50 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold text-amber-700 mb-3">Key Competitors</h3>
-                    <p class="text-sm text-neutral-600 mb-3">Click a name to learn more:</p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="showCompetitorDetail('disney')" class="p-3 bg-white border border-amber-300 rounded-md hover:bg-amber-100 transition-colors text-sm text-blue-600 font-semibold">Disney+</button>
-                        <button onclick="showCompetitorDetail('amazon')" class="p-3 bg-white border border-amber-300 rounded-md hover:bg-amber-100 transition-colors text-sm text-sky-600 font-semibold">Prime Video</button>
-                        <button onclick="showCompetitorDetail('max')" class="p-3 bg-white border border-amber-300 rounded-md hover:bg-amber-100 transition-colors text-sm text-purple-600 font-semibold">Max</button>
-                        <button onclick="showCompetitorDetail('hulu')" class="p-3 bg-white border border-amber-300 rounded-md hover:bg-amber-100 transition-colors text-sm text-green-600 font-semibold">Hulu</button>
-                    </div>
-                </div>
-            </div>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="p-4 bg-green-50 border border-green-200 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold text-green-700 mb-2">Netflix's Strengths</h3>
-                    <ul class="list-disc list-inside text-neutral-700 space-y-1 text-xs">
-                        <li>Unparalleled global scale & brand</li>
-                        <li>Diverse original content library</li>
-                        <li>Sophisticated data analytics</li>
-                        <li>Industry-leading low churn</li>
-                        <li>Growing advertising business</li>
-                    </ul>
-                </div>
-                <div class="p-4 bg-red-50 border border-red-200 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold text-red-700 mb-2">Netflix's Vulnerabilities</h3>
-                    <ul class="list-disc list-inside text-neutral-700 space-y-1 text-xs">
-                        <li>Substantial content costs</li>
-                        <li>Market saturation in mature regions</li>
-                        <li>Intense competition driving costs</li>
-                        <li>Price sensitivity & churn risk</li>
-                        <li>Complex global regulations</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <div id="competitorModal" class="modal">
-            <div class="modal-content">
-                <h3 id="competitorModalTitle" class="text-2xl font-bold text-amber-700 mb-4"></h3>
-                <div id="competitorModalBody" class="text-neutral-700 leading-relaxed space-y-3 text-sm"></div>
-                <button onclick="closeModal('competitorModal')" class="modal-close-btn mt-6">Close</button>
-            </div>
-        </div>
-
-        <section id="financials" class="content-section card">
-            <h2 class="section-title">Financial Deep Dive</h2>
-            <p class="text-center text-neutral-700 mb-10 max-w-3xl mx-auto">Explore Netflix's financial performance, analyzing trends in revenue, profitability, cash flow, and KPIs. Use the tabs below to navigate through different financial aspects.</p>
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Netflix: The Undisputed King of Streaming</h2>
+            <p class="content-text mb-6">Netflix (NASDAQ: NFLX) is the world's leading subscription streaming entertainment service. After pioneering the industry and weathering the storm of the "streaming wars," Netflix has emerged as the clear leader, focused on a dual strategy of growing its massive subscriber base and improving profitability. The company has successfully evolved its business model by introducing a lower-priced <span class="highlight">advertising-supported plan</span> and cracking down on password sharing, converting freeloaders into paying customers. With an unmatched global scale, a powerful content engine, and new revenue streams gaining traction, Netflix is solidifying its position as the indispensable anchor of the modern media landscape.</p>
             
-            <div class="mb-6 text-center" id="financials-tabs-container">
-                <button data-tab="revenue" class="tab-button active">Revenue</button>
-                <button data-tab="profitability" class="tab-button">Profitability</button>
-                <button data-tab="cashflow" class="tab-button">Cash Flow</button>
-                <button data-tab="kpis" class="tab-button">Key KPIs</button>
-            </div>
-
-            <div id="financials-content-area" class="space-y-8">
-                <div data-tab-content="revenue" class="financial-tab-pane active space-y-8">
-                    <div class="text-center">
-                        <h3 class="text-xl font-semibold text-neutral-700 mb-1">Overall Revenue Growth (Billions USD)</h3>
-                        <p class="text-xs text-neutral-500 mb-2">Exceeding $40B TTM (Mar 2025).</p>
-                        <div class="chart-container"><canvas id="revenueGrowthChart"></canvas></div>
-                    </div>
-                    <div class="grid md:grid-cols-2 gap-8 items-start">
-                        <div class="text-center">
-                            <h3 class="text-xl font-semibold text-neutral-700 mb-1">Geographic Revenue (FY2024)</h3>
-                            <p class="text-xs text-neutral-500 mb-2">UCAN largest, EMEA & APAC strong growth.</p>
-                            <div class="chart-container h-72 md:h-80"><canvas id="geoRevenueChart"></canvas></div>
-                        </div>
-                         <div class="p-4 bg-amber-50 rounded-lg shadow">
-                            <h3 class="text-lg font-semibold text-amber-700 mb-2">ARPU Insights (Q4 2024)</h3>
-                            <ul class="list-disc list-inside text-neutral-600 text-xs space-y-1">
-                                <li><strong>UCAN:</strong> ~$17.20-$17.26</li>
-                                <li><strong>EMEA:</strong> ~$10.96-$11.11</li>
-                                <li><strong>LATAM:</strong> ~$8.00-$8.24</li>
-                                <li><strong>APAC:</strong> ~$7.29-$7.34</li>
-                            </ul>
-                            <p class="text-xs text-neutral-500 mt-2">Highlights challenge/opportunity in balancing international growth with ARPU uplift.</p>
-                        </div>
-                    </div>
+            <div class="grid md-grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: Scale, Engagement, and Monetization</h3>
+                    <p class="content-text mb-4">Netflix's strategy is focused on a virtuous cycle of growth and profitability:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Content is King:</strong> Invest billions in a broad mix of original and licensed content—films, series, documentaries, and live events—to attract and retain a diverse global audience.</li>
+                        <li><strong class="font-semibold text-gray-700">Grow the Ad-Tier:</strong> Rapidly scale the advertising business by offering a compelling, lower-priced entry point for new subscribers, creating a significant new revenue stream.</li>
+                        <li><strong class="font-semibold text-gray-700">Improve Monetization:</strong> Continue to convert password sharers into paying households through its "Extra Member" feature and optimize pricing across its various subscription tiers.</li>
+                        <li><strong class="font-semibold text-gray-700">Expand into New Verticals:</strong> Cautiously expand into adjacent entertainment categories like video games and live events to increase user engagement and the overall value proposition.</li>
+                    </ul>
                 </div>
-
-                <div data-tab-content="profitability" class="financial-tab-pane hidden space-y-8">
-                    <div class="text-center">
-                        <h3 class="text-xl font-semibold text-neutral-700 mb-1">Profit Margin Trends (%)</h3>
-                        <p class="text-xs text-neutral-500 mb-2">Significant expansion; Op. margin 27% FY24, est. 29% FY25.</p>
-                        <div class="chart-container"><canvas id="profitMarginsChart"></canvas></div>
-                    </div>
-                    <div class="text-center">
-                        <h3 class="text-xl font-semibold text-neutral-700 mb-1">Op. Income & EBITDA (Billions USD)</h3>
-                        <p class="text-xs text-neutral-500 mb-2">Op. income surged 50% YoY to $10.4B in FY2024.</p>
-                        <div class="chart-container"><canvas id="opIncomeEbitdaChart"></canvas></div>
-                    </div>
-                </div>
-
-                <div data-tab-content="cashflow" class="financial-tab-pane hidden space-y-8">
-                     <div class="text-center">
-                        <h3 class="text-xl font-semibold text-neutral-700 mb-1">Operating & Free Cash Flow (Billions USD)</h3>
-                        <p class="text-xs text-neutral-500 mb-2">$7.4B OCF, $6.9B FCF (FY24). FCF est. ~$8B (FY25).</p>
-                        <div class="chart-container"><canvas id="cashFlowChart"></canvas></div>
-                    </div>
-                </div>
-                
-                <div data-tab-content="kpis" class="financial-tab-pane hidden space-y-8">
-                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                        <div class="kpi-card">
-                            <div class="kpi-value">302M+</div>
-                            <div class="kpi-label">Global Paid Memberships (End FY2024)</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-value">41M</div>
-                            <div class="kpi-label">Net Sub Additions (FY2024)</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-value">~2.17%</div>
-                            <div class="kpi-label">Churn Rate (Q3 2024)</div>
-                        </div>
-                    </div>
-                     <p class="text-center text-xs text-neutral-600 mb-4">Note: Netflix shifts focus from quarterly subs/ARM to revenue/op. margin from Q1 2025.</p>
-                    <div class="text-center">
-                        <h3 class="text-xl font-semibold text-neutral-700 mb-1">Return on Invested Capital (ROIC %)</h3>
-                        <p class="text-xs text-neutral-500 mb-2">Marked improvement; ~24% current ROIC (highest since 2011).</p>
-                        <div class="chart-container"><canvas id="roicChart"></canvas></div>
-                    </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Global Paid Memberships (Q1 2025)</p>
+                    <p class="kpi-value text-violet-600">270 Million</p>
+                    <p class="content-text text-sm mt-2">Represents Netflix's unparalleled global scale, providing a massive foundation for its subscription and advertising revenue.</p>
                 </div>
             </div>
         </section>
 
-        <section id="future" class="content-section card">
-            <h2 class="section-title">Charting the Future</h2>
-            <p class="text-center text-neutral-700 mb-10 max-w-3xl mx-auto">Netflix focuses on key growth levers while navigating challenges. This section outlines strategic imperatives for sustained leadership and its evolving business focus.</p>
-            <div class="p-4 bg-amber-50 rounded-lg shadow mb-8">
-                <h3 class="text-lg font-semibold text-amber-700 mb-3 text-center">Key Growth Levers</h3>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 text-center">
-                    <div class="p-2 bg-white rounded-md shadow-sm"><span class="text-2xl">📺</span><p class="text-xs font-medium text-neutral-600 mt-1">Advertising</p></div>
-                    <div class="p-2 bg-white rounded-md shadow-sm"><span class="text-2xl">🎮</span><p class="text-xs font-medium text-neutral-600 mt-1">Gaming</p></div>
-                    <div class="p-2 bg-white rounded-md shadow-sm"><span class="text-2xl">🎤</span><p class="text-xs font-medium text-neutral-600 mt-1">Live Programming</p></div>
-                    <div class="p-2 bg-white rounded-md shadow-sm"><span class="text-2xl">🌏</span><p class="text-xs font-medium text-neutral-600 mt-1">Intl. Expansion</p></div>
-                    <div class="p-2 bg-white rounded-md shadow-sm"><span class="text-2xl">👥</span><p class="text-xs font-medium text-neutral-600 mt-1">Paid Sharing</p></div>
-                </div>
-            </div>
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Netflix Makes Money: A Multi-Tiered Subscription Model</h2>
+            <p class="content-text mb-6">Netflix's business model is centered on a simple and powerful concept: a direct-to-consumer, recurring subscription. The company has evolved this model to include multiple tiers to cater to different consumer needs and price points, significantly expanding its addressable market and creating new avenues for growth.</p>
 
-            <div class="grid md:grid-cols-2 gap-6 mb-8">
-                 <div class="p-4 bg-red-50 border border-red-200 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold text-red-700 mb-2">Navigating Headwinds</h3>
-                    <ul class="list-disc list-inside text-neutral-700 space-y-1 text-xs">
-                        <li>Intense competition</li>
-                        <li>High content investment</li>
-                        <li>Market saturation (mature regions)</li>
-                        <li>Evolving regulations</li>
-                        <li>Economic sensitivity</li>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                 <div class="kpi-card bg-sky-50 border-sky-200 p-6">
+                    <h3 class="subsection-title !mt-0 !text-sky-600">Core Revenue Streams</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 text-left pl-4">
+                       <li><strong class="font-semibold text-gray-700">Subscription Fees:</strong> The primary source of revenue. Netflix offers a variety of plans at different price points, including Standard with Ads, Standard, and Premium tiers.</li>
+                       <li><strong class="font-semibold text-gray-700">Advertising Revenue:</strong> A new and rapidly growing revenue stream generated from selling ad inventory on its Standard with Ads plan.</li>
+                       <li><strong class="font-semibold text-gray-700">"Extra Member" Fees:</strong> Revenue from the successful initiative to monetize password sharing by allowing primary account holders to pay a small extra fee to add users outside their household.</li>
                     </ul>
                 </div>
-                 <div class="p-4 bg-green-50 border border-green-200 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold text-green-700 mb-2">Strategic Imperatives</h3>
-                    <ul class="list-disc list-inside text-neutral-700 space-y-1 text-xs">
-                        <li>Innovate (content, UX)</li>
-                        <li>Deepen intl. penetration</li>
-                        <li>Scale global ad business</li>
-                        <li>Integrate gaming & live events</li>
-                        <li>Maintain pricing discipline</li>
-                    </ul>
+                <div class="kpi-card bg-teal-50 border-teal-200 p-6">
+                    <h3 class="subsection-title !mt-0 !text-teal-600">Shift in Metrics</h3>
+                     <p class="content-text">Reflecting its strategic shift, Netflix announced it will stop reporting quarterly paid membership numbers starting in 2026. Instead, the company will focus on metrics it believes are better indicators of its success, such as <strong class="font-semibold text-gray-700">revenue, operating margins, and engagement (time spent viewing)</strong>. This move signals that the company's primary focus is now on optimizing revenue and profitability per user, rather than just raw subscriber growth.</p>
                 </div>
-            </div>
-             <div class="p-4 bg-amber-100 rounded-lg shadow">
-                <h3 class="text-lg font-semibold text-amber-800 mb-2 text-center">The Future Focus: Engagement</h3>
-                <p class="text-sm text-neutral-700 leading-relaxed text-center">Success will be measured by growing and monetizing <strong class="text-amber-700">engagement</strong> (time spent, content consumed). The goal is to be an indispensable global entertainment destination.</p>
             </div>
         </section>
-    </main>
 
-    <footer class="footer">
-        <p class="text-sm">Netflix Interactive Business Analysis. Data synthesized from report (May 2025).</p>
-        <p class="text-xs mt-1">&copy; <span id="currentYear"></span> Interactive Report. For informational purposes only.</p>
-    </footer>
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">After years of prioritizing growth over profits, Netflix has firmly pivoted to a focus on profitable growth. The company is now consistently delivering strong operating margin expansion and substantial free cash flow, all while continuing to grow its top line at a healthy rate. This financial discipline has been well-received by investors and provides the firepower for continued content investment and capital returns.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase a business with re-accelerating revenue growth and a strong, consistent expansion in profitability.</p>
+        </section>
+
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The King of the Streaming Wars</h2>
+            <p class="content-text mb-6">Netflix's competitive advantage is built on its unparalleled global scale, a powerful and universally recognized brand, and a deep library of original content that creates a strong and durable moat.</p>
+            
+            <div class="grid md-grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Global Scale & Brand Recognition:</strong> With 270 million subscribers, Netflix has a scale that no competitor can match. This allows it to amortize its massive content spend over a huge user base. Its brand is globally synonymous with streaming entertainment.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Original Content Library:</strong> A deep and diverse library of exclusive, award-winning original content (e.g., "Stranger Things," "Bridgerton," "Squid Game") creates a powerful reason for customers to subscribe and remain loyal.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Data & Personalization Engine:</strong> Decades of viewership data powers a sophisticated recommendation algorithm that keeps users engaged by surfacing relevant content, reducing churn and increasing viewing hours.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Major Media Conglomerates:</strong> Companies like Disney (Disney+, Hulu), Warner Bros. Discovery (Max), and Paramount (Paramount+).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Big Tech Streamers:</strong> Tech giants like Amazon (Prime Video) and Apple (Apple TV+) with deep pockets and the ability to bundle streaming with other services.</span>
+                         </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Live TV Streaming Services:</strong> Services like YouTube TV and Hulu + Live TV that compete for consumer screen time.</span>
+                         </li>
+                          <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Forms of Entertainment:</strong> In the broadest sense, Netflix competes for users' free time against everything from video games (e.g., Fortnite) to social media (e.g., TikTok, YouTube).</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Netflix has successfully navigated the most intense phase of the streaming wars and emerged as the profitable, scaled leader. The investment thesis is centered on its ability to continue leveraging its scale and content engine to drive growth in its new advertising and extra-member revenue streams. However, it must continue to execute at a high level to fend off formidable, well-funded competitors.</p>
+            <div class="grid md-grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Advertising Revenue Growth:</strong> The ad-supported tier is a massive, multi-billion dollar opportunity that is still in its very early innings, providing a long runway for growth.</li>
+                        <li><strong>Improved Monetization:</strong> The continued conversion of password-sharing households provides a significant, near-term tailwind to both subscriber numbers and revenue.</li>
+                        <li><strong>Scale-Driven Profitability:</strong> As the clear leader, Netflix is positioned to be the most profitable and durable player in the streaming industry, with significant room for continued margin expansion.</li>
+                        <li><strong>Content Engine Flywheel:</strong> A proven ability to create global cultural hits provides a sustainable advantage in attracting and retaining subscribers worldwide.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Intense Competition:</strong> The streaming market remains fiercely competitive. Well-funded media and tech giants are all vying for subscriber attention and spending billions on content.</li>
+                        <li><strong>Rising Content Costs:</strong> The need to consistently produce a slate of high-quality, engaging content requires a massive and growing content budget, which can pressure margins.</li>
+                        <li><strong>Subscriber Churn & Saturation:</strong> In more mature markets like North America, subscriber growth is slowing, and the company must constantly battle churn by delivering a compelling value proposition.</li>
+                        <li><strong>Execution in New Verticals:</strong> Success in new areas like gaming is not guaranteed and requires significant investment and a different set of core competencies.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Netflix, Inc. public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
+        </footer>
 
     <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
 
-        // Sticky Nav Smooth Scroll and Active Link Highlighting
-        const mainNav = document.querySelector('.sticky-nav');
-        const navLinks = document.querySelectorAll('.sticky-nav .nav-link');
-        const contentSections = document.querySelectorAll('.content-section');
-        let navHeight = mainNav ? mainNav.offsetHeight + 20 : 70; // Default if nav not found early
-
-        function changeActiveLink() {
-            let index = contentSections.length;
-            while(--index && window.scrollY + navHeight < contentSections[index].offsetTop) {}
-            
-            navLinks.forEach((link) => link.classList.remove('active'));
-            if(navLinks[index]) {
-                 navLinks[index].classList.add('active');
-            }
-        }
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
         
-        navLinks.forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    // Calculate position considering sticky nav height
-                    const targetPosition = targetElement.offsetTop - (mainNav ? mainNav.offsetHeight : 50);
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
                 }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
             });
         });
         
-        window.addEventListener('scroll', changeActiveLink);
-        document.addEventListener('DOMContentLoaded', () => {
-            if (mainNav) navHeight = mainNav.offsetHeight + 20; // Recalculate navHeight
-            changeActiveLink(); // Initial check
-             // Initialize all charts after DOM is ready
-            initializeAllCharts();
-        });
-        
-        function formatLabel(str, maxWidth) {
-            if (!str) return '';
-            const sections = [];
-            let words = str.split(" ");
-            let temp = "";
-            words.forEach((item, index) => {
-                if (temp.length > 0) temp += " " + item;
-                else temp = item;
-                if (temp.length > maxWidth) { sections.push(temp); temp = ""; }
-                else if (index === words.length - 1 && temp.length > 0) sections.push(temp);
-            });
-            return sections.length > 0 ? sections : str; // Return original string if not split
-        }
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
-        const monetizationDetails = {
-            subscriptions: { title: "📈 Subscription Tiers", description: "Netflix's primary revenue: monthly fees for tiered plans (Basic, Standard, Premium) varying by stream quality, screens, ad-inclusion. Dynamically priced for 190+ countries." },
-            advertising: { title: "📺 Advertising Revenue", description: "Ad-supported tier (late 2022) targets cost-sensitive users, creating new high-margin revenue. Over 55% new sign-ups (Q4 2024). Ad revenue to double FY2025. Proprietary ad-tech rolling out." },
-            licensing: { title: "🌍 Content Licensing & Syndication", description: "Licenses content from studios and also licenses its own hit originals like 'Stranger Things' to other platforms, maximizing IP value and recouping costs." },
-            gaming: { title: "🎮 Gaming Initiatives", description: "Mobile games for subscribers, often IP-linked, to enhance engagement and loyalty. Investment tied to member value." },
-            live_events: { title: "🎤 Live Events & Experiential Content", description: "Expanding into live events (boxing, comedy, NFL games) for 'must-watch' viewing. Exploring 'Netflix House' physical pop-ups." },
-            merchandising: { title: "🛍️ Merchandising", description: "Online stores and collaborations for merchandise (apparel, toys) from popular series like 'Squid Game', extending brand reach."}
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
         };
 
-        function showMonetizationDetail(type) {
-            const detail = monetizationDetails[type];
-            document.getElementById('modalTitle').textContent = detail.title;
-            document.getElementById('modalDescription').textContent = detail.description;
-            document.getElementById('monetizationModal').classList.add('visible');
-        }
+        // --- FINANCIAL CHARTS LOGIC ---
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('visible');
-        }
-        
-        const competitorDetails = {
-            disney: { title: "Disney+ (The Walt Disney Company)", body: "<p><strong>Model:</strong> Leverages iconic IP (Disney, Marvel, Star Wars). SVOD with ad-tiers, bundles (Hulu, ESPN+). Integrated with Disney ecosystem.</p><p><strong>Content:</strong> Core franchises, original series/films on IPs. Substantial budget.</p><p><strong>Differentiation:</strong> Unparalleled brand IP, family appeal. Slate can be narrower.</p>" },
-            amazon: { title: "Amazon Prime Video (Amazon)", body: "<p><strong>Model:</strong> Benefit of Prime membership. Revenue from Prime fees, VOD, ads. Enhances Prime ecosystem.</p><p><strong>Content:</strong> Licensed, Amazon MGM originals, live sports (NFL).</p><p><strong>Differentiation:</strong> Amazon retail integration, broad Prime utility. Content library less culturally impactful at times.</p>" },
-            max: { title: "Max (Warner Bros. Discovery)", body: "<p><strong>Model:</strong> SVOD combining HBO, Discovery, Warner Bros. content. Focus on 'quality over quantity'.</p><p><strong>Content:</strong> HBO series, Warner Bros. films, Discovery reality. HBO budget ~$2B.</p><p><strong>Differentiation:</strong> Strong HBO brand, diverse library. Higher price points.</p>" },
-            hulu: { title: "Hulu (Majority-owned by Disney)", body: "<p><strong>Model:</strong> Hybrid (SVOD + significant ad income). Current-season episodes from US networks. Live TV option.</p><p><strong>Content:</strong> Licensed current TV, Hulu Originals, back-catalog.</p><p><strong>Differentiation:</strong> Current TV, effective ad model, Live TV. Historically US-focused.</p>" }
-        };
-
-        function showCompetitorDetail(competitor) {
-            const detail = competitorDetails[competitor];
-            document.getElementById('competitorModalTitle').textContent = detail.title;
-            document.getElementById('competitorModalBody').innerHTML = detail.body;
-            document.getElementById('competitorModal').classList.add('visible');
-        }
-        
-        const financialTabs = document.querySelectorAll('#financials-tabs-container .tab-button');
-        const financialTabContents = document.querySelectorAll('#financials-content-area .financial-tab-pane');
-
-        financialTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                financialTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                const targetTab = tab.dataset.tab;
-                financialTabContents.forEach(content => {
-                    content.classList.toggle('hidden', content.dataset.tabContent !== targetTab);
-                    content.classList.toggle('active', content.dataset.tabContent === targetTab);
-                });
-            });
-        });
-
-        // Chart.js Configurations - Styled like Atlassian SPA
-        const defaultChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: { 
-                    beginAtZero: true, // Most charts benefit from this
-                    ticks: { color: '#525252', font: {size: 10} }, // neutral-600
-                    grid: { color: '#e5e5e5' } // neutral-200
-                },
-                x: { 
-                    ticks: { color: '#525252', font: {size: 10}, callback: function(value) { return formatLabel(this.getLabelForValue(value), 10); } },
-                    grid: { display: false }
-                }
+        // Fiscal Year ends December 31
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [31.62, 33.72, 37.09], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
             },
-            plugins: {
-                legend: { 
-                    position: 'bottom', // Consistent with Atlassian
-                    labels: { color: '#262626', font: {size: 11}, boxWidth: 12 } // neutral-800
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [5.63, 6.20, 8.24], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [8.19, 8.54, 8.83, 9.38, 9.50, 9.48, 9.60, 9.54], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [1.83, 1.92, 1.50, 2.63, 2.50, 2.13, 1.71, 2.81], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
                 },
-                tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    titleColor: '#ffffff',
-                    bodyColor: '#ffffff',
-                    titleFont: { weight: 'bold'},
-                    bodyFont: { size: 11 },
-                    padding: 10,
-                    cornerRadius: 4,
-                    callbacks: {
-                         label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) label += ': ';
-                            if (context.parsed.y !== null) {
-                                const isPercentage = context.dataset.yAxisID === 'yPercentage' || (context.dataset.label && (context.dataset.label.includes('%') || context.dataset.label.includes('Margin')));
-                                if (isPercentage) {
-                                     label += context.parsed.y.toFixed(1) + '%';
-                                } else { // Assume millions or billions based on context
-                                     label += '$' + context.parsed.y.toFixed(context.parsed.y > 1000 ? 1 : 2) + (context.dataset.unit || 'B'); // Default to Billions if not specified
-                                }
-                            }
-                            return label;
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
                         }
                     }
                 }
-            },
-            animation: { duration: 800, easing: 'easeOutQuart' }
-        };
+            });
+        }
         
-        function initializeAllCharts() {
-            // Ad Revenue Chart
-            const adRevenueCtx = document.getElementById('adRevenueChart');
-            if (adRevenueCtx) new Chart(adRevenueCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['FY2023 (E)', 'FY2024 (A)', 'FY2025 (P)', 'FY2027 (E)'],
-                    datasets: [{
-                        label: 'Ad Revenue', unit: 'B',
-                        data: [1.5, 3.0, 6.0, 8.5], 
-                        backgroundColor: 'rgba(217, 119, 6, 0.7)', // amber-600
-                        borderColor: 'rgba(217, 119, 6, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: JSON.parse(JSON.stringify(defaultChartOptions))
-            });
-            
-            // Market Share Chart
-            const marketShareCtx = document.getElementById('marketShareChart');
-            if (marketShareCtx) new Chart(marketShareCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Prime Video', 'Netflix', 'Max', 'Disney+', 'Hulu', 'Paramount+', 'Apple TV+', 'Peacock', 'Other'],
-                    datasets: [{
-                        label: 'US Market Share',
-                        data: [22, 21, 13, 12, 11, 9, 7, 1, 4],
-                        backgroundColor: ['#3b82f6', '#ef4444', '#a855f7', '#2563eb', '#10b981', '#0ea5e9', '#6b7280', '#f59e0b', '#9ca3af'],
-                        borderColor: '#ffffff', borderWidth: 2
-                    }]
-                },
-                options: { ...JSON.parse(JSON.stringify(defaultChartOptions)), plugins: { ...defaultChartOptions.plugins, legend: { position: 'right', labels: {...defaultChartOptions.plugins.legend.labels, boxWidth:10, padding:15} }} }
-            });
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
 
-            // Revenue Growth Chart
-            const revenueGrowthCtx = document.getElementById('revenueGrowthChart');
-            if(revenueGrowthCtx) new Chart(revenueGrowthCtx, {
-                type: 'line',
-                data: {
-                    labels: ['FY2022', 'FY2023', 'FY2024', 'TTM Mar 25'],
-                    datasets: [{
-                        label: 'Total Revenue', unit: 'B',
-                        data: [31.616, 33.723, 39.001, 40.173],
-                        borderColor: 'rgba(217, 119, 6, 1)', 
-                        backgroundColor: 'rgba(217, 119, 6, 0.3)',
-                        fill: true, tension: 0.2
-                    }]
-                },
-                options: JSON.parse(JSON.stringify(defaultChartOptions))
-            });
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
 
-            // Geographic Revenue Chart
-            const geoRevenueCtx = document.getElementById('geoRevenueChart');
-            if (geoRevenueCtx) new Chart(geoRevenueCtx, {
-                type: 'pie',
-                data: {
-                    labels: ['UCAN', 'EMEA', 'LATAM', 'APAC'],
-                    datasets: [{
-                        label: 'FY2024 Revenue by Region',
-                        data: [44.4, 31.8, 12.5, 11.4], // Percentages
-                        backgroundColor: ['#d97706', '#f59e0b', '#fbbf24', '#fcd34d'], // Amber shades
-                        borderColor: '#ffffff', borderWidth: 2
-                    }]
-                },
-                 options: { ...JSON.parse(JSON.stringify(defaultChartOptions)), plugins: {...defaultChartOptions.plugins, tooltip: {...defaultChartOptions.plugins.tooltip, callbacks: { label: function(context) { return context.label + ': ' + context.parsed.toFixed(1) + '%';} }} }}
-            });
-            
-            // Profit Margins Chart
-            const profitMarginsCtx = document.getElementById('profitMarginsChart');
-            if(profitMarginsCtx) new Chart(profitMarginsCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['FY2022', 'FY2023', 'FY2024'],
-                    datasets: [
-                        { label: 'Gross Margin (%)', data: [39.37, 41.54, 46.06], backgroundColor: 'rgba(217, 119, 6, 0.8)'},
-                        { label: 'Operating Margin (%)', data: [20.9, 20.6, 27.0], backgroundColor: 'rgba(245, 158, 11, 0.7)' },
-                        { label: 'Net Margin (%)', data: [14.1, 16.3, 21.5], backgroundColor: 'rgba(251, 191, 36, 0.6)' }
-                    ]
-                },
-                options: { ...JSON.parse(JSON.stringify(defaultChartOptions)), scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: '%', color: '#92400e'}}} }
-            });
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
-            // Operating Income & EBITDA Chart
-            const opIncomeEbitdaCtx = document.getElementById('opIncomeEbitdaChart');
-            if(opIncomeEbitdaCtx) new Chart(opIncomeEbitdaCtx, {
-                type: 'line',
-                data: {
-                    labels: ['FY2023', 'FY2024', 'Q1 2025 (OpI)'],
-                    datasets: [
-                        { label: 'Operating Income', unit: 'B', data: [ (10.4/1.5).toFixed(1) , 10.4, 3.3], borderColor: 'rgba(217, 119, 6, 1)', backgroundColor: 'rgba(217, 119, 6, 0.3)', fill: true, tension: 0.2 },
-                        { label: 'EBITDA', unit: 'B', data: [6.372, 9.977, null], borderColor: 'rgba(29, 78, 216, 1)', backgroundColor: 'rgba(29, 78, 216, 0.3)', fill: true, tension: 0.2, spanGaps: true }
-                    ]
-                },
-                options: { ...JSON.parse(JSON.stringify(defaultChartOptions)), scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'Billions USD', color: '#92400e'}}} }
-            });
-            
-            // Cash Flow Chart
-            const cashFlowCtx = document.getElementById('cashFlowChart');
-            if(cashFlowCtx) new Chart(cashFlowCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['FY23 OCF', 'FY24 OCF', 'FY24 FCF', 'Q1 25 FCF', 'FY25 FCF (P)'],
-                    datasets: [{
-                        label: 'Cash Flow', unit: 'B',
-                        data: [7.326, 7.4, 6.9, 2.661, 8.0],
-                        backgroundColor: ['#d97706', '#b45309', '#f59e0b', '#92400e', '#fbbf24' ], // Amber shades
-                        borderWidth: 0
-                    }]
-                },
-                options: JSON.parse(JSON.stringify(defaultChartOptions))
-            });
-
-            // ROIC Chart
-            const roicCtx = document.getElementById('roicChart');
-            if(roicCtx) new Chart(roicCtx, {
-                type: 'line',
-                data: {
-                    labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24', 'TTM E25'],
-                    datasets: [{
-                        label: 'ROIC (%)',
-                        data: [12.38, 14.75, 11.82, 15.05, 20.39, 22.45],
-                        borderColor: 'rgba(217, 119, 6, 1)', 
-                        backgroundColor: 'rgba(217, 119, 6, 0.3)',
-                        fill: true, tension: 0.2
-                    }]
-                },
-                options: { ...JSON.parse(JSON.stringify(defaultChartOptions)), scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: '%', color: '#92400e'}}} }
-            });
-        } // End of initializeAllCharts
     </script>
 </body>
 </html>

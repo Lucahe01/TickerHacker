@@ -3,700 +3,479 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextEra Energy (NEE) - Interactive Analysis</title>
+    <title>NextEra Energy (NEE) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Visualization & Content Choices:
-        - Overview: Text. Goal: Inform.
-        - FPL/NEER Segments: Text, Key Stats (HTML), Charts (Chart.js - e.g., Revenue Contribution, Generation Mix, Backlog Growth). Goal: Inform, Compare. Interaction: Tooltips. Justification: Clear presentation of segment details and performance.
-        - Financial Dashboard: Multiple Line/Bar Charts (Chart.js - Revenue, OpInc, Adj EPS, OCF, CapEx, ROIC, EBITDA trends). Goal: Change, Compare. Interaction: Tooltips. Justification: Dynamic view of financial health.
-        - Competition: Text, HTML Tables/Cards. Goal: Compare.
-        - Outlook/Risks: Text, Lists. Goal: Inform.
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All charts via Chart.js (Canvas). -->
     <style>
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #f5f5f4; /* stone-100 */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
             color: #374151; /* gray-700 */
         }
-        .chart-container { 
-            position: relative; 
-            width: 100%; 
-            max-width: 650px; 
-            margin-left: auto; 
-            margin-right: auto; 
-            height: 320px; 
-            max-height: 380px;
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
         }
         @media (min-width: 768px) { /* md */
-            .chart-container { 
-                height: 350px; 
+            .chart-container {
+                height: 350px;
                 max-height: 400px;
-            } 
+            }
         }
-        .sticky-nav { 
-            position: -webkit-sticky; 
-            position: sticky; 
-            top: 0; 
-            z-index: 50; 
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
         }
-        .nav-link {
-            padding: 0.5rem 0.75rem; /* Adjusted padding for more items */
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
             border-radius: 0.375rem; /* rounded-md */
             font-weight: 500;
             font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
             color: #374151; /* gray-700 */
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
             white-space: nowrap;
         }
         .nav-link:hover, .nav-link.active {
-            background-color: #0284c7; /* sky-600 */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
         }
-        h1.main-title {
-            font-size: 2.25rem; /* text-4xl */
-            font-weight: 700;
-            color: #0369a1; /* sky-700 */
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        h2.section-title { 
-            font-size: 1.875rem; /* text-3xl */
-            font-weight: 600; 
-            color: #0ea5e9; /* sky-500 */
-            margin-bottom: 1.5rem; 
-            padding-bottom: 0.5rem; 
-            border-bottom: 2px solid #e7e5e4; /* stone-200 */
-        }
-        h3.subsection-title { 
-            font-size: 1.5rem; /* text-2xl */
-            font-weight: 600; 
-            color: #14b8a6; /* teal-500 */
-            margin-top: 2rem; 
-            margin-bottom: 1rem; 
-        }
-        h4.content-title { 
-            font-size: 1.125rem; /* text-lg */
-            font-weight: 600; 
-            margin-top: 1.25rem; 
-            margin-bottom: 0.75rem; 
-            color: #0ea5e9; /* sky-500 */
-        }
-        .section-card { 
-            background-color: #FFFFFF;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03); /* Softer shadow */
-            padding: 1.5rem; /* p-6 */
-            margin-bottom: 2rem; /* mb-8 */
-        }
-        .content-text { 
-            line-height: 1.75;
-            color: #4b5563; /* gray-600 */
-            font-size: 0.95rem; /* Slightly smaller for denser text */
-        }
-        .section-intro { 
-            font-size: 1.05rem; 
-            color: #52525b; /* zinc-600 */
-            margin-bottom: 1.5rem; 
-            line-height: 1.6; 
-        }
-        .table-wrapper { overflow-x: auto; margin-top:1rem; margin-bottom:1rem; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { 
-            border: 1px solid #d4d4d8; /* stone-300 */
-            padding: 0.75rem; 
-            text-align: left; 
-            font-size: 0.875rem; /* text-sm */
-        }
-        th { 
-            background-color: #f5f5f4; /* stone-100 */
-            font-weight: 600; 
-            color: #1f2937; /* gray-800 */
-        }
-        .key-metric-card {
-            background-color: #f0f9ff; /* sky-50 */
-            border-left: 4px solid #0ea5e9; /* sky-500 */
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
             padding: 1rem;
-            border-radius: 0.375rem;
-            margin-bottom: 0.75rem;
+            text-align: center;
         }
-        .key-metric-title {
-            font-weight: 500;
-            color: #0369a1; /* sky-700 */
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
             margin-bottom: 0.25rem;
         }
-        .key-metric-value {
-            font-size: 1.25rem; /* text-xl */
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
             font-weight: 600;
-            color: #0c4a6e; /* sky-800 */
+            color: #1F2937; /* gray-800 */
         }
     </style>
 </head>
-<body class="bg-stone-100 text-gray-700">
+<body class="min-h-screen">
 
-    <header class="bg-white/95 backdrop-blur-sm shadow-md sticky-nav">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <span class="font-bold text-xl" style="color: #0369a1;">NEE Interactive Analysis</span>
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">NextEra Energy (NEE) Analysis</h1>
                 </div>
                 <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-1">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
                         <a href="#overview" class="nav-link">Overview</a>
-                        <a href="#fpl" class="nav-link">FPL</a>
-                        <a href="#neer" class="nav-link">NEER</a>
-                        <a href="#other-segments" class="nav-link">Other Segments</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
                         <a href="#financials" class="nav-link">Financials</a>
-                        <a href="#competition" class="nav-link">Competition</a>
-                        <a href="#outlook" class="nav-link">Outlook & Risks</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
-                        <svg class="block h-6 w-6" id="icon-menu" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                        <svg class="hidden h-6 w-6" id="icon-close" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
             </div>
-        </nav>
-        <div id="mobile-menu" class="md:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#overview" class="nav-link block text-base">Overview</a>
-                <a href="#fpl" class="nav-link block text-base">FPL</a>
-                <a href="#neer" class="nav-link block text-base">NEER</a>
-                <a href="#other-segments" class="nav-link block text-base">Other Segments</a>
-                <a href="#financials" class="nav-link block text-base">Financials</a>
-                <a href="#competition" class="nav-link block text-base">Competition</a>
-                <a href="#outlook" class="nav-link block text-base">Outlook & Risks</a>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
             </div>
-        </div>
+        </nav>
     </header>
 
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8 mt-4">
-        <h1 class="main-title">NextEra Energy (NEE) Interactive Analysis</h1>
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
         <section id="overview" class="section-card scroll-mt-20">
-            <h2 class="section-title">Company Overview & Executive Summary</h2>
-            <p class="section-intro">This section provides a high-level introduction to NextEra Energy, Inc. (NEE), outlining its dual identity as a major U.S. electric utility and a global leader in renewable energy generation. We'll touch upon its core business segments, strategic focus, and overall market positioning within the evolving energy landscape.</p>
-            <p class="content-text mb-4">NextEra Energy, Inc. (NEE) is a leading clean energy company headquartered in Juno Beach, Florida. It is one of the largest electric utility holding companies in North America and is recognized as the world's largest generator of renewable energy from wind and solar sources. NEE's strategy is built upon two principal businesses: Florida Power & Light Company (FPL), a rate-regulated electric utility serving millions of customers in Florida, and NextEra Energy Resources (NEER), a competitive energy business focused on clean energy development and generation across the United States and Canada.</p>
-            <p class="content-text mb-4">FPL provides stable, predictable earnings, benefiting from Florida's constructive regulatory environment and growing population. These consistent cash flows support the capital-intensive growth of NEER, which is at the forefront of the energy transition, developing and operating a vast portfolio of wind, solar, and battery storage projects. NEE also operates NextEra Energy Transmission (NEET) and the newer NextEra Water segment, indicating diversification into related infrastructure.</p>
-            <p class="content-text">Financially, NextEra Energy has demonstrated consistent growth in adjusted earnings and a strong commitment to investing in American energy infrastructure. The company is well-positioned to capitalize on the long-term secular growth trends in clean energy and grid modernization, though it navigates risks related to regulation, commodity prices, and project execution.</p>
-        </section>
-
-        <section id="fpl" class="section-card scroll-mt-20">
-            <h2 class="section-title">Florida Power & Light (FPL)</h2>
-            <p class="section-intro">Dive into Florida Power & Light, NextEra Energy's regulated utility arm. This section details FPL's operational scale, its evolving generation portfolio with a strong focus on solar, its revenue model under Florida's regulatory framework, and its significant capital investment programs aimed at modernization and reliability.</p>
+            <h2 class="section-title">NextEra Energy: Leading America's Clean Energy Transition</h2>
+            <p class="content-text mb-6">NextEra Energy (NYSE: NEE) is a leading clean energy company with a unique, dual-engine business model. It combines the stability of the nation's largest regulated electric utility, Florida Power & Light (FPL), with the high-growth potential of the world's largest generator of renewable energy from wind and solar, NextEra Energy Resources (NEER). This hybrid model provides a powerful combination of predictable, regulated earnings and significant growth from the secular tailwinds of decarbonization and electrification. With a massive <span class="highlight">capital investment plan</span> aimed at modernizing the grid and expanding its renewables portfolio, NextEra is uniquely positioned to both power and profit from America's clean energy future.</p>
             
-            <h3 class="subsection-title">Operations and Customer Base</h3>
-            <p class="content-text mb-4">FPL is the largest electric utility in Florida and one of the largest in the United States, serving over 6 million customer accounts (approximately 12 million people). As of year-end 2024, FPL's infrastructure included approximately 35,296 MW of net generating capacity and an extensive network of roughly 91,000 circuit miles of transmission and distribution lines.</p>
-
-            <h3 class="subsection-title">Generation Portfolio & Energy Delivery</h3>
-            <p class="content-text mb-4">FPL is actively transitioning its generation portfolio. Its 2024 mix includes significant natural gas capacity, a rapidly expanding solar portfolio (7,038 MW solar and 469 MW battery storage at YE 2024), and nuclear power. FPL aims for solar to be ~35% of its generation by 2034. This strategy has resulted in nearly $16 billion in fuel cost savings for customers since 2001.</p>
-            <div class="grid md:grid-cols-2 gap-4 my-4">
-                <div class="key-metric-card">
-                    <div class="key-metric-title">FPL Net Generating Capacity (YE 2024)</div>
-                    <div class="key-metric-value">~35.3 GW</div>
+            <div class="grid md-grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: The "Clean Energy Supermajor"</h3>
+                    <p class="content-text mb-4">NextEra's strategy is built on a foundation of disciplined capital allocation and operational excellence:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Invest in a Modern Grid:</strong> Aggressively deploy capital at FPL to improve reliability, storm-harden the grid, and support the rapid population and economic growth in Florida.</li>
+                        <li><strong class="font-semibold text-gray-700">Lead in Renewables Development:</strong> Leverage NEER's scale, development expertise, and access to low-cost capital to expand its position as the world's leader in wind, solar, and battery storage.</li>
+                        <li><strong class="font-semibold text-gray-700">Maintain Financial Strength:</strong> Adhere to a disciplined financial policy, focusing on maintaining a strong balance sheet to fund its massive capital program and deliver consistent, top-quartile dividend growth.</li>
+                        <li><strong class="font-semibold text-gray-700">Execute the "Zero Carbon Blueprint":</strong> A long-term vision to decarbonize its operations through a combination of solar, battery storage, green hydrogen, and other clean energy technologies.</li>
+                    </ul>
                 </div>
-                <div class="key-metric-card">
-                    <div class="key-metric-title">FPL Solar Capacity (YE 2024)</div>
-                    <div class="key-metric-value">7,038 MW</div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Renewables Development Backlog (NEER)</p>
+                    <p class="kpi-value text-violet-600">> 21 Gigawatts</p>
+                    <p class="content-text text-sm mt-2">Represents a massive pipeline of signed contracts for future wind, solar, and storage projects, providing strong visibility into future growth.</p>
                 </div>
-            </div>
-
-            <h3 class="subsection-title">Revenue Model and Regulatory Framework</h3>
-            <p class="content-text mb-4">FPL's revenue is primarily from retail electricity sales, regulated by the Florida Public Service Commission (FPSC). The 2021 rate agreement authorized an ROE of 10.60% (rising to 10.80%), with mechanisms like SoBRA for solar investment recovery. FPL's new four-year rate plan (2026-2029) targets an 11.90% ROE midpoint to support its extensive capital investment program.</p>
-            
-            <h4 class="content-title">FPL Financial Contribution & Capital Expenditures</h4>
-            <p class="content-text mb-2">FPL is a consistent earnings driver for NEE. Its capital expenditures are substantial, focusing on generation modernization, grid hardening, and T&D upgrades.</p>
-            <div class="chart-container mt-6 mb-8 mx-auto">
-                <canvas id="fplCapexChart"></canvas>
-            </div>
-            <div class="chart-container mt-6 mb-8 mx-auto">
-                <canvas id="fplFinancialsChart"></canvas>
             </div>
         </section>
 
-        <section id="neer" class="section-card scroll-mt-20">
-            <h2 class="section-title">NextEra Energy Resources (NEER)</h2>
-            <p class="section-intro">Explore NextEra Energy Resources, the competitive energy segment and a global leader in renewable energy. This section covers NEER's strategic focus, its diverse generation portfolio (wind, solar, nuclear, storage), its impressive project development pipeline and backlog, and its revenue model based on long-term contracts.</p>
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How NextEra Makes Money: Two Complementary Businesses</h2>
+            <p class="content-text mb-6">NextEra's success is driven by two powerful, complementary business segments. FPL provides a stable, regulated earnings base that grows consistently, while NEER offers significant upside potential by capitalizing on the accelerating demand for clean energy.</p>
 
-            <h3 class="subsection-title">Strategic Focus and Portfolio</h3>
-            <p class="content-text mb-4">NEER is the world's largest generator of renewable energy from wind and solar, and a leader in battery storage. As of YE 2024, NEER's net generating capacity was ~33,410 MW. Its 2024 MWh production mix was: Wind 60%, Solar 10%, Natural Gas 20%, Nuclear 8%, Other 2%.</p>
-            <div class="grid md:grid-cols-3 gap-4 my-4">
-                <div class="key-metric-card">
-                    <div class="key-metric-title">NEER Net Generating Capacity (YE 2024)</div>
-                    <div class="key-metric-value">~33.4 GW</div>
-                </div>
-                <div class="key-metric-card">
-                    <div class="key-metric-title">NEER Wind Capacity (YE 2024)</div>
-                    <div class="key-metric-value">~21.0 GW</div>
-                </div>
-                <div class="key-metric-card">
-                    <div class="key-metric-title">NEER Solar Capacity (YE 2024)</div>
-                    <div class="key-metric-value">~7.8 GW</div>
-                </div>
-            </div>
-            <div class="chart-container mt-6 mb-8 mx-auto">
-                <canvas id="neerGenerationMixChart"></canvas>
-            </div>
-            
-            <h3 class="subsection-title">Project Development & Backlog</h3>
-            <p class="content-text mb-4">NEER added over 12 GW of new renewable and storage projects to its backlog in 2024. By Q1 2025, the backlog reached approximately 28 GW, with a total development pipeline around 300 GW. The weighted-average remaining contract term for its PPAs was ~14 years at YE 2024.</p>
-            <div class="chart-container mt-6 mb-8 mx-auto">
-                <canvas id="neerBacklogChart"></canvas>
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="fpl">Florida Power & Light (FPL)</button>
+                    <button class="segment-tab-button" data-target="neer">NextEra Energy Resources (NEER)</button>
+                </nav>
             </div>
 
-            <h4 class="content-title">NEER Financial Contribution & Capital Expenditures</h4>
-            <p class="content-text mb-2">NEER's financial performance can be more variable due to market conditions and project timing, but its adjusted earnings show consistent growth. Capital deployment is focused on expanding its renewables and storage portfolio.</p>
-            <div class="chart-container mt-6 mb-8 mx-auto">
-                <canvas id="neerCapexChart"></canvas>
+            <div id="segmentDetails">
+                <div id="fplContent" class="segment-content">
+                    <h3 class="subsection-title">Florida Power & Light (FPL)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="content-text mb-2">FPL is the largest electric utility in the United States, serving over 12 million people in the high-growth state of Florida. It operates as a regulated monopoly, generating highly predictable and stable earnings by investing in its power generation, transmission, and distribution infrastructure and recovering those costs through customer rates approved by state regulators.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Attributes:</strong> Operates in a constructive regulatory environment with a rapidly growing customer base.</li>
+                                <li><strong>Financial Role:</strong> Provides the vast majority of NextEra's consolidated earnings, forming a stable foundation for the company's dividend.</li>
+                             </ul>
+                        </div>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="earningsBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div id="neerContent" class="segment-content hidden">
+                    <h3 class="subsection-title">NextEra Energy Resources (NEER)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">NEER is the high-growth, competitive energy arm of the company and the world's largest generator of renewable energy. It develops, constructs, and operates a massive portfolio of wind farms, solar projects, and battery storage facilities across North America. Revenue is primarily generated through long-term, fixed-price contracts with other utilities and large corporate buyers.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Attributes:</strong> World leader in wind, solar, and battery storage capacity.</li>
+                                <li><strong>Financial Role:</strong> Provides significant long-term growth potential and earnings upside, driven by the clean energy transition.</li>
+                             </ul>
+                        </div>
+                         <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Market Position</p>
+                             <p class="kpi-value text-sky-600">#1 Global Renewables Developer</p>
+                             <p class="content-text text-sm mt-2">NEER's scale and expertise in developing and operating clean energy projects are unmatched in the industry.</p>
+                         </div>
+                    </div>
+                </div>
             </div>
-             <div class="chart-container mt-6 mb-8 mx-auto">
-                <canvas id="neerFinancialsChart"></canvas>
-            </div>
-        </section>
-
-        <section id="other-segments" class="section-card scroll-mt-20">
-            <h2 class="section-title">Other Segments: Transmission & Water</h2>
-            <p class="section-intro">This section provides a brief overview of NextEra Energy Transmission (NEET) and the emerging NextEra Water segment, highlighting their strategic roles and growth potential within NEE's broader portfolio.</p>
-            <h3 class="subsection-title">NextEra Energy Transmission (NEET)</h3>
-            <p class="content-text mb-4">NEET is a leading competitive transmission company in North America, with a rate base of $2.7 billion, ~370 substations, and 3,885 circuit miles of transmission lines at YE 2024. It plays a critical role in grid modernization and connecting renewable generation, with a significant project pipeline. NEET's capital expenditures were $650 million in 2024.</p>
-            <h3 class="subsection-title">NextEra Water</h3>
-            <p class="content-text mb-4">NextEra Water is NEE's venture into the regulated water and wastewater utility sector, currently operating in Florida and Texas. This segment aims to leverage NEE's infrastructure development expertise in a new regulated market. It is currently in an early stage of development and its financial contribution is not yet material.</p>
         </section>
 
         <section id="financials" class="section-card scroll-mt-20">
-            <h2 class="section-title">Consolidated Financial Performance</h2>
-            <p class="section-intro">Review NextEra Energy's consolidated financial health through interactive charts displaying key metrics from 2022 to 2024. This dashboard covers revenue, operating income, adjusted EPS, operating cash flow, capital expenditures, ROIC, and EBITDA trends.</p>
-            <div class="grid md:grid-cols-2 gap-x-8 gap-y-10 mt-6">
-                <div class="chart-container"><canvas id="consolidatedRevenueChart"></canvas></div>
-                <div class="chart-container"><canvas id="consolidatedOpIncomeChart"></canvas></div>
-                <div class="chart-container"><canvas id="consolidatedAdjEPSChart"></canvas></div>
-                <div class="chart-container"><canvas id="consolidatedOCFChart"></canvas></div>
-                <div class="chart-container"><canvas id="consolidatedCapexChart"></canvas></div>
-                <div class="chart-container"><canvas id="consolidatedROICChart"></canvas></div>
-                <div class="chart-container"><canvas id="consolidatedEBITDAChart"></canvas></div>
-                <div class="chart-container"><canvas id="segmentRevenueContribution2024Chart"></canvas></div>
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">NextEra Energy has a long and successful track record of delivering consistent earnings and dividend growth. The company's financial strength is underpinned by the predictable cash flows from its regulated FPL business, which provides the financial capacity to fund the capital-intensive growth of its NEER segment.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="operatingIncome">Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
             </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase the stable and growing nature of NextEra's business, with a clear upward trend in both revenue and profitability over time.</p>
         </section>
 
         <section id="competition" class="section-card scroll-mt-20">
-            <h2 class="section-title">Competitive Landscape</h2>
-            <p class="section-intro">Understand NextEra Energy's competitive positioning. This section examines the competitive dynamics for FPL within Florida's regulated utility market and for NEER in the competitive wholesale power and renewable energy sectors, highlighting key competitors and NEE's advantages.</p>
-            <h3 class="subsection-title">FPL Competition</h3>
-            <p class="content-text mb-4">In Florida, FPL's main investor-owned utility peers are Duke Energy Florida and Tampa Electric (TECO). FPL's competitive advantages include its large scale, low customer bills (nearly 40% below national average), high reliability, operational efficiency, and a constructive regulatory environment. Direct retail competition is limited.</p>
-            <h3 class="subsection-title">NEER Competition</h3>
-            <p class="content-text mb-4">NEER competes with other large IPPs and utility affiliates like Invenergy, Avangrid Renewables, AES Corporation, and Enel Green Power. NEER's differentiators include superior development skills, an extensive project pipeline (~300 GW), strong customer relationships, purchasing power, and operational expertise. It holds an estimated 20% market share in U.S. renewable energy origination.</p>
+            <h2 class="section-title">Competitive Moat: A Tale of Two Fortresses</h2>
+            <p class="content-text mb-6">NextEra's competitive advantage is twofold, with deep and distinct moats protecting each of its core business segments. This dual-fortress model makes its market position incredibly resilient and difficult to challenge.</p>
+            
+            <div class="grid md-grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">FPL's Regulated Monopoly:</strong> FPL operates as a legal monopoly in one of the most attractive service territories in the U.S. A constructive regulatory environment combined with rapid population growth in Florida creates a wide moat for predictable, low-risk growth.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">NEER's Unmatched Scale & Expertise:</strong> As the largest renewables developer, NEER benefits from significant economies of scale in procurement, financing, and operations. Its decades of experience and data give it a durable cost and execution advantage over smaller competitors.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Access to Low-Cost Capital:</strong> The combined financial strength of FPL and NEER gives the company access to a lower cost of capital than most of its competitors, which is a critical advantage in the capital-intensive energy sector.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Large Utilities:</strong> Companies like Duke Energy (DUK) and Southern Company (SO) compete with FPL for investment capital and operate their own competitive generation businesses.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Independent Power Producers (IPPs):</strong> Companies like Vistra Energy and Constellation Energy compete with NEER in the competitive power generation market.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Renewable Energy Developers:</strong> A fragmented landscape of smaller, privately-owned and publicly-traded renewable energy developers that compete with NEER for new projects.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
         <section id="outlook" class="section-card scroll-mt-20">
-            <h2 class="section-title">Strategic Outlook & Risks</h2>
-            <p class="section-intro">Look ahead at NextEra Energy's future. This section discusses key growth drivers, such as decarbonization and AI-driven electricity demand, NEE's strategic initiatives in renewables, storage, and grid modernization, and also outlines the principal risks and challenges the company faces.</p>
-            <h3 class="subsection-title">Growth Drivers & Strategic Initiatives</h3>
-            <p class="content-text mb-4">Key growth drivers include global decarbonization, rising electricity demand (especially from AI data centers needing over 450 GW new U.S. generation by 2030), and supportive policies like the IRA. NEE plans to invest ~$120 billion in U.S. energy infrastructure over the next four years. NEER's pipeline and FPL's modernization plan (nearly $50 billion investment for 2025-2029) are central to this. Innovation in battery storage and green hydrogen are also key focuses.</p>
-            <h3 class="subsection-title">Key Risks and Challenges</h3>
-            <ul class="list-disc list-inside content-text space-y-1">
-                <li><strong>Regulatory Risks:</strong> Outcomes of FPL rate cases and changes in regulatory policy.</li>
-                <li><strong>Commodity Price Volatility:</strong> Exposure for NEER's merchant assets and re-contracting.</li>
-                <li><strong>Project Execution & Supply Chain:</strong> Delays, cost overruns, and component availability for NEER's large pipeline.</li>
-                <li><strong>Interest Rates & Financing:</strong> Impact of rising rates on capital-intensive projects.</li>
-                <li><strong>Policy Changes:</strong> Uncertainty around incentives like the IRA and tariff policies.</li>
-                <li><strong>Climate & Weather:</strong> Physical risks to infrastructure, especially FPL in Florida.</li>
-            </ul>
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">NextEra Energy offers a unique combination of utility-like stability and best-in-class clean energy growth. The investment thesis is centered on the company's ability to successfully execute on its massive capital deployment plan while navigating the complexities of the energy transition. The primary risks relate to the execution of this plan in a rising interest rate and inflationary environment.</p>
+            <div class="grid md-grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Secular Growth in Renewables:</strong> NextEra is the premier vehicle to capitalize on the multi-decade tailwind of the clean energy transition, driven by falling costs, policy support, and corporate demand.</li>
+                        <li><strong>Predictable Earnings and Dividend Growth:</strong> The company has a long history of delivering on its financial commitments, with a clear line of sight to 6-8% annual growth in adjusted EPS and a similar growth rate in its dividend.</li>
+                        <li><strong>Favorable Florida Demographics:</strong> FPL's service territory is one of the fastest-growing in the country, providing a durable, organic growth driver for the regulated utility.</li>
+                        <li><strong>Scale as a Competitive Advantage:</strong> In both its regulated and competitive businesses, NextEra's massive scale provides a sustainable advantage in terms of cost and execution capabilities.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Interest Rate Sensitivity:</strong> As a capital-intensive utility and developer, higher interest rates increase the cost of financing NextEra's massive growth projects and can make its dividend less attractive relative to fixed-income investments.</li>
+                        <li><strong>Execution Risk:</strong> The company is deploying a record amount of capital. Any significant project delays, cost overruns, or operational issues could negatively impact financial results.</li>
+                        <li><strong>Regulatory and Political Risk:</strong> While currently constructive, changes in the regulatory environment in Florida or shifts in federal energy policy could impact the company's profitability and growth prospects.</li>
+                        <li><strong>Supply Chain Constraints:</strong> The renewable energy industry is dependent on a global supply chain for key components like solar panels and turbines, which can be subject to disruptions and price volatility.</li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
-    </main>
-
-    <footer class="bg-sky-800 text-sky-100 text-center p-8 mt-12">
-        <p class="text-sm">&copy; <span id="currentYearFooter"></span> NextEra Energy Interactive Analysis. For illustrative purposes only.</p>
-    </footer>
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from NextEra Energy, Inc. public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
+        </footer>
 
     <script>
         document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
 
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const iconMenu = document.getElementById('icon-menu');
-        const iconClose = document.getElementById('icon-close');
-
-        mobileMenuButton.addEventListener('click', () => {
-            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
-            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
-            mobileMenu.classList.toggle('hidden');
-            iconMenu.classList.toggle('hidden');
-            iconClose.classList.toggle('hidden');
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
         });
-
-        document.querySelectorAll('#mobile-menu a.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-                mobileMenuButton.setAttribute('aria-expanded', 'false');
-                iconMenu.classList.remove('hidden');
-                iconClose.classList.add('hidden');
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
             });
         });
         
-        const navLinks = document.querySelectorAll('header .nav-link');
-        const sections = document.querySelectorAll('main section[id]');
-
-        function changeNavActiveState() {
-            let currentSectionId = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (window.scrollY >= sectionTop - 100) { // 100px offset for sticky nav
-                    currentSectionId = section.getAttribute('id');
-                }
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
             });
+        });
 
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${currentSectionId}`) {
-                    link.classList.add('active');
-                }
-            });
-        }
-        
-        window.addEventListener('load', changeNavActiveState);
-        window.addEventListener('scroll', changeNavActiveState);
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
-        function wrapText(text, maxWidthChars) {
-            if (typeof text !== 'string') return text;
-            const words = text.split(' ');
-            let lines = [];
-            let currentLine = words[0] || '';
-
-            for (let i = 1; i < words.length; i++) {
-                if (currentLine.length + words[i].length + 1 < maxWidthChars) {
-                    currentLine += ' ' + words[i];
-                } else {
-                    lines.push(currentLine);
-                    currentLine = words[i];
-                }
-            }
-            lines.push(currentLine);
-            return lines;
-        }
-        
-        const CHART_PALETTE = {
-            blue: '#38bdf8',    // sky-400
-            teal: '#2dd4bf',    // teal-400
-            green: '#34d399',   // emerald-400
-            orange: '#fb923c',  // orange-400
-            indigo: '#818cf8',  // indigo-400
-            sky_dark: '#0ea5e9', // sky-500
-            teal_dark: '#0d9488', // teal-600
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
         };
 
-        Chart.defaults.font.family = 'Inter, sans-serif';
-        Chart.defaults.color = '#4b5563'; // gray-600
-
-        const defaultChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: { 
-                        font: { size: 11 },
-                        color: '#374151' // gray-700
-                    }
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                    titleColor: '#1f2937', // gray-800
-                    bodyColor: '#4b5563', // gray-600
-                    backgroundColor: 'rgba(255,255,255,0.95)',
-                    borderColor: '#e5e7eb', // gray-200
-                    borderWidth: 1,
-                    padding: 10,
-                    cornerRadius: 4,
-                    boxPadding: 3,
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) { label += ': '; }
-                            if (context.parsed.y !== null) {
-                                let value = context.parsed.y;
-                                if (context.dataset.yAxisID === 'yPercent' || context.chart.canvas.id === 'consolidatedROICChart') {
-                                   label += value.toFixed(1) + '%';
-                                } else {
-                                   label += '$' + value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + (context.chart.canvas.id.includes('EPS') ? '' : 'M');
-                                }
-                            }
-                            return label;
-                        }
-                    }
-                },
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        font: { size: 10 },
-                        color: '#4b5563',
-                        callback: function(value, index, values) {
-                            const label = this.getLabelForValue(value);
-                            return wrapText(label, 10); 
-                        }
-                    },
-                    grid: { display: false }
-                },
-                y: {
-                    ticks: { 
-                        font: { size: 10 },
-                        color: '#4b5563',
-                        callback: function(value, index, values) {
-                             if (this.axis === 'yPercent' || this.chart.canvas.id === 'consolidatedROICChart') {
-                                return value + '%';
-                             }
-                             return '$' + value.toLocaleString() + (this.chart.canvas.id.includes('EPS') ? '' : 'M');
-                        }
-                    },
-                    beginAtZero: true,
-                    grid: { color: 'rgba(200,200,200,0.3)'} 
-                }
-            }
-        };
-
-        // Chart Data & Instantiation
-        const financialYears = ['2022', '2023', '2024'];
-
-        // 1. Consolidated Revenue
-        new Chart(document.getElementById('consolidatedRevenueChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: financialYears,
-                datasets: [{
-                    label: 'Operating Revenues',
-                    data: [20956, 28114, 24753],
-                    borderColor: CHART_PALETTE.blue,
-                    backgroundColor: CHART_PALETTE.blue + '33',
-                    tension: 0.1, fill: true, pointRadius: 3, pointBackgroundColor: CHART_PALETTE.blue
-                }]
-            },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Consolidated Operating Revenues (Millions USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-
-        // 2. Consolidated Operating Income
-        new Chart(document.getElementById('consolidatedOpIncomeChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: financialYears,
-                datasets: [{
-                    label: 'Operating Income',
-                    data: [4081, 10237, 7479],
-                    borderColor: CHART_PALETTE.teal,
-                    backgroundColor: CHART_PALETTE.teal + '33',
-                    tension: 0.1, fill: true, pointRadius: 3, pointBackgroundColor: CHART_PALETTE.teal
-                }]
-            },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Consolidated Operating Income (Millions USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-        
-        // 3. Consolidated Adjusted EPS
-        new Chart(document.getElementById('consolidatedAdjEPSChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: financialYears,
-                datasets: [{
-                    label: 'Adjusted EPS',
-                    data: [2.90, 3.17, 3.43],
-                    backgroundColor: CHART_PALETTE.green,
-                    borderColor: CHART_PALETTE.green,
-                    borderWidth: 1
-                }]
-            },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Consolidated Adjusted EPS (USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-
-        // 4. Operating Cash Flow
-        new Chart(document.getElementById('consolidatedOCFChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: financialYears,
-                datasets: [{
-                    label: 'Net Cash from Operating Activities',
-                    data: [8262, 11301, 13260],
-                    backgroundColor: CHART_PALETTE.orange,
-                }]
-            },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Operating Cash Flow (Millions USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-
-        // 5. Capital Expenditures (Consolidated)
-        new Chart(document.getElementById('consolidatedCapexChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: financialYears,
-                datasets: [{
-                    label: 'Capital Expenditures',
-                    data: [19283, 25113, 24729], // Consolidated CapEx
-                    backgroundColor: CHART_PALETTE.indigo,
-                }]
-            },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Consolidated Capital Expenditures (Millions USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-        
-        // 6. ROIC Trend
-        new Chart(document.getElementById('consolidatedROICChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: financialYears,
-                datasets: [{
-                    label: 'ROIC (%)',
-                    data: [3.21, 7.16, 5.16],
-                    backgroundColor: CHART_PALETTE.sky_dark,
-                }]
-            },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Return on Invested Capital (ROIC %)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-
-        // 7. EBITDA Trend
-        new Chart(document.getElementById('consolidatedEBITDAChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: financialYears,
-                datasets: [{
-                    label: 'EBITDA (Calculated)',
-                    data: [8584, 16116, 12941],
-                    borderColor: CHART_PALETTE.teal_dark,
-                    backgroundColor: CHART_PALETTE.teal_dark + '33',
-                    tension: 0.1, fill: true, pointRadius: 3, pointBackgroundColor: CHART_PALETTE.teal_dark
-                }]
-            },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'Consolidated EBITDA (Millions USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-        
-        // 8. FPL vs NEER Revenue Contribution 2024
-        new Chart(document.getElementById('segmentRevenueContribution2024Chart').getContext('2d'), {
-            type: 'pie',
-            data: {
-                labels: ['FPL', 'NEER', 'Corporate & Other'],
-                datasets: [{
-                    label: '2024 Operating Revenues',
-                    data: [17019, 7542, 192],
-                    backgroundColor: [CHART_PALETTE.blue, CHART_PALETTE.teal, CHART_PALETTE.stone_lightgrey /* define stone_lightgrey or use another palette color */ ],
-                    borderColor: '#FFFFFF',
-                    borderWidth: 2
-                }]
-            },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: '2024 Segment Revenue Contribution (Millions USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-        
-        // FPL Charts
-        new Chart(document.getElementById('fplCapexChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: financialYears,
-                datasets: [{
-                    label: 'FPL Capital Expenditures',
-                    data: [9190, 9400, 8210], // Approx values in millions
-                    backgroundColor: CHART_PALETTE.blue,
-                }]
-            },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'FPL Capital Expenditures (Millions USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-
-        new Chart(document.getElementById('fplFinancialsChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: financialYears,
-                datasets: [
-                    {
-                        label: 'FPL Operating Revenues',
-                        data: [17282, 18365, 17019],
-                        backgroundColor: CHART_PALETTE.sky_dark,
-                        yAxisID: 'yRevenue',
-                    },
-                    {
-                        label: 'FPL Net Income',
-                        data: [3701, 4552, 4543],
-                        backgroundColor: CHART_PALETTE.teal,
-                        yAxisID: 'yNetIncome',
-                    }
-                ]
-            },
-            options: { ...defaultChartOptions, scales: {
-                x: defaultChartOptions.scales.x,
-                yRevenue: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Operating Revenues ($M)'}, grid: {drawOnChartArea: false} },
-                yNetIncome: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Net Income ($M)'} }
-            }, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'FPL Revenue & Net Income (Millions USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-
-        // NEER Charts
-         new Chart(document.getElementById('neerGenerationMixChart').getContext('2d'), {
+        // Earnings Breakdown Chart
+        const earningsBreakdownCtx = document.getElementById('earningsBreakdownChart').getContext('2d');
+        new Chart(earningsBreakdownCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Wind (60%)', 'Solar (10%)', 'Natural Gas (20%)', 'Nuclear (8%)', 'Other (2%)'],
+                labels: ['Florida Power & Light (FPL)', 'NextEra Energy Resources (NEER)'],
                 datasets: [{
-                    label: 'NEER 2024 MWh Production Mix',
-                    data: [60, 10, 20, 8, 2],
-                    backgroundColor: [CHART_PALETTE.blue, CHART_PALETTE.yellow, CHART_PALETTE.orange, CHART_PALETTE.green, CHART_PALETTE.stone_lightgrey],
-                    borderColor: '#FFFFFF',
-                    borderWidth: 2
+                    data: [70, 30], // Approximate Adjusted Earnings % Contribution
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky],
+                    hoverOffset: 4
                 }]
             },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'NEER 2024 MWh Production Mix (%)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-        
-        new Chart(document.getElementById('neerBacklogChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: ['YE 2024', 'Q1 2025'],
-                datasets: [{
-                    label: 'NEER Project Backlog (GW)',
-                    data: [25, 28], 
-                    backgroundColor: [CHART_PALETTE.green, CHART_PALETTE.teal],
-                }]
-            },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'NEER Project Backlog (GW)', color: '#374151', font: {size: 14, weight: '500'} } }, scales: {...defaultChartOptions.scales, y: {...defaultChartOptions.scales.y, callback: function(value){return value + 'GW'}}} }
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Adjusted Earnings Contribution' } }
+            }
         });
 
-        new Chart(document.getElementById('neerCapexChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: financialYears,
-                datasets: [{
-                    label: 'NEER Capital Expenditures',
-                    data: [9650, 15650, 16390], // Approx values in millions
-                    backgroundColor: CHART_PALETTE.teal,
-                }]
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Fiscal Year ends December 31
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [20.96, 28.11, 27.13], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
             },
-            options: { ...defaultChartOptions, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'NEER Capital Expenditures (Millions USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
-        });
-        
-        new Chart(document.getElementById('neerFinancialsChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: financialYears,
-                datasets: [
-                    {
-                        label: 'NEER Operating Revenues',
-                        data: [3720, 9672, 7542],
-                        backgroundColor: CHART_PALETTE.orange,
-                        yAxisID: 'yRevenue',
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [5.21, 9.38, 9.61], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($M)', data: [7337, 8485, 6878, 5730, 6920, 7170, 7250, 5380], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Millions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($M)', data: [2508, 3201, 2197, 2270, 2600, 2750, 2400, 2250], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Millions of USD'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
                     },
-                    {
-                        label: 'NEER Net Income (Adjusted)', // Using adjusted for NEER as GAAP is volatile
-                        data: [2440, 2760, 3120], // Adjusted Net Income in Millions (approximated from EPS)
-                        backgroundColor: CHART_PALETTE.indigo,
-                        yAxisID: 'yNetIncome',
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
                     }
-                ]
-            },
-            options: { ...defaultChartOptions, scales: {
-                x: defaultChartOptions.scales.x,
-                yRevenue: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Operating Revenues ($M)'}, grid: {drawOnChartArea: false} },
-                yNetIncome: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Adj. Net Income ($M)'} }
-            }, plugins: { ...defaultChartOptions.plugins, title: { display: true, text: 'NEER Revenue & Adjusted Net Income (Millions USD)', color: '#374151', font: {size: 14, weight: '500'} } } }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
         });
 
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
     </script>
 </body>

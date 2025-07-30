@@ -1,409 +1,481 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Sempra (SRE) - Interactive Business Analysis</title>
-   <script src="https://cdn.tailwindcss.com"></script>
-   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-   <!-- Visualization & Content Choices:
-       - Overview: KPI cards for key metrics (Assets, Rate Base, Consumers).
-       - Business Model: Interactive cards for each of the three segments (CA, TX, Infrastructure) detailing their operations and revenue models.
-       - Financials: A tabbed interface to switch between charts for Revenue, Earnings by Segment, and Cash Flow vs. Capex, enabling focused analysis. Charts are styled for clarity and consistency.
-       - Competition: A dropdown selector to compare Sempra's differentiated model against pure-play utilities and infrastructure companies.
-       - Strategy: An interactive accordion for the SWOT analysis and styled cards for growth drivers and risks.
-       CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-   <style>
-       html { scroll-behavior: smooth; }
-       body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; } /* slate-50, slate-800 */
-       .main-container { max-width: 1200px; margin-left: auto; margin-right: auto; padding: 1rem; }
-       .sticky-nav { position: sticky; top: 0; z-index: 40; background-color: #f8fafc; padding-top: 0.5rem; padding-bottom: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; }
-       .nav-link { padding: 0.65rem 1rem; margin-right: 0.25rem; border-radius: 0.375rem; font-weight: 500; font-size: 0.875rem; cursor: pointer; transition: all 0.3s ease; border: 1px solid transparent; color: #0f766e; display: inline-block; } /* teal-700 */
-       .nav-link.active { background-color: #0d9488; color: white; border-color: #0d9488; } /* teal-600 */
-       .nav-link:not(.active):hover { background-color: #ccfbf1; color: #115e59; } /* teal-100, teal-800 */
-       .page-title { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; color: #0f766e; margin-bottom: 0.5rem; } /* teal-700 */
-       .page-subtitle { font-size: 1.25rem; color: #475569; } /* slate-600 */
-       .content-section { scroll-margin-top: 70px; }
-       .section-title { font-size: 1.875rem; line-height: 2.25rem; font-weight: 700; color: #0f766e; margin-bottom: 1.5rem; text-align: center; }
-       .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07); padding: 1.5rem; transition: transform 0.3s ease, box-shadow 0.3s ease; margin-bottom: 2.5rem; }
-       .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
-       .chart-container { position: relative; width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; height: 350px; max-height: 450px; }
-       @media (min-width: 768px) { .chart-container { height: 400px; } }
-       .tab-button { padding: 0.5rem 1rem; margin-right: 0.25rem; margin-bottom: 0.5rem; border-radius: 0.375rem; font-weight: 500; font-size: 0.875rem; cursor: pointer; transition: all 0.3s ease; border: 1px solid #14b8a6; color: #0f766e; } /* teal-500, teal-700 */
-       .tab-button.active { background-color: #0d9488; color: white; } /* teal-600 */
-       .tab-button:not(.active):hover { background-color: #ccfbf1; } /* teal-100 */
-       .kpi-card { background-color: #f0f9ff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05); text-align: center; } /* sky-50 */
-       .kpi-value { font-size: 1.875rem; font-weight: 700; color: #0369a1; } /* sky-700 */
-       .kpi-label { font-size: 0.875rem; color: #475569; } /* slate-600 */
-       .accordion-header { cursor: pointer; padding: 1rem; background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 0.375rem; margin-bottom: 0.25rem; font-weight: 600; color: #075985; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s; } /* sky-50, sky-200, sky-800 */
-       .accordion-header:hover { background-color: #e0f2fe; } /* sky-100 */
-       .accordion-content { display: none; padding: 1rem; border: 1px solid #bae6fd; border-top: none; border-radius: 0 0 0.375rem 0.375rem; background-color: white; }
-       .accordion-item.active .accordion-content { display: block; }
-       .accordion-item.active .accordion-header .icon::before { content: "-"; }
-       .accordion-header .icon::before { content: "+"; font-weight: bold; font-size: 1.25rem; }
-       .footer { background-color: #1e293b; color: #cbd5e1; padding: 2rem 0; margin-top: 3rem; text-align: center; } /* slate-800, slate-300 */
-   </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sempra (SRE) - TickerHack Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #374151; /* gray-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #A78BFA; /* violet-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 0.5rem; /* pb-2 */
+            border-bottom: 2px solid #E7E5E4; /* stone-200 */
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #7DD3FC; /* sky-400 */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .content-text {
+            line-height: 1.75;
+            color: #4B5563; /* gray-600 */
+            font-size: 0.95rem;
+        }
+        .highlight {
+            color: #F97316; /* orange-500 */
+            font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+        }
+        .kpi-card {
+            background-color: #F9FAFB; /* gray-50 */
+            border: 1px solid #E7E5E4; /* stone-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* gray-500 */
+            margin-bottom: 0.25rem;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* text-2xl or 3xl */
+            font-weight: 600;
+            color: #1F2937; /* gray-800 */
+        }
+    </style>
 </head>
-<body class="antialiased">
+<body class="min-h-screen">
 
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Sempra (SRE) Analysis</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
+                        <a href="#overview" class="nav-link">Overview</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
+                        <a href="#financials" class="nav-link">Financials</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
+                        <a href="#outlook" class="nav-link">Outlook</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block text-base">Overview</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
+                    <a href="#financials" class="nav-link block text-base">Financials</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
+                    <a href="#outlook" class="nav-link block text-base">Outlook</a>
+                </div>
+            </div>
+        </nav>
+    </header>
 
-   <header class="text-center py-8">
-       <h1 class="page-title">Sempra Energy (SRE)</h1>
-       <p class="page-subtitle">An Interactive Business Analysis</p>
-   </header>
+    <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Sempra: Powering North America's Energy Future</h2>
+            <p class="content-text mb-6">Sempra (NYSE: SRE) is a premier North American energy infrastructure company focused on electrification and the clean energy transition. With a mission to be the leading energy infrastructure company on the continent, Sempra's strategy is centered on its three major growth platforms: Sempra California, Sempra Texas, and Sempra Infrastructure. The company is executing a massive <span class="highlight">capital investment plan</span> focused on expanding and modernizing its vast transmission and distribution networks to support growing energy demand and the integration of renewables. This focus on regulated, rate-based utility growth provides a stable foundation, while its infrastructure arm offers significant upside through large-scale projects like liquefied natural gas (LNG) export terminals.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: A Three-Platform Growth Engine</h3>
+                    <p class="content-text mb-4">Sempra's strategy is to deliver long-term value through disciplined investments in its three core businesses:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Modernize Regulated Utilities:</strong> Deploy significant capital into its California and Texas utilities to enhance safety, reliability, and capacity, supporting electrification and clean energy goals.</li>
+                        <li><strong class="font-semibold text-gray-700">Grow Infrastructure Assets:</strong> Expand its infrastructure portfolio, particularly in LNG and clean power, to meet growing global demand for secure and cleaner energy sources.</li>
+                        <li><strong class="font-semibold text-gray-700">Financial Discipline:</strong> Maintain a strong balance sheet and focus on operational excellence to support its large capital program and deliver consistent, top-tier dividend growth.</li>
+                        <li><strong class="font-semibold text-gray-700">Sustainability Leadership:</strong> Position the company as a leader in the energy transition by enabling the delivery of diverse and cleaner forms of energy.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">2025-2029 Capital Plan</p>
+                    <p class="kpi-value text-violet-600">$48 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents a record five-year capital plan focused almost entirely on regulated transmission and distribution investments to drive rate base growth.</p>
+                </div>
+            </div>
+        </section>
 
-   <nav class="sticky-nav mb-6">
-       <div class="main-container flex justify-center">
-           <a href="#overview" class="nav-link active">Overview</a>
-           <a href="#businessModel" class="nav-link">Business Model</a>
-           <a href="#financials" class="nav-link">Financials</a>
-           <a href="#competition" class="nav-link">Competition</a>
-           <a href="#strategy" class="nav-link">Strategy & Outlook</a>
-       </div>
-   </nav>
+        <section id="segments" class="section-card scroll-mt-20">
+            <h2 class="section-title">How Sempra Makes Money: Three Regulated Platforms</h2>
+            <p class="content-text mb-6">Sempra's business is organized into three large-scale, regulated growth platforms. This structure provides a stable and predictable earnings base from its utilities, complemented by the significant growth potential of its infrastructure projects.</p>
 
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="segment-tab-button active" data-target="california">Sempra California</button>
+                    <button class="segment-tab-button" data-target="texas">Sempra Texas</button>
+                    <button class="segment-tab-button" data-target="infra">Sempra Infrastructure</button>
+                </nav>
+            </div>
 
-   <main class="main-container">
-
-
-       <section id="overview" class="content-section card">
-           <h2 class="section-title">Company Overview</h2>
-           <p class="mb-6 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Sempra is a leading North American energy infrastructure company, delivering energy to nearly 40 million consumers. Its operations are structured around three core pillars—Sempra California, Sempra Texas, and Sempra Infrastructure—balancing stable regulated utility operations with high-growth infrastructure development, particularly in Liquefied Natural Gas (LNG).</p>
-           <div class="grid md:grid-cols-3 gap-6 text-center">
-               <div class="kpi-card">
-                   <div class="kpi-value">~$100B</div>
-                   <div class="kpi-label">Total Assets (2024)</div>
-               </div>
-               <div class="kpi-card">
-                   <div class="kpi-value">$56B</div>
-                   <div class="kpi-label">Utility Rate Base (2024)</div>
-               </div>
-               <div class="kpi-card">
-                   <div class="kpi-value">7-9%</div>
-                   <div class="kpi-label">Projected EPS CAGR (2025-2029)</div>
-               </div>
-           </div>
-       </section>
-
-
-       <section id="businessModel" class="content-section card">
-           <h2 class="section-title">Sempra's Business Model: Three Pillars</h2>
-           <p class="mb-8 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Sempra's business model strategically combines the stability of regulated utilities with the growth potential of large-scale infrastructure projects. This hybrid approach provides predictable cash flows from its California and Texas utilities to support capital-intensive ventures in its Infrastructure segment.</p>
-           <div class="grid md:grid-cols-3 gap-6">
-               <div class="p-4 bg-white border border-slate-200 rounded-lg shadow hover:shadow-lg transition-shadow">
-                   <h3 class="text-xl font-semibold text-sky-700 mb-2">1. Sempra California</h3>
-                   <p class="text-sm text-slate-600 mb-3"><strong>Operations:</strong> San Diego Gas & Electric (SDG&E) and SoCalGas, serving 25M consumers.</p>
-                   <p class="text-sm text-slate-600 mb-3"><strong>Services:</strong> Electric and Natural Gas Transmission & Distribution.</p>
-                   <p class="text-sm text-slate-600"><strong>Revenue Model:</strong> Regulated rates set by the CPUC, allowing recovery of costs and a return on rate base investment.</p>
-               </div>
-               <div class="p-4 bg-white border border-slate-200 rounded-lg shadow hover:shadow-lg transition-shadow">
-                   <h3 class="text-xl font-semibold text-emerald-700 mb-2">2. Sempra Texas</h3>
-                   <p class="text-sm text-slate-600 mb-3"><strong>Operations:</strong> Majority ownership of Oncor, the largest T&D utility in Texas, serving 13M consumers.</p>
-                   <p class="text-sm text-slate-600 mb-3"><strong>Services:</strong> Electric Transmission & Distribution.</p>
-                   <p class="text-sm text-slate-600"><strong>Revenue Model:</strong> Regulated rates set by the PUCT to cover costs and provide an authorized return on equity.</p>
-               </div>
-               <div class="p-4 bg-white border border-slate-200 rounded-lg shadow hover:shadow-lg transition-shadow">
-                   <h3 class="text-xl font-semibold text-blue-700 mb-2">3. Sempra Infrastructure</h3>
-                   <p class="text-sm text-slate-600 mb-3"><strong>Operations:</strong> LNG export facilities (Cameron, ECA, Port Arthur), natural gas pipelines, and low-carbon solutions.</p>
-                   <p class="text-sm text-slate-600 mb-3"><strong>Services:</strong> LNG production & export, natural gas transportation.</p>
-                   <p class="text-sm text-slate-600"><strong>Revenue Model:</strong> Long-term contracts for LNG & pipeline capacity, equity earnings from JVs, asset sales.</p>
-               </div>
-           </div>
-       </section>
-
-
-       <section id="financials" class="content-section card">
-           <h2 class="section-title">Financial Deep Dive</h2>
-           <p class="mb-8 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Analyze Sempra's financial health through trends in revenue, segment earnings, and cash flow. Use the tabs below to explore different financial dimensions. The data reflects a company in a heavy investment cycle, funding future growth.</p>
-           <div class="mb-6 text-center" id="financials-tabs-container">
-               <button data-tab="revenue" class="tab-button active">Revenue & Income</button>
-               <button data-tab="segments" class="tab-button">Segment Earnings</button>
-               <button data-tab="cashflow" class="tab-button">Cash Flow & Capex</button>
-           </div>
-           <div id="financials-content-area">
-               <div data-tab-content="revenue" class="financial-tab-pane active">
-                   <h3 class="text-xl font-semibold text-neutral-700 mb-1 text-center">Consolidated Revenue & Net Income (2022-2024)</h3>
-                   <p class="text-xs text-slate-500 mb-2 text-center">Revenue fluctuates with factors like commodity pass-through costs, while adjusted earnings show underlying growth.</p>
-                   <div class="chart-container"><canvas id="revenueIncomeChart"></canvas></div>
-               </div>
-               <div data-tab-content="segments" class="financial-tab-pane hidden">
-                   <h3 class="text-xl font-semibold text-neutral-700 mb-1 text-center">Segment Earnings (2022-2024)</h3>
-                   <p class="text-xs text-slate-500 mb-2 text-center">Consistent earnings growth from regulated utilities provides a stable financial foundation.</p>
-                   <div class="chart-container"><canvas id="segmentEarningsChart"></canvas></div>
-               </div>
-               <div data-tab-content="cashflow" class="financial-tab-pane hidden">
-                   <h3 class="text-xl font-semibold text-neutral-700 mb-1 text-center">Cash Flow vs. Capital Expenditures (2022-2024)</h3>
-                   <p class="text-xs text-slate-500 mb-2 text-center">Rising operating cash flow supports a massive increase in capital investment for future growth.</p>
-                   <div class="chart-container"><canvas id="cashFlowCapexChart"></canvas></div>
-               </div>
-           </div>
-       </section>
-
-
-       <section id="competition" class="content-section card">
-           <h2 class="section-title">Competitive Landscape</h2>
-           <p class="mb-8 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Sempra's hybrid model differentiates it from pure-play utilities and infrastructure firms. Its regulated utilities provide stable cash flow to de-risk capital-intensive LNG projects, offering a unique value proposition.</p>
-            <div class="mb-8">
-               <h3 class="text-xl font-semibold text-neutral-700 mb-3 text-center">Sempra's Differentiated Model vs. Competitors</h3>
-               <div class="max-w-md mx-auto">
-                   <select id="competitorSelect" class="w-full p-2 border border-slate-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
-                       <option value="utilities">vs. Pure-Play Utilities</option>
-                       <option value="infrastructure">vs. Pure-Play Infrastructure</option>
-                   </select>
-               </div>
-               <div id="competitorUtilities" class="competitor-info p-4 bg-slate-50 rounded-lg shadow mt-4">
-                   <h4 class="font-semibold text-teal-700">vs. Utilities (e.g., PG&E, Edison Int'l)</h4>
-                   <p class="text-sm text-slate-600">Unlike pure-play utilities confined to regulated rate base growth, Sempra's Infrastructure arm provides a significant vector for higher growth through its large-scale LNG projects. Sempra also has greater geographic diversification (CA, TX, Mexico) compared to state-focused peers.</p>
-               </div>
-               <div id="competitorInfrastructure" class="competitor-info p-4 bg-slate-50 rounded-lg shadow mt-4 hidden">
-                   <h4 class="font-semibold text-teal-700">vs. Infrastructure (e.g., Cheniere, Kinder Morgan)</h4>
-                   <p class="text-sm text-slate-600">Compared to pure-play LNG or midstream companies, Sempra's extensive and stable regulated utility base offers a distinct advantage. This foundation provides predictable earnings to support and de-risk the more volatile and capital-intensive nature of its infrastructure projects.</p>
-               </div>
-           </div>
-           <div class="text-center">
-               <h3 class="text-xl font-semibold text-neutral-700 mb-1 text-center">Competitive Financial Snapshot (FY2024)</h3>
-               <p class="text-xs text-slate-500 mb-2 text-center">Comparison of Sempra with key utility and infrastructure peers.</p>
-               <div class="chart-container"><canvas id="competitorChart"></canvas></div>
-           </div>
-       </section>
-
-
-       <section id="strategy" class="content-section card">
-           <h2 class="section-title">Strategy & Future Outlook</h2>
-           <p class="mb-8 text-slate-700 leading-relaxed text-center max-w-4xl mx-auto">Sempra's strategy centers on "disciplined growth," focusing on a massive $56 billion capital plan (2025-2029), simplifying its business, and de-risking its LNG franchise through partnerships. Click below to explore its strategic analysis.</p>
-            <div id="swotAccordion" class="mb-8">
-               <div class="accordion-item">
-                   <div class="accordion-header"><span>Strengths & Weaknesses</span><span class="icon"></span></div>
-                   <div class="accordion-content grid md:grid-cols-2 gap-4">
-                       <div>
-                           <h4 class="font-semibold text-green-700 mb-1">Strengths</h4>
-                           <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
-                               <li>Diversified portfolio (regulated & infrastructure)</li>
-                               <li>Large, stable regulated rate base</li>
-                               <li>Strategic asset locations (CA, TX, LNG hubs)</li>
-                               <li>Significant growth pipeline ($56B capex)</li>
-                           </ul>
-                       </div>
+            <div id="segmentDetails">
+                <div id="californiaContent" class="segment-content">
+                    <h3 class="subsection-title">Sempra California</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                           <h4 class="font-semibold text-red-700 mb-1">Weaknesses</h4>
-                           <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
-                               <li>High regulatory exposure (esp. California)</li>
-                               <li>Heavy capital expenditure requirements</li>
-                               <li>Project execution risk on large projects</li>
-                               <li>Interest rate and commodity price sensitivity</li>
-                           </ul>
-                       </div>
-                   </div>
-               </div>
-               <div class="accordion-item">
-                   <div class="accordion-header"><span>Opportunities & Threats</span><span class="icon"></span></div>
-                   <div class="accordion-content grid md:grid-cols-2 gap-4">
-                       <div>
-                           <h4 class="font-semibold text-blue-700 mb-1">Opportunities</h4>
-                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
-                               <li>Strong global LNG demand</li>
-                               <li>Electrification & economic growth in key markets</li>
-                               <li>Policy support for clean energy & grid modernization</li>
+                            <p class="content-text mb-2">This platform is comprised of two major Southern California utilities: San Diego Gas & Electric (SDG&E) and Southern California Gas Co. (SoCalGas). Together, they form the largest utility customer base in the United States, serving a thriving and innovative regional economy.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>SDG&E:</strong> A combined electric and natural gas utility providing service to San Diego and southern Orange counties.</li>
+                                <li><strong>SoCalGas:</strong> The largest natural gas distribution utility in the United States, serving customers throughout Central and Southern California.</li>
+                             </ul>
+                        </div>
+                        <div class="kpi-card bg-sky-50 border-sky-200">
+                             <p class="kpi-label">Service Territory</p>
+                             <p class="kpi-value text-sky-600">~27 Million Consumers</p>
+                             <p class="content-text text-sm mt-2">Serving a massive and economically vital region of the U.S., providing a stable foundation for earnings.</p>
+                         </div>
+                    </div>
+                </div>
+                <div id="texasContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Sempra Texas</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This platform is centered around Sempra's 80.25% ownership stake in Oncor Electric Delivery Company, the largest electric transmission and distribution utility in Texas. Oncor operates the state's largest T&D system, serving a fast-growing population and economy.</p>
+                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Oncor:</strong> Operates over 144,000 miles of transmission and distribution lines, delivering power to more than 13 million Texans.</li>
+                                <li><strong>Growth Driver:</strong> Benefiting from strong population and business growth in Texas, driving the need for continued grid investment.</li>
+                             </ul>
+                        </div>
+                        <div class="kpi-card bg-orange-50 border-orange-200">
+                             <p class="kpi-label">Core Focus</p>
+                             <p class="kpi-value text-orange-600">Transmission & Distribution</p>
+                             <p class="content-text text-sm mt-2">Oncor is a pure-play T&D utility, which insulates it from the volatility of the competitive Texas power generation market.</p>
+                         </div>
+                    </div>
+                </div>
+                 <div id="infraContent" class="segment-content hidden">
+                    <h3 class="subsection-title">Sempra Infrastructure</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <p class="content-text mb-2">This segment develops, builds, and operates critical energy infrastructure, with a focus on clean power, energy networks, and LNG and net-zero solutions. It owns and operates a leading portfolio of LNG export facilities and cross-border pipelines, connecting North American energy resources to global markets.</p>
+                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
+                                <li><strong>Key Assets:</strong> Cameron LNG and the upcoming Port Arthur LNG export facilities.</li>
+                                <li><strong>Strategic Importance:</strong> Provides a significant avenue for long-term, contracted growth that is distinct from the regulated utility businesses.</li>
                             </ul>
-                       </div>
-                       <div>
-                           <h4 class="font-semibold text-orange-700 mb-1">Threats</h4>
-                           <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
-                               <li>Adverse regulatory decisions</li>
-                               <li>Intense competition for projects & capital</li>
-                               <li>Geopolitical risks affecting energy markets</li>
-                               <li>Increasing ESG scrutiny</li>
-                           </ul>
-                       </div>
-                   </div>
-               </div>
-           </div>
-           <div class="p-4 bg-teal-50 border border-teal-200 rounded-lg">
-               <h3 class="text-lg font-semibold text-teal-800 mb-2 text-center">Concluding Thoughts</h3>
-               <p class="text-sm text-slate-700 leading-relaxed text-center">Sempra is positioned at the nexus of key energy trends: grid modernization, electrification, and global LNG demand. Its success hinges on executing its massive capital plan, navigating complex regulations, and managing project risks. The hybrid model offers a compelling profile, balancing stability with high-growth potential in the evolving energy landscape.</p>
-           </div>
-       </section>
+                        </div>
+                         <div class="kpi-card bg-teal-50 border-teal-200">
+                            <p class="kpi-label">Growth Catalyst</p>
+                            <p class="kpi-value text-teal-600">LNG Exports</p>
+                            <p class="content-text text-sm mt-2">The development of large-scale LNG projects like Port Arthur LNG offers substantial future earnings potential.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <section id="financials" class="section-card scroll-mt-20">
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Sempra's financial model is designed for stability and predictable growth. The vast majority of its earnings are generated by its regulated utilities, which provides a high degree of predictability. This stable base supports the company's large capital expenditure program and allows for consistent dividend growth.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
+                </div>
 
-   </main>
+                <div>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="operatingIncome">Operating Income ($M)</option>
+                        </select>
+                    </div>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase the stable and growing nature of Sempra's regulated utility business, which forms the bedrock of its financial strength.</p>
+        </section>
 
+        <section id="competition" class="section-card scroll-mt-20">
+            <h2 class="section-title">Competitive Moat: The Regulated Utility Fortress</h2>
+            <p class="content-text mb-6">Sempra's competitive advantage is built on the foundation of its regulated monopoly utility assets, which operate in attractive, high-growth markets. These assets provide a wide and deep moat that is nearly impossible for competitors to replicate.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Regulated Monopoly Status:</strong> Sempra's utilities in California and Texas operate as legal monopolies in their service territories. They face no direct competition for their transmission and distribution services, leading to highly predictable, regulated returns.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Strategic Infrastructure Assets:</strong> The company's vast network of pipelines, wires, and storage facilities are essential, long-lived assets that are critical to the functioning of the economy in their regions.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Constructive Regulatory Environments:</strong> Sempra primarily operates in states like California and Texas, which have generally constructive regulatory frameworks that allow for timely recovery of the significant capital investments needed to maintain and modernize the grid.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Peer Utilities:</strong> While there is no direct competition in its service territories, Sempra competes for investment capital with other large, regulated utilities like NextEra Energy, Duke Energy, and Southern Company.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Other Infrastructure Developers:</strong> In its non-regulated Sempra Infrastructure business, it competes with other large energy companies and private equity firms to develop and build large-scale projects like LNG terminals and renewable power plants.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-   <footer class="footer">
-       <p class="text-sm">Sempra Energy (SRE) Interactive Business Analysis. Data synthesized from May 2025 report.</p>
-       <p class="text-xs mt-1">&copy; <span id="currentYear"></span> Interactive Report. For informational purposes only.</p>
-   </footer>
+        <section id="outlook" class="section-card scroll-mt-20">
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Sempra offers a compelling combination of stable, regulated utility growth and significant long-term upside from its infrastructure projects. The investment thesis is centered on the successful execution of its massive capital plan and navigating the complex regulatory and political environments in its key markets.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Predictable Rate Base Growth:</strong> The $48 billion, five-year capital plan is expected to drive a 9% annualized growth in the company's rate base, leading to predictable earnings and dividend growth.</li>
+                        <li><strong>The Electrification Tail-wind:</strong> Sempra is a primary beneficiary of the long-term trend of electrification, particularly in transportation and buildings, which drives the need for a larger and more robust grid.</li>
+                        <li><strong>LNG Growth Potential:</strong> The development of the Port Arthur LNG facility and potential expansions at Cameron LNG offer significant, long-term contracted cash flow growth potential.</li>
+                        <li><strong>Strong Dividend Profile:</strong> With a solid track record of dividend increases, Sempra appeals to income-oriented investors seeking reliable and growing payouts.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
+                    <ul class="list-disc list-inside content-text space-y-2 pl-4">
+                        <li><strong>Regulatory Risk:</strong> The company's profitability is highly dependent on constructive outcomes in regulatory proceedings in California and Texas. Any adverse rulings on cost recovery or allowed returns could negatively impact earnings.</li>
+                        <li><strong>Wildfire Risk:</strong> Operating in California exposes the company to significant financial risk associated with catastrophic wildfires, despite extensive mitigation efforts.</li>
+                        <li><strong>Large Project Execution Risk:</strong> The development of multi-billion dollar infrastructure projects like LNG terminals is complex and carries risks of cost overruns and construction delays.</li>
+                        <li><strong>Interest Rate Sensitivity:</strong> As a capital-intensive business, a sharp rise in interest rates could increase the cost of financing its large capital expenditure program.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Sempra public filings (SEC reports), investor presentations, and credible financial data providers as of July 2025.</p>
+        </footer>
 
-   <script>
-       document.getElementById('currentYear').textContent = new Date().getFullYear();
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
 
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+        
+        // Segment Tabs
+        const segmentTabs = document.querySelectorAll('.segment-tab-button');
+        const segmentContents = document.querySelectorAll('.segment-content');
+        segmentTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                segmentTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetId = tab.dataset.target + 'Content';
+                segmentContents.forEach(content => {
+                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                });
+            });
+        });
 
-       // Sticky Nav Smooth Scroll and Active Link Highlighting
-       const mainNav = document.querySelector('.sticky-nav');
-       const navLinks = document.querySelectorAll('.sticky-nav .nav-link');
-       const contentSections = document.querySelectorAll('.content-section');
-       let navHeight = mainNav ? mainNav.offsetHeight + 20 : 70;
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4'
+        };
 
-       function changeActiveLink() {
-           let index = contentSections.length;
-           while(--index && window.scrollY + navHeight < contentSections[index].offsetTop) {}
-           navLinks.forEach((link) => link.classList.remove('active'));
-           if(navLinks[index]) navLinks[index].classList.add('active');
-       }
-      
-       navLinks.forEach(anchor => {
-           anchor.addEventListener('click', function (e) {
-               e.preventDefault();
-               const targetId = this.getAttribute('href');
-               const targetElement = document.querySelector(targetId);
-               if (targetElement) {
-                   const targetPosition = targetElement.offsetTop - (mainNav ? mainNav.offsetHeight : 50);
-                   window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-               }
-           });
-       });
-      
-       window.addEventListener('scroll', changeActiveLink);
-       document.addEventListener('DOMContentLoaded', () => {
-           if (mainNav) navHeight = mainNav.offsetHeight + 20;
-           changeActiveLink();
-           initializeAllCharts();
-       });
+        // --- FINANCIAL CHARTS LOGIC ---
 
+        // Fiscal Year ends December 31
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [14.42, 16.73, 15.22], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [4.24, 4.41, 4.88], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
 
-       // Competitor Toggle
-       const competitorSelect = document.getElementById('competitorSelect');
-       if(competitorSelect) {
-           competitorSelect.addEventListener('change', function() {
-               document.getElementById('competitorUtilities').classList.toggle('hidden', this.value !== 'utilities');
-               document.getElementById('competitorInfrastructure').classList.toggle('hidden', this.value !== 'infrastructure');
-           });
-       }
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($M)', data: [3048, 4586, 4016, 5732, 3591, 3624, 4166, 3835], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Millions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($M)', data: [806, 1162, 1070, 1618, 1228, 1111, 1374, 1163], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Millions of USD'
+            }
+        };
 
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
 
-       // Accordion
-       const accordionItems = document.querySelectorAll('.accordion-item');
-       accordionItems.forEach(item => {
-           const header = item.querySelector('.accordion-header');
-           header.addEventListener('click', () => {
-               const isActive = item.classList.contains('active');
-               // Optional: Close other items when one is opened
-               // accordionItems.forEach(i => i.classList.remove('active'));
-               if (!isActive) item.classList.add('active');
-               else item.classList.remove('active');
-           });
-       });
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
 
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
 
-       // Financials Tabs Logic
-       const financialTabs = document.querySelectorAll('#financials-tabs-container .tab-button');
-       const financialTabContents = document.querySelectorAll('#financials-content-area .financial-tab-pane');
-       financialTabs.forEach(tab => {
-           tab.addEventListener('click', () => {
-               financialTabs.forEach(t => t.classList.remove('active'));
-               tab.classList.add('active');
-               const targetTab = tab.dataset.tab;
-               financialTabContents.forEach(content => {
-                   content.classList.toggle('hidden', content.dataset.tabContent !== targetTab);
-               });
-           });
-       });
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
-
-       // Chart.js Configurations
-       const defaultChartOptions = {
-           responsive: true,
-           maintainAspectRatio: false,
-           scales: {
-               y: { beginAtZero: false, ticks: { color: '#475569' }, grid: { color: '#e2e8f0' } },
-               x: { ticks: { color: '#475569' }, grid: { display: false } }
-           },
-           plugins: {
-               legend: { position: 'bottom', labels: { color: '#1e293b', font: {size: 11}, boxWidth: 12 } },
-               tooltip: {
-                   backgroundColor: 'rgba(30, 41, 59, 0.9)',
-                   titleColor: '#ffffff', bodyColor: '#ffffff', titleFont: { weight: 'bold'},
-                   padding: 10, cornerRadius: 4,
-                   callbacks: {
-                       label: function(context) {
-                           let label = context.dataset.label || '';
-                           if (label) label += ': ';
-                           if (context.parsed.y !== null) {
-                               label += '$' + (context.parsed.y / 1000).toFixed(2) + 'B';
-                           }
-                           return label;
-                       }
-                   }
-               }
-           },
-           animation: { duration: 800, easing: 'easeOutQuart' }
-       };
-
-
-       function initializeAllCharts() {
-           // Revenue & Income Chart
-           const revenueIncomeCtx = document.getElementById('revenueIncomeChart');
-           if (revenueIncomeCtx) new Chart(revenueIncomeCtx, {
-               type: 'bar',
-               data: {
-                   labels: ['2022', '2023', '2024'],
-                   datasets: [
-                       { label: 'Total Revenues', data: [14433, 16726, 13185], backgroundColor: 'rgba(14, 165, 233, 0.7)', yAxisID: 'y' }, // sky-500
-                       { label: 'Adjusted Net Income', data: [2639, 2916, 2969], backgroundColor: 'rgba(16, 185, 129, 0.7)', yAxisID: 'y' } // emerald-500
-                   ]
-               },
-               options: JSON.parse(JSON.stringify(defaultChartOptions))
-           });
-
-
-           // Segment Earnings Chart
-           const segmentEarningsCtx = document.getElementById('segmentEarningsChart');
-           if (segmentEarningsCtx) new Chart(segmentEarningsCtx, {
-               type: 'line',
-               data: {
-                   labels: ['2022', '2023', '2024'],
-                   datasets: [
-                       { label: 'Sempra California', data: [1573, 1662, 1724], borderColor: '#0ea5e9', backgroundColor: 'rgba(14, 165, 233, 0.1)', fill: true, tension: 0.2 },
-                       { label: 'Sempra Texas', data: [820, 872, 932], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.2 },
-                       { label: 'Sempra Infrastructure', data: [588, 605, 633], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.2 }
-                   ]
-               },
-               options: JSON.parse(JSON.stringify(defaultChartOptions))
-           });
-
-
-           // Cash Flow & Capex Chart
-           const cashFlowCapexCtx = document.getElementById('cashFlowCapexChart');
-           if(cashFlowCapexCtx) new Chart(cashFlowCapexCtx, {
-               type: 'line',
-               data: {
-                   labels: ['2022', '2023', '2024'],
-                   datasets: [
-                       { label: 'Operating Cash Flow', data: [3862, 4519, 4860], borderColor: '#22c55e', backgroundColor: 'rgba(34, 197, 94, 0.1)', fill: true, tension: 0.2 }, // green-500
-                       { label: 'Capital Expenditures', data: [3472, 7763, 9871], borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', fill: true, tension: 0.2 } // orange-500
-                   ]
-               },
-               options: JSON.parse(JSON.stringify(defaultChartOptions))
-           });
-
-
-           // Competitor Chart
-           const competitorCtx = document.getElementById('competitorChart');
-           if(competitorCtx) new Chart(competitorCtx, {
-               type: 'bar',
-               data: {
-                   labels: ['Sempra (SRE)', 'PG&E (PCG)', 'Edison Int\'l (EIX)', 'Cheniere (LNG)', 'Kinder Morgan (KMI)'],
-                   datasets: [
-                       { label: 'FY2024 Revenue', data: [13190, 24420, 17300, 15700, 15100], backgroundColor: 'rgba(59, 130, 246, 0.7)', yAxisID: 'y' }, // blue-500
-                       { label: 'FY2024 Net Income', data: [2820, 2480, 1280, 3300, 2610], backgroundColor: 'rgba(132, 204, 22, 0.7)', yAxisID: 'y' } // lime-500
-                   ]
-               },
-               options: { ...JSON.parse(JSON.stringify(defaultChartOptions)), scales: { x: { ticks: { font: { size: 9 } } }, y: { ...defaultChartOptions.scales.y, stacked: false } } }
-           });
-       }
-   </script>
+    </script>
 </body>
 </html>
+

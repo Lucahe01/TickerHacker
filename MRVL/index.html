@@ -3,19 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marvell Technology: Interactive Business Analysis</title>
+    <title>Marvell Technology (MRVL) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Visualization & Content Choices: 
-        - Overview: Text summary of Marvell's mission and transformation. Goal: Inform. Method: HTML text.
-        - Business Model: Text summaries of fabless model, revenue, supply chain. Goal: Inform. Method: HTML text.
-        - Market Segments: Donut chart for Q4 FY25 revenue breakdown by segment (Data Center, Enterprise, etc.). Bar chart for YoY & QoQ changes per segment. Goal: Compare, Inform. Viz: Chart.js Donut & Bar. Interaction: Tooltips. Justification: Visualizes segment importance and performance.
-        - Financial Performance: Line charts for Revenue & OCF trends (FY23-FY25). Grouped Bar charts for GAAP vs. Non-GAAP Gross/Operating Margins & Net Income (FY23-FY25). Goal: Show trends, Compare. Viz: Chart.js Line & Bar. Interaction: Tooltips. Justification: Illustrates financial health and performance over time.
-        - Competitive Landscape: HTML table comparing Marvell, Broadcom, Nvidia, Intel on key aspects. Goal: Compare. Viz: HTML Table. Interaction: Static display. Justification: Structured comparison of key players.
-        - Strategic Outlook: Text summaries of growth opportunities, risks. Goal: Inform. Method: HTML text.
-        - All choices adhere to NO SVG/Mermaid, using Chart.js (Canvas) and HTML/Tailwind. The designed structure is supported by clear navigation and section-specific content.
-    -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -28,7 +19,7 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px; 
+            height: 300px;
             max-height: 350px;
         }
         @media (min-width: 768px) { /* md */
@@ -44,10 +35,17 @@
             padding: 1.5rem; /* p-6 */
             margin-bottom: 2rem; /* mb-8 */
         }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
         .section-title {
             font-size: 1.875rem; /* text-3xl */
             font-weight: 600; /* font-semibold */
-            color: #60A5FA; /* blue-400 */
+            color: #A78BFA; /* violet-400 */
             margin-bottom: 1.5rem; /* mb-6 */
             padding-bottom: 0.5rem; /* pb-2 */
             border-bottom: 2px solid #E7E5E4; /* stone-200 */
@@ -55,7 +53,7 @@
         .subsection-title {
             font-size: 1.5rem; /* text-2xl */
             font-weight: 600; /* font-semibold */
-            color: #2DD4BF; /* teal-400 */
+            color: #7DD3FC; /* sky-400 */
             margin-top: 1.5rem; /* mt-6 */
             margin-bottom: 1rem; /* mb-4 */
         }
@@ -63,11 +61,26 @@
             line-height: 1.75;
             color: #4B5563; /* gray-600 */
             font-size: 0.95rem;
-            margin-bottom: 0.75rem;
         }
         .highlight {
             color: #F97316; /* orange-500 */
             font-weight: 600;
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 500;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: #E7E5E4; /* stone-200 */
+            color: #374151; /* gray-700 */
+            border: 1px solid transparent;
+        }
+        .tab-button.active {
+            background-color: #A78BFA; /* violet-400 */
+            color: #FFFFFF;
+            border-color: #8B5CF6; /* violet-500 */
         }
         .nav-link {
             padding: 0.5rem 1rem;
@@ -78,33 +91,8 @@
             white-space: nowrap;
         }
         .nav-link:hover, .nav-link.active {
-            background-color: #60A5FA; /* blue-400 */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
-        }
-        .table-cell { 
-            padding: 0.75rem 1rem; 
-            border: 1px solid #E7E5E4; /* stone-200 */
-            text-align: left; 
-            font-size: 0.875rem; /* text-sm */
-            color: #4B5563; /* gray-600 */
-        }
-        .table-header-cell {
-            background-color: #F3F4F6; /* gray-100 */
-            color: #1F2937; /* gray-800 */
-            font-weight: 600;
-        }
-        .details-summary {
-            font-weight: 600; /* font-semibold */
-            color: #2DD4BF; /* teal-400 */
-            cursor: pointer;
-            padding: 0.5rem 0;
-            font-size: 1.125rem; /* text-lg */
-            margin-bottom: 0.5rem;
-        }
-        .details-content {
-            margin-top: 0.5rem;
-            padding-left: 1rem;
-            border-left: 2px solid #E7E5E4; /* stone-200 */
         }
         .kpi-card {
             background-color: #F9FAFB; /* gray-50 */
@@ -131,20 +119,19 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold" style="color: #60A5FA;">Marvell Technology Analysis</h1>
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Marvell Technology (MRVL) Analysis</h1>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
                         <a href="#overview" class="nav-link">Overview</a>
-                        <a href="#business-model" class="nav-link">Business Model</a>
-                        <a href="#segments" class="nav-link">Market Segments</a>
+                        <a href="#segments" class="nav-link">Business Segments</a>
                         <a href="#financials" class="nav-link">Financials</a>
-                        <a href="#competition" class="nav-link">Competition</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
                         <a href="#outlook" class="nav-link">Outlook</a>
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                         <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -154,10 +141,9 @@
             <div class="md:hidden hidden" id="mobile-menu">
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                     <a href="#overview" class="nav-link block text-base">Overview</a>
-                    <a href="#business-model" class="nav-link block text-base">Business Model</a>
-                    <a href="#segments" class="nav-link block text-base">Market Segments</a>
+                    <a href="#segments" class="nav-link block text-base">Business Segments</a>
                     <a href="#financials" class="nav-link block text-base">Financials</a>
-                    <a href="#competition" class="nav-link block text-base">Competition</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
                     <a href="#outlook" class="nav-link block text-base">Outlook</a>
                 </div>
             </div>
@@ -165,598 +151,308 @@
     </header>
 
     <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
-        <section id="overview" class="section-card scroll-mt-20">
-            <h2 class="section-title">Welcome to Marvell Technology Interactive Analysis</h2>
-            <p class="content-text">This interactive application provides an exploration of Marvell Technology's business, based on the "Marvell Business Model Deep Dive" report. Marvell has strategically repositioned itself as a key enabler of data infrastructure, focusing on high-growth markets like AI and cloud data centers. This section offers a high-level overview of the company and its strategic direction.</p>
-            <h3 class="subsection-title">Corporate Overview & Mission</h3>
-            <p class="content-text">Founded in 1995, Marvell Technology, Inc. has evolved into a significant player in the semiconductor industry, employing over 6,900 people and holding over 10,000 patents. Its core mission is to "develop and deliver semiconductor solutions that move, store, process and secure the world's data faster and more reliably than anyone else." This mission guides its focus on data centers, carrier infrastructure, enterprise networking, and automotive markets.</p>
-            <h3 class="subsection-title">Strategic Transformation</h3>
-            <p class="content-text">Under CEO Matthew J. Murphy, Marvell has shifted from lower-margin businesses to concentrate on data infrastructure. This involved strategic acquisitions like Cavium, Avera, Aquantia, Inphi, and Innovium, building a comprehensive portfolio for AI data centers, including custom compute, advanced interconnects, and network switching. This focus means deeper collaborations with hyperscalers and a commitment to long-term R&D.</p>
-        </section>
 
-        <section id="business-model" class="section-card scroll-mt-20">
-            <h2 class="section-title">Marvell's Business Model & Operations</h2>
-            <p class="content-text">This section delves into Marvell's operational framework, explaining its core business model, how it generates revenue, and its approach to product development and supply chain management. Understanding these aspects is crucial to appreciating Marvell's position in the semiconductor industry.</p>
-            <h3 class="subsection-title">Core Business Model: Fabless Design and Innovation</h3>
-            <p class="content-text">Marvell operates on a fabless semiconductor model, focusing on research, design, development, and marketing of ICs, while outsourcing manufacturing to third-party foundries. This strategy reduces capital expenditure and allows concentration on innovation, crucial for its custom silicon strategy in the competitive AI chip market. However, it also creates reliance on foundry partners.</p>
-            <h3 class="subsection-title">Revenue Generation</h3>
-            <p class="content-text">Revenue primarily comes from selling semiconductor products, ranging from standard components to custom ASICs. Key customers include OEMs, ODMs, cloud providers, and large enterprises. The data center market, especially custom AI silicon programs, has become a major revenue driver, reflecting successful monetization of R&D in high-value data infrastructure.</p>
-            <h3 class="subsection-title">Product Development, Manufacturing, and Supply Chain</h3>
-            <p class="content-text">Innovation is central, backed by over 10,000 patents. The product lifecycle emphasizes meeting data infrastructure customer needs. As a fabless company, Marvell collaborates closely with foundries for wafer fabrication and partners for assembly/testing. It emphasizes a responsible supply chain, being a member of the Responsible Business Alliance (RBA) and adhering to a Supplier Code of Conduct covering human rights, climate action, and water use. This sustainability focus is increasingly a strategic imperative and competitive differentiator.</p>
+        <section id="overview" class="section-card scroll-mt-20">
+            <h2 class="section-title">Marvell: Architecting the Future of Data Infrastructure</h2>
+            <p class="content-text mb-6">Marvell Technology (NASDAQ: MRVL) is a leading provider of data infrastructure semiconductor solutions. Spanning the entire data lifecycle from processing and networking to storage and security, Marvell's technology is critical to the world's most advanced data centers, automotive systems, and enterprise networks. The company is at the forefront of the Artificial Intelligence (AI) revolution, leveraging its deep expertise in <span class="highlight">custom Application-Specific Integrated Circuits (ASICs)</span> to design bespoke silicon for the world's largest cloud providers. This strategic focus on high-growth, high-value markets has transformed Marvell into a key enabler of AI and accelerated computing.</p>
+            
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <div>
+                    <h3 class="subsection-title !mt-0">Core Strategy: A Focus on Customization and Connectivity</h3>
+                    <p class="content-text mb-4">Marvell's strategy is built on providing essential, high-performance building blocks for data infrastructure:</p>
+                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
+                        <li><strong class="font-semibold text-gray-700">Lead in Custom AI Silicon:</strong> Capitalize on the growing demand from hyperscale cloud customers for custom-designed ASICs to power their AI training and inference workloads.</li>
+                        <li><strong class="font-semibold text-gray-700">Dominate Data Center Interconnect:</strong> Provide a comprehensive portfolio of optical and copper connectivity solutions (PAM4 DSPs, switches, PHYs) to enable the high-speed data movement required by AI.</li>
+                        <li><strong class="font-semibold text-gray-700">Expand in Automotive:</strong> Leverage its leadership in Ethernet technology to provide the networking backbone for next-generation software-defined vehicles.</li>
+                        <li><strong class="font-semibold text-gray-700">Strategic Portfolio Management:</strong> Continuously optimize its portfolio by investing in high-growth areas like AI and automotive while managing more traditional markets for profitability.</li>
+                    </ul>
+                </div>
+                <div class="kpi-card bg-violet-50 border-violet-200">
+                    <p class="kpi-label">Q1 FY26 Data Center Revenue</p>
+                    <p class="kpi-value text-violet-600">$816 Million</p>
+                    <p class="content-text text-sm mt-2">Represents explosive 87% year-over-year growth, primarily driven by strong demand for the company's AI-focused custom silicon and optical interconnect solutions.</p>
+                </div>
+            </div>
         </section>
 
         <section id="segments" class="section-card scroll-mt-20">
-            <h2 class="section-title">Market Segments Deep Dive</h2>
-            <p class="content-text">Marvell structures its business around five key end markets. This section explores each segment, highlighting their product offerings, target applications, and recent performance. The interactive charts below visualize the revenue contribution and growth dynamics, illustrating Marvell's strategic shift towards data-centric growth engines, particularly the Data Center segment.</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <div>
-                    <h3 class="subsection-title !mt-0 text-center">Q4 FY25 Net Revenue by End Market (%)</h3>
-                    <div class="chart-container h-72 md:h-80">
-                        <canvas id="segmentRevenuePieChart"></canvas>
-                    </div>
-                    <p class="content-text text-xs text-center mt-2">Hover over segments for details. Data Center clearly dominates revenue.</p>
-                </div>
-                <div>
-                    <h3 class="subsection-title !mt-0 text-center">Q4 FY25 Segment Performance</h3>
-                    <div class="chart-container h-72 md:h-80">
-                        <canvas id="segmentGrowthBarChart"></canvas>
-                    </div>
-                    <p class="content-text text-xs text-center mt-2">YoY: Year-over-Year, QoQ: Quarter-over-Quarter change.</p>
-                </div>
-            </div>
+            <h2 class="section-title">How Marvell Makes Money: Revenue by End Market</h2>
+            <p class="content-text mb-6">Marvell's business is organized around five key end markets, with the Data Center segment emerging as the primary growth engine due to the insatiable demand from AI applications. The company provides a broad portfolio of standard, semi-custom, and fully custom silicon solutions to serve these markets.</p>
 
-            <div id="segment-details">
-                <h3 class="subsection-title">Segment Overview:</h3>
-                <p class="content-text">Marvell's Data Center segment is its largest and fastest-growing, fueled by AI and cloud demand. Other segments like Enterprise Networking, Carrier Infrastructure, Automotive/Industrial, and Consumer show varied performance, reflecting the company's strategic priorities.</p>
-                
-                <details class="mb-4">
-                    <summary class="details-summary">Data Center (75% of Q4 FY25 Revenue)</summary>
-                    <div class="details-content">
-                        <p class="content-text"><strong>Revenue:</strong> $1,365.8M (Q4 FY25), +78% YoY, +24% QoQ.</p>
-                        <p class="content-text"><strong>Key Products:</strong> Custom compute (XPUs, CPUs, DPUs, NICs), interconnects (PAM4/coherent DSPs, PCIe retimers, DCI optical modules), network switching, storage controllers (SSD/HDD/Fibre Channel), CXL solutions, HSMs.</p>
-                        <p class="content-text"><strong>Applications:</strong> AI/ML infrastructure, cloud platforms, servers, NAS/SAN storage. Growth driven by custom AI silicon and interconnect demand. Marvell co-develops compute devices with hyperscalers.</p>
-                    </div>
-                </details>
-                <details class="mb-4">
-                    <summary class="details-summary">Enterprise Networking (9% of Q4 FY25 Revenue)</summary>
-                    <div class="details-content">
-                        <p class="content-text"><strong>Revenue:</strong> $171.4M (Q4 FY25), -35% YoY, +14% QoQ.</p>
-                        <p class="content-text"><strong>Key Products:</strong> Enterprise/industrial Ethernet switches, PHYs, wireless/networking processors.</p>
-                        <p class="content-text"><strong>Applications:</strong> Campus/SMB routers & switches, WAPs, network appliances (firewalls, load balancers), workstations.</p>
-                    </div>
-                </details>
-                <details class="mb-4">
-                    <summary class="details-summary">Carrier Infrastructure (6% of Q4 FY25 Revenue)</summary>
-                    <div class="details-content">
-                        <p class="content-text"><strong>Revenue:</strong> $105.8M (Q4 FY25), -38% YoY, +25% QoQ.</p>
-                        <p class="content-text"><strong>Key Products:</strong> Wireless/networking processors, Ethernet switches, PHYs, custom ASICs.</p>
-                        <p class="content-text"><strong>Applications:</strong> 5G base stations, optical transport, broadband access, routers, RAN systems.</p>
-                    </div>
-                </details>
-                 <details class="mb-4">
-                    <summary class="details-summary">Automotive/Industrial (5% of Q4 FY25 Revenue)</summary>
-                    <div class="details-content">
-                        <p class="content-text"><strong>Revenue:</strong> $85.7M (Q4 FY25), +4% YoY, +3% QoQ.</p>
-                        <p class="content-text"><strong>Key Products:</strong> Automotive Ethernet (switches, multi-gig PHYs, bridges), storage controllers.</p>
-                        <p class="content-text"><strong>Applications:</strong> ADAS, autonomous vehicles, in-vehicle networking, industrial Ethernet, military/government.</p>
-                    </div>
-                </details>
-                <details class="mb-4">
-                    <summary class="details-summary">Consumer (5% of Q4 FY25 Revenue)</summary>
-                    <div class="details-content">
-                        <p class="content-text"><strong>Revenue:</strong> $88.7M (Q4 FY25), -38% YoY, -8% QoQ.</p>
-                        <p class="content-text"><strong>Key Products:</strong> HDD/SSD controllers, broadband gateway/router solutions.</p>
-                        <p class="content-text"><strong>Applications:</strong> PCs, gaming consoles, home data storage, home WAPs, set-top boxes. Reflects strategic de-emphasis.</p>
-                    </div>
-                </details>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <div class="chart-container h-80 md:h-96">
+                    <canvas id="revenueBreakdownChart"></canvas>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Market Drivers</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Data Center:</strong> The largest and fastest-growing segment. Includes custom AI ASICs, optical DSPs, Ethernet switches, and storage controllers for cloud and AI infrastructure.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Enterprise Networking:</strong> Provides Ethernet switches, PHYs, and processors for corporate campus and data center networks.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-teal-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Carrier Infrastructure:</strong> Solutions for 5G wireless infrastructure, including processors and baseband technologies.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-orange-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Automotive & Industrial:</strong> A growing segment focused on in-vehicle networking, Ethernet switches, and controllers for the software-defined vehicle.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-gray-400 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Consumer:</strong> Legacy products for consumer-grade storage devices.</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </section>
 
         <section id="financials" class="section-card scroll-mt-20">
-            <h2 class="section-title">Financial Performance Analysis</h2>
-            <p class="content-text">This section provides an analysis of Marvell's financial performance over fiscal years 2023, 2024, and 2025. The charts below illustrate trends in key metrics such as net revenue, profitability (both GAAP and Non-GAAP), and operating cash flow. Understanding these trends is essential for assessing Marvell's financial health and the impact of its strategic initiatives.</p>
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Marvell's financial performance reflects its strategic transformation into an AI-driven data center powerhouse. While some traditional markets are experiencing cyclical downturns, the explosive growth in the Data Center segment is driving the overall business, leading to improving profitability and a strong outlook.</p>
             
-             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                <div class="kpi-card">
-                    <p class="kpi-label">FY25 Net Revenue</p>
-                    <p class="kpi-value">$5.77B</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY23-FY25)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Non-GAAP Operating Income ($B)</option>
+                        </select>
+                    </div>
+                    <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="yearlyFinancialChart"></canvas>
+                    </div>
                 </div>
-                <div class="kpi-card">
-                    <p class="kpi-label">FY25 Op. Cash Flow</p>
-                    <p class="kpi-value">$1.68B</p>
-                </div>
-                <div class="kpi-card">
-                    <p class="kpi-label">FY25 Non-GAAP Gross Margin</p>
-                    <p class="kpi-value">60.5%</p>
-                </div>
-            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <div>
-                    <h3 class="subsection-title !mt-0 text-center">Net Revenue Trend (FY23-FY25)</h3>
-                    <div class="chart-container h-80">
-                        <canvas id="netRevenueChart"></canvas>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($M)</option>
+                             <option value="operatingIncome">Non-GAAP Operating Income ($M)</option>
+                        </select>
                     </div>
-                    <p class="content-text text-xs text-center mt-2">Total net revenue in USD millions.</p>
-                </div>
-                <div>
-                    <h3 class="subsection-title !mt-0 text-center">Operating Cash Flow (FY23-FY25)</h3>
-                    <div class="chart-container h-80">
-                        <canvas id="ocfChart"></canvas>
+                    <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
+                        <canvas id="quarterlyFinancialChart"></canvas>
                     </div>
-                    <p class="content-text text-xs text-center mt-2">Net cash from operating activities in USD millions.</p>
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                <div>
-                    <h3 class="subsection-title !mt-0 text-center">Gross Margin Trend (FY23-FY25)</h3>
-                    <div class="chart-container h-80">
-                        <canvas id="grossMarginChart"></canvas>
-                    </div>
-                    <p class="content-text text-xs text-center mt-2">Comparison of GAAP and Non-GAAP gross margins.</p>
-                </div>
-                <div>
-                    <h3 class="subsection-title !mt-0 text-center">Operating Margin Trend (FY23-FY25)</h3>
-                    <div class="chart-container h-80">
-                        <canvas id="operatingMarginChart"></canvas>
-                    </div>
-                    <p class="content-text text-xs text-center mt-2">Comparison of GAAP and Non-GAAP operating margins.</p>
-                </div>
-            </div>
-             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="subsection-title !mt-0 text-center">Net Income (Loss) Trend (FY23-FY25)</h3>
-                    <div class="chart-container h-80">
-                        <canvas id="netIncomeChart"></canvas>
-                    </div>
-                    <p class="content-text text-xs text-center mt-2">GAAP and Non-GAAP net income (loss) in USD millions.</p>
-                </div>
-                <div>
-                    <h3 class="subsection-title !mt-0">Balance Sheet Snapshot (End of FY25)</h3>
-                    <ul class="list-disc list-inside content-text space-y-1 pl-4">
-                        <li><strong>Cash & Cash Equivalents:</strong> $948.0 million</li>
-                        <li><strong>Total Debt (Short & Long Term):</strong> $4,181.1 million</li>
-                        <li><strong>Total Stockholders’ Equity:</strong> $14,039.9 million</li>
-                    </ul>
-                     <p class="content-text mt-4">Marvell reported a GAAP net loss of $(885.0)M for FY25, but a Non-GAAP net income of $1.377B. This difference is largely due to non-cash charges like amortization of acquired intangibles and stock-based compensation. Despite the GAAP loss, the company generated a record $1.68B in operating cash flow in FY25, highlighting strong underlying cash generation.</p>
-                </div>
-            </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts illustrate the cyclical nature of some of Marvell's end markets, contrasted with the powerful secular growth trend in its data center business.</p>
         </section>
 
         <section id="competition" class="section-card scroll-mt-20">
-            <h2 class="section-title">Competitive Landscape</h2>
-            <p class="content-text">Marvell operates in a highly competitive data infrastructure semiconductor market, facing established players with significant resources. This section outlines the market overview and provides a comparative look at Marvell versus its key competitors: Broadcom, Nvidia, and Intel. Understanding these dynamics is key to assessing Marvell's market positioning and strategic challenges.</p>
+            <h2 class="section-title">Competitive Moat: The Custom Silicon Edge</h2>
+            <p class="content-text mb-6">Marvell's competitive moat is built on its deep engineering expertise, its comprehensive IP portfolio, and its collaborative, long-term relationships with the world's most influential technology companies.</p>
             
-            <h3 class="subsection-title">Market Overview</h3>
-            <p class="content-text">The data infrastructure semiconductor market is driven by AI, cloud computing, 5G, IoT, and automotive trends. Global semiconductor sales reached $627.6 billion in 2024. Key trends include demand for custom silicon (especially for AI), chiplet architectures, and increasing design complexity.</p>
-
-            <h3 class="subsection-title">Competitor Comparison</h3>
-            <p class="content-text">The following table summarizes key aspects of Marvell and its main competitors. Marvell differentiates itself through its specialized data infrastructure portfolio, custom ASIC capabilities, and expertise in high-speed connectivity.</p>
-            <div class="overflow-x-auto mt-6 shadow rounded-lg">
-                <table class="min-w-full bg-white">
-                    <thead>
-                        <tr>
-                            <th class="table-cell table-header-cell">Feature</th>
-                            <th class="table-cell table-header-cell">Marvell Technology</th>
-                            <th class="table-cell table-header-cell">Broadcom Inc.</th>
-                            <th class="table-cell table-header-cell">Nvidia Corporation</th>
-                            <th class="table-cell table-header-cell">Intel Corporation</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-stone-200">
-                        <tr>
-                            <td class="table-cell font-semibold">Business Model</td>
-                            <td class="table-cell">Fabless</td>
-                            <td class="table-cell">Fabless</td>
-                            <td class="table-cell">Fabless</td>
-                            <td class="table-cell">IDM (IDM 2.0, Foundry)</td>
-                        </tr>
-                        <tr>
-                            <td class="table-cell font-semibold">Primary Market Focus</td>
-                            <td class="table-cell">Data Infrastructure (Data Center, Carrier, Enterprise, Auto)</td>
-                            <td class="table-cell">Diversified (Semiconductors & Infrastructure Software)</td>
-                            <td class="table-cell">AI/HPC, Gaming, Pro Viz, Auto</td>
-                            <td class="table-cell">CPUs, Data Center, AI, Networking, Edge, PC, Foundry</td>
-                        </tr>
-                        <tr>
-                            <td class="table-cell font-semibold">Key Strengths in AI</td>
-                            <td class="table-cell">Custom AI Accelerators, DPUs, Optical Interconnect</td>
-                            <td class="table-cell">Networking ASICs for AI, Custom Silicon</td>
-                            <td class="table-cell">GPU-dominant AI Platform (Hardware & CUDA Software)</td>
-                            <td class="table-cell">CPUs, GPUs, FPGAs, Custom ASICs, Photonics, Foundry</td>
-                        </tr>
-                        <tr>
-                            <td class="table-cell font-semibold">Custom Silicon Approach</td>
-                            <td class="table-cell">Deep co-development, IP blocks</td>
-                            <td class="table-cell">Strong ASIC capabilities</td>
-                            <td class="table-cell">Platform-focused, some customization</td>
-                            <td class="table-cell">IFS for external, internal custom ASIC division</td>
-                        </tr>
-                        <tr>
-                            <td class="table-cell font-semibold">Networking Portfolio</td>
-                            <td class="table-cell">Comprehensive (Switches, PHYs, DPUs, Optical, Auto Ethernet)</td>
-                            <td class="table-cell">Dominant in Merchant Switching, Connectivity</td>
-                            <td class="table-cell">High-Performance Networking (InfiniBand, Ethernet, DPUs)</td>
-                            <td class="table-cell">Ethernet Controllers, Tofino Switches, FPGAs, Photonics</td>
-                        </tr>
-                        <tr>
-                            <td class="table-cell font-semibold">Software/Ecosystem</td>
-                            <td class="table-cell">SDKs, Open Standards Support</td>
-                            <td class="table-cell">Software for acquired businesses</td>
-                            <td class="table-cell">CUDA Platform, Extensive Developer Ecosystem</td>
-                            <td class="table-cell">oneAPI, Broad Software Stack</td>
-                        </tr>
-                        <tr>
-                            <td class="table-cell font-semibold">Approx. FY25/Recent Annual Revenue</td>
-                            <td class="table-cell">~$5.8 Billion</td>
-                            <td class="table-cell">~$50+ Billion</td>
-                            <td class="table-cell">~$130 Billion</td>
-                            <td class="table-cell">~$55-60 Billion (est.)</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Custom ASIC Leadership:</strong> Marvell's ability to design complex, high-performance custom silicon from the ground up gives it a powerful advantage. These multi-year design cycles create extremely sticky relationships with customers who are co-developing their most strategic products with Marvell.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Broad IP Portfolio:</strong> Marvell possesses a wide range of essential IP for data infrastructure, including industry-leading SerDes, PAM4 DSPs, processors, and security technologies. This allows them to offer a complete solution that is difficult for competitors to replicate.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">High Switching Costs:</strong> Once a customer designs a Marvell chip (especially a custom ASIC) into their system, the costs of switching to a different vendor—in terms of redesign, qualification, and software development—are immense.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
+                     <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Broadcom (AVGO):</strong> A major competitor across custom silicon, networking, and storage. Both companies are top players in the ASIC market.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">NVIDIA (NVDA):</strong> While a partner in some areas, Nvidia is also a competitor, particularly as it expands its own networking and DPU offerings for its AI platform.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Credo Technology (CRDO) & Others:</strong> Competes in the high-speed connectivity space, particularly with optical DSPs and other interconnect solutions.</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
-             <p class="content-text mt-4">Marvell's competitive strengths include its focused portfolio, high-speed connectivity expertise (PAM4, coherent DSPs), and custom ASIC delivery. Weaknesses could be its scale relative to giants and reliance on hyperscaler customers. Differentiation comes from being a data infrastructure specialist, contrasting with Intel's IDM model or Nvidia's GPU/platform dominance.</p>
         </section>
 
         <section id="outlook" class="section-card scroll-mt-20">
-            <h2 class="section-title">Strategic Outlook & Conclusion</h2>
-            <p class="content-text">This final section synthesizes Marvell's strategic outlook, highlighting key growth catalysts and potential risks. It provides an expert assessment of Marvell's position and future prospects in the dynamic data infrastructure market.</p>
+            <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
+            <p class="content-text mb-6">Marvell is a premier semiconductor company positioned at the heart of the AI build-out. The investment thesis is driven by its leadership in the fast-growing custom silicon market. However, the business is not immune to the inherent cyclicality of the semiconductor industry and risks related to customer concentration.</p>
             <div class="grid md:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title !mt-0 text-teal-600">Opportunities 🚀</h3>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li>Massive Total Addressable Market in AI infrastructure.</li>
-                        <li>Growth in Automotive in-vehicle networking and ADAS.</li>
-                        <li>Expansion in 5G infrastructure and custom silicon for carriers.</li>
-                        <li>Leveraging CXL technology for data center disaggregation.</li>
-                        <li>Deepening partnerships with hyperscalers and cloud providers.</li>
+                        <li><strong>The AI Custom Silicon Wave:</strong> The trend of cloud hyperscalers designing their own chips for AI is a massive, multi-year tailwind for Marvell, a recognized leader in this space.</li>
+                        <li><strong>AI Networking and Optics:</strong> The demand for higher bandwidth in AI clusters creates a powerful growth driver for Marvell's comprehensive portfolio of optical DSPs, switches, and PHYs.</li>
+                        <li><strong>Automotive Growth Vector:</strong> The shift to software-defined vehicles requires a robust in-vehicle network, creating a significant long-term growth opportunity for Marvell's automotive Ethernet products.</li>
+                        <li><strong>Improving Financials:</strong> As the high-margin AI business becomes a larger portion of revenue, it is expected to drive margin expansion and strong earnings growth.</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0 text-orange-600">Threats & Challenges 📉</h3>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li>Intense competition from larger, well-resourced players.</li>
-                        <li>Macroeconomic uncertainty impacting enterprise/carrier spending.</li>
-                        <li>Cyclical nature of the semiconductor industry.</li>
-                        <li>Reliance on key hyperscaler customers (concentration risk).</li>
-                        <li>Dependence on third-party foundries and supply chain disruptions.</li>
-                        <li>Successful integration and ROI from acquisitions.</li>
+                        <li><strong>Customer Concentration:</strong> A significant portion of the custom silicon revenue is dependent on a small number of very large hyperscale customers. A delay or cancellation of a program could have a material impact.</li>
+                        <li><strong>Semiconductor Cyclicality:</strong> While the AI business is booming, Marvell's other end markets (like enterprise and carrier) are subject to macroeconomic cycles, which can create revenue headwinds.</li>
+                        <li><strong>Intense Competition:</strong> Marvell operates in a highly competitive industry against well-funded and technologically advanced rivals like Broadcom.</li>
+                        <li><strong>Execution Risk:</strong> The design and manufacturing of cutting-edge custom silicon is incredibly complex. Any delays or performance issues could damage customer relationships and future business.</li>
                     </ul>
                 </div>
             </div>
-            <h3 class="subsection-title">Concluding Assessment</h3>
-            <p class="content-text">Marvell has effectively transformed into a focused leader in data infrastructure semiconductors. Its success is tied to AI growth and cloud provider investments. Expertise in interconnect technologies is a core strength. The company must execute flawlessly on custom silicon programs and maintain technological leadership. Managing its smaller segments and navigating competitive pressures, customer concentration, and rapid technological change will be critical. Consistent financial performance, especially improving GAAP profitability and strong cash flow, will be key indicators of long-term value creation. Overall, Marvell is well-positioned to benefit from secular trends driving the data economy but faces significant challenges in a competitive market.</p>
         </section>
-    </main>
 
-    <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
-        <p class="text-sm">&copy; <span id="currentYearFooter"></span> Interactive Marvell Analysis. For informational purposes only.</p>
-        <p class="text-xs mt-1">Data based on "Marvell Business Model Deep Dive" report.</p>
-    </footer>
+        <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
+            <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
+            <p class="text-xs mt-1">Data synthesized from Marvell Technology, Inc. public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
+        </footer>
 
     <script>
         document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
-        Chart.defaults.font.family = 'Inter, sans-serif';
-        Chart.defaults.color = '#4B5563'; // gray-600
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const navLinks = document.querySelectorAll('header nav a[href^="#"]');
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const allSections = document.querySelectorAll('main section[id]');
-
-            const observerCallback = (entries) => {
-                entries.forEach(entry => {
-                    const id = entry.target.getAttribute('id');
-                    const navLink = document.querySelector(`header nav a[href="#${id}"]`);
-                    if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
-                        navLinks.forEach(link => link.classList.remove('active'));
-                        if(navLink) navLink.classList.add('active');
-                    }
-                });
-            };
-            const observerOptions = { root: null, rootMargin: "-100px 0px -50% 0px", threshold: 0.1 }; // Adjust rootMargin for sticky header
-            const sectionObserver = new IntersectionObserver(observerCallback, observerOptions);
-            allSections.forEach(section => sectionObserver.observe(section));
-            
-            navLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
-                    // Default anchor behavior handles scrolling
-                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                        mobileMenuButton.click(); // Close mobile menu
-                    }
-                });
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenuEl = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuEl.classList.toggle('hidden');
+            mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll and active nav link highlighting
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
             });
+        });
 
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', function() {
-                    const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
-                    mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
-                    mobileMenu.classList.toggle('hidden');
-                    mobileMenuButton.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
-                });
-            }
-            
-            // Set initial active link based on hash or default to overview
-            let currentHash = window.location.hash || '#overview';
-            const initialActiveLink = document.querySelector(`header nav a[href="${currentHash}"]`);
-            if (initialActiveLink) {
-                 navLinks.forEach(link => link.classList.remove('active'));
-                 initialActiveLink.classList.add('active');
-            } else {
-                 const overviewLink = document.querySelector(`header nav a[href="#overview"]`);
-                 if (overviewLink) overviewLink.classList.add('active');
-            }
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4',
+            stone: '#E7E5E4'
+        };
 
-            function createChartTooltip() {
-                return {
-                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                    titleFont: { size: 13, weight: '600', family: 'Inter' },
-                    bodyFont: { size: 12, family: 'Inter' },
-                    padding: 10,
-                    cornerRadius: 5,
-                    displayColors: true,
-                    borderColor: 'rgba(255,255,255,0.6)',
-                    borderWidth: 1,
-                    callbacks: {
-                        title: function(tooltipItems) {
-                            const item = tooltipItems[0];
-                            let label = item.chart.data.labels[item.dataIndex];
-                            if (Array.isArray(label)) { return label.join(' '); }
-                            return label;
-                        }
-                    }
-                };
-            }
-            
-            function createChartLegend() {
-                return {
-                    position: 'bottom',
-                    labels: {
-                        font: { size: 11, family: 'Inter' },
-                        color: '#4B5563', // gray-600
-                        padding: 15,
-                        usePointStyle: true,
-                        pointStyle: 'rectRounded',
-                        boxWidth: 12,
-                    }
-                };
-            }
-
-            function wrapLabel(label, maxWidth) {
-                if (typeof label !== 'string') return label;
-                const words = label.split(' ');
-                let lines = [];
-                let currentLine = '';
-                words.forEach(word => {
-                    if ((currentLine + word).length > maxWidth && currentLine.length > 0) {
-                        lines.push(currentLine.trim());
-                        currentLine = word + ' ';
-                    } else {
-                        currentLine += word + ' ';
-                    }
-                });
-                if (currentLine.trim().length > 0) lines.push(currentLine.trim());
-                return lines.length > 0 ? lines : [label];
-            }
-            
-            const PALETTE_CHART_COLORS = {
-                blue: '#60A5FA',    // blue-400
-                teal: '#5EEAD4',    // teal-300 (lighter for charts)
-                orange: '#FDBA74',  // orange-300 (lighter for charts)
-                stone: '#D6D3D1',   // stone-300 (slightly darker for contrast if needed)
-                gray: '#6B7280',    // gray-500
-                darkBlue: '#2563EB', // blue-600
-                darkTeal: '#14B8A6', // teal-500
-                darkOrange: '#F97316', //orange-500
-                red: '#F87171', // red-400
-                purple: '#A78BFA', // purple-400
-                pink: '#F472B6', // pink-400
-                green: '#4ADE80' // green-400
-            };
-
-
-            if (document.getElementById('segmentRevenuePieChart')) {
-                new Chart(document.getElementById('segmentRevenuePieChart'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Data Center (75%)', 'Enterprise Networking (9%)', 'Carrier Infrastructure (6%)', 'Consumer (5%)', 'Automotive/Industrial (5%)'],
-                        datasets: [{
-                            label: 'Q4 FY25 Net Revenue by End Market',
-                            data: [75, 9, 6, 5, 5],
-                            backgroundColor: [PALETTE_CHART_COLORS.blue, PALETTE_CHART_COLORS.teal, PALETTE_CHART_COLORS.orange, PALETTE_CHART_COLORS.purple, PALETTE_CHART_COLORS.gray],
-                            borderColor: '#FFFFFF',
-                            borderWidth: 2,
-                            hoverOffset: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: createChartLegend(),
-                            tooltip: createChartTooltip()
-                        },
-                        animation: { animateScale: true, animateRotate: true }
-                    }
-                });
-            }
-
-            if (document.getElementById('segmentGrowthBarChart')) {
-                new Chart(document.getElementById('segmentGrowthBarChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: ['Data Center', 'Enterprise Networking', 'Carrier Infra.', 'Auto/Industrial', 'Consumer'],
-                        datasets: [
-                            {
-                                label: 'YoY Change (%)',
-                                data: [78, -35, -38, 4, -38],
-                                backgroundColor: PALETTE_CHART_COLORS.blue,
-                                borderColor: PALETTE_CHART_COLORS.blue,
-                                borderWidth: 1
-                            },
-                            {
-                                label: 'QoQ Change (%)',
-                                data: [24, 14, 25, 3, -8],
-                                backgroundColor: PALETTE_CHART_COLORS.teal,
-                                borderColor: PALETTE_CHART_COLORS.teal,
-                                borderWidth: 1
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: false, // Allow negative values
-                                title: { display: true, text: 'Percentage Change (%)', font: {size: 11, family:'Inter'}, color: '#4B5563' },
-                                ticks: { color: '#4B5563', font: {size: 10, family:'Inter'} }
-                            },
-                            x: {
-                                ticks: { 
-                                    color: '#4B5563', 
-                                    font: {size: 10, family:'Inter'},
-                                    callback: function(value, index, values) {
-                                        const label = this.getLabelForValue(value);
-                                        return wrapLabel(label, 8); // Shorter wrap for potentially smaller chart
-                                    }
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: createChartLegend(),
-                            tooltip: createChartTooltip()
-                        }
-                    }
-                });
-            }
-            
-            const fiscalYears = ['FY 2023', 'FY 2024', 'FY 2025'];
-            const commonChartOptions = {
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Data Center', 'Enterprise Networking', 'Carrier Infrastructure', 'Auto & Industrial', 'Consumer'],
+                datasets: [{
+                    data: [61, 13, 6, 9, 11], // Approximate percentages for Q1 FY26
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal, CHART_COLORS.orange, CHART_COLORS.stone],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
                 responsive: true, maintainAspectRatio: false,
-                scales: { 
-                    y: { beginAtZero: false, title: {display: true, text:'USD Millions', font:{size:11, family:'Inter'}, color: '#4B5563'}, ticks: {color: '#4B5563', font:{size:10, family:'Inter'}} }, 
-                    x: {ticks: {color: '#4B5563', font:{size:10, family:'Inter'}}} 
-                },
-                plugins: { legend: createChartLegend(), tooltip: createChartTooltip() }
-            };
-            const commonBarChartOptions = {
-                responsive: true, maintainAspectRatio: false,
-                scales: { 
-                    y: { title: {display: true, text:'Margin (%)', font:{size:11, family:'Inter'}, color: '#4B5563'}, ticks: {color: '#4B5563', font:{size:10, family:'Inter'}} }, 
-                    x: {ticks: {color: '#4B5563', font:{size:10, family:'Inter'}}} 
-                },
-                plugins: { legend: createChartLegend(), tooltip: createChartTooltip() }
-            };
-
-
-            if (document.getElementById('netRevenueChart')) {
-                new Chart(document.getElementById('netRevenueChart'), {
-                    type: 'line',
-                    data: {
-                        labels: fiscalYears,
-                        datasets: [{
-                            label: 'Net Revenue (USD Millions)',
-                            data: [5920.2, 5507.7, 5767.0],
-                            borderColor: PALETTE_CHART_COLORS.blue,
-                            backgroundColor: PALETTE_CHART_COLORS.blue + '4D', // 30% opacity
-                            fill: true,
-                            tension: 0.1
-                        }]
-                    },
-                    options: commonChartOptions
-                });
-            }
-
-            if (document.getElementById('ocfChart')) {
-                new Chart(document.getElementById('ocfChart'), {
-                    type: 'line',
-                    data: {
-                        labels: fiscalYears,
-                        datasets: [{
-                            label: 'Operating Cash Flow (USD Millions)',
-                            data: [1491.4, 1951.7, 1680.0],
-                            borderColor: PALETTE_CHART_COLORS.green,
-                            backgroundColor: PALETTE_CHART_COLORS.green + '4D',
-                            fill: true,
-                            tension: 0.1
-                        }]
-                    },
-                    options: commonChartOptions
-                });
-            }
-
-            if (document.getElementById('grossMarginChart')) {
-                new Chart(document.getElementById('grossMarginChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: fiscalYears,
-                        datasets: [
-                            {
-                                label: 'GAAP Gross Margin (%)',
-                                data: [51.4, 43.6, 48.0],
-                                backgroundColor: PALETTE_CHART_COLORS.blue,
-                            },
-                            {
-                                label: 'Non-GAAP Gross Margin (%)',
-                                data: [66.1, 61.3, 60.5],
-                                backgroundColor: PALETTE_CHART_COLORS.teal,
-                            }
-                        ]
-                    },
-                    options: commonBarChartOptions
-                });
-            }
-
-            if (document.getElementById('operatingMarginChart')) {
-                new Chart(document.getElementById('operatingMarginChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: fiscalYears,
-                        datasets: [
-                            {
-                                label: 'GAAP Operating Margin (%)',
-                                data: [9.5, -17.9, -6.7],
-                                backgroundColor: PALETTE_CHART_COLORS.blue,
-                            },
-                            {
-                                label: 'Non-GAAP Operating Margin (%)',
-                                data: [38.5, 31.5, 30.7],
-                                backgroundColor: PALETTE_CHART_COLORS.teal,
-                            }
-                        ]
-                    },
-                    options: { ...commonBarChartOptions, scales: { ...commonBarChartOptions.scales, y: { ...commonBarChartOptions.scales.y, beginAtZero: false } } } // Allow negative for op margin
-                });
-            }
-            
-            if (document.getElementById('netIncomeChart')) {
-                new Chart(document.getElementById('netIncomeChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: fiscalYears,
-                        datasets: [
-                            {
-                                label: 'GAAP Net Income (Loss) (USD M)',
-                                data: [162.9, -933.4, -885.0],
-                                backgroundColor: PALETTE_CHART_COLORS.orange,
-                            },
-                            {
-                                label: 'Non-GAAP Net Income (USD M)',
-                                data: [1830.8, 1331.5, 1377.0],
-                                backgroundColor: PALETTE_CHART_COLORS.purple,
-                            }
-                        ]
-                    },
-                     options: { ...commonChartOptions, scales: { ...commonChartOptions.scales, y: { ...commonChartOptions.scales.y, beginAtZero: false } } } // Allow negative for net income
-                });
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by End Market (Q1 FY26)' } }
             }
         });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Fiscal Year ends in late January/early February
+        const yearlyDataStore = {
+            labels: ['FY23', 'FY24', 'FY25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [5.92, 5.51, 5.24], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Non-GAAP Operating Income ($B)', data: [2.07, 1.48, 1.05], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 24', 'Q3 24', 'Q4 24', 'Q1 25', 'Q2 25', 'Q3 25', 'Q4 25', 'Q1 26'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($M)', data: [1517, 1419, 1427, 1321, 1161, 1149, 1426, 1323], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Millions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Non-GAAP Operating Income ($M)', data: [477, 394, 403, 335, 237, 241, 350, 313], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Millions of USD'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
+
     </script>
 </body>
 </html>

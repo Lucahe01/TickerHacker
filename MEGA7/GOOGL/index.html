@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alphabet Inc. (GOOG) - TickerHack Deep Research</title>
+    <title>Alphabet Inc. (GOOGL) - TickerHack Deep Research</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -35,10 +35,17 @@
             padding: 1.5rem; /* p-6 */
             margin-bottom: 2rem; /* mb-8 */
         }
+        .main-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1F2937; /* gray-800 */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
         .section-title {
             font-size: 1.875rem; /* text-3xl */
             font-weight: 600; /* font-semibold */
-            color: #4285F4; /* Google Blue */
+            color: #A78BFA; /* violet-400 */
             margin-bottom: 1.5rem; /* mb-6 */
             padding-bottom: 0.5rem; /* pb-2 */
             border-bottom: 2px solid #E7E5E4; /* stone-200 */
@@ -46,7 +53,7 @@
         .subsection-title {
             font-size: 1.5rem; /* text-2xl */
             font-weight: 600; /* font-semibold */
-            color: #34A853; /* Google Green */
+            color: #7DD3FC; /* sky-400 */
             margin-top: 1.5rem; /* mt-6 */
             margin-bottom: 1rem; /* mb-4 */
         }
@@ -71,9 +78,9 @@
             border: 1px solid transparent;
         }
         .tab-button.active {
-            background-color: #4285F4; /* Google Blue */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
-            border-color: #1a73e8;
+            border-color: #8B5CF6; /* violet-500 */
         }
         .nav-link {
             padding: 0.5rem 1rem;
@@ -84,7 +91,7 @@
             white-space: nowrap;
         }
         .nav-link:hover, .nav-link.active {
-            background-color: #4285F4; /* Google Blue */
+            background-color: #A78BFA; /* violet-400 */
             color: #FFFFFF;
         }
         .kpi-card {
@@ -112,19 +119,19 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold" style="color: #4285F4;">Alphabet (GOOG) Analysis</h1>
+                    <h1 class="text-xl font-bold" style="color: #A78BFA;">Alphabet (GOOGL) Analysis</h1>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-1 lg:space-x-2">
                         <a href="#overview" class="nav-link">Overview</a>
                         <a href="#segments" class="nav-link">Business Segments</a>
                         <a href="#financials" class="nav-link">Financials</a>
-                        <a href="#competition" class="nav-link">Moat & Risks</a>
+                        <a href="#competition" class="nav-link">Competitive Moat</a>
                         <a href="#outlook" class="nav-link">Outlook</a>
                     </div>
                 </div>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500" aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                         <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -136,7 +143,7 @@
                     <a href="#overview" class="nav-link block text-base">Overview</a>
                     <a href="#segments" class="nav-link block text-base">Business Segments</a>
                     <a href="#financials" class="nav-link block text-base">Financials</a>
-                    <a href="#competition" class="nav-link block text-base">Moat & Risks</a>
+                    <a href="#competition" class="nav-link block text-base">Competitive Moat</a>
                     <a href="#outlook" class="nav-link block text-base">Outlook</a>
                 </div>
             </div>
@@ -146,150 +153,119 @@
     <main class="container mx-auto p-4 md:p-6 lg:p-8 mt-4">
 
         <section id="overview" class="section-card scroll-mt-20">
-            <h2 class="section-title">Alphabet: An AI-First Reinvention</h2>
-            <p class="content-text mb-6">Alphabet Inc. is a collection of businesses, with Google's advertising-driven services forming the massive, profitable core. For years, its mission has been to "organize the world's information." Today, the company is in the midst of its most significant transformation yet, becoming an "AI-first" organization. This involves fundamentally reinventing its flagship products like Search with its Gemini AI models while simultaneously competing to be a foundational platform for AI development through Google Cloud. This analysis delves into Alphabet's tripartite structure, its financial engine, and the monumental opportunities and risks it faces in the age of generative AI.</p>
+            <h2 class="section-title">Alphabet: The AI-Powered Advertising Behemoth</h2>
+            <p class="content-text mb-6">Alphabet (NASDAQ: GOOGL, GOOG) is a global technology conglomerate and the parent company of Google. Its business is a vast and powerful ecosystem built on the foundation of its near-monopolistic Google Search engine. This advertising juggernaut funds the company's other major growth pillars: the rapidly scaling Google Cloud platform and the massive user engagement engine of YouTube. In what it calls the "Gemini era," Alphabet is undergoing a profound transformation, infusing <span class="highlight">generative AI</span> across every facet of its business, from providing "AI Overviews" in Search to offering cutting-edge AI models and infrastructure on Google Cloud. This positions the company as a central player in the next generation of computing, but also exposes it to intense competition and unprecedented regulatory scrutiny.</p>
             
-            <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="grid md-grid-cols-2 gap-6 items-start">
                 <div>
-                    <h3 class="subsection-title !mt-0" style="color: #EA4335;">Core Business Strategy</h3>
-                    <p class="content-text mb-4">Alphabet's strategy is a dual-pronged approach to leading the AI transition:</p>
+                    <h3 class="subsection-title !mt-0">Core Strategy: The AI-First Flywheel</h3>
+                    <p class="content-text mb-4">Alphabet's strategy is focused on leveraging its core strengths to capitalize on the AI revolution:</p>
                     <ul class="list-disc list-inside content-text space-y-1 pl-4">
-                        <li><strong class="font-semibold text-gray-700">Lead in AI Research & Application:</strong> Leverage DeepMind and Google Research to build state-of-the-art models (like Gemini) and deploy them across its user-facing products, from AI Overviews in Search to features in Pixel phones.</li>
-                        <li><strong class="font-semibold text-gray-700">Grow the Cloud as an AI Platform:</strong> Position Google Cloud as the premier destination for developers and enterprises to build their own generative AI applications, differentiating through its powerful AI infrastructure (TPUs) and services (Vertex AI).</li>
-                        <li><strong class="font-semibold text-gray-700">Monetize Core Services:</strong> Continue to dominate the digital advertising market through Search and YouTube, which funds all other endeavors.</li>
-                        <li><strong class="font-semibold text-gray-700">Invest in Future Moonshots:</strong> Use the "Other Bets" segment to make long-term, high-risk investments in new technology sectors like autonomous driving (Waymo) and life sciences (Verily).</li>
+                        <li><strong class="font-semibold text-gray-700">Reinvent Search with AI:</strong> Evolve the world's leading search engine by integrating generative AI to provide richer, more direct answers and maintain its competitive edge.</li>
+                        <li><strong class="font-semibold text-gray-700">Win in the AI Cloud:</strong> Differentiate Google Cloud by offering a comprehensive, open, and AI-optimized platform for enterprises to build and deploy their own AI applications.</li>
+                        <li><strong class="font-semibold text-gray-700">Grow YouTube's Value:</strong> Increase engagement and monetization of YouTube through subscriptions (Premium, Music) and by making it a premier destination for both creators and advertisers.</li>
+                        <li><strong class="font-semibold text-gray-700">Disciplined Capital Allocation:</strong> Balance massive investments in AI infrastructure and R&D with significant capital returns to shareholders through buybacks and a newly initiated dividend.</li>
                     </ul>
                 </div>
-                <div class="kpi-card bg-yellow-50 border-yellow-200">
+                <div class="kpi-card bg-violet-50 border-violet-200">
                     <p class="kpi-label">Google Cloud Revenue (Q1 2025)</p>
-                    <p class="kpi-value" style="color: #FBBC05;">$9.8 Billion</p>
-                    <p class="content-text text-sm mt-2">Up <span class="highlight">26% year-over-year</span>, this segment's accelerating growth and sustained profitability are critical to Alphabet's future narrative.</p>
+                    <p class="kpi-value text-violet-600">$10.7 Billion</p>
+                    <p class="content-text text-sm mt-2">Represents 29% year-over-year growth, highlighting the strong momentum of Alphabet's high-growth cloud computing arm, which is increasingly benefiting from AI workloads.</p>
                 </div>
             </div>
         </section>
 
         <section id="segments" class="section-card scroll-mt-20">
-            <h2 class="section-title">Business Segments: The Core, The Cloud, and The Bets</h2>
-            <p class="content-text mb-6">Alphabet's financial structure is best understood as three distinct businesses: a massively profitable advertising core (Google Services), a high-growth and newly profitable cloud platform (Google Cloud), and a portfolio of ambitious, cash-burning future technologies (Other Bets). This structure allows for both focus on the core and investment in disruptive innovation.</p>
+            <h2 class="section-title">How Alphabet Makes Money: The Three Pillars</h2>
+            <p class="content-text mb-6">Alphabet's business is organized into three primary reporting segments. Google Services, which includes Search and YouTube, is the incredibly profitable engine that generates the vast majority of revenue and profit. This allows Alphabet to fund the high-growth, and now profitable, Google Cloud segment, as well as its long-term speculative ventures in "Other Bets."</p>
 
-            <div class="mb-6 border-b border-stone-200">
-                <nav class="-mb-px flex space-x-2 md:space-x-4" aria-label="Tabs">
-                    <button class="segment-tab-button active" data-target="services">Google Services</button>
-                    <button class="segment-tab-button" data-target="cloud">Google Cloud</button>
-                    <button class="segment-tab-button" data-target="bets">Other Bets</button>
-                </nav>
-            </div>
-
-            <div id="segmentDetails">
-                <div id="servicesContent" class="segment-content">
-                    <h3 class="subsection-title">Google Services (88% of Q1 2025 Revenue)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
-                        <div>
-                            <p class="content-text mb-2">The financial engine of Alphabet, generating <span class="highlight">$78.9 billion</span> in revenue and <span class="highlight">$27.9 billion</span> in operating income in Q1 2025 alone. This segment houses the company's iconic advertising and consumer products.</p>
-                             <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Google Search & other:</strong> The primary ad revenue source from Google.com, Maps, and Play.</li>
-                                <li><strong>YouTube ads:</strong> Video advertising revenue, a major growth driver.</li>
-                                <li><strong>Google other:</strong> Non-ad revenue, including Pixel hardware, Play Store fees, and YouTube subscriptions.</li>
-                            </ul>
-                        </div>
-                        <div class="chart-container h-72 md:h-80">
-                            <canvas id="revenueBreakdownChart"></canvas>
-                        </div>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="chart-container h-80 md:h-96">
+                    <canvas id="revenueBreakdownChart"></canvas>
                 </div>
-                <div id="cloudContent" class="segment-content hidden">
-                    <h3 class="subsection-title">Google Cloud (11% of Q1 2025 Revenue)</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
-                         <div>
-                            <p class="content-text mb-2">Alphabet's key growth engine, achieving scale and profitability with <span class="highlight">$9.8 billion</span> in Q1 2025 revenue and <span class="highlight">$864 million</span> in operating income.</p>
-                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Google Cloud Platform (GCP):</strong> Provides enterprise customers with infrastructure, data analytics, and AI services to compete with AWS and Azure.</li>
-                                <li><strong>Google Workspace:</strong> A suite of productivity tools like Gmail, Drive, and Docs, sold on a per-user subscription basis.</li>
-                            </ul>
-                        </div>
-                        <div class="chart-container h-72 md:h-80">
-                             <canvas id="revenueBreakdownChart2"></canvas>
-                        </div>
-                    </div>
-                </div>
-                 <div id="betsContent" class="segment-content hidden">
-                    <h3 class="subsection-title">Other Bets (1% of Q1 2025 Revenue)</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-center">
-                         <div>
-                            <p class="content-text mb-2">A portfolio of long-term projects designed to become the next Alphabet. This segment represents a significant investment in future technology, posting revenues of <span class="highlight">$1.2 billion</span> against an operating loss of <span class="highlight">$2.7 billion</span> in Q1 2025.</p>
-                            <ul class="list-disc list-inside content-text space-y-1 pl-4 mt-4">
-                                <li><strong>Waymo:</strong> A leader in autonomous driving technology.</li>
-                                <li><strong>Verily:</strong> A life sciences company focused on data-driven healthcare.</li>
-                                <li>Includes various other ventures in areas like robotics and advanced materials.</li>
-                            </ul>
-                        </div>
-                        <div class="chart-container h-72 md:h-80">
-                            <canvas id="revenueBreakdownChart3"></canvas>
-                        </div>
-                    </div>
+                 <div class="chart-container h-80 md:h-96">
+                    <canvas id="profitBreakdownChart"></canvas>
                 </div>
             </div>
+             <p class="content-text text-sm mt-6 text-center">The charts clearly show that while Google Cloud is a major growth driver, the Search business remains the undisputed engine of Alphabet's profitability, with YouTube also being a significant contributor.</p>
         </section>
 
         <section id="financials" class="section-card scroll-mt-20">
-            <h2 class="section-title">Financial Deep Dive: A Tale of Three Segments</h2>
-            <p class="content-text mb-6">Alphabet's financial statements clearly tell the story of its business structure. The operating income chart, in particular, visualizes how the immense profitability of Google Services funds the company's investments in the high-growth Google Cloud and the speculative Other Bets portfolio. This dynamic is key to understanding Alphabet's strategy.</p>
+            <h2 class="section-title">Financial Deep Dive</h2>
+            <p class="content-text mb-6">Alphabet is a financial behemoth, characterized by its massive scale, strong revenue growth, and exceptional profitability. The company's financial strength allows it to make colossal investments in R&D and capital expenditures for AI infrastructure while simultaneously returning vast sums of capital to shareholders. The key trend to watch is the growth and expanding profitability of the Google Cloud segment.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title">Total Annual Revenue (Fiscal Year)</h3>
-                    <p class="content-text text-sm mb-4">Alphabet has demonstrated consistent top-line growth, powered by the durable digital advertising market and the rise of its Cloud segment.</p>
+                    <h3 class="subsection-title">Fiscal Year Trends (FY22-FY24)</h3>
+                    <div class="mb-4">
+                        <label for="yearlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Annual Metric:</label>
+                        <select id="yearlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                            <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                            <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
                     <div id="yearlyFinancialChartContainer" class="chart-container h-80 max-w-full">
                         <canvas id="yearlyFinancialChart"></canvas>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="subsection-title">Operating Income by Segment (Q1 2025)</h3>
-                     <p class="content-text text-sm mb-4">This chart reveals the core financial dynamic: Services generate massive profits, Cloud is now a profitable contributor, and Other Bets is a planned investment area.</p>
+                    <h3 class="subsection-title">Quarterly Trends (Recent 8 Qtrs)</h3>
+                     <div class="mb-4">
+                        <label for="quarterlyMetricSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Quarterly Metric:</label>
+                        <select id="quarterlyMetricSelect" class="block w-full p-2 border border-stone-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500">
+                             <option value="totalRevenue" selected>Total Revenue ($B)</option>
+                             <option value="operatingIncome">Operating Income ($B)</option>
+                        </select>
+                    </div>
                     <div id="quarterlyFinancialChartContainer" class="chart-container h-80 max-w-full">
                         <canvas id="quarterlyFinancialChart"></canvas>
                     </div>
                 </div>
             </div>
+             <p class="content-text text-sm mt-6 text-center">The financial charts showcase a business with resilient top-line growth and a strong track record of generating substantial profits, even while making massive investments in AI.</p>
         </section>
 
         <section id="competition" class="section-card scroll-mt-20">
-            <h2 class="section-title">Moats & The Battle for AI</h2>
-            <p class="content-text mb-6">Alphabet's competitive advantages are rooted in the immense scale of its core products and its deep technological expertise in AI. However, the company faces existential threats from intense regulatory pressure and the disruptive potential of the very AI technology it is pioneering.</p>
+            <h2 class="section-title">Competitive Moat: The Search and Data Fortress</h2>
+            <p class="content-text mb-6">Alphabet has built one of the most powerful competitive moats in history, founded on the near-monopoly of Google Search and the immense data and network effects that flow from its ecosystem of billions of users.</p>
             
-            <div class="grid md:grid-cols-2 gap-8 items-start">
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title !mt-0" style="color: #34A853;">Key Moats</h3>
+                    <h3 class="subsection-title !mt-0">Key Moats</h3>
                     <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Search Dominance & User Data:</strong> Google's near-monopoly in search provides it with unparalleled data on user intent, creating a powerful feedback loop for improving both search results and ad targeting. This data is a formidable barrier to entry.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Dominant Network Effects in Search:</strong> With over 90% of the global search market, Google's scale is unmatched. More searches lead to more data, which makes the search algorithm better, which in turn attracts more users and advertisers, creating a powerful, self-reinforcing flywheel.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">World-Class AI R&D:</strong> With Google DeepMind, the company is home to some of the world's leading AI researchers and possesses a portfolio of cutting-edge models (Gemini) that few can replicate. This is a foundational technology moat.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Vast Trove of Proprietary Data:</strong> Data from Search, Maps, Android, and YouTube provides an unparalleled understanding of user intent and behavior. This is a critical and nearly insurmountable advantage for training AI models and delivering effective advertising.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-blue-500 mr-2 mt-1">➔</span>
-                            <span class="content-text"><strong class="text-gray-700">Massive Ecosystems:</strong> The scale of Android and YouTube creates powerful network effects. They serve as default distribution channels for Google's services on billions of devices globally, creating a high barrier for competitors.</span>
+                            <span class="text-violet-500 mr-2 mt-1">➔</span>
+                            <span class="content-text"><strong class="text-gray-700">Technological Leadership & R&D Scale:</strong> Alphabet's deep bench of engineering talent and its massive R&D budget allow it to remain at the forefront of foundational technologies like Artificial Intelligence.</span>
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0" style="color: #EA4335;">Primary Risks & Competitors</h3>
+                    <h3 class="subsection-title !mt-0">Primary Competitors</h3>
                      <ul class="list-none space-y-3">
                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">Regulatory & Antitrust Scrutiny:</strong> This is the most significant risk. Alphabet faces major antitrust lawsuits from the Department of Justice and regulators worldwide, targeting its search, advertising, and app store businesses. These could lead to forced business changes or massive fines.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Microsoft (MSFT):</strong> The most significant competitor, particularly in cloud computing (Azure vs. Google Cloud) and now in AI-powered search (Bing with ChatGPT).</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                            <span class="content-text"><strong class="text-gray-700">AI Disruption to Search:</strong> Generative AI and conversational interfaces could fundamentally change how users seek information, potentially disrupting the traditional search advertising model that forms Google's profitable core.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Amazon (AMZN):</strong> A major competitor in cloud computing (AWS) and a rapidly growing force in digital advertising.</span>
                         </li>
                          <li class="flex items-start">
-                            <span class="text-orange-500 mr-2 mt-1">●</span>
-                             <span class="content-text"><strong class="text-gray-700">Intense Cloud Competition:</strong> Google Cloud remains a distant third in market share to Amazon Web Services (AWS) and Microsoft Azure. Both competitors are also investing heavily in AI and have strong enterprise relationships.</span>
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">Meta Platforms (META):</strong> A primary competitor for digital advertising dollars.</span>
+                         </li>
+                         <li class="flex items-start">
+                            <span class="text-sky-500 mr-2 mt-1">●</span>
+                            <span class="content-text"><strong class="text-gray-700">TikTok:</strong> A major competitor to YouTube for user attention and video advertising revenue, particularly among younger audiences.</span>
                         </li>
                     </ul>
                 </div>
@@ -298,24 +274,24 @@
 
         <section id="outlook" class="section-card scroll-mt-20">
             <h2 class="section-title">Strategic Outlook: Risks & Rewards</h2>
-            <p class="content-text mb-6">Alphabet's future hinges on a critical balancing act: it must successfully navigate the disruptive shift to AI and defend its core Search business while simultaneously fending off unprecedented regulatory challenges and closing the gap in the enterprise cloud market.</p>
-            <div class="grid md:grid-cols-2 gap-8 items-start">
+            <p class="content-text mb-6">Alphabet is a blue-chip technology giant at the heart of the AI revolution. The investment thesis is centered on the durability of its Search monopoly and its ability to translate its deep AI expertise into a new wave of growth in both Search and Cloud. However, the company is facing the most significant regulatory and competitive threats in its history.</p>
+            <div class="grid md-grid-cols-2 gap-8">
                 <div>
-                    <h3 class="subsection-title !mt-0" style="color: #34A853;">Rewards & Opportunities 🚀</h3>
+                    <h3 class="subsection-title !mt-0 text-teal-600">Rewards & Opportunities 🚀</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Successful AI Integration:</strong> If AI Overviews enhance the search experience and drive engagement, Google could solidify its dominance for another decade.</li>
-                        <li><strong>Cloud Growth & Profitability:</strong> Continued market share gains in the cloud, driven by AI services, could establish a second major profit center for the company.</li>
-                        <li><strong>Monetizing AI Models:</strong> Licensing its Gemini models or developing new AI-native applications could create entirely new revenue streams.</li>
-                        <li><strong>"Other Bets" Success:</strong> A breakthrough in a major venture like Waymo could create a third massive growth engine for the company.</li>
+                        <li><strong>AI Leadership:</strong> With its world-class AI research (Google DeepMind), vast datasets, and powerful Gemini models, Alphabet is exceptionally well-positioned to be a primary beneficiary of the AI era.</li>
+                        <li><strong>Durable Search Monopoly:</strong> The Google Search business is one of the most profitable and dominant business models in history, and continues to generate enormous free cash flow.</li>
+                        <li><strong>Cloud Growth Runway:</strong> Google Cloud is a strong #3 player in a massive and growing market, with AI creating a new catalyst for enterprises to adopt the platform.</li>
+                        <li><strong>Massive Capital Returns:</strong> The company's immense profitability allows for a huge share buyback program and a recently initiated dividend, providing strong support for shareholder returns.</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="subsection-title !mt-0" style="color: #EA4335;">Risks & Challenges 📉</h3>
+                    <h3 class="subsection-title !mt-0 text-orange-600">Risks & Challenges 📉</h3>
                     <ul class="list-disc list-inside content-text space-y-2 pl-4">
-                        <li><strong>Adverse Regulatory Outcomes:</strong> The ongoing antitrust lawsuits represent the single greatest threat, with the potential to force structural changes to its most profitable businesses.</li>
-                        <li><strong>Erosion of Search Margin:</strong> The computational cost of serving AI-generated search results is significantly higher than traditional search, which could pressure the segment's legendary profit margins.</li>
-                        <li><strong>Failure to Execute in AI Race:</strong> Falling behind competitors in the capabilities or application of AI models could damage user trust and market position.</li>
-                        <li><strong>Cultural Shift:</strong> Transforming a massive, established company to be more nimble and innovative in the fast-paced AI era remains a significant internal challenge.</li>
+                        <li><strong>Unprecedented Regulatory Risk:</strong> This is the single greatest risk. Alphabet faces major antitrust lawsuits and investigations across the globe (particularly in the U.S. and Europe) that directly threaten its core Search and advertising businesses.</li>
+                        <li><strong>AI Disruption to Search:</strong> While Alphabet is a leader in AI, the shift to generative AI-powered search also represents a potential threat to its lucrative ad-based business model.</li>
+                        <li><strong>Intense Competition:</strong> The company faces formidable, well-funded competition on all fronts, from Microsoft and Amazon in the cloud to a host of rivals in the AI space.</li>
+                        <li><strong>Capital Expenditure Intensity:</strong> The AI arms race requires a staggering level of capital expenditure on data centers and specialized chips, which could pressure free cash flow in the near term.</li>
                     </ul>
                 </div>
             </div>
@@ -323,7 +299,7 @@
 
         <footer class="bg-stone-800 text-stone-300 py-8 text-center mt-12">
             <p class="text-sm">&copy; <span id="currentYearFooter"></span> TickerHack Deep Research. For informational purposes only.</p>
-            <p class="text-xs mt-1">Data synthesized from Alphabet Inc. public filings and credible financial news sources as of May 2025.</p>
+            <p class="text-xs mt-1">Data synthesized from Alphabet Inc. public filings (SEC reports), press releases, and credible financial data providers as of July 2025.</p>
         </footer>
 
     <script>
@@ -337,107 +313,165 @@
             mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
         });
         
-        // Active nav link highlighting
+        // Smooth scroll and active nav link highlighting
         const navLinks = document.querySelectorAll('header nav a[href^="#"]');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                if (!mobileMenuEl.classList.contains('hidden')) { mobileMenuBtn.click(); }
+                if (mobileMenuEl && !mobileMenuEl.classList.contains('hidden')) {
+                    mobileMenuBtn.click(); // Close mobile menu if open
+                }
                 navLinks.forEach(l => l.classList.remove('active'));
                 e.currentTarget.classList.add('active');
             });
         });
         
-        // Segment Tabs
-        const segmentTabs = document.querySelectorAll('.segment-tab-button');
-        const segmentContents = document.querySelectorAll('.segment-content');
-        const chartsToRender = ['revenueBreakdownChart', 'revenueBreakdownChart2', 'revenueBreakdownChart3'];
-        let renderedCharts = {};
+        // Chart.js Global Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4B5563';
 
-        function createBreakdownChart(canvasId) {
-             if (renderedCharts[canvasId]) return;
-             const ctx = document.getElementById(canvasId).getContext('2d');
-             renderedCharts[canvasId] = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Google Services', 'Google Cloud', 'Other Bets'],
-                    datasets: [{
-                        data: [78.9, 9.8, 1.2], // Q1 2025 Data in $B
-                        backgroundColor: ['#4285F4', '#34A853', '#EA4335'],
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue Contribution (Q1 2025)' } }
-                }
-            });
-        }
-        
-        segmentTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                segmentTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                const targetId = tab.dataset.target + 'Content';
-                segmentContents.forEach(content => {
-                    content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
-                });
-                // Lazy render charts on tab click
-                chartsToRender.forEach(id => {
-                    const canvas = document.getElementById(id);
-                    if (canvas && !canvas.closest('.hidden')) {
-                         createBreakdownChart(id);
-                    }
-                });
-            });
-        });
-        
-        // Initial render for the active tab's chart
-        createBreakdownChart('revenueBreakdownChart');
+        const CHART_COLORS = {
+            violet: '#A78BFA',
+            sky: '#7DD3FC',
+            orange: '#FDBA74',
+            teal: '#5EEAD4',
+            stone: '#E7E5E4'
+        };
 
-
-        // --- FINANCIAL CHARTS LOGIC ---
-        const CHART_COLORS = { blue: '#4285F4', green: '#34A853', red: '#EA4335', yellow: '#FBBC05' };
-
-        // Yearly Revenue Chart
-        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
-        new Chart(yearlyCanvas, {
-            type: 'bar',
+        // Revenue Breakdown Chart
+        const revenueBreakdownCtx = document.getElementById('revenueBreakdownChart').getContext('2d');
+        new Chart(revenueBreakdownCtx, {
+            type: 'doughnut',
             data: {
-                labels: ['FY22', 'FY23', 'FY24'],
+                labels: ['Google Search', 'Google Cloud', 'YouTube ads', 'Other'],
                 datasets: [{
-                    label: 'Total Annual Revenue ($B)',
-                    data: [282.8, 307.4, 335.1], // Illustrative data reflecting growth
-                    backgroundColor: CHART_COLORS.blue,
+                    data: [60, 13, 11, 16], // Approximate percentages for Q1 2025
+                    backgroundColor: [CHART_COLORS.violet, CHART_COLORS.sky, CHART_COLORS.teal, CHART_COLORS.orange],
+                    hoverOffset: 4
                 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: false, title: { display: true, text: 'USD ($ Billions)' } } }
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Revenue by Segment (Q1 2025)' } }
             }
         });
 
-        // Quarterly Operating Income Chart
-        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
-        new Chart(quarterlyCanvas, {
-            type: 'bar',
+        // Profit Breakdown Chart
+        const profitBreakdownCtx = document.getElementById('profitBreakdownChart').getContext('2d');
+        new Chart(profitBreakdownCtx, {
+            type: 'pie',
             data: {
-                labels: ['Google Services', 'Google Cloud', 'Other Bets'],
+                labels: ['Google Services', 'Google Cloud', 'Other Bets (Loss)'],
                 datasets: [{
-                    label: 'Operating Income ($B)',
-                    data: [27.9, 0.864, -2.7], // Q1 2025 Operating Income Data
-                    backgroundColor: [CHART_COLORS.green, CHART_COLORS.yellow, CHART_COLORS.red],
+                    data: [29800, 1300, 1100], // Q1 2025 Operating Income/Loss in Millions
+                    backgroundColor: [CHART_COLORS.sky, CHART_COLORS.violet, CHART_COLORS.orange],
+                    hoverOffset: 4
                 }]
             },
-             options: {
+            options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    x: { grid: { display: false } },
-                    y: { beginAtZero: false, title: { display: true, text: 'USD ($ Billions)' } }
-                 }
+                plugins: { 
+                    legend: { position: 'bottom' }, 
+                    title: { display: true, text: 'Operating Income by Segment (Q1 2025)' },
+                    tooltip: {
+                         callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                let value = context.parsed;
+                                if (context.label.includes('(Loss)')) {
+                                    value = -value;
+                                }
+                                label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact' }).format(value * 1000000);
+                                return label;
+                            }
+                        }
+                    }
+                }
             }
         });
+
+        // --- FINANCIAL CHARTS LOGIC ---
+
+        // Fiscal Year ends December 31
+        const yearlyDataStore = {
+            labels: ['FY22', 'FY23', 'FY24'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [282.84, 307.39, 334.86], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [74.84, 84.29, 93.36], backgroundColor: CHART_COLORS.sky + 'BF', borderColor: CHART_COLORS.sky } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        // Quarters are fiscal quarters
+        const quarterlyDataStore = {
+            labels: ['Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24', 'Q1 25'],
+            totalRevenue: {
+                datasets: [ { label: 'Total Revenue ($B)', data: [74.60, 76.69, 86.31, 80.54, 82.20, 85.10, 93.10, 85.11], backgroundColor: CHART_COLORS.violet + 'BF', borderColor: CHART_COLORS.violet } ],
+                yAxisLabel: 'Billions of USD'
+            },
+            operatingIncome: {
+                datasets: [ { label: 'Operating Income ($B)', data: [21.84, 22.34, 23.70, 25.47, 23.80, 24.10, 25.50, 25.92], backgroundColor: CHART_COLORS.teal + 'BF', borderColor: CHART_COLORS.teal } ],
+                yAxisLabel: 'Billions of USD'
+            }
+        };
+
+        let yearlyChart = null;
+        let quarterlyChart = null;
+        const yearlySelect = document.getElementById('yearlyMetricSelect');
+        const quarterlySelect = document.getElementById('quarterlyMetricSelect');
+        const yearlyCanvas = document.getElementById('yearlyFinancialChart').getContext('2d');
+        const quarterlyCanvas = document.getElementById('quarterlyFinancialChart').getContext('2d');
+
+        function createChart(canvas, existingChart, dataStore, metricKey) {
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            const metricDetails = dataStore[metricKey];
+            
+            return new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dataStore.labels,
+                    datasets: metricDetails.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    },
+                    scales: {
+                        x: {},
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: metricDetails.yAxisLabel
+                            },
+                        }
+                    }
+                }
+            });
+        }
+        
+        yearlySelect.addEventListener('change', (event) => {
+            yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, event.target.value);
+        });
+
+        quarterlySelect.addEventListener('change', (event) => {
+            quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, event.target.value);
+        });
+
+        // Initial chart renders
+        yearlyChart = createChart(yearlyCanvas, yearlyChart, yearlyDataStore, 'totalRevenue');
+        quarterlyChart = createChart(quarterlyCanvas, quarterlyChart, quarterlyDataStore, 'totalRevenue');
 
     </script>
 </body>
